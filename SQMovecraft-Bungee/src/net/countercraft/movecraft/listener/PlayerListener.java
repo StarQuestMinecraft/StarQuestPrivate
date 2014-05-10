@@ -136,6 +136,7 @@ public class PlayerListener implements Listener {
 			if (event.isSneaking()){
 				if (event.getPlayer().getItemInHand().getType() == Material.WATCH){
 					if (event.getPlayer().hasPermission("movecraft." + c.getType().getCraftName() + ".move")) {
+						if(c.getMoveTaskId() != -1){
 						SneakMoveTask task = new SneakMoveTask(c, event.getPlayer());
 						task.runTaskTimer(Movecraft.getInstance(), 1, 1);
 						c.setMoveTaskId(task.getTaskId());

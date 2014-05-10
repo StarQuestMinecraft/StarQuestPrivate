@@ -56,13 +56,17 @@ public class Craft {
 	public int xDist, yDist, zDist;
 	public ArrayList<String> playersWithBedSpawnsOnShip = new ArrayList<String>();
 	public boolean shipAttemptingTeleport = false;
+	//these values are related to Autopilot, not acceleration. bad var names.
 	public int vX, vZ;
 	public ArrayList<Player> playersRiding = new ArrayList<Player>();
 	public int warpCoordsX;
 	public int warpCoordsZ;
 	public Location originalPilotLoc = new Location(w,0,0,0);
 	public Player pilot;
-
+	
+	private int velocity = 0;
+	private int steps = 0;
+	
 	public Craft( CraftType type, World world ) {
 		this.type = type;
 		this.w = world;
@@ -155,7 +159,18 @@ public class Craft {
 	public void setMoveTaskId(int taskID){
 		moveTaskID = taskID;
 	}
-	
+	public int getVelocity(){
+		return velocity;
+	}
+	public int getSteps(){
+		return steps;
+	}
+	public void setVelocity(int newV){
+		velocity = newV;
+	}
+	public void setSteps(int steps){
+		this.steps = steps;
+	}
 	@SuppressWarnings("deprecation")
 	public void extendLandingGear(){
 		for (MovecraftLocation l: getBlockList()) {

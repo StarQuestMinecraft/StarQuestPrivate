@@ -26,6 +26,7 @@ import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.event.CraftAsyncTranslateEvent;
 import net.countercraft.movecraft.localisation.I18nSupport;
+import net.countercraft.movecraft.utils.AccelerationUtils;
 import net.countercraft.movecraft.utils.BoundingBoxUtils;
 import net.countercraft.movecraft.utils.CarUtils;
 import net.countercraft.movecraft.utils.EntityUpdateCommand;
@@ -55,7 +56,6 @@ import java.util.logging.Level;
 
 public class TranslationTask extends AsyncTask {
         private TranslationTaskData data;
-        private final Vector ZERO = new Vector(0,0,0);
         public TranslationTask( Craft c, TranslationTaskData data ) {
                 super( c );
                 this.data = data;
@@ -64,6 +64,11 @@ public class TranslationTask extends AsyncTask {
         @SuppressWarnings("deprecation")
 		@Override
         public void excecute() {
+        	
+        		if(getCraft().getType().isGroundVehicle()){
+        			data.setDy(CarUtils.getNewdY(getCraft(), data.getDx(), data.getDy()));
+        		}
+        		
                 MovecraftLocation[] blocksList = data.getBlockList();
                 
                 // canfly=false means an ocean-going vessel

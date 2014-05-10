@@ -8,13 +8,15 @@ import net.countercraft.movecraft.craft.Craft;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class SneakMoveTask extends BukkitRunnable{
+public class ShipMoveTask extends BukkitRunnable{
 	Craft c;
 	Player p;
 	boolean sneakPressed;
 	
 	private static final Map<Player, Long> timeMap = new HashMap<Player, Long>();
-	public SneakMoveTask(Craft craft, Player player){
+	
+	//created when a ship is piloted and cancelled when the ship is released.
+	public ShipMoveTask(Craft craft, Player player){
 		c = craft;
 		p = player;
 	}
@@ -52,7 +54,7 @@ public class SneakMoveTask extends BukkitRunnable{
 				if(sneakPressed){
 					AccelerationUtils.checkAndIncreaseVelocity(c);
 				} else {
-					c.setVelocity(c.getVelocity() - 1);
+					AccelerationUtils.checkAndDecrementVelocity(c);
 					if(c.getVelocity() <= 0){
 						this.cancel();
 						c.setVelocity(0);
