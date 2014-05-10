@@ -1,0 +1,27 @@
+name: Movecraft
+version: 3.1.32
+description: The original flight and movement plugin for minecraft.
+author: AJCStriker
+website: http://madrealms.net/forums/
+main: net.countercraft.movecraft.Movecraft
+database: false
+
+commands:
+   removehome:
+      description: remove your home.
+      usage: /removehome
+   s:
+      description: Shoot the cannons!
+      usage: /s
+   serverjump:
+      description: lolnope
+      usage: lolnope
+   uuid:
+      description: sdfsdf
+      usage: sdfsdf
+   loadship:
+      description: sdfsdf
+      usage: sdfsdf
+depend:
+   - WorldEdit
+
