@@ -64,10 +64,6 @@ public class TranslationTask extends AsyncTask {
         @SuppressWarnings("deprecation")
 		@Override
         public void excecute() {
-        	
-        		if(getCraft().getType().isGroundVehicle()){
-        			data.setDy(CarUtils.getNewdY(getCraft(), data.getDx(), data.getDy()));
-        		}
         		
                 MovecraftLocation[] blocksList = data.getBlockList();
                 

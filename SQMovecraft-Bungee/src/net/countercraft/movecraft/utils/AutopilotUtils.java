@@ -1,44 +1,25 @@
-package net.countercraft.movecraft.async.translation;
+package net.countercraft.movecraft.utils;
 
-import java.util.ArrayList;
-
-import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
-import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
-import net.countercraft.movecraft.utils.MovecraftLocation;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
-public class AutopilotRunTask extends BukkitRunnable{
-	public static ArrayList<Craft> autopilotingCrafts = new ArrayList<Craft>();
+
+public class AutopilotUtils {
 	final static int SQRT_2 = (int) Math.round(Math.sqrt(2));
-	
-	public AutopilotRunTask() {
-		
-		runTaskTimer(Movecraft.getInstance(), 40, 40);
-		
-	}
-	
-	public void run(){
-		for (Craft c : autopilotingCrafts){
-			if (!c.processing.get() && !c.shipAttemptingTeleport){
-				c.translate(c.vX, 0, c.vZ);
-			}
-		}
-	}
+
 	public static void startAutopiloting(Craft c, Player p){
 		calculateVelocity(c);
-		autopilotingCrafts.add(c);
+		c.isAutopiloting = true;
 		p.sendMessage(ChatColor.RED + "Autopilot Engaged.");
 	}
 	public static void stopAutopiloting(Craft c, Player p){
-		if (autopilotingCrafts.contains(c)) autopilotingCrafts.remove(c);
+		c.isAutopiloting = false;
 		if (p != null){
 			p.sendMessage(ChatColor.RED + "Your autopilot has turned off.");
 		}
@@ -58,7 +39,7 @@ public class AutopilotRunTask extends BukkitRunnable{
 		}
 	}
 	public static void stopAutopiloting(Craft c, Player p, Sign s){
-		if (autopilotingCrafts.contains(c)) autopilotingCrafts.remove(c);
+		c.isAutopiloting = false;
 		p.sendMessage(ChatColor.RED + "Autopilot disabled.");
 		s.setLine(1, ChatColor.GREEN + "{DISABLED}");
 		s.update();
@@ -86,5 +67,6 @@ public class AutopilotRunTask extends BukkitRunnable{
         else if (degrees <= 337){ c.vX = -modifroot; c.vZ = -modifroot;} //return "Northwest";
         else if (degrees <= 359){ c.vX = 0; c.vZ = -modif;} //return "North";
         else {c.vX = 0; c.vZ = 0;}
+       
 	}
 }

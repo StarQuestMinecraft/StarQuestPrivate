@@ -28,7 +28,6 @@ import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
-import net.countercraft.movecraft.utils.SneakMoveTask;
 import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.Bukkit;
@@ -132,21 +131,11 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerToggleSneak(PlayerToggleSneakEvent event){
 		Craft c = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());
-		if (c != null){;
+		if (c != null){
 			if (event.isSneaking()){
-				if (event.getPlayer().getItemInHand().getType() == Material.WATCH){
-					if (event.getPlayer().hasPermission("movecraft." + c.getType().getCraftName() + ".move")) {
-						if(c.getMoveTaskId() != -1){
-						SneakMoveTask task = new SneakMoveTask(c, event.getPlayer());
-						task.runTaskTimer(Movecraft.getInstance(), 1, 1);
-						c.setMoveTaskId(task.getTaskId());
-					}
-				}
+				c.sneakPressed = true;
 			} else {
-				if (c.getMoveTaskId() != -1){
-					Bukkit.getScheduler().cancelTask(c.getMoveTaskId());
-					c.setMoveTaskId(-1);
-				}
+				c.sneakPressed = false;
 			}
 		}
 	}

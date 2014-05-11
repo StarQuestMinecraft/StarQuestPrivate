@@ -18,12 +18,12 @@
 package net.countercraft.movecraft.listener;
 
 import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.async.translation.AutopilotRunTask;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.craft.Torpedo;
 import net.countercraft.movecraft.localisation.I18nSupport;
+import net.countercraft.movecraft.utils.AutopilotUtils;
 import net.countercraft.movecraft.utils.BoardingRampUtils;
 import net.countercraft.movecraft.utils.BomberUtils;
 import net.countercraft.movecraft.utils.MathUtils;
@@ -44,7 +44,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -182,10 +181,10 @@ public class InteractListener implements Listener {
 				if (sign.getLine(1).equals(ChatColor.GREEN + "{DISABLED}")) {
 					Craft c = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());
 					if (c != null) {
-						if(!AutopilotRunTask.autopilotingCrafts.contains(c)){
+						if(c.isAutopiloting){
 							sign.setLine(1, ChatColor.RED + "{ENGAGED}");
 							sign.update();
-							AutopilotRunTask.startAutopiloting(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer());
+							AutopilotUtils.startAutopiloting(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer());
 							return;
 						}
 						event.getPlayer().sendMessage("Your craft is already autopiloting!");
@@ -194,7 +193,7 @@ public class InteractListener implements Listener {
 					event.getPlayer().sendMessage("You are not currently piloting a craft, you cannot start the autopilot.");
 					return;
 				} else if (sign.getLine(1).equals(ChatColor.RED + "{ENGAGED}")) {
-					AutopilotRunTask.stopAutopiloting(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer(), sign);
+					AutopilotUtils.stopAutopiloting(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer(), sign);
 				}
 			} else if (sign.getLine(0).equalsIgnoreCase("[boardingramp]")) {
 				sign.setLine(0, ChatColor.RED + "Boarding Ramp");

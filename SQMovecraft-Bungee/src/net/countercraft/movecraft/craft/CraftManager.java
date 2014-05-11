@@ -18,7 +18,6 @@
 package net.countercraft.movecraft.craft;
 
 import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.async.translation.AutopilotRunTask;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.localisation.I18nSupport;
 
@@ -96,9 +95,7 @@ public class CraftManager {
 			p.sendMessage( String.format( I18nSupport.getInternationalisedString( "Release - Craft has been released message" ) ) );
 			Movecraft.getInstance().getLogger().log( Level.INFO, String.format( I18nSupport.getInternationalisedString( "Release - Player has released a craft console" ), getPlayerFromCraft( c ).getName(), c.getType().getCraftName(), c.getBlockList().length, c.getMinX(), c.getMinZ() ) );
 			
-			if(AutopilotRunTask.autopilotingCrafts.contains(c)){
-				AutopilotRunTask.stopAutopiloting(c, p);
-			}
+			c.getMoveTask().cancel();
 			craftPlayerIndex.remove( p );
 			
 			for(Player plr: c.playersRiding){

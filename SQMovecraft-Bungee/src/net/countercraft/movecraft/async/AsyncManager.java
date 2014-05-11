@@ -21,7 +21,6 @@ import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.detection.DetectionTask;
 import net.countercraft.movecraft.async.detection.DetectionTaskData;
 import net.countercraft.movecraft.async.rotation.RotationTask;
-import net.countercraft.movecraft.async.translation.AutopilotRunTask;
 import net.countercraft.movecraft.async.translation.RepeatTryWorldJumpTask;
 import net.countercraft.movecraft.async.translation.TranslationTask;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
@@ -39,6 +38,7 @@ import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.MovingPartUtils;
 import net.countercraft.movecraft.utils.Rotation;
+import net.countercraft.movecraft.utils.ShipMoveTask;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -178,6 +178,7 @@ public class AsyncManager extends BukkitRunnable {
 							c.setHitBox( data.getHitBox() );
 							c.setMinX( data.getMinX() );
 							c.setMinZ( data.getMinZ() );
+							c.setMoveTask(new ShipMoveTask(c, c.pilot));
 							c.originalPilotLoc = Movecraft.getInstance().getServer().getPlayer(data.getPlayername()).getLocation();
 							c.retractLandingGear();
 							Movecraft.getInstance().getServer().getPlayer( data.getPlayername() ).sendMessage( String.format( I18nSupport.getInternationalisedString( "Detection - Successfully piloted craft" ) ) );
@@ -202,9 +203,7 @@ public class AsyncManager extends BukkitRunnable {
 						//The craft translation failed
 						p.sendMessage( task.getData().getFailMessage() );
 						clear(c);
-						if (AutopilotRunTask.autopilotingCrafts.contains(c)){
-							AutopilotRunTask.stopAutopiloting(c, p);
-						}
+						if(c.isAutopiloting) c.isAutopiloting = false;
 					} else {
 						//The craft is clear to move, perform the block updates
 

@@ -28,6 +28,7 @@ import net.countercraft.movecraft.event.CraftSyncTranslateEvent;
 import net.countercraft.movecraft.utils.GunUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.Rotation;
+import net.countercraft.movecraft.utils.ShipMoveTask;
 import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.Bukkit;
@@ -51,27 +52,29 @@ public class Craft {
 	private MovecraftLocation[] blockList;
 	private World w;
 	public AtomicBoolean processing = new AtomicBoolean();
-	private int moveTaskID;
 	private int minX, minZ;
 	public int xDist, yDist, zDist;
 	public ArrayList<String> playersWithBedSpawnsOnShip = new ArrayList<String>();
 	public boolean shipAttemptingTeleport = false;
 	//these values are related to Autopilot, not acceleration. bad var names.
 	public int vX, vZ;
+	public boolean isAutopiloting;
 	public ArrayList<Player> playersRiding = new ArrayList<Player>();
 	public int warpCoordsX;
 	public int warpCoordsZ;
 	public Location originalPilotLoc = new Location(w,0,0,0);
 	public Player pilot;
+	public boolean sneakPressed;
 	
 	private int velocity = 0;
 	private int steps = 0;
+	
+	private ShipMoveTask moveTask;
 	
 	public Craft( CraftType type, World world ) {
 		this.type = type;
 		this.w = world;
 		this.blockList = new MovecraftLocation[1];
-		this.moveTaskID = -1;
 		xDist = 0;
 		yDist = 0;
 		zDist = 0;
@@ -152,12 +155,12 @@ public class Craft {
 		this.minZ = minZ;
 	}
 	
-	public int getMoveTaskId(){
-		return moveTaskID;
+	public ShipMoveTask getMoveTask(){
+		return moveTask;
 	}
 	
-	public void setMoveTaskId(int taskID){
-		moveTaskID = taskID;
+	public void setMoveTask(ShipMoveTask task){
+		moveTask = task;
 	}
 	public int getVelocity(){
 		return velocity;
