@@ -18,7 +18,6 @@
 package net.countercraft.movecraft;
 
 import net.countercraft.movecraft.async.AsyncManager;
-import net.countercraft.movecraft.async.translation.AutopilotRunTask;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.bungee.BungeeCraftReciever;
 import net.countercraft.movecraft.bungee.BungeeCraftSender;
@@ -161,7 +160,6 @@ public class Movecraft extends JavaPlugin {
 			new MovecraftMetrics( CraftManager.getInstance().getCraftTypes().length );   
 			//bungee server/minecraft server/plugins/movecraft
 			
-			new AutopilotRunTask();
 			
 			Bedspawn.setUp();
 			//PingUtils.setUp();
