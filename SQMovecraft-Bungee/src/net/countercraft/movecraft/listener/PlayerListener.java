@@ -134,8 +134,10 @@ public class PlayerListener implements Listener {
 		if (c != null){
 			if (event.isSneaking()){
 				c.sneakPressed = true;
+				System.out.println("Sneak Pressed!");
 			} else {
 				c.sneakPressed = false;
+				System.out.println("Sneak unpressed!");
 			}
 		}
 	}

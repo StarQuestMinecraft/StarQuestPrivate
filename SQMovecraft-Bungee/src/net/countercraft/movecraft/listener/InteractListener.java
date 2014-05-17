@@ -120,7 +120,7 @@ public class InteractListener implements Listener {
 
 
 		if ( getCraftTypeFromString( sign.getLine( 0 ) ) != null ) {
-			if (Movecraft.signContainsPlayername(sign, event.getPlayer().getName())) {
+			if (Movecraft.signContainsPlayername(sign, event.getPlayer().getName()) || event.getPlayer().isOp()) {
 				// Valid sign prompt for ship command.
 				if ( event.getPlayer().hasPermission( "movecraft." + sign.getLine( 0 ) + ".pilot" ) ) {
 					// Attempt to run detection

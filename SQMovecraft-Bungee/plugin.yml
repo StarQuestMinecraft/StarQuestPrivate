@@ -24,4 +24,5 @@ commands:
       usage: sdfsdf
 depend:
    - WorldEdit
+   - WorldBorder
 

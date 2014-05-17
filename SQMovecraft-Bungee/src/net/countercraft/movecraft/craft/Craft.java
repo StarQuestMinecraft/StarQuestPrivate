@@ -181,8 +181,8 @@ public class Craft {
 			if (b.getType() == Material.PISTON_BASE && b.getData() == 0){
 				Block above = b.getRelative(BlockFace.UP);
 				if (above.getType() == Material.SPONGE){
-						Block belowTwo = b.getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN);
-						if (belowTwo.getType() != Material.AIR){
+						Block below = b.getRelative(BlockFace.DOWN);
+						if (below.getType() == Material.AIR){
 							above.setTypeIdAndData(152, (byte) 0, true);
 						}
 				}

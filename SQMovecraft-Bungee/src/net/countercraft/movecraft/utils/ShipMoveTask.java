@@ -12,15 +12,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class ShipMoveTask extends BukkitRunnable{
 	Craft c;
 	Player p;
-
-	
-	private static final Map<Player, Long> timeMap = new HashMap<Player, Long>();
 	
 	//created when a ship is piloted and cancelled when the ship is released.
 	public ShipMoveTask(Craft craft, Player player){
 		c = craft;
 		p = player;
-		runTaskTimer(Movecraft.getInstance(), 1L, 1L);
+		runTaskTimer(Movecraft.getInstance(), 1L, c.getType().getTickCooldown() / 4);
 	}
 	
 	@Override
@@ -28,13 +25,6 @@ public class ShipMoveTask extends BukkitRunnable{
 		if(c.isAutopiloting){
 			c.translate(c.vX, 0, c.vZ);
 		} else {
-			Long time = timeMap.get(p);
-			if (time != null) {
-				long ticksElapsed = (System.currentTimeMillis() - time) / 50;
-				if (Math.abs(ticksElapsed) < c.getType().getTickCooldown()) {
-					return;
-				}
-			}
 			if((!c.processing.get()) && (!c.shipAttemptingTeleport)){
 				if (MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))) {
 		
@@ -58,27 +48,29 @@ public class ShipMoveTask extends BukkitRunnable{
 					
 					if(c.sneakPressed){
 						AccelerationUtils.checkAndIncreaseVelocity(c);
+						System.out.println(c.getVelocity());
 					} else {
 						AccelerationUtils.checkAndDecrementVelocity(c);
-						if(c.getVelocity() <= 0){
-							this.cancel();
-							c.setVelocity(0);
-						}
 					}
 					
 					dx *= c.getVelocity();
+					dy *= c.getVelocity();
 					dz *= c.getVelocity();
 					
 	        		if(c.getType().isGroundVehicle()){
 	        			dy = (CarUtils.getNewdY(c, dx, dz));
 	        		}
-		
-					c.translate(dx, dy, dz);
-					timeMap.put(p, System.currentTimeMillis());
+	        		if(!(dx==0 && dy==0 && dz==0)){
+	        			c.translate(dx, dy, dz);
+	        		}
 					return;
 				}
 				return;
 			}
 		}
+	}
+
+	private void sysout(String string) {
+		System.out.println(string);
 	}
 }

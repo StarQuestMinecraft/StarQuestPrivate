@@ -9,7 +9,8 @@ public class AccelerationUtils {
 		int s = c.getSteps();
 		int a = c.getType().getAcceleration();
 		if(shouldGainVelocity(v, s, a)){
-			c.setVelocity(v + 1);
+			if(v < c.getType().getMaxBlocksPerTranslation())
+				c.setVelocity(v + 1);
 			c.setSteps(0);
 		} else {
 			c.setSteps(s + 1);
@@ -17,6 +18,7 @@ public class AccelerationUtils {
 	}
 	public static void checkAndDecrementVelocity(Craft c){
 		int v = c.getVelocity();
+		if(v == 0) return;
 		int s = c.getSteps();
 		int a = c.getType().getAcceleration();
 		if(shouldGainVelocity(v, s, a)){
