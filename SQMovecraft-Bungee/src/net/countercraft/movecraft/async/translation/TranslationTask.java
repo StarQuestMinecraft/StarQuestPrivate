@@ -26,6 +26,7 @@ import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.event.CraftAsyncTranslateEvent;
 import net.countercraft.movecraft.localisation.I18nSupport;
+import net.countercraft.movecraft.utils.BorderUtils;
 import net.countercraft.movecraft.utils.BoundingBoxUtils;
 import net.countercraft.movecraft.utils.CarUtils;
 import net.countercraft.movecraft.utils.EntityUpdateCommand;
@@ -163,6 +164,9 @@ public class TranslationTask extends AsyncTask {
                 if(!event.call()){
                 	fail(event.getMessage());
                 }
+                if (!BorderUtils.isWithinBorderIncludePadding(getCraft().pilot.getLocation())) {
+    				fail("You have almost reached the world border! Turn back now!");
+    			}
                 for ( int i = 0; i < blocksList.length; i++ ) {
                         MovecraftLocation oldLoc = blocksList[i];
                         MovecraftLocation newLoc = oldLoc.translate( data.getDx(), data.getDy(), data.getDz() );
