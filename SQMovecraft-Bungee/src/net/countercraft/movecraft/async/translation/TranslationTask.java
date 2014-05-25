@@ -164,7 +164,7 @@ public class TranslationTask extends AsyncTask {
                 if(!event.call()){
                 	fail(event.getMessage());
                 }
-                if (!BorderUtils.isWithinBorderIncludePadding(getCraft().pilot.getLocation())) {
+                if (!BorderUtils.isWithinBorderIncludePadding(getNewPilotLocation())) {
     				fail("You have almost reached the world border! Turn back now!");
     			}
                 for ( int i = 0; i < blocksList.length; i++ ) {
@@ -329,5 +329,10 @@ public class TranslationTask extends AsyncTask {
 
         public TranslationTaskData getData() {
                 return data;
+        }
+        
+        private Location getNewPilotLocation(){
+        	Location l = getCraft().pilot.getLocation();
+        	return new Location(l.getWorld(), l.getX() + data.getDx(), l.getY() + data.getDy(), l.getZ() + data.getDz());
         }
 }

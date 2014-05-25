@@ -25,7 +25,7 @@ public class BorderUtils {
 	}
 	
 	private static int getRadius(String name) {
-		return (worldBorderPlugin.getConfig().getInt("worlds." + name + ".x"));
+		return (worldBorderPlugin.getConfig().getInt("worlds." + name + ".radiusX"));
 	}
 	public static boolean isWithinBorderIncludePadding(Location l){
 		return locIsWithin(l, WORLD_RADIUS - PADDING);
