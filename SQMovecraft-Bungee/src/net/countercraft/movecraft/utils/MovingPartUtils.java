@@ -25,7 +25,7 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.schematic.SchematicFormat;
 
 public class MovingPartUtils {
-	public static File dir = new File(Movecraft.getInstance().getDataFolder().getAbsoluteFile().getParentFile().getParentFile().getParentFile() + "/movingpart");
+	public static File dir = new File(Movecraft.getInstance().getDataFolder().getAbsoluteFile().getParentFile().getParentFile().getParentFile().getPartentFile() + "/movingpart");
 	public static boolean saveSchematic(Sign s, CuboidRegion r, WorldEditPlugin p, Player plr, boolean onState){
 		Vector min = r.getMinimumPoint();
 		Vector max = r.getMaximumPoint();
