@@ -1,11 +1,9 @@
 package net.countercraft.movecraft.utils;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
 
+import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -23,7 +21,11 @@ public class ShipMoveTask extends BukkitRunnable{
 	@Override
 	public void run() {
 		if(c.isAutopiloting){
-			c.translate(c.vX, 0, c.vZ);
+			if(c.getW().getEnvironment() == Environment.THE_END){
+				WarpUtils.translate(c, c.vX, 0, c.vZ);
+			} else {
+				c.translate(c.vX, 0, c.vZ);
+			}
 		} else {
 			if((!c.processing.get()) && (!c.shipAttemptingTeleport)){
 				if (MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))) {
@@ -61,16 +63,16 @@ public class ShipMoveTask extends BukkitRunnable{
 	        			dy = (CarUtils.getNewdY(c, dx, dz));
 	        		}
 	        		if(!(dx==0 && dy==0 && dz==0)){
-	        			c.translate(dx, dy, dz);
+	        			if(c.getW().getEnvironment() == Environment.THE_END){
+	        				WarpUtils.translate(c, dx, dy, dz);
+	        			} else {
+	        				c.translate(dx, dy, dz);
+	        			}
 	        		}
 					return;
 				}
 				return;
 			}
 		}
-	}
-
-	private void sysout(String string) {
-		System.out.println(string);
 	}
 }

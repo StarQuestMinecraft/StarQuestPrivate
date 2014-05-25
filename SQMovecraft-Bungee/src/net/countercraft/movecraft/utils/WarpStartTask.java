@@ -50,6 +50,7 @@ public class WarpStartTask extends BukkitRunnable{
 					
 					s.setLine(2, ChatColor.BLUE + "Stable Slip.");
 					s.update();
+					p.getWorld().playSound(p.getLocation(), Sound.EXPLODE, 1.0F, 1.0F);
 					
 					WarpUtils.enterWarp(p, CraftManager.getInstance().getCraftByPlayer(p));
 					p.sendMessage(ChatColor.AQUA +"succesfully entered the slip and in stable travel. To navigate, fly just like your normally do.");
@@ -94,7 +95,7 @@ public class WarpStartTask extends BukkitRunnable{
 			ItemStack iStack=i.getItem(i.first(Material.EYE_OF_ENDER));
 			int amount=iStack.getAmount();
 			if(amount==1) {
-				i.remove(263);
+				i.clear();
 			} else {
 				iStack.setAmount(amount-1);
 			}
@@ -104,7 +105,7 @@ public class WarpStartTask extends BukkitRunnable{
 			ItemStack iStack= i2.getItem(i2.first(Material.EYE_OF_ENDER));
 			int amount=iStack.getAmount();
 			if(amount==1) {
-				i2.remove(173);
+				i.clear();
 			} else {
 				iStack.setAmount(amount-1);
 			}

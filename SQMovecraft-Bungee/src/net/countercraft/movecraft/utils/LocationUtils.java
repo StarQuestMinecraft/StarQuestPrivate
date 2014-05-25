@@ -174,7 +174,7 @@ public class LocationUtils {
 			//Defalos is to the south of Regalis
 			if(warpZ > 5000) return "Defalos";
 			//Digitalis is to the east of Regalis
-			if(warpX > 5000) return "Digitalis";
+			if(warpX > 5000) return "Digitalia";
 		} else if(SYSTEM.equals("Digitalia")){
 			//Regalis is to the west of Digitalia
 			if(warpX < -5000) return "Regalis";
@@ -184,7 +184,7 @@ public class LocationUtils {
 			//Regalis is to the north of Defalos
 			if(warpZ < -5000) return "Regalis";
 			//Digitalis is to the east of Defalos
-			if(warpX > 5000) return "Defalos";
+			if(warpX > 5000) return "Digitalia";
 		}
 		return null;
 	}
