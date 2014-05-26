@@ -18,6 +18,7 @@ import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.utils.BoardingRampUtils;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.TorpedoFlyTask;
+import net.countercraft.movecraft.utils.SignUtils;
 
 public class Torpedo {
 	
@@ -31,7 +32,7 @@ public class Torpedo {
 			p.sendMessage("You can't fire space torpedoes on a planet...");
 			return;
 		}
-		BlockFace direction = getFacingBlockFace(sign);
+		BlockFace direction = SignUtils.getFacingBlockFace(sign);
 		Block oneForward = sign.getBlock().getRelative(direction);
 		Block twoForward = oneForward.getRelative(direction);
 		Block dispenser = twoForward.getRelative(direction);
@@ -84,22 +85,5 @@ public class Torpedo {
 		TNTPrimed tnt = myBlock.getWorld().spawn(myBlock.getLocation(), TNTPrimed.class);
 		tnt.setFuseTicks(1);
 		tnt.setIsIncendiary(true);
-	}
-	@SuppressWarnings("deprecation")
-	public static BlockFace getFacingBlockFace(Sign s){
-		Block sBlock = s.getBlock();
-		int data = sBlock.getData();
-		switch(data){
-			case 2:
-				return BlockFace.SOUTH;
-			case 3:
-				return BlockFace.NORTH;
-			case 4:
-				return BlockFace.EAST;
-			case 5:
-				return BlockFace.WEST;
-			default:
-				return null;
-		}
 	}
 }

@@ -118,10 +118,6 @@ public class AsyncManager extends BukkitRunnable {
 						Craft[] craftsInWorld = CraftManager.getInstance().getCraftsInWorld( c.getW() );
 						boolean failed = false;
 						
-						if (numcannons(data.getBlockList(), c.getW()) > c.getType().getAllowedCannons()){
-							Movecraft.getInstance().getServer().getPlayer(data.getPlayername()).sendMessage("Your ship has too many cannons!");
-							failed = true;
-						}
 						if ( craftsInWorld != null ) {
 							for ( Craft craft : craftsInWorld ) {
 
@@ -130,47 +126,6 @@ public class AsyncManager extends BukkitRunnable {
 									failed = true;
 								}
 
-							}
-						} else {
-							//detect ship signs
-							boolean foundMainSign = false;
-							for (MovecraftLocation l : data.getSignLocations()){
-								Location loc = new Location(c.getW(), l.getX(), l.getY(), l.getZ());
-								Sign s = (Sign) loc.getBlock().getState();
-								//check for [private] signs
-								if (s.getLine(0).equals("[private]")){
-									if (!Movecraft.signContainsPlayername(s, data.getPlayername())){
-										failed = true;
-										Movecraft.getInstance().getServer().getPlayer(data.getPlayername()).sendMessage("You are attatched to a door that is locked to someone besides you.");
-									}
-								}
-								//check each sign to see if it's a craft sign
-								boolean isCraftType = (InteractListener.getCraftTypeFromString(s.getLine(0)) != null);
-								if (isCraftType){
-									//special rules for carriers!
-									if (c.getType().equals(InteractListener.getCraftTypeFromString("Carrier")) || c.getType().equals(InteractListener.getCraftTypeFromString("Flagship"))){
-										if (!Movecraft.signContainsPlayername(s, data.getPlayername())){
-											failed = true;
-											Movecraft.getInstance().getServer().getPlayer(data.getPlayername()).sendMessage("Your ship seems to be attatched to another ship that isn't yours.");
-										}
-										
-									//other ships
-									} else {
-										
-										//don't count the main sign as a different ship.
-										if(!foundMainSign){
-											if(c.getType().equals(InteractListener.getCraftTypeFromString(s.getLine(0)))){
-												if (Movecraft.signContainsPlayername(s, data.getPlayername())){
-													foundMainSign = true;
-												}
-											}
-										}else{
-											failed = true;
-											Movecraft.getInstance().getServer().getPlayer(data.getPlayername()).sendMessage("Your ship seems to have more than one ship sign, or is attatched to another ship.");
-											break;
-										}
-									}
-								}
 							}
 						}
 						if ( !failed ) {
@@ -340,26 +295,4 @@ public class AsyncManager extends BukkitRunnable {
 
 		clearanceSet.clear();
 	}
-	
-	private int numcannons(MovecraftLocation[] blocklist, World w){
-		int numcannons = 0;
-		for (MovecraftLocation l: blocklist){
-			
-			Block b = w.getBlockAt(l.getX(), l.getY(), l.getZ());
-			
-			if (b.getType() == Material.SPONGE){
-				if (b.getRelative(BlockFace.NORTH).getType() == Material.PISTON_BASE){
-					numcannons++;
-				} else if(b.getRelative(BlockFace.SOUTH).getType() == Material.PISTON_BASE) {
-					numcannons++;
-				} else if(b.getRelative(BlockFace.EAST).getType() == Material.PISTON_BASE) {
-					numcannons++;
-				} else if(b.getRelative(BlockFace.WEST).getType() == Material.PISTON_BASE) {
-					numcannons++;
-				}
-			}
-		}
-		return numcannons;
-	}
-	
 }

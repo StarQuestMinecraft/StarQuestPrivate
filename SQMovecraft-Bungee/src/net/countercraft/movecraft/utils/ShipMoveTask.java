@@ -55,9 +55,11 @@ public class ShipMoveTask extends BukkitRunnable{
 						AccelerationUtils.checkAndDecrementVelocity(c);
 					}
 					
-					dx *= c.getVelocity();
-					dy *= c.getVelocity();
-					dz *= c.getVelocity();
+					if(isGoingForward(c, dx, dy, dz)){
+						dx *= c.getVelocity();
+						dy *= c.getVelocity();
+						dz *= c.getVelocity();
+					}
 					
 	        		if(c.getType().isGroundVehicle()){
 	        			dy = (CarUtils.getNewdY(c, dx, dz));
@@ -74,5 +76,19 @@ public class ShipMoveTask extends BukkitRunnable{
 				return;
 			}
 		}
+	}
+
+	private boolean isGoingForward(Craft c, int dx, int dy, int dz) {
+		switch(c.facingDirection){
+		case NORTH:
+			return dz < 0;
+		case SOUTH:
+			return dz > 0;
+		case EAST:
+			return dx > 0;
+		case WEST:
+			return dx < 0;
+		}
+		return false;
 	}
 }

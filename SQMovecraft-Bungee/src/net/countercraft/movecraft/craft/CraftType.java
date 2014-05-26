@@ -33,7 +33,7 @@ import java.util.logging.Level;
 
 public class CraftType {
 	private String craftName;
-	private int maxSize, minSize, minHeightLimit, maxHeightLimit, drillHeadID, allowedCannons, maxBlocksPerTranslation, acceleration, turnDelay;
+	private int maxSize, minSize, minHeightLimit, maxHeightLimit, drillHeadID, allowedCannons, maxBlocksPerTranslation, acceleration;
 	private Integer[] allowedBlocks, forbiddenBlocks;
 	private ArrayList<Integer> drilledBlocks;
 	private boolean canFly, tryNudge, canCruise, canTeleport, canStaticMove, isGroundVehicle;
@@ -44,6 +44,9 @@ public class CraftType {
 	private int tickCooldown;
 	private double speed;
 	private HashMap<Integer, ArrayList<Double>> flyBlocks = new HashMap<Integer, ArrayList<Double>>();
+	
+	private int numLargeEngine, numMediumEngine, numSmallEngine;
+	private int maxLargeEngine, maxMediumEngine, maxSmallEngine;
 
 	public CraftType(File f) {
 		try {
@@ -165,14 +168,37 @@ public class CraftType {
 		} else {
 			acceleration = 1;
 		}
-		// this is the turning delay value; the time in ticks it takes for a
-		// ship to complete a turn. this timer is started after
-		// the ship decelerates completely.
-		if (data.containsKey("turnDelay")) {
-			turnDelay = (Integer) data.get("turnDelay");
+		//maximum engine values
+		if (data.containsKey("maxSmallEngine")) {
+			maxSmallEngine = (Integer) data.get("maxSmallEngine");
 		} else {
-			turnDelay = 1;
+			maxSmallEngine = 0;
 		}
+		if (data.containsKey("maxMediumEngine")) {
+			maxMediumEngine = (Integer) data.get("maxMediumEngine");
+		} else {
+			maxMediumEngine = 0;
+		}
+		if (data.containsKey("maxLargeEngine")) {
+			maxLargeEngine = (Integer) data.get("maxLargeEngine");
+		} else {
+			maxLargeEngine = 0;
+		}
+	}
+	
+	public void addEngineSmall(){
+		if(numSmallEngine >= maxSmallEngine) return;
+		maxBlocksPerTranslation = maxBlocksPerTranslation + 1;
+	}
+	
+	public void addEngineMedium(){
+		if(numMediumEngine >= maxMediumEngine) return;
+		maxBlocksPerTranslation = maxBlocksPerTranslation + 1;
+	}
+	
+	public void addEngineLarge(){
+		if(numLargeEngine >= maxLargeEngine) return;
+		maxBlocksPerTranslation = maxBlocksPerTranslation + 1;
 	}
 
 	public String getCraftName() {
@@ -273,8 +299,5 @@ public class CraftType {
 	}
 	public int getAcceleration(){
 		return acceleration;
-	}
-	public int getTurnDelay(){
-		return turnDelay;
 	}
 }

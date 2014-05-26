@@ -31,6 +31,7 @@ import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.Rotation;
 import net.countercraft.movecraft.utils.WarpUtils;
 import net.countercraft.movecraft.utils.WarpStartTask;
+import net.countercraft.movecraft.utils.SignUtils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -259,7 +260,7 @@ public class InteractListener implements Listener {
 				sign.setLine(1, ChatColor.RED + "Chute");
 				sign.update();
 			} else if (sign.getLine(0).equals(ChatColor.RED + "Bomb") && event.getPlayer().hasPermission("movecraft.bomber.move")){
-				BlockFace direction = Torpedo.getFacingBlockFace(sign);
+				BlockFace direction = SignUtils.getFacingBlockFace(sign);
 				Block sb = sign.getBlock();
 				if(sb.getRelative(direction).getType() == Material.SPONGE){
 					Block b = sb.getRelative(direction);

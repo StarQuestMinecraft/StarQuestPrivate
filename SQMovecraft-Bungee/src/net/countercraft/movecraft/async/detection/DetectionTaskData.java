@@ -32,6 +32,7 @@ public class DetectionTaskData {
 	private Integer minX, minZ;
 	private Integer[] allowedBlocks, forbiddenBlocks;
 	private ArrayList<MovecraftLocation> signLocations;
+	private ArrayList<MovecraftLocation> spongeLocations;
 
 	public DetectionTaskData( World w, String playerName, Integer[] allowedBlocks, Integer[] forbiddenBlocks ) {
 		this.w = w;
@@ -117,7 +118,15 @@ public class DetectionTaskData {
 	void setSignLocations(ArrayList<MovecraftLocation> list){
 		signLocations = list;
 	}
-	public ArrayList<MovecraftLocation> getSignLocations(){
+    public ArrayList<MovecraftLocation> getSignLocations(){
 		return signLocations;
+	}
+
+	public ArrayList<MovecraftLocation> getSpongeLocations() {
+		return spongeLocations;
+	}
+
+	public void setSpongeLocations(ArrayList<MovecraftLocation> spongeLocations) {
+		this.spongeLocations = spongeLocations;
 	}
 }

@@ -61,6 +61,7 @@ public class WarpUtils {
 			p.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + " You have reached the edge of the solar system!");
 			p.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + "Your ship's computer will now navigate through the Slip to the next solar system.");
 			RepeatTryServerJumpTask t = new RepeatTryServerJumpTask(p, c, system + "_the_end", LocationUtils.getSlipCoordX(system), 100, LocationUtils.getSlipCoordZ(system));
+			t.runTaskTimer(Movecraft.getInstance(), 0, 1);
 		}
 	}
 	

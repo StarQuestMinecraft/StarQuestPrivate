@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 public class BoardingRampUtils {
 	@SuppressWarnings("deprecation")
 	public static void openRamp(Sign s){
-		BlockFace facingdirection = getFacingBlockFace(s);
+		BlockFace facingdirection = SignUtils.getFacingBlockFace(s);
 		
 		Block sBlock = s.getBlock();
 		Block changeblock = sBlock.getRelative(BlockFace.DOWN);
@@ -29,7 +29,7 @@ public class BoardingRampUtils {
 	}
 	@SuppressWarnings("deprecation")
 	public static boolean closeRamp(Sign s, Player interactor){
-		BlockFace facingdirection = getFacingBlockFace(s);
+		BlockFace facingdirection = SignUtils.getFacingBlockFace(s);
 		
 		Block sBlock = s.getBlock();
 		Block changeblock = sBlock.getRelative(BlockFace.DOWN);
@@ -56,22 +56,5 @@ public class BoardingRampUtils {
 		s.setLine(3, "");
 		s.update();
 		return true;
-	}
-	@SuppressWarnings("deprecation")
-	public static BlockFace getFacingBlockFace(Sign s){
-		Block sBlock = s.getBlock();
-		int data = sBlock.getData();
-		switch(data){
-			case 2:
-				return BlockFace.NORTH;
-			case 3:
-				return BlockFace.SOUTH;
-			case 4:
-				return BlockFace.WEST;
-			case 5:
-				return BlockFace.EAST;
-			default:
-				return null;
-		}
 	}
 }

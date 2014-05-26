@@ -1,0 +1,97 @@
+[05:13:30] [Async Chat Thread - #4/INFO]: [Acu][Colonist]Greek_Raider: u r a terible mod ARCH 632
+[05:26:15] [Async Chat Thread - #6/INFO]: [Acu][Colonist]MaxKittyGuy: so why don't u stop "kiddo"
+[05:26:40] [Async Chat Thread - #6/INFO]: [Acu][Colonist]MaxKittyGuy: so why don't u shuddup "kiddo"
+[05:39:03] [Async Chat Thread - #7/INFO]: [Acu][Colonist]MaxKittyGuy: oh so
+[05:39:32] [Async Chat Thread - #7/INFO]: [Acu][Colonist]MaxKittyGuy: you think you fancy shmancy "fedewation" is so good that it owns a planet!!!???
+[05:39:43] [Async Chat Thread - #7/INFO]: [Acu][Colonist]MaxKittyGuy: well lemme tell you it doesn't !!!!!!!!!!!!!!!
+[05:40:21] [Async Chat Thread - #7/INFO]: [Acu][Colonist]MaxKittyGuy: ok lemme see the documents!
+[05:40:45] [Async Chat Thread - #7/INFO]: [Acu][Colonist]MaxKittyGuy: from dib that says "Emera belongs to federation"!!!!!!
+[05:41:22] [Async Chat Thread - #7/INFO]: [Acu][Colonist]MaxKittyGuy: I'm waiting for a link people
+[05:41:32] [Async Chat Thread - #7/INFO]: [Acu][Colonist]MaxKittyGuy: oh yeah there is none!
+[05:42:00] [Async Chat Thread - #7/INFO]: [Acu][Colonist]MaxKittyGuy: so while the fed is finally realizing that Emera doesn't belong to them I will wait here and see
+[05:42:07] [Async Chat Thread - #7/INFO]: [Acu][Colonist]MaxKittyGuy: their suprised little faces
+[05:42:11] [Server thread/INFO]: [Info] do /region flag <region name> pvp deny to turn off pvp in your worldguard region! 
+[05:42:31] [Async Chat Thread - #7/INFO]: [Acu][Colonist]MaxKittyGuy: * sits down on beach chair and puts on sunglasses
+[05:42:50] [Async Chat Thread - #7/INFO]: [Acu][Colonist]MaxKittyGuy: *asks for smoothie
+[05:43:00] [Async Chat Thread - #7/INFO]: [Acu][Colonist]MaxMonsterGuy: Im not trying to threaten you
+[05:43:08] [Async Chat Thread - #7/INFO]: [Acu][Colonist]MaxKittyGuy: no
+[05:45:35] [Async Chat Thread - #8/INFO]: [Acu][Colonist]MaxKittyGuy: are there any papers stating
+[05:45:53] [Async Chat Thread - #8/INFO]: [Acu][Colonist]MaxKittyGuy: "federation owns Emera"
+[05:46:00] [Async Chat Thread - #8/INFO]: [Acu][Colonist]MaxKittyGuy: No!
+[05:46:26] [Async Chat Thread - #8/INFO]: [Acu][Colonist]MaxKittyGuy: no but there ARE papers stating that you don't know anything
+[05:48:48] [Async Chat Thread - #9/INFO]: [Acu][Colonist]MaxKittyGuy: http://starquestminecraft.com/starquestforums/m/17078810/viewthread/12965613-troll-info
+[05:48:55] [Async Chat Thread - #9/INFO]: [Acu][Colonist]MaxKittyGuy: just for YOUR info!
+[05:57:44] [Async Chat Thread - #10/INFO]: [Acu][Colonist]MaxKittyGuy: here guys:
+[05:57:46] [Async Chat Thread - #10/INFO]: [Acu][Colonist]MaxKittyGuy: http://starquestminecraft.com/starquestforums/m/17078810/viewthread/12965716-owning-planet
+[05:59:46] [Async Chat Thread - #11/INFO]: [Acu][Colonist]MaxKittyGuy: ok war it is!!!!
+[05:59:56] [Async Chat Thread - #11/INFO]: [Acu][Colonist]MaxKittyGuy: I DECLARE war!!!!!!!!!!!!!!!!!
+[06:00:02] [Server thread/INFO]: Organic_Ferret[/174.22.165.197:54876] logged in with entity id 274333 at ([Acualis] 0.5, 103.0, 0.5)
+[06:00:03] [Server thread/INFO]: warning66[/108.8.56.222:54875] logged in with entity id 274334 at ([Acualis] -243.63354675070957, 109.0, -44.394461808283026)
+[06:00:19] [Async Chat Thread - #11/INFO]: [Acu][Colonist]MaxKittyGuy: on all of the federation that think they own planets
+[06:00:28] [Async Chat Thread - #11/INFO]: [Acu][Colonist]MaxKittyGuy: All of the fed
+[06:00:48] [Async Chat Thread - #11/INFO]: [Acu][Colonist]MaxMonsterGuy: I LOVE YOU federation!
+[06:01:00] [Server thread/INFO]: [Movecraft] Player warning66 has released a craft of type Starfighter with size 117 at coordinates : -93 x , -5 z
+[06:01:03] [Async Chat Thread - #11/INFO]: [Acu][Colonist]MaxMonsterGuy: spare me
+[06:01:07] [Async Chat Thread - #11/INFO]: [Acu][Colonist]MaxMonsterGuy: plz
+[06:01:19] [Async Chat Thread - #11/INFO]: [Acu][Colonist]MaxKittyGuy: darnit lemme slay you maxmonsterguy
+[06:01:41] [Server thread/INFO]: MaxMonsterGuy killed warning66 wielding diamond sword on Acualis 
+[06:01:44] [Server thread/INFO]:  BEDSPAWN: Player = warning66 & server = Defalos & world = Defalos & coords = 1716,100,1885.
+[06:02:07] [Server thread/INFO]: MaxMonsterGuy killed Organic_Ferret wielding diamond sword on Acualis 
+[06:02:10] [Server thread/INFO]:  BEDSPAWN: Player = maxkittyguy & server = Acualis & world = Acualis & coords = 403,120,-1796.
+[06:02:10] [Server thread/INFO]:  BEDSPAWN: Player = organic_ferret & server = Valadro & world = Valadro & coords = 827,76,113.
+[06:03:36] [Server thread/INFO]: Moneybags118[/24.129.9.28:55069] logged in with entity id 275524 at ([Acualis] 1389.9158164199785, 157.0, 815.8134255809043)
+[06:06:49] [Server thread/INFO]: Moneybags118 killed MaxKittyGuy wielding diamond sword on Acualis 
+[06:06:51] [Server thread/INFO]:  BEDSPAWN: Player = maxkittyguy & server = Acualis & world = Acualis & coords = 403,120,-1796.
+[06:07:42] [Server thread/INFO]: MaxKittyGuy[/108.23.218.103:55267] logged in with entity id 284741 at ([Acualis] 689.4050060770518, 58.17939042872613, -1696.2571902162415)
+[06:08:01] [Server thread/INFO]: [Movecraft] Player MaxMonsterGuy has released a craft of type LightFreighter with size 496 at coordinates : 7 x , -17 z
+[06:08:27] [Server thread/INFO]: MaxMonsterGuy killed Moneybags118 wielding diamond sword on Acualis 
+[06:08:29] [Server thread/INFO]: Moneybags118 lost connection: Internal Exception: java.io.IOException: An established connection was aborted by the software in your host machine
+[06:08:38] [Server thread/INFO]: [Movecraft] Player MaxMonsterGuy has released a craft of type LightFreighter with size 488 at coordinates : 7 x , -17 z
+[06:08:42] [Server thread/INFO]: MaxMonsterGuy killed Loart wielding diamond sword on Acualis 
+[06:08:45] [Async Chat Thread - #13/INFO]: [Acu][Colonist]MaxMonsterGuy: WARRRR
+[06:08:54] [Server thread/INFO]:  BEDSPAWN: Player = loart & server = Iffrizar & world = Iffrizar & coords = -906,69,-905.
+[06:09:33] [Server thread/INFO]: Moneybags118[/24.129.9.28:55391] logged in with entity id 290959 at ([Acualis] 0.5, 104.0, 0.5)
+[06:09:34] [Server thread/INFO]: 5a824393-578b-4dae-9cfe-a7a5b7ac2ec3
+[06:09:59] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxKittyGuy: get out moneybags!!!
+[06:10:07] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxKittyGuy: we will kill u all!!!!
+[06:10:20] [Server thread/INFO]: Moneybags118 issued server command: /tp MaxMonsterGuy
+[06:10:23] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxKittyGuy: what hax?!
+[06:10:27] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxKittyGuy: our skills
+[06:10:31] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxKittyGuy: money!
+[06:10:44] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxMonsterGuy: ??
+[06:10:49] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxMonsterGuy: I
+[06:10:54] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxKittyGuy: hat fist fight
+[06:10:56] [Server thread/INFO]: Moneybags118 issued server command: /gm 0
+[06:10:58] [Server thread/INFO]: Moneybags118 issued server command: /fly
+[06:10:59] [Server thread/INFO]: §cMoneybags118 §4was denied access to command.
+[06:11:03] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxKittyGuy: you mean diamond sword enchanted
+[06:11:07] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxKittyGuy: ooohhh
+[06:11:23] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxMonsterGuy: ??
+[06:11:28] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxMonsterGuy: Whut
+[06:11:32] [Server thread/INFO]: [Info] it is illegal to use starship cannons to blast ship signs off in worldguard regions. 
+[06:11:33] [Server thread/INFO]: Moneybags118 issued server command: /gm 1
+[06:11:35] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxMonsterGuy: huh
+[06:11:38] [Server thread/WARN]: MaxKittyGuy moved wrongly!
+[06:11:50] [Server thread/INFO]: Moneybags118 issued server command: /gm 0
+[06:11:58] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxKittyGuy: wow
+[06:12:04] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxKittyGuy: because we killed feds
+[06:12:15] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxKittyGuy: they're players too
+[06:12:19] [Async Chat Thread - #14/INFO]: [Acu][Pirate][SrMod]Moneybags118: I have no issue that you killed me. I am bad at pvp anyways
+[06:12:22] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxKittyGuy: they tried to kill us
+[06:12:33] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxKittyGuy: even moneybags agrees
+[06:12:44] [Async Chat Thread - #14/INFO]: [Acu][Pirate][SrMod]Moneybags118: My issue is that your buddy somehow managed to hit me without knowing I was behind him
+[06:12:55] [Async Chat Thread - #14/INFO]: [Acu][Pirate][SrMod]Moneybags118: Whiped right around and wacked me
+[06:13:01] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxKittyGuy: he's bad at pvp so ur gonna ban us because we kille dhim
+[06:13:08] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxMonsterGuy: I dunno
+[06:13:13] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxMonsterGuy: Im bored
+[06:13:15] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxKittyGuy: we monitor dnmap a lot since we declared war
+[06:13:18] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxMonsterGuy: K
+[06:13:25] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxKittyGuy: no
+[06:13:29] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxKittyGuy: i dunno
+[06:13:35] [Async Chat Thread - #14/INFO]: [Acu][Pirate][SrMod]Moneybags118: Their allignment is a non issue
+[06:13:37] [Server thread/INFO]: Moneybags118 issued server command: /gm 1
+[06:14:30] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxMonsterGuy: ??
+[06:14:32] [Server thread/INFO]: MaxKittyGuy lost connection: Disconnected
+[06:14:47] [Async Chat Thread - #14/INFO]: [Acu][Colonist]MaxMonsterGuy: Bye moneybags?
+[06:14:48] [Server thread/INFO]: [Info] want some ideas for something to do? Check this out: http://tinyurl.com/starquestjobs 
+[06:15:02] [Server thread/INFO]: Moneybags118 issued server command: /duty

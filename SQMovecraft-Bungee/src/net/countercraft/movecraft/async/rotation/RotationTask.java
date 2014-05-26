@@ -26,6 +26,7 @@ import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.Rotation;
+import net.countercraft.movecraft.utils.SignUtils;
 
 import org.apache.commons.collections.ListUtils;
 import org.bukkit.Chunk;
@@ -236,6 +237,9 @@ public class RotationTask extends AsyncTask {
             			double[] rotatedCoords = MathUtils.rotateVecNoRound( rotation, adjustedCenter.getX(), adjustedCenter.getZ() );
             			Location rotatedCenter = new Location( getCraft().getW(), rotatedCoords[0], getCraft().originalPilotLoc.getY(), rotatedCoords[1] );
             			getCraft().originalPilotLoc = rotatedCenter.add( tOP );
+            			
+            			//rotate the craft's internal known direction
+            			getCraft().facingDirection = SignUtils.rotate(getCraft().facingDirection, rotation);
                         
                         // Calculate air changes
                         List<MovecraftLocation> airLocation = ListUtils.subtract( Arrays.asList( originalBlockList ), Arrays.asList( blockList ) );

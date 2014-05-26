@@ -65,6 +65,7 @@ public class Craft {
 	public Location originalPilotLoc = new Location(w,0,0,0);
 	public Player pilot;
 	public boolean sneakPressed;
+	public BlockFace facingDirection = BlockFace.NORTH;
 	
 	private int velocity = 0;
 	private int steps = 0;
