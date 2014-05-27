@@ -209,7 +209,7 @@ public class Craft {
 							// Location fLoc =
 							// twoinfront.getLocation().toVector().add(GunUtils.getFireBallVelocity(playerFacing).multiply(2)).toLocation(twoinfront.getWorld(),
 							// 0, 0);
-							Fireball f = ((Fireball) twoinfront.getLocation().getWorld().spawnEntity(twoinfront.getLocation(), EntityType.FIREBALL));
+							Fireball f = ((Fireball) twoinfront.getLocation().getWorld().spawn(twoinfront.getLocation(), Fireball.class));/*.spawnEntity(twoinfront.getLocation(), Fireball.class))*/
 							f.setDirection(GunUtils.getFireBallVelocity(playerFacing).multiply(2));
 							f.setShooter(pilot);
 							twoinfront.getWorld().playSound(twoinfront.getLocation(), Sound.SHOOT_ARROW, 2.0F, 1.0F);
