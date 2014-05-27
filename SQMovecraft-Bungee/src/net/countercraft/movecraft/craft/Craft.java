@@ -60,10 +60,10 @@ public class Craft {
 	public ArrayList<Player> playersRiding = new ArrayList<Player>();
 	public int warpCoordsX;
 	public int warpCoordsZ;
-	public Location originalPilotLoc = new Location(w,0,0,0);
+	public Location originalPilotLoc = new Location(w, 0, 0, 0);
 	public Player pilot;
 
-	public Craft( CraftType type, World world ) {
+	public Craft(CraftType type, World world) {
 		this.type = type;
 		this.w = world;
 		this.blockList = new MovecraftLocation[1];
@@ -73,22 +73,21 @@ public class Craft {
 		zDist = 0;
 	}
 
-/*	public boolean isNotProcessing() {
-		return !processing.get();
-	}
-
-	public void setProcessing( boolean processing ) {
-		this.processing.set( processing );
-	}*/
+	/*
+	 * public boolean isNotProcessing() { return !processing.get(); }
+	 * 
+	 * public void setProcessing( boolean processing ) { this.processing.set(
+	 * processing ); }
+	 */
 
 	public MovecraftLocation[] getBlockList() {
-		synchronized ( blockList ) {
+		synchronized (blockList) {
 			return blockList.clone();
 		}
 	}
 
-	public void setBlockList( MovecraftLocation[] blockList ) {
-		synchronized ( this.blockList ) {
+	public void setBlockList(MovecraftLocation[] blockList) {
+		synchronized (this.blockList) {
 			this.blockList = blockList;
 		}
 	}
@@ -105,38 +104,38 @@ public class Craft {
 		return hitBox;
 	}
 
-	public void setHitBox( int[][][] hitBox ) {
+	public void setHitBox(int[][][] hitBox) {
 		this.hitBox = hitBox;
 	}
 
-	public void detect( String playerName, MovecraftLocation startPoint ) {
+	public void detect(String playerName, MovecraftLocation startPoint) {
 		pilot = Bukkit.getServer().getPlayer(playerName);
 		CraftPilotEvent event = new CraftPilotEvent(this);
-		if(event.call())
-		AsyncManager.getInstance().submitTask( new DetectionTask( this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), playerName, w ), this );
+		if (event.call())
+			AsyncManager.getInstance().submitTask(new DetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), playerName, w), this);
 	}
 
-	public void translate( int dx, int dy, int dz ) {
-		if(w.getEnvironment() == Environment.THE_END) WarpUtils.translate(this, dx, dy, dz);
+	public void translate(int dx, int dy, int dz) {
+		if (w.getEnvironment() == Environment.THE_END)
+			WarpUtils.translate(this, dx, dy, dz);
 		else {
-			TranslationTaskData data = new TranslationTaskData( dx, dz, dy, getBlockList(), getHitBox(), minZ, minX, type.getMaxHeightLimit(), type.getMinHeightLimit());
+			TranslationTaskData data = new TranslationTaskData(dx, dz, dy, getBlockList(), getHitBox(), minZ, minX, type.getMaxHeightLimit(), type.getMinHeightLimit());
 			CraftSyncTranslateEvent event = new CraftSyncTranslateEvent(this, data);
-			if(event.call()){
-				AsyncManager.getInstance().submitTask( new TranslationTask( this, data ), this );
+			if (event.call()) {
+				AsyncManager.getInstance().submitTask(new TranslationTask(this, data), this);
 			}
 		}
 	}
 
-	public void rotate( Rotation rotation, MovecraftLocation originPoint ) {
-		AsyncManager.getInstance().submitTask( new RotationTask( this, originPoint, this.getBlockList(), rotation, this.getW()), this );
+	public void rotate(Rotation rotation, MovecraftLocation originPoint) {
+		AsyncManager.getInstance().submitTask(new RotationTask(this, originPoint, this.getBlockList(), rotation, this.getW()), this);
 	}
-
 
 	public int getMinX() {
 		return minX;
 	}
 
-	public void setMinX( int minX ) {
+	public void setMinX(int minX) {
 		this.minX = minX;
 	}
 
@@ -144,78 +143,93 @@ public class Craft {
 		return minZ;
 	}
 
-	public void setMinZ( int minZ ) {
+	public void setMinZ(int minZ) {
 		this.minZ = minZ;
 	}
-	
-	public int getMoveTaskId(){
+
+	public int getMoveTaskId() {
 		return moveTaskID;
 	}
-	
-	public void setMoveTaskId(int taskID){
+
+	public void setMoveTaskId(int taskID) {
 		moveTaskID = taskID;
 	}
-	
+
 	@SuppressWarnings("deprecation")
-	public void extendLandingGear(){
-		for (MovecraftLocation l: getBlockList()) {
+	public void extendLandingGear() {
+		for (MovecraftLocation l : getBlockList()) {
 			Block b = w.getBlockAt(l.getX(), l.getY(), l.getZ());
-			if (b.getType() == Material.PISTON_BASE && b.getData() == 0){
+			if (b.getType() == Material.PISTON_BASE && b.getData() == 0) {
 				Block above = b.getRelative(BlockFace.UP);
-				if (above.getType() == Material.SPONGE){
-						Block belowTwo = b.getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN);
-						if (belowTwo.getType() != Material.AIR){
-							above.setTypeIdAndData(152, (byte) 0, true);
-						}
+				if (above.getType() == Material.SPONGE) {
+					Block belowTwo = b.getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN);
+					if (belowTwo.getType() != Material.AIR) {
+						above.setTypeIdAndData(152, (byte) 0, true);
+					}
 				}
 			}
 		}
 	}
+
 	@SuppressWarnings("deprecation")
-	public void retractLandingGear(){
-		for (MovecraftLocation l : getBlockList()){
+	public void retractLandingGear() {
+		for (MovecraftLocation l : getBlockList()) {
 			Block b = w.getBlockAt(l.getX(), l.getY(), l.getZ());
-			if (b.getType() == Material.PISTON_BASE && b.getData() == 8){
+			if (b.getType() == Material.PISTON_BASE && b.getData() == 8) {
 				Block above = b.getRelative(BlockFace.UP);
-				if (above.getTypeId() == 152){
+				if (above.getTypeId() == 152) {
 					above.setTypeIdAndData(19, (byte) 0, true);
 				}
 			}
 		}
 	}
+
 	@SuppressWarnings("deprecation")
-	public void shootGuns(Player p){
-		
+	public void shootGuns(Player p) {
+
 		BlockFace playerFacing = GunUtils.yawToFace(p.getLocation().getYaw());
 		int datavalue = GunUtils.getIntegerDirection(playerFacing);
-		
-		this.processing.set(true);
-		for (MovecraftLocation l: getBlockList()){
-			
-			Block b = w.getBlockAt(l.getX(), l.getY(), l.getZ());
-			
-			if (b.getType() == Material.PISTON_BASE){
-				
-				if (b.getData() == datavalue){
-					final Block behind = GunUtils.getBlockBehind(b);
-					if (behind.getType() == Material.SPONGE){
-		
-						Block twoinfront = b.getRelative(playerFacing).getRelative(playerFacing);
-						
-						behind.setType(Material.REDSTONE_BLOCK);
-						Fireball f = ((Fireball) twoinfront.getLocation().getWorld().spawnEntity(twoinfront.getLocation(), EntityType.FIREBALL));
-						f.setDirection(GunUtils.getFireBallVelocity(playerFacing));
-						f.setShooter(pilot);
-						twoinfront.getWorld().playSound(twoinfront.getLocation(), Sound.SHOOT_ARROW, 2.0F, 1.0F);
-						
-						Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 
-							@Override
-							public void run() {
-								behind.setType(Material.SPONGE);
-								processing.set(false);
-							}
-						}, 5L);
+		if (!this.processing.get()) {
+			this.processing.set(true);
+			for (MovecraftLocation l : getBlockList()) {
+
+				Block b = w.getBlockAt(l.getX(), l.getY(), l.getZ());
+
+				if (b.getType() == Material.PISTON_BASE) {
+
+					if (b.getData() == datavalue) {
+						final Block behind = GunUtils.getBlockBehind(b);
+						if (behind.getType() == Material.SPONGE) {
+
+							Block twoinfront = b.getRelative(playerFacing).getRelative(playerFacing);
+
+							behind.setType(Material.REDSTONE_BLOCK);
+
+							// Location fLoc =
+							// twoinfront.getLocation().toVector().add(GunUtils.getFireBallVelocity(playerFacing).multiply(2)).toLocation(twoinfront.getWorld(),
+							// 0, 0);
+							Fireball f = ((Fireball) twoinfront.getLocation().getWorld().spawnEntity(twoinfront.getLocation(), EntityType.FIREBALL));
+							f.setDirection(GunUtils.getFireBallVelocity(playerFacing).multiply(2));
+							f.setShooter(pilot);
+							twoinfront.getWorld().playSound(twoinfront.getLocation(), Sound.SHOOT_ARROW, 2.0F, 1.0F);
+
+							Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+
+								@Override
+								public void run() {
+									behind.setType(Material.SPONGE);
+								}
+							}, 5L);
+
+							Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+
+								@Override
+								public void run() {
+									processing.set(false);
+								}
+							}, 7L);
+						}
 					}
 				}
 			}
