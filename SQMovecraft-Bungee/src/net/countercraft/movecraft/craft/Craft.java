@@ -162,9 +162,12 @@ public class Craft {
 			if (b.getType() == Material.PISTON_BASE && b.getData() == 0) {
 				Block above = b.getRelative(BlockFace.UP);
 				if (above.getType() == Material.SPONGE) {
-					Block belowTwo = b.getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN);
-					if (belowTwo.getType() != Material.AIR) {
-						above.setTypeIdAndData(152, (byte) 0, true);
+					Block below = b.getRelative(BlockFace.DOWN);
+					if (below.getType() == Material.AIR) {
+						Block belowTwo = below.getRelative(BlockFace.DOWN);
+						if (belowTwo.getType() != Material.AIR) {
+							above.setTypeIdAndData(152, (byte) 0, true);
+						}
 					}
 				}
 			}
@@ -209,7 +212,22 @@ public class Craft {
 							// Location fLoc =
 							// twoinfront.getLocation().toVector().add(GunUtils.getFireBallVelocity(playerFacing).multiply(2)).toLocation(twoinfront.getWorld(),
 							// 0, 0);
-							Fireball f = ((Fireball) twoinfront.getLocation().getWorld().spawn(twoinfront.getLocation(), Fireball.class));/*.spawnEntity(twoinfront.getLocation(), Fireball.class))*/
+							Fireball f = ((Fireball) twoinfront.getLocation().getWorld().spawn(twoinfront.getLocation(), Fireball.class));/*
+																																		 * .
+																																		 * spawnEntity
+																																		 * (
+																																		 * twoinfront
+																																		 * .
+																																		 * getLocation
+																																		 * (
+																																		 * )
+																																		 * ,
+																																		 * Fireball
+																																		 * .
+																																		 * class
+																																		 * )
+																																		 * )
+																																		 */
 							f.setDirection(GunUtils.getFireBallVelocity(playerFacing).multiply(2));
 							f.setShooter(pilot);
 							twoinfront.getWorld().playSound(twoinfront.getLocation(), Sound.SHOOT_ARROW, 2.0F, 1.0F);

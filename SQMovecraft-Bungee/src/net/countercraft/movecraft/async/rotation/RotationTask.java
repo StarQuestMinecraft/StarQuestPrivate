@@ -163,6 +163,7 @@ public class RotationTask extends AsyncTask {
                                 if ( w.getBlockTypeIdAt( blockList[i].getX(), blockList[i].getY(), blockList[i].getZ() ) != 0 && !existingBlockSet.contains( blockList[i] ) ) {
                                         failed = true;
                                         failMessage = String.format( I18nSupport.getInternationalisedString( "Rotation - Craft is obstructed" ) );
+                                        getCraft().processing.compareAndSet(false, true);
                                         break;
                                 } else {
                                         int id = w.getBlockTypeIdAt( originalBlockList[i].getX(), originalBlockList[i].getY(), originalBlockList[i].getZ() );

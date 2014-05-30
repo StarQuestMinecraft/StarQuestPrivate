@@ -210,7 +210,7 @@ public class AsyncManager extends BukkitRunnable {
 
 						MapUpdateCommand[] updates = task.getData().getUpdates();
 						EntityUpdateCommand[] eUpdates=task.getData().getEntityUpdates();
-						boolean failed = MapUpdateManager.getInstance().addWorldUpdate( c.getW(), updates, eUpdates );
+						boolean failed = (updates != null) && MapUpdateManager.getInstance().addWorldUpdate( c.getW(), updates, eUpdates );
 
 						if ( !failed ) {
 
@@ -259,6 +259,7 @@ public class AsyncManager extends BukkitRunnable {
 					if ( task.isFailed() ) {
 						//The craft translation failed
 						p.sendMessage( task.getFailMessage() );
+						clear(c);
 					} else {
 						MapUpdateCommand[] updates = task.getUpdates();
 						EntityUpdateCommand[] eUpdates=task.getEntityUpdates();

@@ -90,7 +90,10 @@ public class MapUpdateManager extends BukkitRunnable {
                 }
                 if(!foundChunk) {
                         chunk = w.getBlockAt( x, y, z ).getChunk();
-                        chunkList.add(chunk);                                                        
+                        chunkList.add(chunk);
+                        if(!chunk.isLoaded()){
+                        	chunk.load();
+                        }
                 }
 
                 net.minecraft.server.v1_7_R1.Chunk c = null;
