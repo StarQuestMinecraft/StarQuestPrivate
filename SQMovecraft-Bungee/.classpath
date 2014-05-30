@@ -9,5 +9,8 @@
 	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/spigot.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/WorldEdit.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/BungeeCordLib.jar"/>
+	<classpathentry kind="lib" path="libs/BungeeCordLib.jar"/>
+	<classpathentry kind="lib" path="libs/spigot.jar"/>
+	<classpathentry kind="lib" path="libs/WorldEdit.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
