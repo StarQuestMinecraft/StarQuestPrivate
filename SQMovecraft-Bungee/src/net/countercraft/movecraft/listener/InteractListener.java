@@ -139,11 +139,12 @@ public class InteractListener implements Listener {
 					}
 	
 					event.setCancelled( true );
-				}
-				event.getPlayer().sendMessage("You do not have permission for this type of craft!");
+				} else {
+				event.getPlayer().sendMessage(ChatColor.RED + "You do not have permission for this type of craft!");
 				return;
+				}
 			}
-			event.getPlayer().sendMessage("You aren't a captain of this ship.");
+			event.getPlayer().sendMessage(ChatColor.RED + "You aren't a captain of this ship.");
 
 		} else if ( sign.getLine( 0 ).equalsIgnoreCase( "[helm]" ) ) {
 			sign.setLine( 0, "\\  ||  /" );

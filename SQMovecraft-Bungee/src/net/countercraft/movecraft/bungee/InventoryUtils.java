@@ -1,41 +1,27 @@
+
 package net.countercraft.movecraft.bungee;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.util.Arrays;
-import java.util.Map;
-import java.util.Map.Entry;
- 
-
-
-
-
-
-
-
-
-
-
-
 
 import net.countercraft.movecraft.utils.external.CardboardBox;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import us.higashiyama.george.CardboardBox.Knapsack;
+
 public class InventoryUtils {
-	
+
+	//@formatting:off
 	 /*public void saveInv(Arguments entry) {
 		  Player p = getServer().getPlayer(entry.getKey());
 		  Inventory armorInv = Bukkit.createInventory(p, 9);
@@ -101,6 +87,31 @@ public class InventoryUtils {
         }
         return serialization;
     }*/
+	
+	public static void writePlayer(DataOutputStream os, Player p){
+		try {
+			ObjectOutputStream out = new ObjectOutputStream(os);
+			out.writeObject(new Knapsack(p));
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+	}
+	
+	public static Knapsack readPlayer(DataInputStream ips){
+		Knapsack playerKnap = null;
+		try {
+			ObjectInputStream in = new ObjectInputStream(ips);
+			playerKnap = (Knapsack) in.readObject();
+			in.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return playerKnap;
+	}
+	
 	public static void writeInventory(DataOutputStream os, Inventory inventory){
 		try {
 			os.writeInt(inventory.getSize());

@@ -119,7 +119,7 @@ public class AsyncManager extends BukkitRunnable {
 						boolean failed = false;
 						
 						if (numcannons(data.getBlockList(), c.getW()) > c.getType().getAllowedCannons()){
-							Movecraft.getInstance().getServer().getPlayer(data.getPlayername()).sendMessage("Your ship has too many cannons!");
+							Movecraft.getInstance().getServer().getPlayer(data.getPlayername()).sendMessage(ChatColor.RED + "Your ship has too many cannons!");
 							failed = true;
 						}
 						if ( craftsInWorld != null ) {
@@ -141,7 +141,7 @@ public class AsyncManager extends BukkitRunnable {
 								if (s.getLine(0).equals("[private]")){
 									if (!Movecraft.signContainsPlayername(s, data.getPlayername())){
 										failed = true;
-										Movecraft.getInstance().getServer().getPlayer(data.getPlayername()).sendMessage("You are attatched to a door that is locked to someone besides you.");
+										Movecraft.getInstance().getServer().getPlayer(data.getPlayername()).sendMessage(ChatColor.RED + "You are attatched to a door that is locked to someone besides you.");
 									}
 								}
 								//check each sign to see if it's a craft sign
@@ -151,7 +151,7 @@ public class AsyncManager extends BukkitRunnable {
 									if (c.getType().equals(InteractListener.getCraftTypeFromString("Carrier")) || c.getType().equals(InteractListener.getCraftTypeFromString("Flagship"))){
 										if (!Movecraft.signContainsPlayername(s, data.getPlayername())){
 											failed = true;
-											Movecraft.getInstance().getServer().getPlayer(data.getPlayername()).sendMessage("Your ship seems to be attatched to another ship that isn't yours.");
+											Movecraft.getInstance().getServer().getPlayer(data.getPlayername()).sendMessage(ChatColor.RED + "Your ship seems to be attatched to another ship that isn't yours.");
 										}
 										
 									//other ships
@@ -166,7 +166,7 @@ public class AsyncManager extends BukkitRunnable {
 											}
 										}else{
 											failed = true;
-											Movecraft.getInstance().getServer().getPlayer(data.getPlayername()).sendMessage("Your ship seems to have more than one ship sign, or is attatched to another ship.");
+											Movecraft.getInstance().getServer().getPlayer(data.getPlayername()).sendMessage(ChatColor.RED + "Your ship seems to have more than one ship sign, or is attatched to another ship.");
 											break;
 										}
 									}

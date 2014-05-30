@@ -12,7 +12,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import us.higashiyama.george.CardboardBox.Meta.CardboardItemMeta;
 import us.higashiyama.george.CardboardBox.Meta.CardboardMetaBook;
@@ -27,7 +26,7 @@ import us.higashiyama.george.CardboardBox.Utils.CardboardEnchantment;
 /**
  * A serializable ItemStack
  */
-public class CardboardBox extends JavaPlugin implements Serializable {
+public class CardboardBox implements Serializable {
 
 	private static final long serialVersionUID = 729890133797629668L;
 
