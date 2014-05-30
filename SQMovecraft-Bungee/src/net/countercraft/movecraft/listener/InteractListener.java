@@ -140,6 +140,7 @@ public class InteractListener implements Listener {
 	
 					event.setCancelled( true );
 				}
+				event.getPlayer().sendMessage("You do not have permission for this type of craft!");
 				return;
 			}
 			event.getPlayer().sendMessage("You aren't a captain of this ship.");

@@ -80,6 +80,11 @@ public class BungeePlayerHandler {
 		msgout.writeFloat(p.getExp());
 		msgout.writeInt(gameModeToInt(p.getGameMode()));
 	}
+	
+	public static void wipePlayerInventory(Player p){
+		p.getInventory().clear();
+		p.getInventory().setArmorContents(null);
+	}
 
 	public static void recievePlayer(DataInputStream in) {
 		try {

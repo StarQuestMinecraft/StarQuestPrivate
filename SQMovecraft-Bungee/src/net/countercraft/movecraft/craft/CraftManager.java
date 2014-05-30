@@ -88,7 +88,7 @@ public class CraftManager {
 		craftPlayerIndex.put( p, c );
 	}
 
-	public void removeCraft( Craft c ) {
+	public void removeCraft( Craft c) {
 		c.extendLandingGear();
 		craftList.get( c.getW() ).remove( c );
 		Player p = getPlayerFromCraft( c );
@@ -105,13 +105,16 @@ public class CraftManager {
 				plr.sendMessage("The ship has been released, you are no longer riding on it.");
 			}
 			//process and update bedspawns
-			for (String s : c.playersWithBedSpawnsOnShip){
-				Bedspawn b = Bedspawn.getBedspawn(s);
-				b.x = b.x + c.xDist;
-				b.y = b.y + c.yDist;
-				b.z = b.z + c.zDist;
-				Bedspawn.saveBedspawn(b);
-			}
+		}
+	}
+	
+	public void updateBedspawns(Craft c){
+		for (String s : c.playersWithBedSpawnsOnShip){
+			Bedspawn b = Bedspawn.getBedspawn(s);
+			b.x = b.x + c.xDist;
+			b.y = b.y + c.yDist;
+			b.z = b.z + c.zDist;
+			Bedspawn.saveBedspawn(b);
 		}
 	}
 

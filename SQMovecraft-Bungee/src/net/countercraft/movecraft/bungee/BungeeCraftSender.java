@@ -126,6 +126,7 @@ public class BungeeCraftSender {
 		for(Player plr : c.playersRiding){
 			Location l = plr.getLocation();
 			BungeePlayerHandler.writePlayerData(msgout, plr, targetserver, world, l.getBlockX(), l.getBlockY(), l.getBlockZ());
+			BungeePlayerHandler.wipePlayerInventory(plr);
 		}
 		
 		return msgbytes.toByteArray();
