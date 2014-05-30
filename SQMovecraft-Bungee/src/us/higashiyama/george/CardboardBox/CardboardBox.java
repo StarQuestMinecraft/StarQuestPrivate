@@ -114,14 +114,6 @@ public class CardboardBox implements Serializable {
 		@SuppressWarnings("deprecation")
 		ItemStack item = new ItemStack(type, amount, damage);
 
-		HashMap<Enchantment, Integer> map = new HashMap<Enchantment, Integer>();
-
-		for (CardboardEnchantment cEnchantment : enchants.keySet()) {
-			map.put(cEnchantment.unbox(), enchants.get(cEnchantment));
-		}
-
-		item.addUnsafeEnchantments(map);
-
 		// These metas below will never be null because of the if/else during
 		// the packing
 
@@ -140,6 +132,14 @@ public class CardboardBox implements Serializable {
 		}
 		// Apply item meta
 		item.setItemMeta(itemMeta);
+
+		HashMap<Enchantment, Integer> map = new HashMap<Enchantment, Integer>();
+
+		for (CardboardEnchantment cEnchantment : enchants.keySet()) {
+			map.put(cEnchantment.unbox(), enchants.get(cEnchantment));
+		}
+
+		item.addUnsafeEnchantments(map);
 
 		return item;
 	}
