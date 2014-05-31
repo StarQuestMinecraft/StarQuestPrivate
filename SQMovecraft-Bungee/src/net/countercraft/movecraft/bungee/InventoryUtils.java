@@ -6,14 +6,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 import us.higashiyama.george.CardboardBox.CardboardBox;
 import us.higashiyama.george.CardboardBox.Knapsack;
@@ -145,6 +143,7 @@ public class InventoryUtils {
 		}
 		return inv;
 	}
+	/*
 	public static void writePlayerInventory(DataOutputStream os, PlayerInventory inventory){
 		try {
 			ObjectOutputStream out = new ObjectOutputStream(os);
@@ -167,6 +166,8 @@ public class InventoryUtils {
 			return;
 		}
 	}
+	*/
+/*	
 	public static ItemStack[] readPlayerInventory(DataInputStream ips){
 		ItemStack[] data = new ItemStack[40];
 		try {
@@ -194,7 +195,8 @@ public class InventoryUtils {
 		ItemStack[] invcontents = Arrays.copyOfRange(items, 4, items.length);
 		inv.setContents(invcontents);
 	}
-   
+   */
+	
    /* public static Inventory StringToInventory (String invString)
     {
         String[] serializedBlocks = invString.split(";");

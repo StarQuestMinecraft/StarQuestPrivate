@@ -16,11 +16,13 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 
 import us.higashiyama.george.CardboardBox.Knapsack;
 
 public class BungeePlayerHandler {
 
+//@formatting:off
 	public static ArrayList<PlayerTeleport> teleportQueue = new ArrayList<PlayerTeleport>();
 
 	public static void sendPlayer(Player p, String targetserver, String world, int X, int Y, int Z) {
@@ -87,6 +89,9 @@ public class BungeePlayerHandler {
 
 		p.getInventory().clear();
 		p.getInventory().setArmorContents(null);
+		for(PotionEffect effect : p.getActivePotionEffects()) {
+			p.removePotionEffect(effect.getType());
+		}
 	}
 
 	public static void recievePlayer(DataInputStream in) {

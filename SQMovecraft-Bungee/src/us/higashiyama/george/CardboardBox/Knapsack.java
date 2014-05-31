@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import us.higashiyama.george.CardboardBox.Utils.CardboardPotionEffect;
 
@@ -26,7 +28,7 @@ public class Knapsack implements Serializable {
 	public Knapsack(Player p) {
 
 		this.hunger = p.getFoodLevel();
-		health = p.getHealth();
+		this.health = p.getHealth();
 		this.xp = p.getExp();
 		this.xpLevel = p.getLevel();
 		this.potions = CardboardPotionEffect.boxPotions(p.getActivePotionEffects());
@@ -43,6 +45,18 @@ public class Knapsack implements Serializable {
 		p.setLevel(this.xpLevel);
 		p.addPotionEffects(CardboardPotionEffect.unboxPotions(this.potions));
 		this.inventory.unpack(p.getInventory());
-		p.getInventory().setArmorContents(this.armor.unpackItemArray());
+		ItemStack[] armor = this.armor.unpackItemArray();
+		System.out.println("ARMOR ARRAY SIZE: " + armor.length);
+		for (ItemStack stack : armor) {
+			if (stack == null)
+				System.out.println("STACK WAS NULL");
+			System.out.println(stack.getType().toString());
+		}
+		PlayerInventory inv = p.getInventory();
+		inv.setHelmet(armor[3]);
+		inv.setChestplate(armor[2]);
+		inv.setLeggings(armor[1]);
+		inv.setBoots(armor[0]);
+
 	}
 }
