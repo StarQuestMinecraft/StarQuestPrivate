@@ -10,5 +10,9 @@
 	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/BungeeCordLib.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/spigot.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/WorldEdit.jar"/>
+<<<<<<< HEAD
+=======
+	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/BungeeCordLib.jar"/>
+>>>>>>> parent of 609bd54... Addition of libraries and CardboardSystems
 	<classpathentry kind="output" path="bin"/>
 </classpath>
