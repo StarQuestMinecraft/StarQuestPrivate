@@ -26,7 +26,7 @@ public class Knapsack implements Serializable {
 	public Knapsack(Player p) {
 
 		this.hunger = p.getFoodLevel();
-		this.health = p.getHealth();
+		health = p.getHealth();
 		this.xp = p.getExp();
 		this.xpLevel = p.getLevel();
 		this.potions = CardboardPotionEffect.boxPotions(p.getActivePotionEffects());

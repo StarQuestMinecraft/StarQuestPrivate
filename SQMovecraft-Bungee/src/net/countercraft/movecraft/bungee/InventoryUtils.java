@@ -8,8 +8,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Arrays;
 
-import net.countercraft.movecraft.utils.external.CardboardBox;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -17,6 +15,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import us.higashiyama.george.CardboardBox.CardboardBox;
 import us.higashiyama.george.CardboardBox.Knapsack;
 
 public class InventoryUtils {
