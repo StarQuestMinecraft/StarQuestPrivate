@@ -46,12 +46,6 @@ public class Knapsack implements Serializable {
 		p.addPotionEffects(CardboardPotionEffect.unboxPotions(this.potions));
 		this.inventory.unpack(p.getInventory());
 		ItemStack[] armor = this.armor.unpackItemArray();
-		System.out.println("ARMOR ARRAY SIZE: " + armor.length);
-		for (ItemStack stack : armor) {
-			if (stack == null)
-				System.out.println("STACK WAS NULL");
-			System.out.println(stack.getType().toString());
-		}
 		PlayerInventory inv = p.getInventory();
 		inv.setHelmet(armor[3]);
 		inv.setChestplate(armor[2]);
