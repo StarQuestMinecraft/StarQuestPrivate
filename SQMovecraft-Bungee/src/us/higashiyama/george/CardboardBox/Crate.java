@@ -26,11 +26,14 @@ public class Crate implements Serializable {
 
 	public Crate(ItemStack[] i) {
 
+		System.out.println("CONSTRTUCTOR FROMA RRAY");
+
 		for (ItemStack is : i) {
 			if (is == null) {
 				storage.add(new CardboardBox(new ItemStack(0)));
 			} else {
-
+				System.out.println("Constructor Array: " + is.getType().toString());
+				System.out.println(new CardboardBox(is));
 				storage.add(new CardboardBox(is));
 			}
 		}
@@ -55,14 +58,16 @@ public class Crate implements Serializable {
 		for (int x = 0; x < i.getSize() - 1; x++) {
 			i.setItem(x, unpacked.get(x));
 		}
+
 	}
 
 	public ItemStack[] unpackItemArray() {
 
 		ItemStack[] unpacked = new ItemStack[this.storage.size()];
 
-		for (int x = 0; x < unpacked.length - 1; x++) {
+		for (int x = 0; x < unpacked.length; x++) {
 			unpacked[x] = this.storage.get(x).unbox();
+			System.out.println(x + "|" + unpacked[x].toString());
 		}
 
 		return unpacked;

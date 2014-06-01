@@ -37,4 +37,5 @@ public class CardboardMetaSkull implements CardboardItemMeta, Serializable {
 
 		return meta;
 	}
+
 }
