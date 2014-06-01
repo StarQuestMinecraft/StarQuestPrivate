@@ -73,6 +73,7 @@ public class Bedspawn {
 	}
 	
 	public static ArrayList<Bedspawn> loadBedspawnList(MovecraftLocation location, String world) {
+		//TODO This method needs to be redone for a smaller radius!
 		int craftX = location.getX() - 1;
 		int craftZ = location.getZ() - 1;
 		ArrayList<Bedspawn> bedspawnList = new ArrayList<Bedspawn>();

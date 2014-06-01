@@ -22,6 +22,15 @@ commands:
    loadship:
       description: sdfsdf
       usage: sdfsdf
+   nukeship:
+      description: ssdfsdf
+      usage: sdfsdf
 depend:
    - WorldEdit
 
+permissions:
+    movecraft.*:
+        description: Gives access to all movecraft commands
+        children:
+            movecraft.override: true
+            movecraft.loadship: true

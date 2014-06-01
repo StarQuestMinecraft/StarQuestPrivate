@@ -39,6 +39,7 @@ import net.countercraft.movecraft.metrics.MovecraftMetrics;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MovecraftLocation;
+import net.countercraft.movecraft.utils.ShipNuker;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -111,6 +112,11 @@ public class Movecraft extends JavaPlugin {
 			}
 			sender.sendMessage("you don't have permission.");
 			return true;
+		} else if(cmd.getName().equalsIgnoreCase("nukeship")){
+			if(sender.hasPermission("movecraft.loadship")){
+				ShipNuker.nuke((Player) sender);
+				sender.sendMessage("Ship nuked!");
+			}
 		}
 		return false;
 	}

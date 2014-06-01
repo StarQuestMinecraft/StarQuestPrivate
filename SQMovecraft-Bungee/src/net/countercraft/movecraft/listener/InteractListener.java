@@ -83,7 +83,7 @@ public class InteractListener implements Listener {
 				if ( sign.getLine( 0 ).equals( "\\  ||  /" ) && sign.getLine( 1 ).equals( "==      ==" ) && sign.getLine( 2 ).equals( "/  ||  \\" ) ) {
 					Craft craft = CraftManager.getInstance().getCraftByPlayer( event.getPlayer() );
 					if ( craft != null ) {
-						if ( event.getPlayer().hasPermission( "movecraft." + craft.getType().getCraftName() + ".rotate" ) ) {
+						if ( event.getPlayer().hasPermission( "movecraft." + craft.getType().getCraftName() + ".rotate" ) || event.getPlayer().hasPermission("movecraft.override")) {
 
 							Long time = timeMap.get( event.getPlayer() );
 							if ( time != null ) {
@@ -121,9 +121,9 @@ public class InteractListener implements Listener {
 
 
 		if ( getCraftTypeFromString( sign.getLine( 0 ) ) != null ) {
-			if (Movecraft.signContainsPlayername(sign, event.getPlayer().getName())) {
+			if (Movecraft.signContainsPlayername(sign, event.getPlayer().getName()) || event.getPlayer().hasPermission("movecraft.override")) {
 				// Valid sign prompt for ship command.
-				if ( event.getPlayer().hasPermission( "movecraft." + sign.getLine( 0 ) + ".pilot" ) ) {
+				if ( event.getPlayer().hasPermission( "movecraft." + sign.getLine( 0 ) + ".pilot" ) || event.getPlayer().hasPermission("movecraft.override") ) {
 					// Attempt to run detection
 					Location loc = event.getClickedBlock().getLocation();
 					MovecraftLocation startPoint = new MovecraftLocation( loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() );
@@ -154,7 +154,7 @@ public class InteractListener implements Listener {
 		} else if ( sign.getLine( 0 ).equals( "\\  ||  /" ) && sign.getLine( 1 ).equals( "==      ==" ) && sign.getLine( 2 ).equals( "/  ||  \\" ) ) {
 			Craft craft = CraftManager.getInstance().getCraftByPlayer( event.getPlayer() );
 			if ( craft != null ) {
-				if ( event.getPlayer().hasPermission( "movecraft." + craft.getType().getCraftName() + ".rotate" ) ) {
+				if ( event.getPlayer().hasPermission( "movecraft." + craft.getType().getCraftName() + ".rotate" )  || event.getPlayer().hasPermission("movecraft.override")) {
 					Long time = timeMap.get( event.getPlayer() );
 					if ( time != null ) {
 						long ticksElapsed = ( System.currentTimeMillis() - time ) / 50;
