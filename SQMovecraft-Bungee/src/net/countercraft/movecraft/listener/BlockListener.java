@@ -44,7 +44,7 @@ public class BlockListener implements Listener {
 		for (CraftType t : CraftManager.getInstance().getCraftTypes()) {
 			if (event.getLine(0).equalsIgnoreCase(t.getCraftName())) {
 				if (event.getLine(1) == null || event.getLine(1).equals("")){
-					event.setLine(1, event.getPlayer().getName());
+					event.setLine(1, event.getPlayer().getName().substring(0,15));
 				}
 			}
 		}

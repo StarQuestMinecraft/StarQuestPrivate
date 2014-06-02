@@ -129,9 +129,9 @@ public class InteractListener implements Listener {
 					// Attempt to run detection
 					Location loc = event.getClickedBlock().getLocation();
 					MovecraftLocation startPoint = new MovecraftLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-					Craft c = new Craft(getCraftTypeFromString(sign.getLine(0)), loc.getWorld());
 
 					if (CraftManager.getInstance().getCraftByPlayer(event.getPlayer()) == null) {
+						Craft c = new Craft(getCraftTypeFromString(sign.getLine(0)), loc.getWorld());
 						c.detect(event.getPlayer().getName(), startPoint);
 					} else {
 						Craft pCraft = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());

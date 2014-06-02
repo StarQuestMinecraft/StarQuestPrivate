@@ -223,13 +223,10 @@ public class Movecraft extends JavaPlugin {
 	}
 	
 	public static boolean signContainsPlayername(Sign sign, String name){
-		if (name.length() <= 15){
-			if (name.equals(sign.getLine(1)) || name.equals(sign.getLine(2)) || name.equals(sign.getLine(3))){
-				return true;
-			}
-		} else {
-			String name2 = name.substring(0, 15);
-			if (name2.equals(sign.getLine(1)) || name2.equals(sign.getLine(2)) || name2.equals(sign.getLine(3))){
+		String[] lines = sign.getLines();
+		for(int i = 1; i < 4; i++){
+			String s = lines[i];
+			if(name.equals(s) || name.startsWith(s)){
 				return true;
 			}
 		}

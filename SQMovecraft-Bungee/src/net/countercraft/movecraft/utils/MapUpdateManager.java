@@ -121,7 +121,6 @@ public class MapUpdateManager extends BukkitRunnable {
                 }
 
                 int origType=w.getBlockAt( x, y, z ).getTypeId();
-                byte origData=w.getBlockAt( x, y, z ).getData();
                 boolean success = false;
 
                 //don't blank out block if it's already air, or if blocktype will not be changed
