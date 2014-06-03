@@ -91,14 +91,16 @@ public class CraftManager {
 	public void removeCraft( Craft c) {
 		c.extendLandingGear();
 		craftList.get( c.getW() ).remove( c );
-		Player p = getPlayerFromCraft( c );
+		Player p = c.pilot;
+		
+		if(AutopilotRunTask.autopilotingCrafts.contains(c)){
+			AutopilotRunTask.stopAutopiloting(c, p);
+		}
+		
 		if (p  != null ) {
 			p.sendMessage( String.format( I18nSupport.getInternationalisedString( "Release - Craft has been released message" ) ) );
 			Movecraft.getInstance().getLogger().log( Level.INFO, String.format( I18nSupport.getInternationalisedString( "Release - Player has released a craft console" ), getPlayerFromCraft( c ).getName(), c.getType().getCraftName(), c.getBlockList().length, c.getMinX(), c.getMinZ() ) );
 			
-			if(AutopilotRunTask.autopilotingCrafts.contains(c)){
-				AutopilotRunTask.stopAutopiloting(c, p);
-			}
 			craftPlayerIndex.remove( p );
 			
 			for(Player plr: c.playersRiding){

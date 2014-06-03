@@ -206,7 +206,6 @@ public class MapUpdateManager extends BukkitRunnable {
                                 }
                                 
                                 ArrayList<Chunk> chunkList = new ArrayList<Chunk>();
-                                boolean isFirstChunk=true;
                                 
                                 // Perform core block updates, don't do "fragiles" yet. Don't do Dispensers yet either
                                 for ( MapUpdateCommand m : updatesInWorld ) {
@@ -221,24 +220,26 @@ public class MapUpdateManager extends BukkitRunnable {
                                                 List<EntityUpdateCommand> mapUpdateList=entityMap.get(m.getNewBlockLocation());
                                                 for(EntityUpdateCommand entityUpdate : mapUpdateList) {
                                                         Entity entity=entityUpdate.getEntity();
-                                                        Vector pVel=new Vector(entity.getVelocity().getX(),0.0,entity.getVelocity().getZ());
-                                                        if( pVel.getX()==0.0 && entity.getVelocity().getZ()==0.0 ) {
-                                                                Location newLoc=entityUpdate.getNewLocation();
-                                                                
-                                                                // if they have gone through the floor, move them up one block
-                                                             // if they have gone through the floor, move them up one block
-                            									if(newLoc.getY() - entityUpdate.getOldLocation().getY() != 0){
-                            										double decimalY=newLoc.getY()-Math.floor(newLoc.getY());
-                            										if(decimalY>0.40) {
-                                										newLoc.setY( Math.ceil( newLoc.getY() ) );
-                                									}
-                            									}
-                                                                entity.teleport(entityUpdate.getNewLocation());
-                                                        } else {
-                                                                Location craftMove=entityUpdate.getNewLocation().subtract(entityUpdate.getOldLocation());
-                                                                entity.teleport(entity.getLocation().add(craftMove));
+                                                        if(entity.isValid()){
+	                                                        Vector pVel=new Vector(entity.getVelocity().getX(),0.0,entity.getVelocity().getZ());
+	                                                        if( pVel.getX()==0.0 && entity.getVelocity().getZ()==0.0 ) {
+	                                                                Location newLoc=entityUpdate.getNewLocation();
+	                                                                
+	                                                                // if they have gone through the floor, move them up one block
+	                                                             // if they have gone through the floor, move them up one block
+	                            									if(newLoc.getY() - entityUpdate.getOldLocation().getY() != 0){
+	                            										double decimalY=newLoc.getY()-Math.floor(newLoc.getY());
+	                            										if(decimalY>0.40) {
+	                                										newLoc.setY( Math.ceil( newLoc.getY() ) );
+	                                									}
+	                            									}
+	                                                                entity.teleport(entityUpdate.getNewLocation());
+	                                                        } else {
+	                                                                Location craftMove=entityUpdate.getNewLocation().subtract(entityUpdate.getOldLocation());
+	                                                                entity.teleport(entity.getLocation().add(craftMove));
+	                                                        }
+	                                                        entity.setVelocity(pVel);
                                                         }
-                                                        entity.setVelocity(pVel);
                                                 }
                                                 entityMap.remove(m.getNewBlockLocation());
                                                 if(m.isLastUpdate()){

@@ -27,7 +27,7 @@ public class SneakMoveTask extends BukkitRunnable{
 				return;
 			}
 		}
-		if((!c.processing.get()) && (!c.shipAttemptingTeleport)){
+		if((!c.processing.get()) && (!c.shipAttemptingTeleport) && c.pilot.isOnline()){
 			if (MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))) {
 	
 				float rotation = (float) Math.PI * p.getLocation().getYaw() / 180f;

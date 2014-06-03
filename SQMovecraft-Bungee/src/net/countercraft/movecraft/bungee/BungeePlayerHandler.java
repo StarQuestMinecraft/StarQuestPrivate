@@ -49,7 +49,6 @@ public class BungeePlayerHandler {
 
 		ByteArrayOutputStream b = new ByteArrayOutputStream();
 		DataOutputStream out = new DataOutputStream(b);
-		Location l = p.getLocation();
 		// send player data of where they should be teleported to
 		try {
 			out.writeUTF("Forward");

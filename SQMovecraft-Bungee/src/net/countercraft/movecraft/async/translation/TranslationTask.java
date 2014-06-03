@@ -288,6 +288,7 @@ public class TranslationTask extends AsyncTask {
 				// if it should be warping, initiate a warp.
 				Craft c = getCraft();
 				Player p = c.pilot;
+				if(!p.isOnline()) return;
 				String s = LocationUtils.locationCheck(p);
 				if (s != null) {
 					// if(PingUtils.isOnline(s)){
@@ -328,6 +329,7 @@ public class TranslationTask extends AsyncTask {
 			}
 		} catch (IllegalStateException e) {
 			getCraft().processing.compareAndSet(true, false);
+			e.printStackTrace();
 			return;
 		}
 	}

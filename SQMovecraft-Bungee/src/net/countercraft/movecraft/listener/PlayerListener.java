@@ -1,4 +1,5 @@
 /*
+
  * This file is part of Movecraft.
  *
  *     Movecraft is free software: you can redistribute it and/or modify
@@ -236,6 +237,7 @@ public class PlayerListener implements Listener {
 		}
 		event.getPlayer().sendMessage("Bedspawn updated. If this bed is on a ship, make sure you release and repilot your ship before flying it away.");
 	}
+	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerRespawn(final PlayerRespawnEvent event){
 		final Bedspawn b = Bedspawn.getBedspawn(event.getPlayer().getName());
