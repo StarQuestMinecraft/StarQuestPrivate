@@ -24,10 +24,14 @@ public class BungeePlayerHandler {
 
 //@formatting:off
 	public static ArrayList<PlayerTeleport> teleportQueue = new ArrayList<PlayerTeleport>();
+	
+	public static void sendPlayer(Player p, String targetserver, String world, int X, int Y, int Z){
+		sendPlayer(p, targetserver, world, X, Y, Z, false);
+	}
 
-	public static void sendPlayer(Player p, String targetserver, String world, int X, int Y, int Z) {
+	public static void sendPlayer(Player p, String targetserver, String world, int X, int Y, int Z, boolean isBedspawn) {
 
-		sendPlayerCoordinateData(p, targetserver, world, X, Y, Z);
+		sendPlayerCoordinateData(p, targetserver, world, X, Y, Z, isBedspawn);
 		sendPlayer(p, targetserver);
 	}
 
@@ -45,7 +49,7 @@ public class BungeePlayerHandler {
 		p.sendPluginMessage(Movecraft.getInstance(), "BungeeCord", b.toByteArray());
 	}
 
-	private static void sendPlayerCoordinateData(Player p, String targetserver, String world, int X, int Y, int Z) {
+	private static void sendPlayerCoordinateData(Player p, String targetserver, String world, int X, int Y, int Z, boolean isBedspawn) {
 
 		ByteArrayOutputStream b = new ByteArrayOutputStream();
 		DataOutputStream out = new DataOutputStream(b);
@@ -58,7 +62,7 @@ public class BungeePlayerHandler {
 			ByteArrayOutputStream msgbytes = new ByteArrayOutputStream();
 			DataOutputStream msgout = new DataOutputStream(msgbytes);
 
-			writePlayerData(msgout, p, targetserver, world, X, Y, Z);
+			writePlayerData(msgout, p, targetserver, world, X, Y, Z, isBedspawn);
 
 			byte[] outbytes = msgbytes.toByteArray();
 			out.writeShort(outbytes.length);
@@ -70,7 +74,7 @@ public class BungeePlayerHandler {
 		}
 	}
 
-	public static void writePlayerData(DataOutputStream msgout, Player p, String targetserver, String world, int X, int Y, int Z) throws IOException {
+	public static void writePlayerData(DataOutputStream msgout, Player p, String targetserver, String world, int X, int Y, int Z, boolean isBedspawn) throws IOException {
 
 		Location l = p.getLocation();
 		msgout.writeUTF(world);
@@ -82,6 +86,11 @@ public class BungeePlayerHandler {
 		msgout.writeDouble(l.getPitch());
 		InventoryUtils.writePlayer(msgout, p);
 		msgout.writeInt(gameModeToInt(p.getGameMode()));
+		msgout.writeBoolean(isBedspawn);
+	}
+	
+	public static void writePlayerData(DataOutputStream msgout, Player p, String targetserver, String world, int X, int Y, int Z) throws IOException{
+		writePlayerData(msgout, p, targetserver, world, X, Y, Z, false);
 	}
 
 	public static void wipePlayerInventory(Player p) {
@@ -126,6 +135,7 @@ public class BungeePlayerHandler {
 		double pitch = msgin.readDouble();
 		Knapsack playerKnap = InventoryUtils.readPlayer(msgin);
 		GameMode gamemode = intToGameMode(msgin.readInt());
+		boolean isBedspawn = msgin.readBoolean();
 
 		if (coordY > 256) {
 			Location loc = Bukkit.getServer().getWorld(worldname).getSpawnLocation();
@@ -133,7 +143,7 @@ public class BungeePlayerHandler {
 			coordY = loc.getBlockY();
 			coordZ = loc.getBlockZ();
 		}
-		PlayerTeleport t = new PlayerTeleport(playername, worldname, coordX, coordY, coordZ, yaw, pitch, playerKnap, gamemode);
+		PlayerTeleport t = new PlayerTeleport(playername, worldname, coordX, coordY, coordZ, yaw, pitch, playerKnap, gamemode, isBedspawn);
 		return t;
 	}
 

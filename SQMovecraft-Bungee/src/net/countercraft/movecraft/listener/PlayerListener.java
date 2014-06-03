@@ -251,7 +251,6 @@ public class PlayerListener implements Listener {
 				}
 			}, 3L);
 		} else {
-			System.out.println("server name and target name are the same, regular bedspawn.");
 			Location loc2 = new Location(Bukkit.getWorld(b.world), b.x, b.y, b.z);
 			if (checkForNotAir(loc2)){
 				event.setRespawnLocation(loc2);
@@ -289,7 +288,7 @@ public class PlayerListener implements Listener {
 		}
 		return bed.getLocation();
 	}
-	private boolean checkForNotAir(Location loc){
+	public static boolean checkForNotAir(Location loc){
 		boolean found = false;
 		Block testblock = loc.getBlock();
 		int tries = 0;

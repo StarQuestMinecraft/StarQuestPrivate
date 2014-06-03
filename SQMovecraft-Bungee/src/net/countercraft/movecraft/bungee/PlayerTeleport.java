@@ -1,6 +1,10 @@
 
 package net.countercraft.movecraft.bungee;
 
+import net.countercraft.movecraft.Movecraft;
+import net.countercraft.movecraft.bedspawns.Bedspawn;
+import net.countercraft.movecraft.listener.PlayerListener;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -20,9 +24,16 @@ public class PlayerTeleport {
 	float pitch;
 	GameMode gamemode;
 	public Knapsack knapsack;
+	boolean isBedspawn;
 
-	public PlayerTeleport(String playername, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack knap, GameMode gamemode) {
-
+	public PlayerTeleport(String playername, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack knap, GameMode gamemode){
+		init(playername, worldname, x, y, z, yaw, pitch, knap, gamemode, false);
+	}
+	public PlayerTeleport(String playername, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack knap, GameMode gamemode, boolean isBedspawn) {
+		init(playername, worldname, x, y, z, yaw, pitch, knap, gamemode, isBedspawn);
+	}
+	
+	private void init(String playername, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack knap, GameMode gamemode, boolean isBedspawn){
 		this.playername = playername;
 		this.worldname = worldname;
 
@@ -37,21 +48,32 @@ public class PlayerTeleport {
 		this.pitch = (float) pitch;
 		this.gamemode = gamemode;
 		this.knapsack = knap;
-		print();
+		isBedspawn = false;
 	}
 
 	public void execute() {
 
-		print();
-		Player p = Bukkit.getServer().getPlayer(playername);
+		final Player p = Bukkit.getServer().getPlayer(playername);
 		World w = Bukkit.getServer().getWorld(worldname);
-		p.teleport(new Location(w, x + 0.5, (double) y, z + 0.5, yaw, pitch));
+		
+		Location l = new Location(w, x + 0.5, (double) y, z + 0.5, yaw, pitch);
+		
 		this.knapsack.unpack(p);
 		p.setGameMode(gamemode);
 		BungeePlayerHandler.teleportQueue.remove(this);
-	}
-
-	public void print() {
-
+		
+		if(!isBedspawn){
+			p.teleport(l);
+		} else {
+			if (PlayerListener.checkForNotAir(l)){
+				p.teleport(l);
+			} else {
+				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+					public void run(){
+						BungeePlayerHandler.sendPlayer(p, Bedspawn.DEFAULT.server, Bedspawn.DEFAULT.world, Bedspawn.DEFAULT.x, Bedspawn.DEFAULT.y, Bedspawn.DEFAULT.z);
+					}
+				}, 20L);
+			}
+		}
 	}
 }
