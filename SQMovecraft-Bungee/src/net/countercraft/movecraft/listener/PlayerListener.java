@@ -83,11 +83,8 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerLogin(PlayerJoinEvent event){
 		Player p = event.getPlayer();
-		if(p.getGameMode() == GameMode.SURVIVAL){
-			p.setAllowFlight(false);
-			p.setFlySpeed(0F);
-			p.setFlying(false);
-		}
+		
+		boolean isTeleported = false;
 		
 		for(int i = 0; i < BungeePlayerHandler.teleportQueue.size(); i++){
 			final PlayerTeleport t = BungeePlayerHandler.teleportQueue.get(i);
@@ -98,9 +95,56 @@ public class PlayerListener implements Listener {
 						t.execute();
 					}
 				}, 1L);
+				isTeleported = true;
 				break;
 			}
 		}
+		
+		if(!isTeleported){
+			if(p.getGameMode() == GameMode.SURVIVAL){
+				if(shouldTempFly(p)){
+					giveTempFly(p);
+				} else {
+						p.setAllowFlight(false);
+						p.setFlySpeed(0F);
+						p.setFlying(false);
+				}
+			}
+		}
+	}
+	
+	private boolean shouldTempFly(Player p){
+		World w = p.getWorld();
+		int x = p.getLocation().getBlockX();
+		int y = p.getLocation().getBlockY();
+		int z = p.getLocation().getBlockZ();
+		boolean blockFound = false;
+		if(y > 200){
+			for(int i = 0; i < 5; i++){
+				Block b = p.getWorld().getBlockAt(x, y - i, z);
+				if(b.getType() != Material.AIR){
+					blockFound = true;
+					break;
+				}
+			}
+			if(!blockFound){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private void giveTempFly(final Player p){
+		p.setAllowFlight(true);
+		p.setFlying(true);
+		p.setFlySpeed(0F);
+		
+		Movecraft.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+			public void run(){
+				p.setAllowFlight(false);
+				p.setFlying(false);
+			}
+		}, 100L);
 	}
 	
 	@EventHandler
