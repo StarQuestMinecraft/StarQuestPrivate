@@ -19,19 +19,22 @@ public class BorderUtils {
 			WORLD_RADIUS = getRadius(w.getName());
 		}
 	}
-	public static boolean isWithinBorder(Location l){
+	public static boolean isWithinBorder(int x, int z){
 		
-		return locIsWithin(l, WORLD_RADIUS);
+		return locIsWithin(x, z, WORLD_RADIUS);
 	}
 	
 	private static int getRadius(String name) {
 		return (worldBorderPlugin.getConfig().getInt("worlds." + name + ".radiusX"));
 	}
-	public static boolean isWithinBorderIncludePadding(Location l){
-		return locIsWithin(l, WORLD_RADIUS - PADDING);
+	public static boolean isWithinBorderIncludePadding(int x, int z){
+		return locIsWithin(x, z, WORLD_RADIUS - PADDING);
+	}
+	public static boolean isWithinBorderIncludePadding(int x, int z, int padding){
+		return locIsWithin(x, z, WORLD_RADIUS - padding);
 	}
 	
-	public static boolean locIsWithin(Location l, int radius){
-		return (radius * radius) > (l.getX() * (l.getX()) + l.getZ() * l.getZ());
+	public static boolean locIsWithin(int x, int z, int radius){
+		return (radius * radius) > (x * x + z * z);
 	}
 }
