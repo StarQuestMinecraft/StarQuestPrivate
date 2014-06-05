@@ -25,7 +25,10 @@ import net.countercraft.movecraft.utils.BoundingBoxUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -123,6 +126,19 @@ public class DetectionTask extends AsyncTask {
 				if ( isWithinLimit( blockList.size(), 0, maxSize ) ) {
 
 					if (testID != 34) addToDetectionStack( workingLocation );
+					if(testID == 33){
+						int dval = data.getWorld().getBlockAt(x, y, z).getData();
+						if(dval == 8){
+							//this is a landing gear block
+							Block blk = data.getWorld().getBlockAt(x, y, z).getRelative(BlockFace.DOWN);
+							if(blk.getType() == Material.AIR){
+								//the landing gear is retracted
+								addToBlockList(MathUtils.bukkit2MovecraftLoc(blk.getLocation()));
+								//make it landing gear even if it's retracted
+								addToBlockCount(34);
+							}
+						}
+					}
 
 					calculateBounds( workingLocation );
 					
@@ -270,7 +286,7 @@ public class DetectionTask extends AsyncTask {
 				numberOfBlocks = 0;
 			}
 
-			float blockPercentage = ( ( ( float ) numberOfBlocks / data.getBlockList().length ) * 100 );
+			float blockPercentage = ( ( ( float ) numberOfBlocks / (data.getBlockList().length) ) * 100 );
 			Double minPercentage = flyBlocks.get( i ).get( 0 );
 			Double maxPercentage = flyBlocks.get( i ).get( 1 );
 
