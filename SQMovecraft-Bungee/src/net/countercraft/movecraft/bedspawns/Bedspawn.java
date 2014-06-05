@@ -128,6 +128,17 @@ public class Bedspawn {
 	}
 
 	public static void deleteBedspawn(String player) {
+		PreparedStatement s = null;
+		try {
+			s = cntx.prepareStatement("DELETE FROM BEDSPAWNS WHERE `name` = ?");
+			s.setString(1, player);
+			s.execute();
+			s.close();
+		} catch (Exception e){
+			e.printStackTrace();
+		} finally {
+			close(s);
+		}
 	}
 
 	public static boolean getContext() {
