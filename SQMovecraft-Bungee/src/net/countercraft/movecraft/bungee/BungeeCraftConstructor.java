@@ -112,12 +112,48 @@ public class BungeeCraftConstructor {
 	public static boolean destinationObstructed(LocAndBlock[] bll, World targ, int dX, int dY, int dZ){
 		for (int i = 0; i < bll.length; i++) {
 			Location newLoc = new Location (targ, bll[i].X + dX, bll[i].Y + dY, bll[i].Z + dZ);
-			int testID = newLoc.getWorld().getBlockTypeIdAt(newLoc);
-			if (testID != 0) {
-				return true;
+			for(Block b : getEdges(newLoc)){
+				int testID = b.getTypeId();
+				if (testID != 0) {
+					return true;
+				}
 			}
 		}
 		return false;
+	}
+	public static Block[] getEdges(Location l){
+		Block b = l.getBlock();
+		Block[] retval = new Block[19];
+		//block itself
+		retval[0] = b;
+		
+		//faces
+		retval[1] = b.getRelative(0, 1, 0);
+		retval[2] = b.getRelative(0, -1, 0);
+		retval[3] = b.getRelative(1, 0, 0);
+		retval[4] = b.getRelative(-1, 0, 0);
+		retval[5] = b.getRelative(0, 0, 1);
+		retval[6] = b.getRelative(0, 0, -1);
+		
+		//edges on the upper side
+		retval[7] = b.getRelative(1, 1, 0);
+		retval[8] = b.getRelative(-1, 1, 0);
+		retval[9] = b.getRelative(0, 1, 1);
+		retval[10] = b.getRelative(0, 1, -1);
+		
+		//edges on the lower side
+		retval[11] = b.getRelative(1, -1, 0);
+		retval[12] = b.getRelative(-1, -1, 0);
+		retval[13] = b.getRelative(0, -1, 1);
+		retval[14] = b.getRelative(0, -1, -1);
+		
+		//edges on the same plane
+		retval[15] = b.getRelative(1, 0, 1);
+		retval[16] = b.getRelative(-1, 0, 1);
+		retval[17] = b.getRelative(1, 0, -1);
+		retval[18] = b.getRelative(-1, 0, -1);
+		
+		return retval;
 	}
 	
 	//helping methods for calculating differences in X, Y, and Z

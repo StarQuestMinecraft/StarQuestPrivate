@@ -234,7 +234,6 @@ public class TranslationTask extends AsyncTask {
 
 							EntityUpdateCommand eUp = new EntityUpdateCommand(pTest.getLocation(), newPLoc, pTest, pTest.getVelocity(), getCraft());
 							entityUpdateSet.add(eUp);
-							pTest.teleport(newPLoc);
 						} else {
 							pTest.remove();
 						}
