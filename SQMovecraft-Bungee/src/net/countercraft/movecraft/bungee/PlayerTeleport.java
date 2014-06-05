@@ -73,6 +73,7 @@ public class PlayerTeleport {
 						BungeePlayerHandler.sendPlayer(p, Bedspawn.DEFAULT.server, Bedspawn.DEFAULT.world, Bedspawn.DEFAULT.x, Bedspawn.DEFAULT.y, Bedspawn.DEFAULT.z);
 					}
 				}, 20L);
+				Bedspawn.deleteBedspawn(p.getName());
 			}
 		}
 	}

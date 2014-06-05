@@ -20,8 +20,6 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import com.mini.Arguments;
-
 public class TeleportTask {
 	public static boolean worldJump(Player pilot, Craft c, Location locto){
 		

@@ -50,9 +50,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.mini.Arguments;
-import com.mini.Mini;
-
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -74,7 +71,7 @@ public class Movecraft extends JavaPlugin {
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("removehome") && sender instanceof Player){
-			Bedspawn.resetToDefault(sender.getName());
+			Bedspawn.deleteBedspawn(sender.getName());
 		} else if(cmd.getName().equalsIgnoreCase("UUID")){
 			String name = args[0];
 			ByteArrayOutputStream b = new ByteArrayOutputStream();
@@ -224,9 +221,12 @@ public class Movecraft extends JavaPlugin {
 	
 	public static boolean signContainsPlayername(Sign sign, String name){
 		String[] lines = sign.getLines();
+		if(name.length() > 15){
+			name = name.substring(0, 15);
+		}
 		for(int i = 1; i < 4; i++){
 			String s = lines[i];
-			if(name.equals(s) || name.startsWith(s)){
+			if(name.equals(s)){
 				return true;
 			}
 		}

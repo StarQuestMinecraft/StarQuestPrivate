@@ -20,6 +20,8 @@ package net.countercraft.movecraft.listener;
 //import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
+
+import org.bukkit.block.Sign;
 //import net.countercraft.movecraft.items.StorageChestItem;
 //import net.countercraft.movecraft.localisation.I18nSupport;
 //import net.countercraft.movecraft.utils.MovecraftLocation;
@@ -42,9 +44,11 @@ public class BlockListener implements Listener {
 	@EventHandler
 	public void onSignChange(SignChangeEvent event){
 		for (CraftType t : CraftManager.getInstance().getCraftTypes()) {
-			if (event.getLine(0).equalsIgnoreCase(t.getCraftName())) {
-				if (event.getLine(1) == null || event.getLine(1).equals("")){
-					event.setLine(1, event.getPlayer().getName().substring(0,15));
+			Sign s = (Sign) event.getBlock().getState();
+			if (s.getLine(0).equalsIgnoreCase(t.getCraftName())) {
+				if (s.getLine(1) == null || s.getLine(1).equals("")){
+					s.setLine(1, event.getPlayer().getName().substring(0, 15));
+					s.update();	
 				}
 			}
 		}

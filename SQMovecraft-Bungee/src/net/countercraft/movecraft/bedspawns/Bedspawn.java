@@ -61,11 +61,7 @@ public class Bedspawn {
 	}
 
 	public static Bedspawn getBedspawn(String player) {
-		Bedspawn returnBedspawn = loadBedspawn(player);
-		if (returnBedspawn == null) {
-			return getDefault(player);
-		}
-		return returnBedspawn;
+		return loadBedspawn(player);
 	}
 
 	public static ArrayList<Bedspawn> getAllBedspawns() {
@@ -131,10 +127,7 @@ public class Bedspawn {
 		return b;
 	}
 
-	public static void resetToDefault(String player) {
-		Bedspawn b = DEFAULT.clone();
-		b.player = player;
-		Bedspawn.saveBedspawn(b);
+	public static void deleteBedspawn(String player) {
 	}
 
 	public static boolean getContext() {

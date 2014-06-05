@@ -56,8 +56,6 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.mini.Arguments;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -284,14 +282,16 @@ public class PlayerListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerRespawn(final PlayerRespawnEvent event){
-		final Bedspawn b = Bedspawn.getBedspawn(event.getPlayer().getName());
+		Bedspawn b = Bedspawn.getBedspawn(event.getPlayer().getName());
+		if(b == null) b = Bedspawn.DEFAULT;
 		System.out.println(b);
 		System.out.println("Player Current Server: " + Bukkit.getServerName());
 		if(!b.server.equals(Bukkit.getServerName())){
 			System.out.println("server name and target server name aren't equal, teleporting.");
+			final Bedspawn b2 = b;
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 				public void run(){
-					BungeePlayerHandler.sendPlayer(event.getPlayer(), b.server, b.world, b.x, b.y, b.z);
+					BungeePlayerHandler.sendPlayer(event.getPlayer(), b2.server, b2.world, b2.x, b2.y, b2.z);
 				}
 			}, 3L);
 		} else {
@@ -304,6 +304,7 @@ public class PlayerListener implements Listener {
 						BungeePlayerHandler.sendPlayer(event.getPlayer(), Bedspawn.DEFAULT.server, Bedspawn.DEFAULT.world, Bedspawn.DEFAULT.x, Bedspawn.DEFAULT.y, Bedspawn.DEFAULT.z);
 					}
 				}, 20L);
+				Bedspawn.deleteBedspawn(event.getPlayer().getName());
 			}
 		}
 	}
