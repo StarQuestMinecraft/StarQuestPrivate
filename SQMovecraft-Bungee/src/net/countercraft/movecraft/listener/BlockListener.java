@@ -47,7 +47,13 @@ public class BlockListener implements Listener {
 			Sign s = (Sign) event.getBlock().getState();
 			if (s.getLine(0).equalsIgnoreCase(t.getCraftName())) {
 				if (s.getLine(1) == null || s.getLine(1).equals("")){
-					s.setLine(1, event.getPlayer().getName().substring(0, 15));
+					String str = event.getPlayer().getName();
+					if(str.length() > 15){
+						s.setLine(1, str.substring(0, 15));
+					} else {
+						s.setLine(1, str);
+					}
+
 					s.update();	
 				}
 			}
