@@ -196,7 +196,7 @@ public class AsyncManager extends BukkitRunnable {
 				// Check that the craft hasn't been sneakily unpiloted
 				if ( p != null ) {
 
-					if ( task.getData().failed() ) {
+					if ( task.getData().failed() || task.getData().getUpdates() == null ) {
 						//The craft translation failed
 						p.sendMessage( task.getData().getFailMessage() );
 						clear(c);
@@ -208,7 +208,7 @@ public class AsyncManager extends BukkitRunnable {
 
 						MapUpdateCommand[] updates = task.getData().getUpdates();
 						EntityUpdateCommand[] eUpdates=task.getData().getEntityUpdates();
-						boolean failed = (updates != null) && MapUpdateManager.getInstance().addWorldUpdate( c.getW(), updates, eUpdates );
+						boolean failed = (c.pilot.isOnline() && (updates != null) && MapUpdateManager.getInstance().addWorldUpdate( c.getW(), updates, eUpdates ));
 
 						if ( !failed ) {
 

@@ -20,6 +20,7 @@ public class ShipNuker {
 				Block b = w.getBlockAt(l.getX(), l.getY(), l.getZ());
 				b.setType(Material.AIR);
 			}
+			CraftManager.getInstance().removeCraft(c);
 		}
 	}
 }

@@ -128,7 +128,7 @@ public class DetectionTask extends AsyncTask {
 					if (testID != 34) addToDetectionStack( workingLocation );
 					if(testID == 33){
 						int dval = data.getWorld().getBlockAt(x, y, z).getData();
-						if(dval == 8){
+						if(dval == 0){
 							//this is a landing gear block
 							Block blk = data.getWorld().getBlockAt(x, y, z).getRelative(BlockFace.DOWN);
 							if(blk.getType() == Material.AIR){
