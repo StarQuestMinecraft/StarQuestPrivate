@@ -7,9 +7,9 @@ import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class HackyUtils {
-	/*public static void setPosition(Player p, Location dest){
+	public static void setPosition(Player p, Location dest){
 		CraftPlayer plr = (CraftPlayer) p;
 		EntityPlayer eplr = plr.getHandle();
 		eplr.playerConnection.teleport(dest);
-	}*/
+	}
 }

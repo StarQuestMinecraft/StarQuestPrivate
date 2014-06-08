@@ -117,6 +117,7 @@ public class Craft {
 	}
 
 	public void translate(int dx, int dy, int dz) {
+		checkChunksLoaded(dx, dz);
 		if (w.getEnvironment() == Environment.THE_END)
 			WarpUtils.translate(this, dx, dy, dz);
 		else {
