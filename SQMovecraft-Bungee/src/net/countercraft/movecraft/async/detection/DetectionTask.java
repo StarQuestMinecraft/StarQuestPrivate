@@ -286,7 +286,7 @@ public class DetectionTask extends AsyncTask {
 				numberOfBlocks = 0;
 			}
 
-			float blockPercentage = ( ( ( float ) numberOfBlocks / (data.getBlockList().length) ) * 100 );
+			float blockPercentage = ( ( ( float ) numberOfBlocks / data.getBlockList().length ) * 100 );
 			Double minPercentage = flyBlocks.get( i ).get( 0 );
 			Double maxPercentage = flyBlocks.get( i ).get( 1 );
 
