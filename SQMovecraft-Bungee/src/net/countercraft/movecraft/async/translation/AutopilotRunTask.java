@@ -27,7 +27,7 @@ public class AutopilotRunTask extends BukkitRunnable{
 	
 	public void run(){
 		for (Craft c : autopilotingCrafts){
-			if (c.pilot.isOnline() && !c.processing.get() && !c.shipAttemptingTeleport){
+			if (!c.processing.get() && !c.shipAttemptingTeleport){
 				c.translate(c.vX, 0, c.vZ);
 			}
 		}

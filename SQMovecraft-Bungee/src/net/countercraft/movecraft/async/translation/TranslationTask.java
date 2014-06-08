@@ -13,7 +13,6 @@ import net.countercraft.movecraft.utils.BorderUtils;
 import net.countercraft.movecraft.utils.BoundingBoxUtils;
 import net.countercraft.movecraft.utils.CarUtils;
 import net.countercraft.movecraft.utils.EntityUpdateCommand;
-import net.countercraft.movecraft.utils.HackyUtils;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateCommand;
 import net.countercraft.movecraft.utils.MapUpdateManager;
@@ -225,15 +224,14 @@ public class TranslationTask extends AsyncTask {
 
 				Iterator<Player> i = getCraft().playersRiding.iterator();
 				while (i.hasNext()) {
-					Player pTest = i.next();
+					Entity pTest = i.next();
 					if (MathUtils.playerIsWithinBoundingPolygon(getCraft().getHitBox(), getCraft().getMinX(), getCraft().getMinZ(), MathUtils.bukkit2MovecraftLoc(pTest.getLocation()))) {
 						if (pTest.getType() != org.bukkit.entity.EntityType.DROPPED_ITEM) {
 							Location tempLoc = pTest.getLocation().add(data.getDx(), data.getDy(), data.getDz());
 							Location newPLoc = new Location(getCraft().getW(), tempLoc.getX(), tempLoc.getY(), tempLoc.getZ());
 							newPLoc.setPitch(pTest.getLocation().getPitch());
 							newPLoc.setYaw(pTest.getLocation().getYaw());
-							HackyUtils.setPosition(pTest, newPLoc);
-							//pTest.teleport(newPLoc);
+
 							EntityUpdateCommand eUp = new EntityUpdateCommand(pTest.getLocation(), newPLoc, pTest, pTest.getVelocity(), getCraft());
 							entityUpdateSet.add(eUp);
 						} else {
@@ -339,7 +337,7 @@ public class TranslationTask extends AsyncTask {
 			}
 		} catch (IllegalStateException e) {
 			getCraft().processing.compareAndSet(true, false);
-			System.out.println("Movecraft: Illegal State Exception thingy. maybe a problem?");
+			e.printStackTrace();
 			return;
 		}
 	}

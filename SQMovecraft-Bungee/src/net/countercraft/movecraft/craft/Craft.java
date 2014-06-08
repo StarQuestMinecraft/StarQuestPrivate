@@ -31,7 +31,6 @@ import net.countercraft.movecraft.utils.Rotation;
 import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -53,7 +52,7 @@ public class Craft {
 	private World w;
 	public AtomicBoolean processing = new AtomicBoolean();
 	private int moveTaskID;
-	private int minX, minZ, maxX, maxZ;
+	private int minX, minZ;
 	public int xDist, yDist, zDist;
 	public ArrayList<String> playersWithBedSpawnsOnShip = new ArrayList<String>();
 	public boolean shipAttemptingTeleport = false;
@@ -117,7 +116,6 @@ public class Craft {
 	}
 
 	public void translate(int dx, int dy, int dz) {
-		checkChunksLoaded(dx, dz);
 		if (w.getEnvironment() == Environment.THE_END)
 			WarpUtils.translate(this, dx, dy, dz);
 		else {
@@ -155,20 +153,6 @@ public class Craft {
 
 	public void setMoveTaskId(int taskID) {
 		moveTaskID = taskID;
-	}
-	
-	private void checkChunksLoaded(int dx, int dz){
-		int maxX = minX + hitBox.length + dx;
-		int maxZ = minZ + hitBox[0].length + dz;
-		
-		Chunk c = w.getChunkAt(minX + dx, minZ + dz);
-		for(int x = c.getX(); x <= maxX; x += 16){
-			for(int z = c.getZ(); z < maxZ; z += 16){
-				if(!c.isLoaded()){
-					c.load(false);
-				}
-			}
-		}
 	}
 
 	@SuppressWarnings("deprecation")
