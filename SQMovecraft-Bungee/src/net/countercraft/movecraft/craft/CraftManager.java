@@ -95,13 +95,14 @@ public class CraftManager {
 			AutopilotRunTask.stopAutopiloting(c, p);
 		}
 		
-		if (p  != null ) {
+		if (p.isOnline()) {
 			p.sendMessage( String.format( I18nSupport.getInternationalisedString( "Release - Craft has been released message" ) ) );
 			Movecraft.getInstance().getLogger().log( Level.INFO, String.format( I18nSupport.getInternationalisedString( "Release - Player has released a craft console" ), getPlayerFromCraft( c ).getName(), c.getType().getCraftName(), c.getBlockList().length, c.getMinX(), c.getMinZ() ) );
 			
 			craftPlayerIndex.remove( p );
 			
 			for(Player plr: c.playersRiding){
+				if(plr.isOnline())
 				plr.sendMessage("The ship has been released, you are no longer riding on it.");
 			}
 			//process and update bedspawns

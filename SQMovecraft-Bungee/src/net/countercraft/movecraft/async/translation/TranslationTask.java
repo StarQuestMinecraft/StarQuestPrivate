@@ -22,6 +22,7 @@ import net.countercraft.movecraft.utils.MovecraftLocation;
 
 import org.apache.commons.collections.ListUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -74,48 +75,61 @@ public class TranslationTask extends AsyncTask {
 					}
 				}
 				int maxX = getCraft().getMinX() + hb.length;
-				int maxZ = getCraft().getMinZ() + hb[0].length; // safe because
-																// if the first
-																// x array
-																// doesn't have
-																// a z array,
-																// then it
-																// wouldn't be
-																// the first x
-																// array
+				int maxZ = getCraft().getMinZ() + hb[0].length;
 				int minX = getCraft().getMinX();
 				int minZ = getCraft().getMinZ();
-
-				// next figure out the water level by examining blocks next to
-				// the outer boundaries of the craft
-				for (int posY = maxY + 1; (posY >= minY - 1) && (waterLine == 0); posY--) {
+				
+				// Load any chunks that you are moving into that are not loaded 
+				/*for (int posX=minX+data.getDx();posX<=maxX+data.getDx();posX++) {
+					for (int posZ=minZ+data.getDz();posZ<=maxZ+data.getDz();posZ++) {
+						Chunk chunk=getCraft().getW().getBlockAt(posX,minY,posZ).getChunk();
+						if (!chunk.isLoaded()) {
+							chunk.load();
+						}
+					}
+				}*/
+				
+				for(int posY=maxY+1; (posY>=minY-1)&&(waterLine==0); posY--) {
+					int numWater=0;
+					int numAir=0;
 					int posX;
 					int posZ;
-					posZ = minZ - 1;
-					for (posX = minX - 1; (posX <= maxX + 1) && (waterLine == 0); posX++) {
-						if (getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId() == 9) {
-							waterLine = posY;
-						}
+					posZ=minZ-1;
+					for(posX=minX-1; (posX <= maxX+1)&&(waterLine==0); posX++ ) {
+						int typeID=getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId();
+						if(typeID==9) 
+							numWater++;
+						if(typeID==0) 
+							numAir++;
 					}
-					posZ = maxZ + 1;
-					for (posX = minX - 1; (posX <= maxX + 1) && (waterLine == 0); posX++) {
-						if (getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId() == 9) {
-							waterLine = posY;
-						}
+					posZ=maxZ+1;
+					for(posX=minX-1; (posX <= maxX+1)&&(waterLine==0); posX++ ) {
+						int typeID=getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId();
+						if(typeID==9) 
+							numWater++;
+						if(typeID==0) 
+							numAir++;
 					}
-					posX = minX - 1;
-					for (posZ = minZ; (posZ <= maxZ) && (waterLine == 0); posZ++) {
-						if (getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId() == 9) {
-							waterLine = posY;
-						}
+					posX=minX-1;
+					for(posZ=minZ; (posZ <= maxZ)&&(waterLine==0); posZ++ ) {
+						int typeID=getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId();
+						if(typeID==9) 
+							numWater++;
+						if(typeID==0) 
+							numAir++;
 					}
-					posX = maxX + 1;
-					for (posZ = minZ; (posZ <= maxZ) && (waterLine == 0); posZ++) {
-						if (getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId() == 9) {
-							waterLine = posY;
-						}
+					posX=maxX+1;
+					for(posZ=minZ; (posZ <= maxZ)&&(waterLine==0); posZ++ ) {
+						int typeID=getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId();
+						if(typeID==9) 
+							numWater++;
+						if(typeID==0) 
+							numAir++;
 					}
-				}
+					if(numWater>numAir) {
+						waterLine=posY;
+					}
+				}		
 
 				// now add all the air blocks found within the craft's hitbox
 				// immediately above the waterline and below to the craft blocks
@@ -232,7 +246,7 @@ public class TranslationTask extends AsyncTask {
 							Location newPLoc = new Location(getCraft().getW(), tempLoc.getX(), tempLoc.getY(), tempLoc.getZ());
 							newPLoc.setPitch(pTest.getLocation().getPitch());
 							newPLoc.setYaw(pTest.getLocation().getYaw());
-							HackyUtils.setPosition(pTest, newPLoc);
+							pTest.teleport(newPLoc);
 							//pTest.teleport(newPLoc);
 							EntityUpdateCommand eUp = new EntityUpdateCommand(pTest.getLocation(), newPLoc, pTest, pTest.getVelocity(), getCraft());
 							entityUpdateSet.add(eUp);

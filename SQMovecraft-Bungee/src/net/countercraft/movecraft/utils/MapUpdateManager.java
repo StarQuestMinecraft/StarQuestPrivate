@@ -234,7 +234,7 @@ public class MapUpdateManager extends BukkitRunnable {
 	                                									}
 	                            									}
 	                                                                //entity.teleport(entityUpdate.getNewLocation());
-	                            									HackyUtils.setPosition((Player) entity, newLoc);
+	                            									entity.teleport(newLoc);
 	                                                        } else {
 	                                                                Location craftMove=entityUpdate.getNewLocation().subtract(entityUpdate.getOldLocation());
 	                                                                entity.teleport(entity.getLocation().add(craftMove));
