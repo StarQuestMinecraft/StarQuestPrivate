@@ -2,7 +2,6 @@ package net.countercraft.movecraft.async.translation;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.AsyncTask;
-import net.countercraft.movecraft.bungee.PingUtils;
 import net.countercraft.movecraft.bungee.RepeatTryServerJumpTask;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
@@ -53,15 +52,33 @@ public class TranslationTask extends AsyncTask {
 	@Override
 	public void excecute() {
 		try {
-			if(!isChunksLoaded(getCraft().getW(), getCraft().getMinX(), getCraft().getMinZ(), getCraft().getHitBox(), data.getDx(), data.getDz())){
-				System.out.println("[MVC-CHUNKS] Chunks not loaded!");
-				return;
+			
+			int maxX=getCraft().getMinX()+getCraft().getHitBox().length;
+			int maxZ=getCraft().getMinZ()+getCraft().getHitBox()[0].length;  // safe because if the first x array doesn't have a z array, then it wouldn't be the first x array
+			int minX=getCraft().getMinX();
+			int minZ=getCraft().getMinZ();
+			
+			// Load any chunks that you are moving into that are not loaded 
+			for (int posX=minX+data.getDx();posX<=maxX+data.getDx();posX++) {
+				for (int posZ=minZ+data.getDz();posZ<=maxZ+data.getDz();posZ++) {
+					Chunk chunk=getCraft().getW().getBlockAt(posX,0,posZ).getChunk();
+					if (!chunk.isLoaded()) {
+						chunk.load();
+					}
+				}
 			}
 			
 			MovecraftLocation[] blocksList = data.getBlockList();
 
 			// canfly=false means an ocean-going vessel
 			boolean waterCraft = !getCraft().getType().canFly();
+			
+			String sys = getCraft().getW().getName();
+			
+			if(sys.equals("Regalis") || sys.equals("Defalos") || sys.equals("Digitalia") || sys.equals("AsteroidBelt")){
+				waterCraft = false;
+			}
+			
 			int waterLine = 0;
 			if (waterCraft) {
 				int[][][] hb = getCraft().getHitBox();
@@ -81,81 +98,75 @@ public class TranslationTask extends AsyncTask {
 						}
 					}
 				}
-				int maxX = getCraft().getMinX() + hb.length;
-				int maxZ = getCraft().getMinZ() + hb[0].length; // safe because
-																// if the first
-																// x array
-																// doesn't have
-																// a z array,
-																// then it
-																// wouldn't be
-																// the first x
-																// array
-				int minX = getCraft().getMinX();
-				int minZ = getCraft().getMinZ();
-
-				// next figure out the water level by examining blocks next to
-				// the outer boundaries of the craft
-				for (int posY = maxY + 1; (posY >= minY - 1) && (waterLine == 0); posY--) {
-					int posX;
-					int posZ;
-					posZ = minZ - 1;
-					for (posX = minX - 1; (posX <= maxX + 1) && (waterLine == 0); posX++) {
-						if (getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId() == 9) {
-							waterLine = posY;
+				
+				try{
+					// next figure out the water level by examining blocks next to
+					// the outer boundaries of the craft
+					for (int posY = maxY + 1; (posY >= minY - 1) && (waterLine == 0); posY--) {
+						int posX;
+						int posZ;
+						posZ = minZ - 1;
+						for (posX = minX - 1; (posX <= maxX + 1) && (waterLine == 0); posX++) {
+							if (getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId() == 9) {
+								waterLine = posY;
+							}
+						}
+						posZ = maxZ + 1;
+						for (posX = minX - 1; (posX <= maxX + 1) && (waterLine == 0); posX++) {
+							if (getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId() == 9) {
+								waterLine = posY;
+							}
+						}
+						posX = minX - 1;
+						for (posZ = minZ; (posZ <= maxZ) && (waterLine == 0); posZ++) {
+							if (getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId() == 9) {
+								waterLine = posY;
+							}
+						}
+						posX = maxX + 1;
+						for (posZ = minZ; (posZ <= maxZ) && (waterLine == 0); posZ++) {
+							if (getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId() == 9) {
+								waterLine = posY;
+							}
 						}
 					}
-					posZ = maxZ + 1;
-					for (posX = minX - 1; (posX <= maxX + 1) && (waterLine == 0); posX++) {
-						if (getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId() == 9) {
-							waterLine = posY;
+	
+					// now add all the air blocks found within the craft's hitbox
+					// immediately above the waterline and below to the craft blocks
+					// so they will be translated
+					HashSet<MovecraftLocation> newHSBlockList = new HashSet<MovecraftLocation>(Arrays.asList(blocksList));
+					int posY = waterLine + 1;
+					for (int posX = minX; posX < maxX; posX++) {
+						for (int posZ = minZ; posZ < maxZ; posZ++) {
+							if (hb[posX - minX] != null) {
+								if (hb[posX - minX][posZ - minZ] != null) {
+									if (getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId() == 0 && posY > hb[posX - minX][posZ - minZ][0] && posY < hb[posX - minX][posZ - minZ][1]) {
+										MovecraftLocation l = new MovecraftLocation(posX, posY, posZ);
+										newHSBlockList.add(l);
+									}
+								}
+							}
 						}
 					}
-					posX = minX - 1;
-					for (posZ = minZ; (posZ <= maxZ) && (waterLine == 0); posZ++) {
-						if (getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId() == 9) {
-							waterLine = posY;
-						}
-					}
-					posX = maxX + 1;
-					for (posZ = minZ; (posZ <= maxZ) && (waterLine == 0); posZ++) {
-						if (getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId() == 9) {
-							waterLine = posY;
-						}
-					}
-				}
-
-				// now add all the air blocks found within the craft's hitbox
-				// immediately above the waterline and below to the craft blocks
-				// so they will be translated
-				HashSet<MovecraftLocation> newHSBlockList = new HashSet<MovecraftLocation>(Arrays.asList(blocksList));
-				int posY = waterLine + 1;
-				for (int posX = minX; posX < maxX; posX++) {
-					for (int posZ = minZ; posZ < maxZ; posZ++) {
-						if (hb[posX - minX] != null) {
-							if (hb[posX - minX][posZ - minZ] != null) {
-								if (getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId() == 0 && posY > hb[posX - minX][posZ - minZ][0] && posY < hb[posX - minX][posZ - minZ][1]) {
+					// dont check the hitbox for the underwater portion. Otherwise
+					// open-hulled ships would flood.
+					for (posY = waterLine; posY >= minY; posY--) {
+						for (int posX = minX; posX < maxX; posX++) {
+							for (int posZ = minZ; posZ < maxZ; posZ++) {
+								if (getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId() == 0) {
 									MovecraftLocation l = new MovecraftLocation(posX, posY, posZ);
 									newHSBlockList.add(l);
 								}
 							}
 						}
 					}
-				}
-				// dont check the hitbox for the underwater portion. Otherwise
-				// open-hulled ships would flood.
-				for (posY = waterLine; posY >= minY; posY--) {
-					for (int posX = minX; posX < maxX; posX++) {
-						for (int posZ = minZ; posZ < maxZ; posZ++) {
-							if (getCraft().getW().getBlockAt(posX, posY, posZ).getTypeId() == 0) {
-								MovecraftLocation l = new MovecraftLocation(posX, posY, posZ);
-								newHSBlockList.add(l);
-							}
-						}
-					}
+					blocksList = newHSBlockList.toArray(new MovecraftLocation[newHSBlockList.size()]);
+				} catch (IllegalStateException e){
+					waterCraft = false;
+					System.out.println("Illegal state exception, watercraft set to false!");
+					e.printStackTrace();
 				}
 
-				blocksList = newHSBlockList.toArray(new MovecraftLocation[newHSBlockList.size()]);
 			} else if (getCraft().getType().isGroundVehicle()) {
 				data.setDy(CarUtils.getNewdY(getCraft(), data.getDx(), data.getDz()));
 			}
@@ -373,8 +384,9 @@ public class TranslationTask extends AsyncTask {
 
 		for (int x = minLoc.getChunk().getX(); x <= maxLoc.getChunk().getX(); x++) {
 			for (int z = minLoc.getChunk().getZ(); z <= maxLoc.getChunk().getZ(); z++) {
-				if(!w.getChunkAt(x, z).isLoaded()){
-					System.out.println("Ship found unloaded chunks! phew, thank goodness for this check.");
+				Chunk c = w.getChunkAt(x, z);
+				if(!c.isLoaded()){
+					c.load();
 					return false;
 				}
 			}
