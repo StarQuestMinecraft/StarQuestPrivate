@@ -95,8 +95,8 @@ public class DetectionTask extends AsyncTask {
 				// add any players to the ship that should be on it
 				for (Player plr : data.getWorld().getPlayers()) {
 					if (MathUtils.playerIsWithinBoundingPolygon(data.getHitBox(), data.getMinX(), data.getMinZ(), MathUtils.bukkit2MovecraftLoc(plr.getLocation()))) {
-						if (!c.playersRiding.contains(plr)) {
-							c.playersRiding.add(plr.getName());
+						if (!c.playersRiding.contains(plr.getUniqueId())) {
+							c.playersRiding.add(plr.getUniqueId());
 							plr.sendMessage("You board a craft of type " + c.getType().getCraftName() + " under the command of captain " + c.pilot.getName() + ".");
 						}
 					}

@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
@@ -101,12 +102,13 @@ public class CraftManager {
 			
 			craftPlayerIndex.remove( p );
 			
-			for(String str : c.playersRiding){
+			for(UUID str : c.playersRiding){
 				Player plr = Bukkit.getPlayer(str);
 				if(plr != null) plr.sendMessage("The ship has been released, you are no longer riding on it.");
 			}
 			//process and update bedspawns
 		}
+		updateBedspawns(c);
 	}
 	
 	public void updateBedspawns(Craft c){

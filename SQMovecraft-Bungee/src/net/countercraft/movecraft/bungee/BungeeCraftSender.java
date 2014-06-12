@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
@@ -27,7 +28,7 @@ public class BungeeCraftSender {
 		BungeeFileHandler.saveCraftBytes(craftData, p.getName());
 		System.out.println("Saved craft.");
 		sendCraftSpawnPacket(p.getName(), targetserver);
-		for(String s : c.playersRiding){
+		for(UUID s : c.playersRiding){
 			BungeePlayerHandler.sendPlayer(Bukkit.getPlayer(s), targetserver);
 		}
 		removeCraftBlocks(c);
@@ -76,6 +77,7 @@ public class BungeeCraftSender {
 		
 		//send the pilot name
 		msgout.writeUTF(p.getName());
+		msgout.writeUTF(p.getUniqueId().toString());
 		
 		//send the length of the craft's block list array
 		msgout.writeInt(c.getBlockList().length);
@@ -123,7 +125,7 @@ public class BungeeCraftSender {
 			msgout.writeUTF(s);
 		}
 		msgout.writeInt(c.playersRiding.size());
-		for(String s : c.playersRiding){
+		for(UUID s : c.playersRiding){
 			Player plr = Bukkit.getPlayer(s);
 			Location l = plr.getLocation();
 			BungeePlayerHandler.writePlayerData(msgout, plr, targetserver, world, l.getBlockX(), l.getBlockY(), l.getBlockZ());

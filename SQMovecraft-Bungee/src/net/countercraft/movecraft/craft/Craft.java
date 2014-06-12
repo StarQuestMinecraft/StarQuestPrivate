@@ -44,6 +44,7 @@ import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Craft {
@@ -58,7 +59,7 @@ public class Craft {
 	public ArrayList<String> playersWithBedSpawnsOnShip = new ArrayList<String>();
 	public boolean shipAttemptingTeleport = false;
 	public int vX, vZ;
-	public ArrayList<String> playersRiding = new ArrayList<String>();
+	public ArrayList<UUID> playersRiding = new ArrayList<UUID>();
 	public int warpCoordsX;
 	public int warpCoordsZ;
 	public Location originalPilotLoc = null;

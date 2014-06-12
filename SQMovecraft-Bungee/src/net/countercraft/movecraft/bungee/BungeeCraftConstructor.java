@@ -2,6 +2,7 @@ package net.countercraft.movecraft.bungee;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
@@ -22,7 +23,7 @@ import org.bukkit.inventory.InventoryHolder;
 public class BungeeCraftConstructor {
 	
 	//calculate for destination obstructions and then build the craft
-	public static void calculateLocationAndBuild(String world, int tX, int tY, int tZ, int oldX, int oldY, int oldZ, final String type, final String pilot, LocAndBlock[] bll, ArrayList<String> bedSpawnPlayersOnShip, final ArrayList<PlayerTeleport> playersOnShip){
+	public static void calculateLocationAndBuild(String world, int tX, int tY, int tZ, int oldX, int oldY, int oldZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> bedSpawnPlayersOnShip, final ArrayList<PlayerTeleport> playersOnShip){
 		World w = Movecraft.getInstance().getServer().getWorld(world);
 		Location targetLoc = new Location(w, tX, tY, tZ);
 		Location oldLoc = new Location(w, oldX, oldY, oldZ);
@@ -37,22 +38,22 @@ public class BungeeCraftConstructor {
 		}
 		
 		//create a list of string playernames on ship from player teleports
-		ArrayList<String> playersOnShipString = new ArrayList<String>();
+		ArrayList<UUID> playersOnShipString = new ArrayList<UUID>();
 		
 		//modify the players' locations for collision detection and also add them to the string list
 		for(PlayerTeleport t : playersOnShip){
 			t.x = t.x + dX;
 			t.y = t.y + dY;
 			t.z = t.z + dZ;
-			playersOnShipString.add(t.playername);
+			playersOnShipString.add(t.uuid);
 		}
-		buildCraft(w, tX, tY, tZ, dX, dY, dZ, type, pilot, bll, bedSpawnPlayersOnShip, playersOnShipString);
+		buildCraft(w, tX, tY, tZ, dX, dY, dZ, type, pilot, pilotUUID, bll, bedSpawnPlayersOnShip, playersOnShipString);
 		warpPlayers(playersOnShip);
 	}
 	
 	private static void warpPlayers(ArrayList<PlayerTeleport> playersOnShip) {
 		for(final PlayerTeleport t : playersOnShip){
-			if (Bukkit.getServer().getPlayer(t.playername) != null) {
+			if (Bukkit.getServer().getPlayer(t.uuid) != null) {
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 					public void run(){
 						t.execute();
@@ -63,7 +64,7 @@ public class BungeeCraftConstructor {
 			}
 		}
 	}
-	public static void buildCraft(final World w, int X, int Y, int Z, int dX, int dY, int dZ, final String type, final String pilot, LocAndBlock[] bll, ArrayList<String> names, ArrayList<String> namesOnShip){
+	public static void buildCraft(final World w, int X, int Y, int Z, int dX, int dY, int dZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> names, ArrayList<UUID> namesOnShip){
 		int[] fragileBlocks = MapUpdateManager.getInstance().fragileBlocks;
 		ArrayList<LocAndBlock> fragiles = new ArrayList<LocAndBlock>();
 		
@@ -97,11 +98,11 @@ public class BungeeCraftConstructor {
 		//final int XDIFF = xDiff;
 		Craft c = new Craft(InteractListener.getCraftTypeFromString( type ), w);
 		c.setOriginalPilotLoc(new Location(w, X, Y, Z));
-		for(String s : namesOnShip){
+		for(UUID s : namesOnShip){
 			if(!c.playersRiding.contains(s))
 			c.playersRiding.add(s);
 		}
-		attemptPilot(0, c, pilot, type, w);
+		attemptPilot(0, c, pilot, pilotUUID, type, w);
 	}
 	
 	private static void restoreInv(Block b, LocAndBlock lb){
@@ -192,7 +193,7 @@ public class BungeeCraftConstructor {
 		Movecraft.getInstance().getServer().broadcastMessage(s);
 	}
 	
-	private static void attemptPilot(final int count, final Craft c, final String pilot, final String type, final World w){
+	private static void attemptPilot(final int count, final Craft c, final String pilot, final UUID uid, final String type, final World w){
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 			public void run(){
 				Player p = Bukkit.getServer().getPlayer(pilot);
@@ -200,7 +201,7 @@ public class BungeeCraftConstructor {
 					c.detect(pilot,  MathUtils.bukkit2MovecraftLoc(p.getLocation()));
 				} else {
 					//player is not logged in yet, but has a playerteleport set to execute when they do log in (hopefully)
-					BungeePlayerHandler.pilotQueue.put(pilot, c);
+					BungeePlayerHandler.pilotQueue.put(uid, c);
 				}
 			}
 		}, 5L);

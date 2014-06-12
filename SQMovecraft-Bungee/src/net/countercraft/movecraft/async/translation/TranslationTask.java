@@ -38,6 +38,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class TranslationTask extends AsyncTask {
@@ -230,7 +231,7 @@ public class TranslationTask extends AsyncTask {
 
 				// Move entities within the craft
 
-				Iterator<String> i = getCraft().playersRiding.iterator();
+				Iterator<UUID> i = getCraft().playersRiding.iterator();
 				while (i.hasNext()) {
 					Entity pTest = Bukkit.getPlayer(i.next());
 					if(pTest != null){

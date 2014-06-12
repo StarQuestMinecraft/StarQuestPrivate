@@ -8,6 +8,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
@@ -27,27 +28,28 @@ public class BungeePlayerHandler {
 
 //@formatting:off
 	public static ArrayList<PlayerTeleport> teleportQueue = new ArrayList<PlayerTeleport>();
-	static HashMap<String, Craft> pilotQueue = new HashMap<String, Craft>();
+	static HashMap<UUID, Craft> pilotQueue = new HashMap<UUID, Craft>();
 	
 	public static void onLogin(final Player p){
-		final String playername = p.getName();
+		final UUID uid = p.getUniqueId();
 		for(int i = 0; i < teleportQueue.size(); i++){
 			final PlayerTeleport t = teleportQueue.get(i);
-			if(playername.equals(t.playername)){
+			if(uid.equals(t.uuid)){
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 					public void run(){
 						t.execute();
 					}
 				}, 1L);
-				final Craft c = pilotQueue.get(playername);
+				final Craft c = pilotQueue.get(uid);
 				if(c != null){
 					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 						public void run(){
 							if(c.originalPilotLoc == null){
-								c.detect(playername, MathUtils.bukkit2MovecraftLoc(p.getLocation()));
+								c.detect(p.getName(), MathUtils.bukkit2MovecraftLoc(p.getLocation()));
 							} else {
-								c.detect(playername, MathUtils.bukkit2MovecraftLoc(c.originalPilotLoc));
+								c.detect(p.getName(), MathUtils.bukkit2MovecraftLoc(c.originalPilotLoc));
 							}
+							pilotQueue.remove(uid);
 						}
 					}, 2L);
 				}
@@ -108,7 +110,7 @@ public class BungeePlayerHandler {
 
 		Location l = p.getLocation();
 		msgout.writeUTF(world);
-		msgout.writeUTF(p.getName());
+		msgout.writeUTF(p.getUniqueId().toString());
 		msgout.writeInt(X);
 		msgout.writeInt(Y);
 		msgout.writeInt(Z);
@@ -143,7 +145,7 @@ public class BungeePlayerHandler {
 
 			PlayerTeleport t = recievePlayerTeleport(msgin);
 
-			if (Bukkit.getServer().getPlayer(t.playername) != null) {
+			if (Bukkit.getServer().getPlayer(t.uuid) != null) {
 				t.execute();
 			} else {
 				teleportQueue.add(t);
@@ -157,7 +159,7 @@ public class BungeePlayerHandler {
 	public static PlayerTeleport recievePlayerTeleport(DataInputStream msgin) throws IOException {
 
 		String worldname = msgin.readUTF();
-		String playername = msgin.readUTF();
+		UUID uuid = UUID.fromString(msgin.readUTF());
 		int coordX = msgin.readInt();
 		int coordY = msgin.readInt();
 		int coordZ = msgin.readInt();
@@ -173,7 +175,7 @@ public class BungeePlayerHandler {
 			coordY = loc.getBlockY();
 			coordZ = loc.getBlockZ();
 		}
-		PlayerTeleport t = new PlayerTeleport(playername, worldname, coordX, coordY, coordZ, yaw, pitch, playerKnap, gamemode, isBedspawn);
+		PlayerTeleport t = new PlayerTeleport(uuid, worldname, coordX, coordY, coordZ, yaw, pitch, playerKnap, gamemode, isBedspawn);
 		return t;
 	}
 
@@ -205,10 +207,10 @@ public class BungeePlayerHandler {
 		}
 	}
 
-	public static PlayerTeleport teleportFromString(String name) {
+	public static PlayerTeleport teleportFromUUID(UUID u) {
 
 		for (PlayerTeleport t : teleportQueue) {
-			if (t.playername.equals(name)) {
+			if (t.uuid.equals(u)) {
 				return t;
 			}
 		}

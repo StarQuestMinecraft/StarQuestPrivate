@@ -1,6 +1,8 @@
 
 package net.countercraft.movecraft.bungee;
 
+import java.util.UUID;
+
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.listener.PlayerListener;
@@ -15,7 +17,7 @@ import us.higashiyama.george.CardboardBox.Knapsack;
 
 public class PlayerTeleport {
 
-	public String playername;
+	public UUID uuid;
 	String worldname;
 	public int x;
 	public int y;
@@ -26,15 +28,15 @@ public class PlayerTeleport {
 	public Knapsack knapsack;
 	boolean isBedspawn;
 
-	public PlayerTeleport(String playername, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack knap, GameMode gamemode){
-		init(playername, worldname, x, y, z, yaw, pitch, knap, gamemode, false);
+	public PlayerTeleport(UUID uuid, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack knap, GameMode gamemode){
+		init(uuid, worldname, x, y, z, yaw, pitch, knap, gamemode, false);
 	}
-	public PlayerTeleport(String playername, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack knap, GameMode gamemode, boolean isBedspawn) {
-		init(playername, worldname, x, y, z, yaw, pitch, knap, gamemode, isBedspawn);
+	public PlayerTeleport(UUID uuid, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack knap, GameMode gamemode, boolean isBedspawn) {
+		init(uuid, worldname, x, y, z, yaw, pitch, knap, gamemode, isBedspawn);
 	}
 	
-	private void init(String playername, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack knap, GameMode gamemode, boolean isBedspawn){
-		this.playername = playername;
+	private void init(UUID uuid, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack knap, GameMode gamemode, boolean isBedspawn){
+		this.uuid = uuid;
 		this.worldname = worldname;
 
 		// NOTE x y and z represent either the player's preteleport location or
@@ -53,7 +55,7 @@ public class PlayerTeleport {
 
 	public void execute() {
 
-		final Player p = Bukkit.getServer().getPlayer(playername);
+		final Player p = Bukkit.getServer().getPlayer(uuid);
 		World w = Bukkit.getServer().getWorld(worldname);
 		
 		Location l = new Location(w, x + 0.5, (double) y, z + 0.5, yaw, pitch);

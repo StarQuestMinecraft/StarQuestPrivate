@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -47,10 +48,12 @@ public class BungeeCraftReciever {
         	//recieve craft type name
         	String cName = msgin.readUTF();
         	
-        	//recieve pilot name
+        	//recieve pilot name & UUID
         	String pName = msgin.readUTF();
+        	UUID pUUID = UUID.fromString(msgin.readUTF());
+        	
         	if(!affectPlayers){
-        		Player p = Bukkit.getServer().getPlayer(pName);
+        		Player p = Bukkit.getServer().getPlayer(pUUID);
         		if(p != null){
         			Location loc = p.getLocation();
         			Xcoord = loc.getBlockX();
@@ -120,7 +123,7 @@ public class BungeeCraftReciever {
 	        		playersOnShip.add(BungeePlayerHandler.recievePlayerTeleport(msgin));
 	        	}
         	}
-        	BungeeCraftConstructor.calculateLocationAndBuild(targetworld,Xcoord,Ycoord,Zcoord, oldX, oldY, oldZ, cName, pName, blockloclist, bedspawnNames, playersOnShip);
+        	BungeeCraftConstructor.calculateLocationAndBuild(targetworld,Xcoord,Ycoord,Zcoord, oldX, oldY, oldZ, cName, pName, pUUID, blockloclist, bedspawnNames, playersOnShip);
         }
         catch(IOException e){
         	e.printStackTrace();
