@@ -28,6 +28,7 @@ import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.Rotation;
 
 import org.apache.commons.collections.ListUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -186,9 +187,9 @@ public class RotationTask extends AsyncTask {
                 if ( !failed ) {
                         //rotate entities in the craft
                         Location tOP = new Location( getCraft().getW(), originPoint.getX(), originPoint.getY(), originPoint.getZ() );
-                        Iterator<Player> i= getCraft().playersRiding.iterator();
+                        Iterator<String> i= getCraft().playersRiding.iterator();
                         while (i.hasNext()) {
-                                Entity pTest=i.next();
+                                Player pTest = Bukkit.getServer().getPlayer(i.next());
                                 if ( MathUtils.playerIsWithinBoundingPolygon( getCraft().getHitBox(), getCraft().getMinX(), getCraft().getMinZ(), MathUtils.bukkit2MovecraftLoc( pTest.getLocation() ) ) ) {
                                         if(pTest.getType()!=org.bukkit.entity.EntityType.DROPPED_ITEM ) {
                                                 // Player is onboard this craft

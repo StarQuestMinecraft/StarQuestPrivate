@@ -84,7 +84,8 @@ public class TeleportTask {
 		HashMap<Player, Location> players = new HashMap<Player, Location>();
 		
 		//fill the player list
-		for (Player p : c.playersRiding){
+		for (String s : c.playersRiding){
+			Player p = Bukkit.getPlayer(s);
 			if ( MathUtils.playerIsWithinBoundingPolygon( oldHitBox, oldMinX, oldMinZ, MathUtils.bukkit2MovecraftLoc(p.getLocation()))){
 				Location loc = p.getLocation();
 				Location target = new Location(locto.getWorld(), loc.getX() + dX, loc.getY() + dY, loc.getZ() + dZ, loc.getYaw(), loc.getPitch());

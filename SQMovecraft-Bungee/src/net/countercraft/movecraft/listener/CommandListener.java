@@ -76,7 +76,7 @@ public class CommandListener implements Listener {
 			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
 			for(Craft c : crafts){
 				if(MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))){
-					c.playersRiding.add(p);
+					c.playersRiding.add(p.getName());
 					p.sendMessage("You board a craft of type " + c.getType().getCraftName() + " under the command of captain " + c.pilot.getName() + ".");
 					return;
 				}
@@ -90,8 +90,8 @@ public class CommandListener implements Listener {
 			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
 			if(crafts == null) return;
 			for(Craft c : crafts){
-				if(c.playersRiding.contains(p)){
-					c.playersRiding.remove(p);
+				if(c.playersRiding.contains(p.getName())){
+					c.playersRiding.remove(p.getName());
 					p.sendMessage("You get off the craft.");
 					return;
 				}

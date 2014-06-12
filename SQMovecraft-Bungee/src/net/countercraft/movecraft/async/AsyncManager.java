@@ -194,9 +194,9 @@ public class AsyncManager extends BukkitRunnable {
 				Player p = c.pilot;
 
 				// Check that the craft hasn't been sneakily unpiloted
-				if ( p != null ) {
+				if ( p != null) {
 
-					if ( task.getData().failed() ) {
+					if ( task.getData().failed()) {
 						//The craft translation failed
 						p.sendMessage( task.getData().getFailMessage() );
 						clear(c);
@@ -208,7 +208,8 @@ public class AsyncManager extends BukkitRunnable {
 
 						MapUpdateCommand[] updates = task.getData().getUpdates();
 						EntityUpdateCommand[] eUpdates=task.getData().getEntityUpdates();
-						boolean failed = (updates != null) && MapUpdateManager.getInstance().addWorldUpdate( c.getW(), updates, eUpdates );
+
+						boolean failed = MapUpdateManager.getInstance().addWorldUpdate( c.getW(), updates, eUpdates );
 
 						if ( !failed ) {
 
@@ -237,9 +238,8 @@ public class AsyncManager extends BukkitRunnable {
 							c.zDist += task.getData().getDz();
 
 						} else {
-
 							Movecraft.getInstance().getLogger().log( Level.SEVERE, String.format( I18nSupport.getInternationalisedString( "Translation - Craft collision" ) ) );
-
+							clear(c);
 						}
 					}
 

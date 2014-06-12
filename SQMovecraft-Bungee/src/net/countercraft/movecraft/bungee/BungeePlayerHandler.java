@@ -7,8 +7,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.countercraft.movecraft.Movecraft;
+import net.countercraft.movecraft.craft.Craft;
+import net.countercraft.movecraft.utils.MathUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -24,7 +27,34 @@ public class BungeePlayerHandler {
 
 //@formatting:off
 	public static ArrayList<PlayerTeleport> teleportQueue = new ArrayList<PlayerTeleport>();
+	static HashMap<String, Craft> pilotQueue = new HashMap<String, Craft>();
 	
+	public static void onLogin(final Player p){
+		final String playername = p.getName();
+		for(int i = 0; i < teleportQueue.size(); i++){
+			final PlayerTeleport t = teleportQueue.get(i);
+			if(playername.equals(t.playername)){
+				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+					public void run(){
+						t.execute();
+					}
+				}, 1L);
+				final Craft c = pilotQueue.get(playername);
+				if(c != null){
+					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+						public void run(){
+							if(c.originalPilotLoc == null){
+								c.detect(playername, MathUtils.bukkit2MovecraftLoc(p.getLocation()));
+							} else {
+								c.detect(playername, MathUtils.bukkit2MovecraftLoc(c.originalPilotLoc));
+							}
+						}
+					}, 2L);
+				}
+				break;
+			}
+		}
+	}
 	public static void sendPlayer(Player p, String targetserver, String world, int X, int Y, int Z){
 		sendPlayer(p, targetserver, world, X, Y, Z, false);
 	}

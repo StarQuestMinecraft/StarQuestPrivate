@@ -82,7 +82,8 @@ public class PlayerListener implements Listener {
 	public void onPlayerLogin(PlayerJoinEvent event){
 		Player p = event.getPlayer();
 		
-		boolean isTeleported = false;
+		BungeePlayerHandler.onLogin(p);
+		/*boolean isTeleported = false;
 		
 		for(int i = 0; i < BungeePlayerHandler.teleportQueue.size(); i++){
 			final PlayerTeleport t = BungeePlayerHandler.teleportQueue.get(i);
@@ -108,7 +109,7 @@ public class PlayerListener implements Listener {
 						p.setFlying(false);
 				}
 			}
-		}
+		}*/
 	}
 	
 	private boolean shouldTempFly(Player p){
@@ -198,7 +199,7 @@ public class PlayerListener implements Listener {
 		if(! (event instanceof PlayerTeleportEvent)){
 			if(CraftManager.getInstance().getCraftsInWorld(p.getWorld()) == null) return;
 			for(Craft c : CraftManager.getInstance().getCraftsInWorld(p.getWorld())){
-				if(c.playersRiding.contains(p)){
+				if(c.playersRiding.contains(p.getName())){
 					if(!MathUtils.playerIsWithinBoundingPolygon( c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc( event.getTo() ) ) ){
 						if(!c.shipAttemptingTeleport){
 							p.setFallDistance(0.0F);

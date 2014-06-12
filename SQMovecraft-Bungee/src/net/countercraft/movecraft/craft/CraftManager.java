@@ -101,8 +101,8 @@ public class CraftManager {
 			
 			craftPlayerIndex.remove( p );
 			
-			for(Player plr: c.playersRiding){
-				plr.sendMessage("The ship has been released, you are no longer riding on it.");
+			for(String s: c.playersRiding){
+				Bukkit.getPlayer(s).sendMessage("The ship has been released, you are no longer riding on it.");
 			}
 			//process and update bedspawns
 		}

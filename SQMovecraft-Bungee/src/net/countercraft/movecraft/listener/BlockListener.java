@@ -44,17 +44,14 @@ public class BlockListener implements Listener {
 	@EventHandler
 	public void onSignChange(SignChangeEvent event){
 		for (CraftType t : CraftManager.getInstance().getCraftTypes()) {
-			Sign s = (Sign) event.getBlock().getState();
-			if (s.getLine(0).equalsIgnoreCase(t.getCraftName())) {
-				if (s.getLine(1) == null || s.getLine(1).equals("")){
+			if (event.getLine(0).equalsIgnoreCase(t.getCraftName())) {
+				if (event.getLine(1) == null || event.getLine(1).equals("")){
 					String str = event.getPlayer().getName();
 					if(str.length() > 15){
-						s.setLine(1, str.substring(0, 15));
+						event.setLine(1, str.substring(0, 15));
 					} else {
-						s.setLine(1, str);
+						event.setLine(1, str);
 					}
-
-					s.update();	
 				}
 			}
 		}

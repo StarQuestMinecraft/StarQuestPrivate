@@ -33,15 +33,20 @@ public class BungeeCraftConstructor {
 		while(count < 100 && destinationObstructed(bll, w, dX, dY, dZ)){
 			count++;
 			dX += 10;
+			tX += 10;
 		}
 		
-		//modify the players' locations too
+		//create a list of string playernames on ship from player teleports
+		ArrayList<String> playersOnShipString = new ArrayList<String>();
+		
+		//modify the players' locations for collision detection and also add them to the string list
 		for(PlayerTeleport t : playersOnShip){
 			t.x = t.x + dX;
 			t.y = t.y + dY;
 			t.z = t.z + dZ;
+			playersOnShipString.add(t.playername);
 		}
-		buildCraft(w, tX, tY, tZ, dX, dY, dZ, type, pilot, bll, bedSpawnPlayersOnShip);
+		buildCraft(w, tX, tY, tZ, dX, dY, dZ, type, pilot, bll, bedSpawnPlayersOnShip, playersOnShipString);
 		warpPlayers(playersOnShip);
 	}
 	
@@ -58,7 +63,7 @@ public class BungeeCraftConstructor {
 			}
 		}
 	}
-	public static void buildCraft(final World w, int X, int Y, int Z, int dX, int dY, int dZ, final String type, final String pilot, LocAndBlock[] bll, ArrayList<String> names){
+	public static void buildCraft(final World w, int X, int Y, int Z, int dX, int dY, int dZ, final String type, final String pilot, LocAndBlock[] bll, ArrayList<String> names, ArrayList<String> namesOnShip){
 		int[] fragileBlocks = MapUpdateManager.getInstance().fragileBlocks;
 		ArrayList<LocAndBlock> fragiles = new ArrayList<LocAndBlock>();
 		
@@ -91,6 +96,11 @@ public class BungeeCraftConstructor {
 		}
 		//final int XDIFF = xDiff;
 		Craft c = new Craft(InteractListener.getCraftTypeFromString( type ), w);
+		c.setOriginalPilotLoc(new Location(w, X, Y, Z));
+		for(String s : namesOnShip){
+			if(!c.playersRiding.contains(s))
+			c.playersRiding.add(s);
+		}
 		attemptPilot(0, c, pilot, type, w);
 	}
 	
@@ -186,13 +196,11 @@ public class BungeeCraftConstructor {
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 			public void run(){
 				Player p = Bukkit.getServer().getPlayer(pilot);
-				if(count >= 20 ){
-					return;
-				} else if(p == null){
-					int count2 = count + 1;
-					attemptPilot(count2, c, pilot, type, w);
+				if(p != null){
+					c.detect(pilot,  MathUtils.bukkit2MovecraftLoc(p.getLocation()));
 				} else {
-					c.detect(pilot, MathUtils.bukkit2MovecraftLoc(p.getLocation()));
+					//player is not logged in yet, but has a playerteleport set to execute when they do log in (hopefully)
+					BungeePlayerHandler.pilotQueue.put(pilot, c);
 				}
 			}
 		}, 5L);

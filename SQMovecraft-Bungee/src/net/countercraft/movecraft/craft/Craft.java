@@ -31,6 +31,7 @@ import net.countercraft.movecraft.utils.Rotation;
 import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -57,10 +58,10 @@ public class Craft {
 	public ArrayList<String> playersWithBedSpawnsOnShip = new ArrayList<String>();
 	public boolean shipAttemptingTeleport = false;
 	public int vX, vZ;
-	public ArrayList<Player> playersRiding = new ArrayList<Player>();
+	public ArrayList<String> playersRiding = new ArrayList<String>();
 	public int warpCoordsX;
 	public int warpCoordsZ;
-	public Location originalPilotLoc = new Location(w, 0, 0, 0);
+	public Location originalPilotLoc = null;
 	public Player pilot;
 
 	public Craft(CraftType type, World world) {
@@ -71,6 +72,10 @@ public class Craft {
 		xDist = 0;
 		yDist = 0;
 		zDist = 0;
+	}
+	
+	public void setOriginalPilotLoc(Location l){
+		originalPilotLoc = l;
 	}
 
 	/*

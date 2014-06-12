@@ -20,8 +20,11 @@ import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
 import org.apache.commons.collections.ListUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -49,6 +52,11 @@ public class TranslationTask extends AsyncTask {
 	@Override
 	public void excecute() {
 		try {
+			if(!isChunksLoaded(getCraft().getW(), getCraft().getMinX(), getCraft().getMinZ(), getCraft().getHitBox(), data.getDx(), data.getDz())){
+				System.out.println("[MVC-CHUNKS] Chunks not loaded!");
+				return;
+			}
+			
 			MovecraftLocation[] blocksList = data.getBlockList();
 
 			// canfly=false means an ocean-going vessel
@@ -222,16 +230,16 @@ public class TranslationTask extends AsyncTask {
 
 				// Move entities within the craft
 
-				Iterator<Player> i = getCraft().playersRiding.iterator();
+				Iterator<String> i = getCraft().playersRiding.iterator();
 				while (i.hasNext()) {
-					Entity pTest = i.next();
+					Entity pTest = Bukkit.getPlayer(i.next());
 					if (MathUtils.playerIsWithinBoundingPolygon(getCraft().getHitBox(), getCraft().getMinX(), getCraft().getMinZ(), MathUtils.bukkit2MovecraftLoc(pTest.getLocation()))) {
 						if (pTest.getType() != org.bukkit.entity.EntityType.DROPPED_ITEM) {
 							Location tempLoc = pTest.getLocation().add(data.getDx(), data.getDy(), data.getDz());
 							Location newPLoc = new Location(getCraft().getW(), tempLoc.getX(), tempLoc.getY(), tempLoc.getZ());
 							newPLoc.setPitch(pTest.getLocation().getPitch());
 							newPLoc.setYaw(pTest.getLocation().getYaw());
-
+							pTest.teleport(newPLoc);
 							EntityUpdateCommand eUp = new EntityUpdateCommand(pTest.getLocation(), newPLoc, pTest, pTest.getVelocity(), getCraft());
 							entityUpdateSet.add(eUp);
 						} else {
@@ -349,5 +357,25 @@ public class TranslationTask extends AsyncTask {
 
 	public TranslationTaskData getData() {
 		return data;
+	}
+	
+	private boolean isChunksLoaded(World w, int minX, int minZ, int[][][] hitBox, int dx, int dz) {
+		if (dx == 0 && dz == 0)
+			return true;
+		int maxX = minX + hitBox.length;
+		int maxZ = minZ + hitBox[0].length;
+
+		Location minLoc = new Location(w, minX, 0, minZ);
+		Location maxLoc = new Location(w, maxX, 0, maxZ);
+
+		for (int x = minLoc.getChunk().getX(); x <= maxLoc.getChunk().getX(); x++) {
+			for (int z = minLoc.getChunk().getZ(); z <= maxLoc.getChunk().getZ(); z++) {
+				if(!w.getChunkAt(x, z).isLoaded()){
+					System.out.println("Ship found unloaded chunks! phew, thank goodness for this check.");
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }
