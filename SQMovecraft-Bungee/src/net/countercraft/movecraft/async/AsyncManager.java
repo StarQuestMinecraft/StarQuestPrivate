@@ -209,7 +209,7 @@ public class AsyncManager extends BukkitRunnable {
 						MapUpdateCommand[] updates = task.getData().getUpdates();
 						EntityUpdateCommand[] eUpdates=task.getData().getEntityUpdates();
 
-						boolean failed = MapUpdateManager.getInstance().addWorldUpdate( c.getW(), updates, eUpdates );
+						boolean failed = (updates != null) && MapUpdateManager.getInstance().addWorldUpdate( c.getW(), updates, eUpdates );
 
 						if ( !failed ) {
 

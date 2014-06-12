@@ -197,8 +197,9 @@ public class PlayerListener implements Listener {
 	public void onPlayerMove( PlayerMoveEvent event ) {
 		Player p = event.getPlayer();
 		if(! (event instanceof PlayerTeleportEvent)){
-			if(CraftManager.getInstance().getCraftsInWorld(p.getWorld()) == null) return;
-			for(Craft c : CraftManager.getInstance().getCraftsInWorld(p.getWorld())){
+			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
+			if(crafts == null) return;
+			for(Craft c : crafts){
 				if(c.playersRiding.contains(p.getName())){
 					if(!MathUtils.playerIsWithinBoundingPolygon( c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc( event.getTo() ) ) ){
 						if(!c.shipAttemptingTeleport){
