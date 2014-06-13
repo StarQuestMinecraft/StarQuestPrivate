@@ -3,13 +3,9 @@ package net.countercraft.movecraft.bungee;
 import java.io.IOException;
 
 import net.countercraft.movecraft.craft.Craft;
-import net.countercraft.movecraft.listener.PlayerListener;
-import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 

@@ -1,9 +1,6 @@
 package net.countercraft.movecraft.bungee;
 
-import java.util.ArrayList;
-
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 public class LocAndBlock {
 	public int X;

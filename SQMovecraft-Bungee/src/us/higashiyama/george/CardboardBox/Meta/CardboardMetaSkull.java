@@ -14,7 +14,6 @@ public class CardboardMetaSkull implements CardboardItemMeta, Serializable {
 	private String owner;
 	private boolean hasowner;
 
-	@SuppressWarnings("deprecation")
 	public CardboardMetaSkull(ItemStack head) {
 
 		this.id = head.getTypeId();
@@ -27,7 +26,6 @@ public class CardboardMetaSkull implements CardboardItemMeta, Serializable {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public ItemMeta unbox() {
 
 		SkullMeta meta = (SkullMeta) new ItemStack(this.id).getItemMeta();

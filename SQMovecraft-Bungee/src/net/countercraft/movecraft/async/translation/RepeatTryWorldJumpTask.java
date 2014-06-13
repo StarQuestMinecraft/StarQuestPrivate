@@ -1,7 +1,6 @@
 package net.countercraft.movecraft.async.translation;
 
 import net.countercraft.movecraft.craft.Craft;
-import net.countercraft.movecraft.listener.PlayerListener;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

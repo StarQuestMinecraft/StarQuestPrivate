@@ -17,10 +17,6 @@
 
 package net.countercraft.movecraft.async.translation;
 
-import java.util.List;
-
-import org.bukkit.entity.Player;
-
 import net.countercraft.movecraft.utils.EntityUpdateCommand;
 import net.countercraft.movecraft.utils.MapUpdateCommand;
 import net.countercraft.movecraft.utils.MovecraftLocation;

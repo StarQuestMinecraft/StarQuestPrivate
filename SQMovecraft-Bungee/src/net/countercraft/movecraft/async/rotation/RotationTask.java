@@ -17,6 +17,14 @@
 
 package net.countercraft.movecraft.async.rotation;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
 import net.countercraft.movecraft.async.AsyncTask;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.localisation.I18nSupport;
@@ -29,22 +37,10 @@ import net.countercraft.movecraft.utils.Rotation;
 
 import org.apache.commons.collections.ListUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 public class RotationTask extends AsyncTask {
 		private ArrayList<MovecraftLocation> signLocations;
@@ -165,7 +161,6 @@ public class RotationTask extends AsyncTask {
                                 if ( w.getBlockTypeIdAt( blockList[i].getX(), blockList[i].getY(), blockList[i].getZ() ) != 0 && !existingBlockSet.contains( blockList[i] ) ) {
                                         failed = true;
                                         failMessage = String.format( I18nSupport.getInternationalisedString( "Rotation - Craft is obstructed" ) );
-                                        getCraft().processing.compareAndSet(false, true);
                                         break;
                                 } else {
                                         int id = w.getBlockTypeIdAt( originalBlockList[i].getX(), originalBlockList[i].getY(), originalBlockList[i].getZ() );

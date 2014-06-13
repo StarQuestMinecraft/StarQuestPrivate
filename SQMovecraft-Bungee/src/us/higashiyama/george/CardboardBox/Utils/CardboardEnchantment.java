@@ -14,13 +14,11 @@ public class CardboardEnchantment implements Serializable {
 
 	private final int id;
 
-	@SuppressWarnings("deprecation")
 	public CardboardEnchantment(Enchantment enchantment) {
 
 		this.id = enchantment.getId();
 	}
 
-	@SuppressWarnings("deprecation")
 	public Enchantment unbox() {
 
 		return Enchantment.getById(this.id);

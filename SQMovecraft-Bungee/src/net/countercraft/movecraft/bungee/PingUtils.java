@@ -2,9 +2,7 @@ package net.countercraft.movecraft.bungee;
 
 import java.util.HashMap;
 
-import de.howaner.BungeeCordLib.BungeeCord;
 import de.howaner.BungeeCordLib.server.BungeeServer;
-import de.howaner.BungeeCordLib.server.ServerData;
 
 public class PingUtils{
 	private static HashMap<String, BungeeServer> servers = new HashMap<String, BungeeServer>();

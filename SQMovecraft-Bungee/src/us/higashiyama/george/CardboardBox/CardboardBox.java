@@ -38,7 +38,6 @@ public class CardboardBox implements Serializable {
 	private final HashMap<CardboardEnchantment, Integer> enchants;
 	private CardboardItemMeta meta;
 
-	@SuppressWarnings("deprecation")
 	public CardboardBox(ItemStack item) {
 
 		this.type = item.getTypeId();
@@ -111,7 +110,6 @@ public class CardboardBox implements Serializable {
 
 	public ItemStack unbox() {
 
-		@SuppressWarnings("deprecation")
 		ItemStack item = new ItemStack(type, amount, damage);
 
 		// These metas below will never be null because of the if/else during

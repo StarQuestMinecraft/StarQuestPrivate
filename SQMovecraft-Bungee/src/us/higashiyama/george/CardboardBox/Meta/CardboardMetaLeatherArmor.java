@@ -15,7 +15,6 @@ public class CardboardMetaLeatherArmor implements CardboardItemMeta, Serializabl
 	private CardboardColor color;
 	private int id;
 
-	@SuppressWarnings("deprecation")
 	public CardboardMetaLeatherArmor(ItemStack leather) {
 
 		this.id = leather.getTypeId();
@@ -23,7 +22,6 @@ public class CardboardMetaLeatherArmor implements CardboardItemMeta, Serializabl
 		this.color = new CardboardColor(meta.getColor());
 	}
 
-	@SuppressWarnings("deprecation")
 	public ItemMeta unbox() {
 
 		LeatherArmorMeta meta = (LeatherArmorMeta) new ItemStack(this.id).getItemMeta();

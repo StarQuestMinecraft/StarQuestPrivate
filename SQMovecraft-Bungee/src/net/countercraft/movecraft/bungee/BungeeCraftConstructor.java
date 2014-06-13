@@ -10,7 +10,6 @@ import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MathUtils;
-import net.countercraft.movecraft.utils.MovecraftLocation;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

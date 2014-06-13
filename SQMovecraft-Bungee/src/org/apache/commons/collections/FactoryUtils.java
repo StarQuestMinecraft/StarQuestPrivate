@@ -17,8 +17,8 @@
 package org.apache.commons.collections;
 
 import org.apache.commons.collections.functors.ConstantFactory;
-import org.apache.commons.collections.functors.InstantiateFactory;
 import org.apache.commons.collections.functors.ExceptionFactory;
+import org.apache.commons.collections.functors.InstantiateFactory;
 import org.apache.commons.collections.functors.PrototypeFactory;
 
 /**

@@ -5,12 +5,10 @@ import net.countercraft.movecraft.async.translation.RepeatTryWorldJumpTask;
 import net.countercraft.movecraft.bungee.RepeatTryServerJumpTask;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
-import net.countercraft.movecraft.utils.MovecraftLocation;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

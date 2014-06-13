@@ -17,6 +17,10 @@
 
 package net.countercraft.movecraft.craft;
 
+import java.util.ArrayList;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.AsyncManager;
 import net.countercraft.movecraft.async.detection.DetectionTask;
@@ -31,7 +35,6 @@ import net.countercraft.movecraft.utils.Rotation;
 import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -39,13 +42,8 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Craft {
 	private int[][][] hitBox;

@@ -17,13 +17,14 @@
 
 package net.countercraft.movecraft.metrics;
 
+import java.io.IOException;
+import java.util.logging.Level;
+
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.config.Settings;
 import net.countercraft.movecraft.localisation.I18nSupport;
-import org.mcstats.Metrics;
 
-import java.io.IOException;
-import java.util.logging.Level;
+import org.mcstats.Metrics;
 
 public class MovecraftMetrics {
 	private final int classTypes;

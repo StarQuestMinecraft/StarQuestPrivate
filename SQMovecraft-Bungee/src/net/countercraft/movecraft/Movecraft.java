@@ -17,6 +17,13 @@
 
 package net.countercraft.movecraft;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import net.countercraft.movecraft.async.AsyncManager;
 import net.countercraft.movecraft.async.translation.AutopilotRunTask;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
@@ -25,9 +32,7 @@ import net.countercraft.movecraft.bungee.BungeeCraftSender;
 import net.countercraft.movecraft.bungee.BungeeFileHandler;
 import net.countercraft.movecraft.bungee.BungeeListener;
 import net.countercraft.movecraft.bungee.PingUtils;
-import net.countercraft.movecraft.bungee.RepeatTryServerJumpTask;
 import net.countercraft.movecraft.config.Settings;
-import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.listener.BlockListener;
 import net.countercraft.movecraft.listener.CommandListener;
@@ -35,7 +40,7 @@ import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.listener.PartListener;
 import net.countercraft.movecraft.listener.PlayerListener;
 import net.countercraft.movecraft.localisation.I18nSupport;
-import net.countercraft.movecraft.metrics.MovecraftMetrics;  
+import net.countercraft.movecraft.metrics.MovecraftMetrics;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MovecraftLocation;
@@ -49,13 +54,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Movecraft extends JavaPlugin {
 	private static Movecraft instance;

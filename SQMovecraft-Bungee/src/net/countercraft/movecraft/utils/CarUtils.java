@@ -1,8 +1,8 @@
 package net.countercraft.movecraft.utils;
 
-import org.bukkit.World;
-
 import net.countercraft.movecraft.craft.Craft;
+
+import org.bukkit.World;
 
 public class CarUtils {
 	public static int getNewdY(Craft c, int dX, int dZ){

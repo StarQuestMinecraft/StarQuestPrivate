@@ -26,7 +26,6 @@ public class CardboardMetaEnchantment implements CardboardItemMeta, Serializable
 	private int id;
 	private Map<CardboardEnchantment, Integer> enchantments = new HashMap<CardboardEnchantment, Integer>();
 
-	@SuppressWarnings("deprecation")
 	public CardboardMetaEnchantment(ItemStack item) {
 
 		this.id = item.getTypeId();
@@ -37,7 +36,6 @@ public class CardboardMetaEnchantment implements CardboardItemMeta, Serializable
 
 	}
 
-	@SuppressWarnings("deprecation")
 	public ItemMeta unbox() {
 
 		ItemFactory factory = Bukkit.getServer().getItemFactory();

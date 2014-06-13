@@ -13,7 +13,6 @@ public class CardboardMetaMap implements CardboardItemMeta, Serializable {
 	private int id;
 	private boolean scaling;
 
-	@SuppressWarnings("deprecation")
 	public CardboardMetaMap(ItemStack map) {
 
 		this.id = map.getTypeId();
@@ -25,7 +24,6 @@ public class CardboardMetaMap implements CardboardItemMeta, Serializable {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public ItemMeta unbox() {
 
 		MapMeta meta = (MapMeta) new ItemStack(this.id).getItemMeta();

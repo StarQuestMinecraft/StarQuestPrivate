@@ -17,17 +17,6 @@
 
 package net.countercraft.movecraft.craft;
 
-import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.async.translation.AutopilotRunTask;
-import net.countercraft.movecraft.bedspawns.Bedspawn;
-import net.countercraft.movecraft.localisation.I18nSupport;
-
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,6 +25,15 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
+
+import net.countercraft.movecraft.Movecraft;
+import net.countercraft.movecraft.async.translation.AutopilotRunTask;
+import net.countercraft.movecraft.bedspawns.Bedspawn;
+import net.countercraft.movecraft.localisation.I18nSupport;
+
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 public class CraftManager {
 	private static final CraftManager ourInstance = new CraftManager();

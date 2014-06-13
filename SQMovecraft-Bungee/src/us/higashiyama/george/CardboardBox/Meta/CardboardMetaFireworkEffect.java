@@ -15,7 +15,6 @@ public class CardboardMetaFireworkEffect implements CardboardItemMeta, Serializa
 	private int id;
 	private CardboardFireworkEffect effect;
 
-	@SuppressWarnings("deprecation")
 	public CardboardMetaFireworkEffect(ItemStack firework) {
 
 		this.id = firework.getTypeId();
@@ -23,7 +22,6 @@ public class CardboardMetaFireworkEffect implements CardboardItemMeta, Serializa
 		this.effect = new CardboardFireworkEffect(meta.getEffect());
 	}
 
-	@SuppressWarnings("deprecation")
 	public ItemMeta unbox() {
 
 		FireworkEffectMeta meta = (FireworkEffectMeta) new ItemStack(this.id).getItemMeta();

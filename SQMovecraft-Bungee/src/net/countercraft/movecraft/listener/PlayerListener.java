@@ -18,23 +18,20 @@
 
 package net.countercraft.movecraft.listener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.async.translation.RepeatTryWorldJumpTask;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.bungee.BungeePlayerHandler;
-import net.countercraft.movecraft.bungee.PlayerTeleport;
-import net.countercraft.movecraft.bungee.RepeatTryServerJumpTask;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.utils.MathUtils;
-import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.SneakMoveTask;
 import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -55,9 +52,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class PlayerListener implements Listener {
 	private final HashMap<Player, BukkitTask> releaseEvents = new HashMap<Player, BukkitTask>();
@@ -112,40 +106,6 @@ public class PlayerListener implements Listener {
 		}*/
 	}
 	
-	private boolean shouldTempFly(Player p){
-		World w = p.getWorld();
-		int x = p.getLocation().getBlockX();
-		int y = p.getLocation().getBlockY();
-		int z = p.getLocation().getBlockZ();
-		boolean blockFound = false;
-		if(y > 200){
-			for(int i = 0; i < 5; i++){
-				Block b = p.getWorld().getBlockAt(x, y - i, z);
-				if(b.getType() != Material.AIR){
-					blockFound = true;
-					break;
-				}
-			}
-			if(!blockFound){
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	private void giveTempFly(final Player p){
-		p.setAllowFlight(true);
-		p.setFlying(true);
-		p.setFlySpeed(0F);
-		
-		Movecraft.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
-			public void run(){
-				p.setAllowFlight(false);
-				p.setFlying(false);
-			}
-		}, 100L);
-	}
-	
 	@EventHandler
 	public void onPlayerDeath( EntityDamageByEntityEvent e ) {  // changed to death so when you shoot up an airship and hit the pilot, it still sinks
 		if ( e.getEntity() instanceof Player ) {
@@ -165,8 +125,8 @@ public class PlayerListener implements Listener {
 			if(CraftManager.getInstance().getCraftsInWorld(p.getWorld()) == null) return;
 			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
 			for(Craft c2 : crafts){
-				if(c2.playersRiding.contains(p)){
-					c2.playersRiding.remove(p);
+				if(c2.playersRiding.contains(p.getUniqueId())){
+					c2.playersRiding.remove(p.getUniqueId());
 					p.sendMessage("You get off the craft.");
 					return;
 				}
@@ -200,7 +160,7 @@ public class PlayerListener implements Listener {
 			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
 			if(crafts == null) return;
 			for(Craft c : crafts){
-				if(c.playersRiding.contains(p.getName())){
+				if(c.playersRiding.contains(p.getUniqueId())){
 					if(!MathUtils.playerIsWithinBoundingPolygon( c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc( event.getTo() ) ) ){
 						if(!c.shipAttemptingTeleport){
 							p.setFallDistance(0.0F);

@@ -17,30 +17,31 @@
 
 package net.countercraft.movecraft.async;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Level;
+
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.detection.DetectionTask;
 import net.countercraft.movecraft.async.detection.DetectionTaskData;
 import net.countercraft.movecraft.async.rotation.RotationTask;
 import net.countercraft.movecraft.async.translation.AutopilotRunTask;
-import net.countercraft.movecraft.async.translation.RepeatTryWorldJumpTask;
 import net.countercraft.movecraft.async.translation.TranslationTask;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
-import net.countercraft.movecraft.bungee.RepeatTryServerJumpTask;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.utils.BlockUtils;
 import net.countercraft.movecraft.utils.EntityUpdateCommand;
-import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateCommand;
 import net.countercraft.movecraft.utils.MapUpdateManager;
-import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.MovingPartUtils;
 import net.countercraft.movecraft.utils.Rotation;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -48,16 +49,8 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Level;
 
 public class AsyncManager extends BukkitRunnable {
 	private static final AsyncManager instance = new AsyncManager();
@@ -111,20 +104,20 @@ public class AsyncManager extends BukkitRunnable {
 					p.sendMessage( String.format( I18nSupport.getInternationalisedString( "Detection - Failed - Already commanding a craft" ) ) );
 				} else {
 					if ( data.failed() ) {
-						Movecraft.getInstance().getServer().getPlayer( data.getPlayername() ).sendMessage( data.getFailMessage() );
+						p.sendMessage( data.getFailMessage() );
 					} else {
 						Craft[] craftsInWorld = CraftManager.getInstance().getCraftsInWorld( c.getW() );
 						boolean failed = false;
 						
 						if (numcannons(data.getBlockList(), c.getW()) > c.getType().getAllowedCannons()){
-							Movecraft.getInstance().getServer().getPlayer(data.getPlayername()).sendMessage(ChatColor.RED + "Your ship has too many cannons!");
+							p.sendMessage(ChatColor.RED + "Your ship has too many cannons!");
 							failed = true;
 						}
 						if ( craftsInWorld != null ) {
 							for ( Craft craft : craftsInWorld ) {
 
 								if ( BlockUtils.arrayContainsOverlap( craft.getBlockList(), data.getBlockList() ) ) {
-									Movecraft.getInstance().getServer().getPlayer( data.getPlayername() ).sendMessage( String.format( I18nSupport.getInternationalisedString( "Detection - Failed Craft is already being controlled" ) ) );
+									p.sendMessage( String.format( I18nSupport.getInternationalisedString( "Detection - Failed Craft is already being controlled" ) ) );
 									failed = true;
 								}
 
@@ -139,7 +132,7 @@ public class AsyncManager extends BukkitRunnable {
 								if (s.getLine(0).equals("[private]")){
 									if (!Movecraft.signContainsPlayername(s, data.getPlayername())){
 										failed = true;
-										Movecraft.getInstance().getServer().getPlayer(data.getPlayername()).sendMessage(ChatColor.RED + "You are attatched to a door that is locked to someone besides you.");
+										p.sendMessage(ChatColor.RED + "You are attatched to a door that is locked to someone besides you.");
 									}
 								}
 								//check each sign to see if it's a craft sign
@@ -149,7 +142,7 @@ public class AsyncManager extends BukkitRunnable {
 									if (c.getType().equals(InteractListener.getCraftTypeFromString("Carrier")) || c.getType().equals(InteractListener.getCraftTypeFromString("Flagship"))){
 										if (!Movecraft.signContainsPlayername(s, data.getPlayername())){
 											failed = true;
-											Movecraft.getInstance().getServer().getPlayer(data.getPlayername()).sendMessage(ChatColor.RED + "Your ship seems to be attatched to another ship that isn't yours.");
+											p.sendMessage(ChatColor.RED + "Your ship seems to be attatched to another ship that isn't yours.");
 										}
 										
 									//other ships
@@ -164,7 +157,7 @@ public class AsyncManager extends BukkitRunnable {
 											}
 										}else{
 											failed = true;
-											Movecraft.getInstance().getServer().getPlayer(data.getPlayername()).sendMessage(ChatColor.RED + "Your ship seems to have more than one ship sign, or is attatched to another ship.");
+											p.sendMessage(ChatColor.RED + "Your ship seems to have more than one ship sign, or is attatched to another ship.");
 											break;
 										}
 									}
@@ -176,11 +169,11 @@ public class AsyncManager extends BukkitRunnable {
 							c.setHitBox( data.getHitBox() );
 							c.setMinX( data.getMinX() );
 							c.setMinZ( data.getMinZ() );
-							c.originalPilotLoc = Movecraft.getInstance().getServer().getPlayer(data.getPlayername()).getLocation();
+							c.originalPilotLoc = p.getLocation();
 							c.retractLandingGear();
-							Movecraft.getInstance().getServer().getPlayer( data.getPlayername() ).sendMessage( String.format( I18nSupport.getInternationalisedString( "Detection - Successfully piloted craft" ) ) );
+							p.sendMessage( String.format( I18nSupport.getInternationalisedString( "Detection - Successfully piloted craft" ) ) );
 							Movecraft.getInstance().getLogger().log( Level.INFO, String.format( I18nSupport.getInternationalisedString( "Detection - Success - Log Output" ), p.getName(), c.getType().getCraftName(), c.getBlockList().length, c.getMinX(), c.getMinZ() ) );
-							CraftManager.getInstance().addCraft( c, Movecraft.getInstance().getServer().getPlayer( data.getPlayername() ) );
+							CraftManager.getInstance().addCraft( c, p );
 							
 						}
 					}
@@ -209,7 +202,7 @@ public class AsyncManager extends BukkitRunnable {
 						MapUpdateCommand[] updates = task.getData().getUpdates();
 						EntityUpdateCommand[] eUpdates=task.getData().getEntityUpdates();
 
-						boolean failed = (updates != null) && MapUpdateManager.getInstance().addWorldUpdate( c.getW(), updates, eUpdates );
+						boolean failed = (updates != null) && (eUpdates != null) && MapUpdateManager.getInstance().addWorldUpdate( c.getW(), updates, eUpdates );
 
 						if ( !failed ) {
 

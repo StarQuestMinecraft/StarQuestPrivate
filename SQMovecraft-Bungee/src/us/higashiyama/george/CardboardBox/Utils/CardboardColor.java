@@ -12,13 +12,11 @@ public class CardboardColor implements Serializable {
 	private static final long serialVersionUID = 842541538023716705L;
 	private final int color;
 
-	@SuppressWarnings("deprecation")
 	public CardboardColor(Color color) {
 
 		this.color = color.asRGB();
 	}
 
-	@SuppressWarnings("deprecation")
 	public Color unbox() {
 
 		return Color.fromRGB(this.color);

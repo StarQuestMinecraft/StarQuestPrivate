@@ -17,11 +17,6 @@
 
 package net.countercraft.movecraft.craft;
 
-import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.localisation.I18nSupport;
-
-import org.yaml.snakeyaml.Yaml;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,6 +25,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
+
+import net.countercraft.movecraft.Movecraft;
+import net.countercraft.movecraft.localisation.I18nSupport;
+
+import org.yaml.snakeyaml.Yaml;
 
 public class CraftType {
 	private String craftName;

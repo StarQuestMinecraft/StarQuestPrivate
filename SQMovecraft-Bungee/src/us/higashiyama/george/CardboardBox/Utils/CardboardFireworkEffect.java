@@ -17,7 +17,6 @@ public class CardboardFireworkEffect implements Serializable {
 	private boolean flicker;
 	private boolean trail;
 
-	@SuppressWarnings("deprecation")
 	public CardboardFireworkEffect(FireworkEffect effect) { // TODO: PASS NULL
 
 		// EFFECT
@@ -34,7 +33,6 @@ public class CardboardFireworkEffect implements Serializable {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public FireworkEffect unbox() {
 
 		FireworkEffect effect = FireworkEffect.builder().withColor(CardboardColor.unboxAsList(this.colors)).flicker(this.flicker).trail(this.trail)

@@ -17,9 +17,6 @@
 
 package net.countercraft.movecraft.listener;
 
-import java.util.ArrayList;
-
-import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.localisation.I18nSupport;
@@ -90,8 +87,8 @@ public class CommandListener implements Listener {
 			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
 			if(crafts == null) return;
 			for(Craft c : crafts){
-				if(c.playersRiding.contains(p.getName())){
-					c.playersRiding.remove(p.getName());
+				if(c.playersRiding.contains(p.getUniqueId())){
+					c.playersRiding.remove(p.getUniqueId());
 					p.sendMessage("You get off the craft.");
 					return;
 				}

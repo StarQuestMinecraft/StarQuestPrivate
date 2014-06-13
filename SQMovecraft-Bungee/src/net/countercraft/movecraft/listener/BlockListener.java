@@ -21,7 +21,6 @@ package net.countercraft.movecraft.listener;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
 
-import org.bukkit.block.Sign;
 //import net.countercraft.movecraft.items.StorageChestItem;
 //import net.countercraft.movecraft.localisation.I18nSupport;
 //import net.countercraft.movecraft.utils.MovecraftLocation;

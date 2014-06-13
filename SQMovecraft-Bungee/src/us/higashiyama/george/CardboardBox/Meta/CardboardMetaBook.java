@@ -16,7 +16,6 @@ public class CardboardMetaBook implements CardboardItemMeta, Serializable {
 	private String author;
 	private List<String> pages;
 
-	@SuppressWarnings("deprecation")
 	public CardboardMetaBook(ItemStack book) {
 
 		BookMeta meta = (BookMeta) book.getItemMeta();
@@ -26,7 +25,6 @@ public class CardboardMetaBook implements CardboardItemMeta, Serializable {
 		this.pages = meta.getPages();
 	}
 
-	@SuppressWarnings("deprecation")
 	public ItemMeta unbox() {
 
 		BookMeta meta = (BookMeta) new ItemStack(this.id).getItemMeta();

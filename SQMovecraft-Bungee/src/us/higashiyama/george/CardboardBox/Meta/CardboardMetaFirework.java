@@ -19,7 +19,6 @@ public class CardboardMetaFirework implements CardboardItemMeta, Serializable {
 	private int power;
 	private List<CardboardFireworkEffect> effects = new ArrayList<CardboardFireworkEffect>();
 
-	@SuppressWarnings("deprecation")
 	public CardboardMetaFirework(ItemStack firework) {
 
 		this.id = firework.getTypeId();
@@ -31,7 +30,6 @@ public class CardboardMetaFirework implements CardboardItemMeta, Serializable {
 		this.power = meta.getPower();
 	}
 
-	@SuppressWarnings("deprecation")
 	public ItemMeta unbox() {
 
 		FireworkMeta meta = (FireworkMeta) new ItemStack(this.id).getItemMeta();

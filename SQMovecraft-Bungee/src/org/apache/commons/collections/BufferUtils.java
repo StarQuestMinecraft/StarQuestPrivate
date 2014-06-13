@@ -17,12 +17,12 @@
 package org.apache.commons.collections;
 
 import org.apache.commons.collections.buffer.BlockingBuffer;
+import org.apache.commons.collections.buffer.BoundedBuffer;
 import org.apache.commons.collections.buffer.PredicatedBuffer;
 import org.apache.commons.collections.buffer.SynchronizedBuffer;
 import org.apache.commons.collections.buffer.TransformedBuffer;
 import org.apache.commons.collections.buffer.TypedBuffer;
 import org.apache.commons.collections.buffer.UnmodifiableBuffer;
-import org.apache.commons.collections.buffer.BoundedBuffer;
 
 /**
  * Provides utility methods and decorators for {@link Buffer} instances.

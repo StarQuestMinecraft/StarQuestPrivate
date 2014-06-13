@@ -1,23 +1,20 @@
 package net.countercraft.movecraft.craft;
 
+import net.countercraft.movecraft.Movecraft;
+import net.countercraft.movecraft.utils.LocationUtils;
+import net.countercraft.movecraft.utils.TorpedoFlyTask;
+
 import org.bukkit.Effect;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.utils.BoardingRampUtils;
-import net.countercraft.movecraft.utils.LocationUtils;
-import net.countercraft.movecraft.utils.TorpedoFlyTask;
 
 public class Torpedo {
 	

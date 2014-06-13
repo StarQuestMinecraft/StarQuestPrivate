@@ -17,11 +17,12 @@
 
 package net.countercraft.movecraft.config;
 
-import net.countercraft.movecraft.Movecraft;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import net.countercraft.movecraft.Movecraft;
+
+import org.bukkit.configuration.file.FileConfiguration;
 
 class ConfigManager {
 	private final FileConfiguration configFile;

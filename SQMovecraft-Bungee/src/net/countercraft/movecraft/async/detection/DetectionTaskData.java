@@ -20,6 +20,7 @@ package net.countercraft.movecraft.async.detection;
 import java.util.ArrayList;
 
 import net.countercraft.movecraft.utils.MovecraftLocation;
+
 import org.bukkit.World;
 
 public class DetectionTaskData {

@@ -17,6 +17,11 @@
 
 package net.countercraft.movecraft.async.detection;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Stack;
+
 import net.countercraft.movecraft.async.AsyncTask;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.craft.Craft;
@@ -30,11 +35,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Stack;
 
 public class DetectionTask extends AsyncTask {
 	private final MovecraftLocation startLocation;
@@ -125,9 +125,10 @@ public class DetectionTask extends AsyncTask {
 				addToBlockCount(testID);
 
 				if (isWithinLimit(blockList.size(), 0, maxSize)) {
-
+					//piston head block
 					if (testID != 34)
 						addToDetectionStack(workingLocation);
+					//piston base block
 					if (testID == 33) {
 						int dval = data.getWorld().getBlockAt(x, y, z).getData();
 						if (dval == 0) {
@@ -143,7 +144,7 @@ public class DetectionTask extends AsyncTask {
 					}
 
 					calculateBounds(workingLocation);
-
+					//sign blocks
 					if (testID == 63 || testID == 68) {
 						signLocations.add(workingLocation);
 					}
