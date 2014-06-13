@@ -52,7 +52,7 @@ public class BungeeCraftConstructor {
 	
 	private static void warpPlayers(ArrayList<PlayerTeleport> playersOnShip) {
 		for(final PlayerTeleport t : playersOnShip){
-			if (Bukkit.getServer().getPlayer(t.uuid) != null) {
+			if (Movecraft.playerIndex.get(t.uuid) != null) {
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 					public void run(){
 						t.execute();

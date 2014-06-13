@@ -227,8 +227,6 @@ public class MapUpdateManager extends BukkitRunnable {
 	                                                        if( pVel.getX()==0.0 && entity.getVelocity().getZ()==0.0 ) {
 	                                                                Location newLoc=entityUpdate.getNewLocation();
 	                                                                
-	                                                                // if they have gone through the floor, move them up one block
-	                                                             // if they have gone through the floor, move them up one block
 	                                                                entity.teleport(entityUpdate.getNewLocation());
 	                                                        } else {
 	                                                                Location craftMove=entityUpdate.getNewLocation().subtract(entityUpdate.getOldLocation());

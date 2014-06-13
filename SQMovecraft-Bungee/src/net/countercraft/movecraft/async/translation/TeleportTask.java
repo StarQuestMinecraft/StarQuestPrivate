@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
+import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
@@ -89,7 +90,7 @@ public class TeleportTask {
 
 		// fill the player list
 		for (UUID s : c.playersRiding) {
-			Player p = Bukkit.getPlayer(s);
+			Player p = Movecraft.playerIndex.get(s);
 			if (p != null) {
 				if (MathUtils.playerIsWithinBoundingPolygon(oldHitBox, oldMinX, oldMinZ, MathUtils.bukkit2MovecraftLoc(p.getLocation()))) {
 					Location loc = p.getLocation();

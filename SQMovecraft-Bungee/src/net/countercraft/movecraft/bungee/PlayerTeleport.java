@@ -55,7 +55,7 @@ public class PlayerTeleport {
 
 	public void execute() {
 
-		final Player p = Bukkit.getServer().getPlayer(uuid);
+		final Player p = Movecraft.playerIndex.get(uuid);
 		World w = Bukkit.getServer().getWorld(worldname);
 		
 		Location l = new Location(w, x + 0.5, (double) y, z + 0.5, yaw, pitch);

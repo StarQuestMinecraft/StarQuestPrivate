@@ -50,7 +50,7 @@ public class Craft {
 	private final CraftType type;
 	private MovecraftLocation[] blockList;
 	private World w;
-	public AtomicBoolean processing = new AtomicBoolean();
+	private AtomicBoolean processing = new AtomicBoolean();
 	private int moveTaskID;
 	private int minX, minZ;
 	public int xDist, yDist, zDist;
@@ -157,6 +157,23 @@ public class Craft {
 
 	public void setMoveTaskId(int taskID) {
 		moveTaskID = taskID;
+	}
+	public boolean isProcessing(){
+		boolean b = processing.get();
+		//String caller = Movecraft.getMethodCaller();
+		//System.out.println("isProcessing called by " + caller + " and returned " + b);
+		return processing.get();
+	}
+	public void setProcessing(boolean processing){
+		//String caller = Movecraft.getMethodCaller();
+		//System.out.println("setProcessing called by " + caller  + " and set processing to " + processing);
+		this.processing.set(processing);
+	}
+	public boolean processingCompareAndSet(boolean expect, boolean set){
+		//String caller = Movecraft.getMethodCaller();
+		boolean b = this.processing.compareAndSet(expect, set);
+		//System.out.println("compareAndSet called by " + caller + " with values " + expect + ", " + set + " and returned " + b);
+		return b;
 	}
 
 	@SuppressWarnings("deprecation")

@@ -25,7 +25,7 @@ public class WarpUtils {
 		c.warpCoordsZ = l.getBlockZ();
 	}
 	public static void leaveWarp(Player p, Craft c){
-		if(!c.processing.get()){
+		if(!c.isProcessing()){
 			Location l = p.getLocation();
 			World w2 = getNormal(p.getWorld());
 			if(w2 == null) return;

@@ -70,7 +70,7 @@ public class AsyncManager extends BukkitRunnable {
 			ownershipMap.put( task, c );
 			task.runTaskAsynchronously( Movecraft.getInstance() );
 		}
-		else if (c.processing.compareAndSet(false, true) ) {
+		else if (c.processingCompareAndSet(false, true)) {
 			ownershipMap.put( task, c );
 			task.runTaskAsynchronously( Movecraft.getInstance() );
 		}
@@ -327,7 +327,7 @@ public class AsyncManager extends BukkitRunnable {
 
 	private void clearAll() {
 		for ( Craft c : clearanceSet ) {
-			c.processing.set(false);
+			c.setProcessing(false);
 		}
 
 		clearanceSet.clear();

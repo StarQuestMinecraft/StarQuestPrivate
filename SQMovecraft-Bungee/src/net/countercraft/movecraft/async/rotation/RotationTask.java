@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.AsyncTask;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.localisation.I18nSupport;
@@ -68,76 +69,6 @@ public class RotationTask extends AsyncTask {
         @Override
         public void excecute() {
                 
-                // canfly=false means an ocean-going vessel
-                boolean waterCraft=!getCraft().getType().canFly();
-                int waterLine=0;
-                
-                if (waterCraft) {
-                        int [][][] hb=getCraft().getHitBox();
-                        
-                        // start by finding the minimum and maximum y coord
-                        int minY=65535;
-                        int maxY=-65535;
-                        for (int [][] i1 : hb) {
-                                for (int [] i2 : i1) {
-                                        if(i2!=null) {
-                                                if(i2[0]<minY) {
-                                                        minY=i2[0];
-                                                }
-                                                if(i2[1]>maxY) {
-                                                        maxY=i2[1];
-                                                }
-                                        }
-                                }
-                        }
-                        int maxX=getCraft().getMinX()+hb.length;
-                        int maxZ=getCraft().getMinZ()+hb[0].length;  // safe because if the first x array doesn't have a z array, then it wouldn't be the first x array
-                        
-                        // next figure out the water level by examining blocks next to the outer boundaries of the craft
-                        for(int posY=maxY; (posY>=minY)&&(waterLine==0); posY--) {
-                                int posX;
-                                int posZ;
-                                posZ=getCraft().getMinZ()-1;
-                                for(posX=getCraft().getMinX()-1; (posX <= maxX+1)&&(waterLine==0); posX++ ) {
-                                        if(w.getBlockAt(posX, posY, posZ).getTypeId()==9) {
-                                                waterLine=posY;
-                                        }
-                                }
-                                posZ=maxZ+1;
-                                for(posX=getCraft().getMinX()-1; (posX <= maxX+1)&&(waterLine==0); posX++ ) {
-                                        if(w.getBlockAt(posX, posY, posZ).getTypeId()==9) {
-                                                waterLine=posY;
-                                        }
-                                }
-                                posX=getCraft().getMinX()-1;
-                                for(posZ=getCraft().getMinZ(); (posZ <= maxZ)&&(waterLine==0); posZ++ ) {
-                                        if(w.getBlockAt(posX, posY, posZ).getTypeId()==9) {
-                                                waterLine=posY;
-                                        }
-                                }
-                                posX=maxX+1;
-                                for(posZ=getCraft().getMinZ(); (posZ <= maxZ)&&(waterLine==0); posZ++ ) {
-                                        if(w.getBlockAt(posX, posY, posZ).getTypeId()==9) {
-                                                waterLine=posY;
-                                        }
-                                }
-                        }
-                        
-                        // now add all the air blocks found within the crafts borders below the waterline to the craft blocks so they will be rotated
-                        HashSet<MovecraftLocation> newHSBlockList=new HashSet<MovecraftLocation>(Arrays.asList(blockList));
-                        for(int posY=waterLine; posY>=minY; posY--) {
-                                for(int posX=getCraft().getMinX(); posX<=maxX; posX++) {
-                                        for(int posZ=getCraft().getMinZ(); posZ<=maxZ; posZ++) {
-                                                if(w.getBlockAt(posX,posY,posZ).getTypeId()==0) {
-                                                        MovecraftLocation l=new MovecraftLocation(posX,posY,posZ);
-                                                        newHSBlockList.add(l);
-                                                }
-                                        }
-                                }
-                        }
-                        blockList=newHSBlockList.toArray(new MovecraftLocation[newHSBlockList.size()]);
-                }
-                
                 // Rotate the block set
                 MovecraftLocation[] centeredBlockList = new MovecraftLocation[blockList.length];
                 MovecraftLocation[] originalBlockList = blockList.clone();
@@ -157,26 +88,14 @@ public class RotationTask extends AsyncTask {
                         if ( w.getBlockTypeIdAt( originalBlockList[i].getX(), originalBlockList[i].getY(), originalBlockList[i].getZ() ) == 68){
                         	signLocations.add(originalBlockList[i]);
                         }
-                        if (!waterCraft) {
-                                if ( w.getBlockTypeIdAt( blockList[i].getX(), blockList[i].getY(), blockList[i].getZ() ) != 0 && !existingBlockSet.contains( blockList[i] ) ) {
-                                        failed = true;
-                                        failMessage = String.format( I18nSupport.getInternationalisedString( "Rotation - Craft is obstructed" ) );
-                                        break;
-                                } else {
-                                        int id = w.getBlockTypeIdAt( originalBlockList[i].getX(), originalBlockList[i].getY(), originalBlockList[i].getZ() );
-                                        mapUpdates.add( new MapUpdateCommand( originalBlockList[i], blockList[i], id, rotation, getCraft()) );
-                                } 
+                        if ( w.getBlockTypeIdAt( blockList[i].getX(), blockList[i].getY(), blockList[i].getZ() ) != 0 && !existingBlockSet.contains( blockList[i] ) ) {
+                                failed = true;
+                                failMessage = String.format( I18nSupport.getInternationalisedString( "Rotation - Craft is obstructed" ) );
+                                break;
                         } else {
-                                // allow watercraft to rotate through water
-                                if ( (w.getBlockTypeIdAt( blockList[i].getX(), blockList[i].getY(), blockList[i].getZ() ) != 0 && w.getBlockTypeIdAt( blockList[i].getX(), blockList[i].getY(), blockList[i].getZ() ) != 9) && !existingBlockSet.contains( blockList[i] ) ) {
-                                        failed = true;
-                                        failMessage = String.format( I18nSupport.getInternationalisedString( "Rotation - Craft is obstructed" ) );
-                                        break;
-                                } else {
-                                        int id = w.getBlockTypeIdAt( originalBlockList[i].getX(), originalBlockList[i].getY(), originalBlockList[i].getZ() );
-                                        mapUpdates.add( new MapUpdateCommand( originalBlockList[i], blockList[i], id, rotation, getCraft() ) );
-                                } 
-                        }
+                                int id = w.getBlockTypeIdAt( originalBlockList[i].getX(), originalBlockList[i].getY(), originalBlockList[i].getZ() );
+                                mapUpdates.add( new MapUpdateCommand( originalBlockList[i], blockList[i], id, rotation, getCraft()) );
+                        } 
 
                 }
 
@@ -185,8 +104,8 @@ public class RotationTask extends AsyncTask {
                         Location tOP = new Location( getCraft().getW(), originPoint.getX(), originPoint.getY(), originPoint.getZ() );
                         Iterator<UUID> i= getCraft().playersRiding.iterator();
                         while (i.hasNext()) {
-                                Player pTest = Bukkit.getServer().getPlayer(i.next());
-                                if ( MathUtils.playerIsWithinBoundingPolygon( getCraft().getHitBox(), getCraft().getMinX(), getCraft().getMinZ(), MathUtils.bukkit2MovecraftLoc( pTest.getLocation() ) ) ) {
+                                Player pTest = Movecraft.playerIndex.get(i.next());
+                                if (pTest != null && MathUtils.playerIsWithinBoundingPolygon( getCraft().getHitBox(), getCraft().getMinX(), getCraft().getMinZ(), MathUtils.bukkit2MovecraftLoc( pTest.getLocation() ) ) ) {
                                         if(pTest.getType()!=org.bukkit.entity.EntityType.DROPPED_ITEM ) {
                                                 // Player is onboard this craft
                                                 tOP.setX(tOP.getBlockX()+0.5);
@@ -215,10 +134,7 @@ public class RotationTask extends AsyncTask {
                                                 newPLoc.setYaw(newYaw);
                                                 EntityUpdateCommand eUp=new EntityUpdateCommand(playerLoc, newPLoc, pTest, pTest.getVelocity(), getCraft());
                                                 entityUpdateSet.add(eUp);
-                                                if(pTest.getType()==org.bukkit.entity.EntityType.PLAYER) {
-                                                        Player player=(Player) pTest;
-                                                        player.setVelocity(ZERO);
-                                                }
+                                                pTest.setVelocity(ZERO);
                                                 pTest.teleport(newPLoc);
                                         } else {
                                                 pTest.remove();
@@ -238,16 +154,7 @@ public class RotationTask extends AsyncTask {
                         List<MovecraftLocation> airLocation = ListUtils.subtract( Arrays.asList( originalBlockList ), Arrays.asList( blockList ) );
                         
                         for ( MovecraftLocation l1 : airLocation ) {
-                                if(waterCraft) {
-                                                // if its below the waterline, fill in with water. Otherwise fill in with air.
-                                        if(l1.getY()<=waterLine) {
-                                                mapUpdates.add( new MapUpdateCommand( l1, 9, getCraft()) );
-                                        } else {
-                                                mapUpdates.add( new MapUpdateCommand( l1, 0, getCraft()) );
-                                        }
-                                } else {
-                                        mapUpdates.add( new MapUpdateCommand( l1, 0, getCraft() ) );
-                                }
+                        	mapUpdates.add( new MapUpdateCommand( l1, 0, getCraft() ) );
                         }
                         
             			MapUpdateCommand[] temp = mapUpdates.toArray(new MapUpdateCommand[1]);

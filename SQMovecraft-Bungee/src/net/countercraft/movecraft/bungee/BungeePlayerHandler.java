@@ -145,7 +145,7 @@ public class BungeePlayerHandler {
 
 			PlayerTeleport t = recievePlayerTeleport(msgin);
 
-			if (Bukkit.getServer().getPlayer(t.uuid) != null) {
+			if (Movecraft.playerIndex.get(t.uuid) != null) {
 				t.execute();
 			} else {
 				teleportQueue.add(t);

@@ -20,7 +20,7 @@ public class RepeatTryWorldJumpTask extends BukkitRunnable{
 	}
 	@Override
 	public void run(){
-		if (!c.processing.get()){
+		if (!c.isProcessing()){
 			boolean success = false;
 			while(!success){
 				success = TeleportTask.worldJump(pilot, c, locto);

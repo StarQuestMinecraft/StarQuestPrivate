@@ -63,6 +63,8 @@ public class PlayerListener implements Listener {
 		if ( c != null ) {
 			CraftManager.getInstance().removeCraft( c );
 		}
+		
+		Movecraft.playerIndex.remove(e.getPlayer().getUniqueId());
 	}
 
 /*	public void onPlayerDamaged( EntityDamageByEntityEvent e ) {
@@ -75,7 +77,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerLogin(PlayerJoinEvent event){
 		Player p = event.getPlayer();
-		
+		Movecraft.playerIndex.put(p.getUniqueId(), p);
 		BungeePlayerHandler.onLogin(p);
 		/*boolean isTeleported = false;
 		

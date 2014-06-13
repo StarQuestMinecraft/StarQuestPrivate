@@ -29,7 +29,9 @@ public class BungeeCraftSender {
 		System.out.println("Saved craft.");
 		sendCraftSpawnPacket(p.getName(), targetserver);
 		for(UUID s : c.playersRiding){
-			BungeePlayerHandler.sendPlayer(Bukkit.getPlayer(s), targetserver);
+			Player player = Movecraft.playerIndex.get(s);
+			if(player != null)
+			BungeePlayerHandler.sendPlayer(player, targetserver);
 		}
 		removeCraftBlocks(c);
 	}
@@ -126,10 +128,12 @@ public class BungeeCraftSender {
 		}
 		msgout.writeInt(c.playersRiding.size());
 		for(UUID s : c.playersRiding){
-			Player plr = Bukkit.getPlayer(s);
-			Location l = plr.getLocation();
-			BungeePlayerHandler.writePlayerData(msgout, plr, targetserver, world, l.getBlockX(), l.getBlockY(), l.getBlockZ());
-			BungeePlayerHandler.wipePlayerInventory(plr);
+			Player plr = Movecraft.playerIndex.get(s);
+			if(plr != null){
+				Location l = plr.getLocation();
+				BungeePlayerHandler.writePlayerData(msgout, plr, targetserver, world, l.getBlockX(), l.getBlockY(), l.getBlockZ());
+				BungeePlayerHandler.wipePlayerInventory(plr);
+			}
 		}
 		
 		return msgbytes.toByteArray();

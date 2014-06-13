@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
+import net.countercraft.movecraft.Movecraft;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -52,7 +54,7 @@ public class BungeeCraftReciever {
         	UUID pUUID = UUID.fromString(msgin.readUTF());
         	
         	if(!affectPlayers){
-        		Player p = Bukkit.getServer().getPlayer(pUUID);
+        		Player p = Movecraft.playerIndex.get(pUUID);
         		if(p != null){
         			Location loc = p.getLocation();
         			Xcoord = loc.getBlockX();

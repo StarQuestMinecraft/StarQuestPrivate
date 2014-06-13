@@ -21,6 +21,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -59,6 +61,8 @@ public class Movecraft extends JavaPlugin {
 	private static Movecraft instance;
 	private Logger logger;
 	private boolean shuttingDown;
+	
+	public static HashMap<UUID, Player> playerIndex = new HashMap<UUID, Player>();
 	
 	public void onDisable() {
 		// Process the storage crates to disk
@@ -240,4 +244,10 @@ public class Movecraft extends JavaPlugin {
 		return new Bedspawn(null, server, world, X, Y, Z);
 	}
 	
+	//returns the caller of the method that called this method.
+	public static String getMethodCaller(){
+		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+		StackTraceElement e = stackTraceElements[3];
+		return e.getClassName() + " by method " + e.getMethodName() + " at line " + e.getLineNumber();
+	}
 }

@@ -45,7 +45,9 @@ public class TranslationTask extends AsyncTask {
 	@Override
 	public void excecute() {
 		try {
-			
+			if(!getCraft().pilot.isOnline()){
+				fail("Pilot is not online!");
+			}
 			int maxX=getCraft().getMinX()+getCraft().getHitBox().length;
 			int maxZ=getCraft().getMinZ()+getCraft().getHitBox()[0].length;  // safe because if the first x array doesn't have a z array, then it wouldn't be the first x array
 			int minX=getCraft().getMinX();
@@ -124,7 +126,7 @@ public class TranslationTask extends AsyncTask {
 
 				Iterator<UUID> i = getCraft().playersRiding.iterator();
 				while (i.hasNext()) {
-					Entity pTest = Bukkit.getPlayer(i.next());
+					Player pTest = Movecraft.playerIndex.get(i.next());
 					if(pTest != null){
 						if (MathUtils.playerIsWithinBoundingPolygon(getCraft().getHitBox(), getCraft().getMinX(), getCraft().getMinZ(), MathUtils.bukkit2MovecraftLoc(pTest.getLocation()))) {
 							if (pTest.getType() != org.bukkit.entity.EntityType.DROPPED_ITEM) {
@@ -220,7 +222,7 @@ public class TranslationTask extends AsyncTask {
 				}
 			}
 		} catch (IllegalStateException e) {
-			getCraft().processing.set(false);
+			getCraft().setProcessing(false);
 			e.printStackTrace();
 			return;
 		}
@@ -233,26 +235,5 @@ public class TranslationTask extends AsyncTask {
 
 	public TranslationTaskData getData() {
 		return data;
-	}
-	
-	private boolean isChunksLoaded(World w, int minX, int minZ, int[][][] hitBox, int dx, int dz) {
-		if (dx == 0 && dz == 0)
-			return true;
-		int maxX = minX + hitBox.length;
-		int maxZ = minZ + hitBox[0].length;
-
-		Location minLoc = new Location(w, minX, 0, minZ);
-		Location maxLoc = new Location(w, maxX, 0, maxZ);
-
-		for (int x = minLoc.getChunk().getX(); x <= maxLoc.getChunk().getX(); x++) {
-			for (int z = minLoc.getChunk().getZ(); z <= maxLoc.getChunk().getZ(); z++) {
-				Chunk c = w.getChunkAt(x, z);
-				if(!c.isLoaded()){
-					c.load();
-					return false;
-				}
-			}
-		}
-		return true;
 	}
 }

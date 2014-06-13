@@ -30,6 +30,7 @@ import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.translation.AutopilotRunTask;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.localisation.I18nSupport;
+import net.countercraft.movecraft.utils.MathUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -94,6 +95,11 @@ public class CraftManager {
 			AutopilotRunTask.stopAutopiloting(c, p);
 		}
 		
+		if(c.playersRiding.contains(p.getUniqueId())){
+			if(!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))){
+				p.teleport(c.originalPilotLoc);
+			}
+		}
 		if (p != null && p.isOnline()) {
 			p.sendMessage( String.format( I18nSupport.getInternationalisedString( "Release - Craft has been released message" ) ) );
 			Movecraft.getInstance().getLogger().log( Level.INFO, String.format( I18nSupport.getInternationalisedString( "Release - Player has released a craft console" ), p.getName(), c.getType().getCraftName(), c.getBlockList().length, c.getMinX(), c.getMinZ() ) );
@@ -101,7 +107,7 @@ public class CraftManager {
 			craftPlayerIndex.remove( p );
 			
 			for(UUID str : c.playersRiding){
-				Player plr = Bukkit.getPlayer(str);
+				Player plr = Movecraft.playerIndex.get(str);
 				if(plr != null) plr.sendMessage("The ship has been released, you are no longer riding on it.");
 			}
 			//process and update bedspawns
