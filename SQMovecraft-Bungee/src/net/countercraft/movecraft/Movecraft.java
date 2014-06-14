@@ -54,6 +54,7 @@ import org.bukkit.World;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -115,6 +116,11 @@ public class Movecraft extends JavaPlugin {
 			if(sender.hasPermission("movecraft.loadship")){
 				ShipNuker.nuke((Player) sender);
 				sender.sendMessage("Ship nuked!");
+			}
+		} else if(cmd.getName().equalsIgnoreCase("releaseall")){
+			if(sender instanceof ConsoleCommandSender || sender.isOp() || sender.hasPermission("movecraft.override")){
+				CraftManager.getInstance().releaseAllCrafts();
+				System.out.println("All crafts released!");
 			}
 		}
 		return false;

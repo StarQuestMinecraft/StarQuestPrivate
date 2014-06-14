@@ -149,4 +149,14 @@ public class CraftManager {
 
 		return null;
 	}
+	
+	public void releaseAllCrafts(){
+		for(World w  : craftList.keySet()){
+			Craft[] cset = (Craft[]) craftList.get(w).toArray();
+			for(int i = 0; i < cset.length; i++){
+				Craft c = cset[i];
+				removeCraft(c);
+			}
+		}
+	}
 }

@@ -134,6 +134,15 @@ public class Craft {
 	public void rotate(Rotation rotation, MovecraftLocation originPoint) {
 		AsyncManager.getInstance().submitTask(new RotationTask(this, originPoint, this.getBlockList(), rotation, this.getW()), this);
 	}
+	
+	public void messageShipPlayers(String message){
+		for(UUID u : playersRiding){
+			Player p = Movecraft.playerIndex.get(u);
+			if(p != null){
+				p.sendMessage(message);
+			}
+		}
+	}
 
 	public int getMinX() {
 		return minX;

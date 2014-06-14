@@ -25,6 +25,9 @@ commands:
    nukeship:
       description: ssdfsdf
       usage: sdfsdf
+   releaseallships:
+      description: sdfsdfsd
+      usage: sdfsdf
 depend:
    - WorldEdit
 

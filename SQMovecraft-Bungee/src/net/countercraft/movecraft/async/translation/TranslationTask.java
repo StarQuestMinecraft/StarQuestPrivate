@@ -126,22 +126,23 @@ public class TranslationTask extends AsyncTask {
 
 				Iterator<UUID> i = getCraft().playersRiding.iterator();
 				while (i.hasNext()) {
-					Player pTest = Movecraft.playerIndex.get(i.next());
+					System.out.println("MOVING");
+					UUID uid = i.next();
+					System.out.println(uid);
+					Player pTest = Movecraft.playerIndex.get(uid);
 					if(pTest != null){
 						if (MathUtils.playerIsWithinBoundingPolygon(getCraft().getHitBox(), getCraft().getMinX(), getCraft().getMinZ(), MathUtils.bukkit2MovecraftLoc(pTest.getLocation()))) {
-							if (pTest.getType() != org.bukkit.entity.EntityType.DROPPED_ITEM) {
-								Location tempLoc = pTest.getLocation().add(data.getDx(), data.getDy(), data.getDz());
-								Location newPLoc = new Location(getCraft().getW(), tempLoc.getX(), tempLoc.getY(), tempLoc.getZ());
-								newPLoc.setPitch(pTest.getLocation().getPitch());
-								newPLoc.setYaw(pTest.getLocation().getYaw());
-								pTest.teleport(newPLoc);
-								EntityUpdateCommand eUp = new EntityUpdateCommand(pTest.getLocation(), newPLoc, pTest, pTest.getVelocity(), getCraft());
-								entityUpdateSet.add(eUp);
-							} else {
-								pTest.remove();
-							}
+							Location tempLoc = pTest.getLocation().add(data.getDx(), data.getDy(), data.getDz());
+							Location newPLoc = new Location(getCraft().getW(), tempLoc.getX(), tempLoc.getY(), tempLoc.getZ());
+							newPLoc.setPitch(pTest.getLocation().getPitch());
+							newPLoc.setYaw(pTest.getLocation().getYaw());
+							pTest.teleport(newPLoc);
+							EntityUpdateCommand eUp = new EntityUpdateCommand(pTest.getLocation(), newPLoc, pTest, pTest.getVelocity(), getCraft());
+							entityUpdateSet.add(eUp);
+							continue;
 						}
 					}
+					System.out.println("player is null!");
 				}
 
 				getCraft().originalPilotLoc = getCraft().originalPilotLoc.add(data.getDx(), data.getDy(), data.getDz());

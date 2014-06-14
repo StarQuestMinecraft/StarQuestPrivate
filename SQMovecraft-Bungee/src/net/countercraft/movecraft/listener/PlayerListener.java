@@ -57,13 +57,14 @@ public class PlayerListener implements Listener {
 	private final HashMap<Player, BukkitTask> releaseEvents = new HashMap<Player, BukkitTask>();
 
 	@EventHandler
-	public void onPLayerLogout( PlayerQuitEvent e ) {
+	public void onPayerLogout( PlayerQuitEvent e ) {
 		Craft c = CraftManager.getInstance().getCraftByPlayer( e.getPlayer() );
 
 		if ( c != null ) {
 			CraftManager.getInstance().removeCraft( c );
 		}
 		
+		System.out.println("Removed player " + e.getPlayer().getName() + " with UUID " + e.getPlayer().getUniqueId() + " from index.");
 		Movecraft.playerIndex.remove(e.getPlayer().getUniqueId());
 	}
 
@@ -124,7 +125,7 @@ public class PlayerListener implements Listener {
 			if (c != null)
 			CraftManager.getInstance().removeCraft( CraftManager.getInstance().getCraftByPlayer( p ) );
 			
-			if(CraftManager.getInstance().getCraftsInWorld(p.getWorld()) == null) return;
+			/*if(CraftManager.getInstance().getCraftsInWorld(p.getWorld()) == null) return;
 			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
 			for(Craft c2 : crafts){
 				if(c2.playersRiding.contains(p.getUniqueId())){
@@ -132,7 +133,7 @@ public class PlayerListener implements Listener {
 					p.sendMessage("You get off the craft.");
 					return;
 				}
-			}
+			}*/
 	}
 	
 	@EventHandler
