@@ -53,6 +53,8 @@ public class TranslationTask extends AsyncTask {
 			int minX=getCraft().getMinX();
 			int minZ=getCraft().getMinZ();
 			
+			loadChunks(getCraft().getW(), minX, minZ, getCraft().getHitBox(), maxX, maxZ);
+			
 			MovecraftLocation[] blocksList = data.getBlockList();
 
 			// canfly=false means an ocean-going vessel
@@ -126,9 +128,7 @@ public class TranslationTask extends AsyncTask {
 
 				Iterator<UUID> i = getCraft().playersRiding.iterator();
 				while (i.hasNext()) {
-					System.out.println("MOVING");
 					UUID uid = i.next();
-					System.out.println(uid);
 					Player pTest = Movecraft.playerIndex.get(uid);
 					if(pTest != null){
 						if (MathUtils.playerIsWithinBoundingPolygon(getCraft().getHitBox(), getCraft().getMinX(), getCraft().getMinZ(), MathUtils.bukkit2MovecraftLoc(pTest.getLocation()))) {
@@ -142,7 +142,6 @@ public class TranslationTask extends AsyncTask {
 							continue;
 						}
 					}
-					System.out.println("player is null!");
 				}
 
 				getCraft().originalPilotLoc = getCraft().originalPilotLoc.add(data.getDx(), data.getDy(), data.getDz());
@@ -228,7 +227,27 @@ public class TranslationTask extends AsyncTask {
 			return;
 		}
 	}
-
+	
+	private void loadChunks (World w, int minX, int minZ, int[][][] hitBox, int dx, int dz) {
+ 		if (dx == 0 && dz == 0)
+ 			return;
+ 		
+ 		int maxX = minX + hitBox.length;
+ 		int maxZ = minZ + hitBox[0].length;
+ 
+ 		Location minLoc = new Location(w, minX, 0, minZ);
+ 		Location maxLoc = new Location(w, maxX, 0, maxZ);
+ 
+ 		for (int x = minLoc.getChunk().getX(); x <= maxLoc.getChunk().getX(); x++) {
+ 			for (int z = minLoc.getChunk().getZ(); z <= maxLoc.getChunk().getZ(); z++) {
+ 				Chunk c = w.getChunkAt(x,z);
+ 				if(!c.isLoaded()){
+ 					c.load();
+ 				}
+ 			}
+ 		}
+ 	}
+	
 	private void fail(String message) {
 		data.setFailed(true);
 		data.setFailMessage(message);

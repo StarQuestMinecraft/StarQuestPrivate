@@ -223,14 +223,21 @@ public class MapUpdateManager extends BukkitRunnable {
                                                 for(EntityUpdateCommand entityUpdate : mapUpdateList) {
                                                         Entity entity=entityUpdate.getEntity();
                                                         if(entity.isValid()){
+                                                            Location newLoc=entityUpdate.getNewLocation();
+                                                            
+                                                            if(newLoc.getY() - entityUpdate.getOldLocation().getY() != 0){
+                                                            	 double decimalY=newLoc.getY()-Math.floor(newLoc.getY());
+                                                            	 if(decimalY>0.40) {
+                                                            	 newLoc.setY( Math.ceil( newLoc.getY() ) );
+                                                            	 }
+                                                            }
 	                                                        Vector pVel=new Vector(entity.getVelocity().getX(),0.0,entity.getVelocity().getZ());
+	                                                        
 	                                                        if( pVel.getX()==0.0 && entity.getVelocity().getZ()==0.0 ) {
-	                                                                Location newLoc=entityUpdate.getNewLocation();
-	                                                                
-	                                                                entity.teleport(entityUpdate.getNewLocation());
+	                                                                entity.teleport(newLoc);
 	                                                        } else {
-	                                                                Location craftMove=entityUpdate.getNewLocation().subtract(entityUpdate.getOldLocation());
-	                                                                entity.teleport(entity.getLocation().add(craftMove));
+	                                                                Location craftMove=newLoc.subtract(entityUpdate.getOldLocation());
+	                                                                entity.teleport(newLoc.add(craftMove));
 	                                                        }
 	                                                        entity.setVelocity(pVel);
                                                         }
