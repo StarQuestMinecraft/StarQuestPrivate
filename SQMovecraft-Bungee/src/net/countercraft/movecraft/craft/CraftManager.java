@@ -40,7 +40,7 @@ public class CraftManager {
 	private static final CraftManager ourInstance = new CraftManager();
 	private CraftType[] craftTypes;
 	private final Map<World, Set<Craft>> craftList = new ConcurrentHashMap<World, Set<Craft>>();
-	private final HashMap<Player, Craft> craftPlayerIndex = new HashMap<Player, Craft>();
+	private final HashMap<UUID, Craft> craftPlayerIndex = new HashMap<UUID, Craft>();
 
 	public static CraftManager getInstance() {
 		return ourInstance;
@@ -83,14 +83,13 @@ public class CraftManager {
 			craftList.put( c.getW(), new HashSet<Craft>() );
 		}
 		craftList.get( c.getW() ).add( c );
-		craftPlayerIndex.put( p, c );
+		craftPlayerIndex.put( p.getUniqueId(), c );
 	}
 
 	public void removeCraft( Craft c) {
 		c.extendLandingGear();
 		craftList.get( c.getW() ).remove( c );
 		Player p = c.pilot;
-		
 		if(AutopilotRunTask.autopilotingCrafts.contains(c)){
 			AutopilotRunTask.stopAutopiloting(c, p);
 		}
@@ -100,17 +99,17 @@ public class CraftManager {
 				p.teleport(c.originalPilotLoc);
 			}
 		}
-		if (p != null && p.isOnline()) {
-			p.sendMessage( String.format( I18nSupport.getInternationalisedString( "Release - Craft has been released message" ) ) );
-			Movecraft.getInstance().getLogger().log( Level.INFO, String.format( I18nSupport.getInternationalisedString( "Release - Player has released a craft console" ), p.getName(), c.getType().getCraftName(), c.getBlockList().length, c.getMinX(), c.getMinZ() ) );
-			
-			craftPlayerIndex.remove( p );
-			
-			for(UUID str : c.playersRiding){
-				Player plr = Movecraft.playerIndex.get(str);
-				if(plr != null) plr.sendMessage("The ship has been released, you are no longer riding on it.");
+		if(p != null){
+			craftPlayerIndex.remove( p.getUniqueId() );
+			if (p.isOnline()) {
+				p.sendMessage( String.format( I18nSupport.getInternationalisedString( "Release - Craft has been released message" ) ) );
+				Movecraft.getInstance().getLogger().log( Level.INFO, String.format( I18nSupport.getInternationalisedString( "Release - Player has released a craft console" ), p.getName(), c.getType().getCraftName(), c.getBlockList().length, c.getMinX(), c.getMinZ() ) );
+				//process and update bedspawns
 			}
-			//process and update bedspawns
+		}
+		for(UUID str : c.playersRiding){
+			Player plr = Movecraft.playerIndex.get(str);
+			if(plr != null) plr.sendMessage("The ship has been released, you are no longer riding on it.");
 		}
 		updateBedspawns(c);
 	}
@@ -135,14 +134,14 @@ public class CraftManager {
 	}
 
 	public Craft getCraftByPlayer( Player p ) {
-		return craftPlayerIndex.get( p );
+		return craftPlayerIndex.get( p.getUniqueId() );
 	}
 
 	public Player getPlayerFromCraft( Craft c ) {
-		for ( Map.Entry<Player, Craft> playerCraftEntry : craftPlayerIndex.entrySet() ) {
+		for ( Map.Entry<UUID, Craft> playerCraftEntry : craftPlayerIndex.entrySet() ) {
 
 			if ( playerCraftEntry.getValue() == c ) {
-				return playerCraftEntry.getKey();
+				return Movecraft.playerIndex.get(playerCraftEntry.getKey());
 			}
 
 		}

@@ -1,4 +1,0 @@
-msgout.writeUTF(s.getLine(0).trim() + "");
-msgout.writeUTF(s.getLine(1).trim() + "");
-msgout.writeUTF(s.getLine(2).trim() + "");
-msgout.writeUTF(s.getLine(3).trim() + "");

@@ -22,19 +22,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.countercraft.movecraft.Movecraft;
+import net.countercraft.movecraft.async.translation.AutopilotRunTask;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.bungee.BungeePlayerHandler;
+import net.countercraft.movecraft.bungee.PlayerTeleport;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
-import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.utils.MathUtils;
+import net.countercraft.movecraft.utils.OfflinePilotUtils;
 import net.countercraft.movecraft.utils.SneakMoveTask;
 import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -43,6 +44,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -56,18 +59,6 @@ import org.bukkit.scheduler.BukkitTask;
 public class PlayerListener implements Listener {
 	private final HashMap<Player, BukkitTask> releaseEvents = new HashMap<Player, BukkitTask>();
 
-	@EventHandler
-	public void onPayerLogout( PlayerQuitEvent e ) {
-		Craft c = CraftManager.getInstance().getCraftByPlayer( e.getPlayer() );
-
-		if ( c != null ) {
-			CraftManager.getInstance().removeCraft( c );
-		}
-		
-		System.out.println("Removed player " + e.getPlayer().getName() + " with UUID " + e.getPlayer().getUniqueId() + " from index.");
-		Movecraft.playerIndex.remove(e.getPlayer().getUniqueId());
-	}
-
 /*	public void onPlayerDamaged( EntityDamageByEntityEvent e ) {
 		if ( e instanceof Player ) {
 			Player p = ( Player ) e;
@@ -80,6 +71,7 @@ public class PlayerListener implements Listener {
 		Player p = event.getPlayer();
 		Movecraft.playerIndex.put(p.getUniqueId(), p);
 		BungeePlayerHandler.onLogin(p);
+		OfflinePilotUtils.onPlayerLogin(p);
 		/*boolean isTeleported = false;
 		
 		for(int i = 0; i < BungeePlayerHandler.teleportQueue.size(); i++){
@@ -121,19 +113,14 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerQuit( PlayerQuitEvent e ) {  // changed to death so when you shoot up an airship and hit the pilot, it still sinks
 			Player p = e.getPlayer();
-			Craft c = CraftManager.getInstance().getCraftByPlayer( p );
-			if (c != null)
-			CraftManager.getInstance().removeCraft( CraftManager.getInstance().getCraftByPlayer( p ) );
+			final Craft c = CraftManager.getInstance().getCraftByPlayer( p );
+			if( c != null){
+				CraftManager.getInstance().removeCraft(c);
+				OfflinePilotUtils.registerOfflinePilot(p, c);
+			}
 			
-			/*if(CraftManager.getInstance().getCraftsInWorld(p.getWorld()) == null) return;
-			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
-			for(Craft c2 : crafts){
-				if(c2.playersRiding.contains(p.getUniqueId())){
-					c2.playersRiding.remove(p.getUniqueId());
-					p.sendMessage("You get off the craft.");
-					return;
-				}
-			}*/
+			System.out.println("Removed player " + e.getPlayer().getName() + " with UUID " + e.getPlayer().getUniqueId() + " from index.");
+			Movecraft.playerIndex.remove(e.getPlayer().getUniqueId());
 	}
 	
 	@EventHandler
@@ -183,7 +170,7 @@ public class PlayerListener implements Listener {
 					return;
 				}
 				if ( !releaseEvents.containsKey( p ) ) {
-					p.sendMessage( String.format( I18nSupport.getInternationalisedString( "Release - Player has left craft" ) ) );
+					p.sendMessage("You have left the craft, you have 15 seconds to return to the craft before it auto releases.");
 
 					BukkitTask releaseTask = new BukkitRunnable() {
 
@@ -274,12 +261,23 @@ public class PlayerListener implements Listener {
 		}
 	}
 
-/*	@EventHandler
-	public void onPlayerHit( EntityDamageByEntityEvent event ) {
-		if ( event.getEntity() instanceof Player && CraftManager.getInstance().getCraftByPlayer( ( Player ) event.getEntity() ) != null ) {
-			CraftManager.getInstance().removeCraft( CraftManager.getInstance().getCraftByPlayer( ( Player ) event.getEntity() ) );
+	@EventHandler
+	public void onPlayerHit( EntityDamageEvent event ) {
+		if ( event.getEntity() instanceof Player && event.getCause() == DamageCause.SUFFOCATION) {
+			Player plr = (Player) event.getEntity();
+			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(event.getEntity().getWorld());
+			if(event.getEntity() != null && crafts != null){
+				for(Craft c : crafts){
+					if(c.playersRiding.contains(plr.getUniqueId())){
+						plr.teleport(c.originalPilotLoc);
+						plr.setHealth(plr.getMaxHealth());
+						plr.sendMessage("Whoa there! You kissed a wall...");
+						return;
+					}
+				}
+			}
 		}
-	}   */
+	}   
 	private Location getValidLocationToRespawn(Block bed){
 		Block bed2 = bed;
 		ArrayList<Block> blocks = new ArrayList<Block>();

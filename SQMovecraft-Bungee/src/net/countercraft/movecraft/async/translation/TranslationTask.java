@@ -48,18 +48,15 @@ public class TranslationTask extends AsyncTask {
 			if(!getCraft().pilot.isOnline()){
 				fail("Pilot is not online!");
 			}
-			int maxX=getCraft().getMinX()+getCraft().getHitBox().length;
-			int maxZ=getCraft().getMinZ()+getCraft().getHitBox()[0].length;  // safe because if the first x array doesn't have a z array, then it wouldn't be the first x array
-			int minX=getCraft().getMinX();
-			int minZ=getCraft().getMinZ();
-			
-			loadChunks(getCraft().getW(), minX, minZ, getCraft().getHitBox(), maxX, maxZ);
-			
+			//int maxX=getCraft().getMinX()+getCraft().getHitBox().length;
+			//int maxZ=getCraft().getMinZ()+getCraft().getHitBox()[0].length;  // safe because if the first x array doesn't have a z array, then it wouldn't be the first x array
+			//int minX=getCraft().getMinX();
+			//int minZ=getCraft().getMinZ();
+						
 			MovecraftLocation[] blocksList = data.getBlockList();
 
 			// canfly=false means an ocean-going vessel
 			//boolean waterCraft = !getCraft().getType().canFly();
-			boolean waterCraft = false;
 			//no water craft for now!
 			
 			/*String sys = getCraft().getW().getName();
@@ -82,16 +79,18 @@ public class TranslationTask extends AsyncTask {
 				fail(event.getMessage());
 			}
 			
-			Location l = getCraft().pilot.getLocation();
-			int nx = l.getBlockX() + data.getDx();
-			int nz = l.getBlockZ() + data.getDz();
-			if(AutopilotRunTask.autopilotingCrafts.contains(getCraft())){
-				if(!BorderUtils.isWithinBorderIncludePadding(nx, nz, 30)){
-					fail("You left the autopilot on a bit too long and are almost at the worldborder!");
-				}
-			} else {
-				if (!BorderUtils.isWithinBorderIncludePadding(nx, nz)) {
-					fail("You have almost reached the world border! Turn back now!");
+			if(!data.failed()){
+				Location l = getCraft().pilot.getLocation();
+				int nx = l.getBlockX() + data.getDx();
+				int nz = l.getBlockZ() + data.getDz();
+				if(AutopilotRunTask.autopilotingCrafts.contains(getCraft())){
+					if(!BorderUtils.isWithinBorderIncludePadding(nx, nz, 30)){
+						fail("You left the autopilot on a bit too long and are almost at the worldborder!");
+					}
+				} else {
+					if (!BorderUtils.isWithinBorderIncludePadding(nx, nz)) {
+						fail("You have almost reached the world border! Turn back now!");
+					}
 				}
 			}
 			for (int i = 0; i < blocksList.length; i++) {

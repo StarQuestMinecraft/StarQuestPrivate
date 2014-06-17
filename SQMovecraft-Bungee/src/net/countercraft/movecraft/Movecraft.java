@@ -121,6 +121,7 @@ public class Movecraft extends JavaPlugin {
 			if(sender instanceof ConsoleCommandSender || sender.isOp() || sender.hasPermission("movecraft.override")){
 				CraftManager.getInstance().releaseAllCrafts();
 				System.out.println("All crafts released!");
+				return true;
 			}
 		}
 		return false;

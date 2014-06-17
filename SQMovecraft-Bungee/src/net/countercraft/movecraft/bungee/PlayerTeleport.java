@@ -60,7 +60,9 @@ public class PlayerTeleport {
 		
 		Location l = new Location(w, x + 0.5, (double) y, z + 0.5, yaw, pitch);
 		
-		this.knapsack.unpack(p);
+		if(this.knapsack != null){
+			this.knapsack.unpack(p);
+		}
 		p.setGameMode(gamemode);
 		BungeePlayerHandler.teleportQueue.remove(this);
 		
