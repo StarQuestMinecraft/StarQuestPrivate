@@ -89,17 +89,24 @@ public class TeleportTask {
 		HashMap<Player, Location> players = new HashMap<Player, Location>();
 
 		// fill the player list
-		for (UUID s : c.playersRiding) {
-			Player p = Movecraft.playerIndex.get(s);
-			if (p != null) {
-				if (MathUtils.playerIsWithinBoundingPolygon(oldHitBox, oldMinX, oldMinZ, MathUtils.bukkit2MovecraftLoc(p.getLocation()))) {
-					Location loc = p.getLocation();
-					Location target = new Location(locto.getWorld(), loc.getX() + dX, loc.getY() + dY, loc.getZ() + dZ, loc.getYaw(), loc.getPitch());
-					players.put(p, target);
+		try{
+			c.playersRidingLock.acquire();
+			for (UUID s : c.playersRidingShip) {
+				Player p = Movecraft.playerIndex.get(s);
+				if (p != null) {
+					if (MathUtils.playerIsWithinBoundingPolygon(oldHitBox, oldMinX, oldMinZ, MathUtils.bukkit2MovecraftLoc(p.getLocation()))) {
+						Location loc = p.getLocation();
+						Location target = new Location(locto.getWorld(), loc.getX() + dX, loc.getY() + dY, loc.getZ() + dZ, loc.getYaw(), loc.getPitch());
+						players.put(p, target);
+					}
 				}
 			}
+			c.playersRidingLock.release();
+		} catch (Exception e){
+			e.printStackTrace();
 		}
-
+		
+			
 		// remove the old craft
 		CraftManager.getInstance().removeCraft(c);
 
@@ -120,7 +127,13 @@ public class TeleportTask {
 			p.teleport(players.get(p));
 		}
 		// update bedspawns
-		updateBedspawns(c.playersWithBedSpawnsOnShip, locto, dX, dY, dZ);
+		try{
+		c.bedspawnsLock.acquire();
+		updateBedspawns(c.playersWithBedspawnsOnShip, locto, dX, dY, dZ);
+		c.bedspawnsLock.release();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 		// w.newLine();
 
 		// pilot the new craft

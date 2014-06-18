@@ -90,11 +90,9 @@ public class CraftManager {
 		c.extendLandingGear();
 		craftList.get( c.getW() ).remove( c );
 		Player p = c.pilot;
-		if(AutopilotRunTask.autopilotingCrafts.contains(c)){
-			AutopilotRunTask.stopAutopiloting(c, p);
-		}
+		AutopilotRunTask.stopAutopiloting(c, p);
 		
-		if(c.playersRiding.contains(p.getUniqueId())){
+		if(c.playersRidingShip.contains(p.getUniqueId())){
 			if(!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))){
 				p.teleport(c.originalPilotLoc);
 			}
@@ -107,15 +105,12 @@ public class CraftManager {
 				//process and update bedspawns
 			}
 		}
-		for(UUID str : c.playersRiding){
-			Player plr = Movecraft.playerIndex.get(str);
-			if(plr != null) plr.sendMessage("The ship has been released, you are no longer riding on it.");
-		}
+		c.messageShipPlayers("The ship has been released, you are no longer riding on it.");
 		updateBedspawns(c);
 	}
 	
 	public void updateBedspawns(Craft c){
-		for (String s : c.playersWithBedSpawnsOnShip){
+		for (String s : c.playersWithBedspawnsOnShip){
 			Bedspawn b = Bedspawn.getBedspawn(s);
 			b.x = b.x + c.xDist;
 			b.y = b.y + c.yDist;

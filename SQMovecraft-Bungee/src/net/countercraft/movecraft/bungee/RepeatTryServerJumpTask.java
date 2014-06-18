@@ -30,7 +30,7 @@ public class RepeatTryServerJumpTask extends BukkitRunnable{
 	}
 	@Override 
 	public void run(){
-		if (!c.isProcessing()){
+		if (!c.isProcessing() ){
 			try {
 				String world = server;
 				if (server.contains("_the_end")){

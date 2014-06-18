@@ -103,7 +103,7 @@ public class RotationTask extends AsyncTask {
                 if ( !failed ) {
                         //rotate entities in the craft
                         Location tOP = new Location( getCraft().getW(), originPoint.getX(), originPoint.getY(), originPoint.getZ() );
-                        Iterator<UUID> i= getCraft().playersRiding.iterator();
+                        Iterator<UUID> i= getCraft().playersRidingShip.iterator();
                         while (i.hasNext()) {
                                 Player pTest = Movecraft.playerIndex.get(i.next());
                                 if (pTest != null && MathUtils.playerIsWithinBoundingPolygon( getCraft().getHitBox(), getCraft().getMinX(), getCraft().getMinZ(), MathUtils.bukkit2MovecraftLoc( pTest.getLocation() ) ) ) {

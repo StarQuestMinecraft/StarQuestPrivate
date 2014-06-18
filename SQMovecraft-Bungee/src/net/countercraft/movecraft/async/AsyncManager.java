@@ -270,7 +270,7 @@ public class AsyncManager extends BukkitRunnable {
 
 							Location originPoint = new Location( c.getW(), task.getOriginPoint().getX(), task.getOriginPoint().getY(), task.getOriginPoint().getZ() );
 							// Move entities
-							for (String s : c.playersWithBedSpawnsOnShip){
+							for (String s : c.playersWithBedspawnsOnShip){
 								Bedspawn b = Bedspawn.getBedspawn(s);
 								MovecraftLocation oldLoc = new MovecraftLocation(b.x, b.y, b.z);
 								Location l = new Location(c.getW(), oldLoc.getX() + c.xDist, oldLoc.getY() + c.yDist, oldLoc.getZ() + c.zDist);

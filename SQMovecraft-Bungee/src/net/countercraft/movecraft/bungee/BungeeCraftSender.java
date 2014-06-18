@@ -28,7 +28,7 @@ public class BungeeCraftSender {
 		BungeeFileHandler.saveCraftBytes(craftData, p.getName());
 		System.out.println("Saved craft.");
 		sendCraftSpawnPacket(p.getName(), targetserver);
-		for(UUID s : c.playersRiding){
+		for(UUID s : c.playersRidingShip){
 			Player player = Movecraft.playerIndex.get(s);
 			if(player != null)
 			BungeePlayerHandler.sendPlayer(player, targetserver);
@@ -122,12 +122,12 @@ public class BungeeCraftSender {
 				msgout.writeUTF(s.getLine(3) + "");
 			}
 		}
-		msgout.writeInt(c.playersWithBedSpawnsOnShip.size());
-		for(String s : c.playersWithBedSpawnsOnShip){
+		msgout.writeInt(c.playersWithBedspawnsOnShip.size());
+		for(String s : c.playersWithBedspawnsOnShip){
 			msgout.writeUTF(s);
 		}
-		msgout.writeInt(c.playersRiding.size());
-		for(UUID s : c.playersRiding){
+		msgout.writeInt(c.playersRidingShip.size());
+		for(UUID s : c.playersRidingShip){
 			Player plr = Movecraft.playerIndex.get(s);
 			if(plr != null){
 				Location l = plr.getLocation();

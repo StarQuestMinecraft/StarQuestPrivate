@@ -26,7 +26,7 @@ public class RepeatTryWorldJumpTask extends BukkitRunnable{
 				success = TeleportTask.worldJump(pilot, c, locto);
 				locto = new Location(locto.getWorld(), locto.getX() + 50, locto.getY(), locto.getZ());
 			}
-			c.shipAttemptingTeleport = false;
+			c.setProcessingTeleport(false);
 			this.cancel();
 		}
 	}

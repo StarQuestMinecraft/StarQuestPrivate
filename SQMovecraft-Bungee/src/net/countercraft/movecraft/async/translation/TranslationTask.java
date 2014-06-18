@@ -124,8 +124,8 @@ public class TranslationTask extends AsyncTask {
 				data.setBlockList(newBlockList);
 
 				// Move entities within the craft
-
-				Iterator<UUID> i = getCraft().playersRiding.iterator();
+				
+				Iterator<UUID> i = getCraft().playersRidingShip.iterator();
 				while (i.hasNext()) {
 					UUID uid = i.next();
 					Player pTest = Movecraft.playerIndex.get(uid);
@@ -149,8 +149,6 @@ public class TranslationTask extends AsyncTask {
 				List<MovecraftLocation> airLocation = ListUtils.subtract(Arrays.asList(blocksList), Arrays.asList(newBlockList));
 
 				for (MovecraftLocation l1 : airLocation) {
-					// for watercraft, fill blocks below the waterline with
-					// water
 					updateSet.add(new MapUpdateCommand(l1, 0, getCraft()));
 				}
 
@@ -185,7 +183,7 @@ public class TranslationTask extends AsyncTask {
 				String s = LocationUtils.locationCheck(p);
 				if (s != null) {
 					// if(PingUtils.isOnline(s)){
-					c.shipAttemptingTeleport = true;
+					c.setProcessingTeleport(true);
 					RepeatTryServerJumpTask task2 = new RepeatTryServerJumpTask(p, c, s, 0, 205, 0);
 					task2.runTaskTimer(Movecraft.getInstance(), 0, 1);
 					/*
@@ -201,7 +199,7 @@ public class TranslationTask extends AsyncTask {
 						// if(PingUtils.isOnline(s)){
 						p.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + " Leaving the atmosphere!");
 						Location loc = LocationUtils.getWarpLocation(p.getWorld().getName());
-						c.shipAttemptingTeleport = true;
+						c.setProcessingTeleport(true);
 						RepeatTryServerJumpTask task2 = new RepeatTryServerJumpTask(p, c, LocationUtils.getSystem(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 						task2.runTaskTimer(Movecraft.getInstance(), 0, 1);
 						return;
@@ -216,12 +214,11 @@ public class TranslationTask extends AsyncTask {
 				// if they are near a stargate initialize solar system jump
 				RepeatTryServerJumpTask task2 = LocationUtils.checkStargateJump(p, c);
 				if (task2 != null) {
-					c.shipAttemptingTeleport = true;
+					c.setProcessingTeleport(true);
 					task2.runTaskTimer(Movecraft.getInstance(), 0, 1);
 				}
 			}
 		} catch (IllegalStateException e) {
-			getCraft().setProcessing(false);
 			e.printStackTrace();
 			return;
 		}

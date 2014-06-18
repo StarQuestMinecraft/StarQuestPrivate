@@ -96,7 +96,7 @@ public class InteractListener implements Listener {
 
 							if (MathUtils.playerIsWithinBoundingPolygon(craft.getHitBox(), craft.getMinX(), craft.getMinZ(),
 									MathUtils.bukkit2MovecraftLoc(event.getPlayer().getLocation()))) {
-								if (!craft.shipAttemptingTeleport) {
+								if (!craft.isProcessingTeleport()) {
 									CraftManager.getInstance().getCraftByPlayer(event.getPlayer())
 											.rotate(Rotation.ANTICLOCKWISE, MathUtils.bukkit2MovecraftLoc(sign.getLocation()));
 
@@ -171,7 +171,7 @@ public class InteractListener implements Listener {
 
 					if (MathUtils.playerIsWithinBoundingPolygon(craft.getHitBox(), craft.getMinX(), craft.getMinZ(),
 							MathUtils.bukkit2MovecraftLoc(event.getPlayer().getLocation()))) {
-						if (!craft.shipAttemptingTeleport) {
+						if (!craft.isProcessingTeleport()) {
 							CraftManager.getInstance().getCraftByPlayer(event.getPlayer())
 									.rotate(Rotation.CLOCKWISE, MathUtils.bukkit2MovecraftLoc(sign.getLocation()));
 

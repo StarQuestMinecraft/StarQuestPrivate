@@ -19,6 +19,7 @@ package net.countercraft.movecraft.craft;
 
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.countercraft.movecraft.Movecraft;
@@ -51,13 +52,15 @@ public class Craft {
 	private MovecraftLocation[] blockList;
 	private World w;
 	private AtomicBoolean processing = new AtomicBoolean();
+	private AtomicBoolean processingTeleport = new AtomicBoolean();
 	private int moveTaskID;
 	private int minX, minZ;
 	public int xDist, yDist, zDist;
-	public ArrayList<String> playersWithBedSpawnsOnShip = new ArrayList<String>();
-	public boolean shipAttemptingTeleport = false;
+	public ArrayList<String> playersWithBedspawnsOnShip = new ArrayList<String>();
+	public Semaphore bedspawnsLock = new Semaphore(1);
 	public int vX, vZ;
-	public ArrayList<UUID> playersRiding = new ArrayList<UUID>();
+	public ArrayList<UUID> playersRidingShip = new ArrayList<UUID>();
+	public Semaphore playersRidingLock = new Semaphore(1);
 	public int warpCoordsX;
 	public int warpCoordsZ;
 	public Location originalPilotLoc = null;
@@ -136,7 +139,7 @@ public class Craft {
 	}
 	
 	public void messageShipPlayers(String message){
-		for(UUID u : playersRiding){
+		for(UUID u : playersRidingShip){
 			Player p = Movecraft.playerIndex.get(u);
 			if(p != null){
 				p.sendMessage(message);
@@ -168,21 +171,22 @@ public class Craft {
 		moveTaskID = taskID;
 	}
 	public boolean isProcessing(){
-		boolean b = processing.get();
-		//String caller = Movecraft.getMethodCaller();
-		//System.out.println("isProcessing called by " + caller + " and returned " + b);
 		return processing.get();
 	}
 	public void setProcessing(boolean processing){
-		//String caller = Movecraft.getMethodCaller();
-		//System.out.println("setProcessing called by " + caller  + " and set processing to " + processing);
 		this.processing.set(processing);
 	}
 	public boolean processingCompareAndSet(boolean expect, boolean set){
-		//String caller = Movecraft.getMethodCaller();
-		boolean b = this.processing.compareAndSet(expect, set);
-		//System.out.println("compareAndSet called by " + caller + " with values " + expect + ", " + set + " and returned " + b);
-		return b;
+		return this.processing.compareAndSet(expect, set);
+	}
+	public boolean isProcessingTeleport(){
+		return processingTeleport.get();
+	}
+	public void setProcessingTeleport(boolean processingTeleport){
+		this.processingTeleport.set(processingTeleport);
+	}
+	public boolean processingTeleportCompareAndSet(boolean expect, boolean set){
+		return this.processingTeleport.compareAndSet(expect, set);
 	}
 
 	@SuppressWarnings("deprecation")

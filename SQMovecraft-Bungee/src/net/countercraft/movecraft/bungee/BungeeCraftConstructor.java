@@ -97,11 +97,18 @@ public class BungeeCraftConstructor {
 		//final int XDIFF = xDiff;
 		Craft c = new Craft(InteractListener.getCraftTypeFromString( type ), w);
 		c.setOriginalPilotLoc(new Location(w, X, Y, Z));
-		for(UUID s : namesOnShip){
-			if(!c.playersRiding.contains(s))
-			c.playersRiding.add(s);
+		try{
+			c.playersRidingLock.acquire();
+			for(UUID s : namesOnShip){
+				if(!c.playersRidingShip.contains(s))
+				c.playersRidingShip.add(s);
+			}
+			c.playersRidingLock.release();
+		} catch (Exception e){
+			e.printStackTrace();
 		}
 		attemptPilot(0, c, pilot, pilotUUID, type, w);
+		delayStarshipMoving(c);
 	}
 	
 	private static void restoreInv(Block b, LocAndBlock lb){
@@ -130,6 +137,15 @@ public class BungeeCraftConstructor {
 			}
 		}
 		return false;
+	}
+	
+	public static void delayStarshipMoving(final Craft c){
+		c.setProcessingTeleport(true);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+			public void run(){
+				c.setProcessingTeleport(false);
+			}
+		}, 60L);
 	}
 	public static Block[] getEdges(Location l){
 		Block b = l.getBlock();

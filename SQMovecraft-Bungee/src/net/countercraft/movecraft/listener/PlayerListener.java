@@ -150,9 +150,9 @@ public class PlayerListener implements Listener {
 			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
 			if(crafts == null) return;
 			for(Craft c : crafts){
-				if(c.playersRiding.contains(p.getUniqueId())){
+				if(c.playersRidingShip.contains(p.getUniqueId())){
 					if(!MathUtils.playerIsWithinBoundingPolygon( c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc( event.getTo() ) ) ){
-						if(!c.shipAttemptingTeleport){
+						if(!c.isProcessingTeleport()){
 							p.setFallDistance(0.0F);
 							p.teleport(c.originalPilotLoc);
 							p.sendMessage("You attempted to leave the craft. If you want to leave the ship, type /stopriding.");
@@ -268,7 +268,7 @@ public class PlayerListener implements Listener {
 			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(event.getEntity().getWorld());
 			if(event.getEntity() != null && crafts != null){
 				for(Craft c : crafts){
-					if(c.playersRiding.contains(plr.getUniqueId())){
+					if(c.playersRidingShip.contains(plr.getUniqueId())){
 						plr.teleport(c.originalPilotLoc);
 						plr.setHealth(plr.getMaxHealth());
 						plr.sendMessage("Whoa there! You kissed a wall...");

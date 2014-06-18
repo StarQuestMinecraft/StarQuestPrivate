@@ -85,21 +85,30 @@ public class DetectionTask extends AsyncTask {
 
 				Craft c = getCraft();
 				// detect bedspawns, may be an expensive operation?
+				try{
+				c.bedspawnsLock.acquire();
 				for (Bedspawn b : Bedspawn.loadBedspawnList(new MovecraftLocation(c.getMinX(), 0, c.getMinZ()), c.getW().getName())) {
 					MovecraftLocation loc = new MovecraftLocation(b.x, b.y, b.z);
 					if (MathUtils.playerIsWithinBoundingPolygon(data.getHitBox(), data.getMinX(), data.getMinZ(), loc)) {
-						c.playersWithBedSpawnsOnShip.add(b.player);
+						c.playersWithBedspawnsOnShip.add(b.player);
 					}
 				}
-
+				c.bedspawnsLock.release();
+				
+				
 				// add any players to the ship that should be on it
+				c.playersRidingLock.acquire();
 				for (Player plr : data.getWorld().getPlayers()) {
 					if (MathUtils.playerIsWithinBoundingPolygon(data.getHitBox(), data.getMinX(), data.getMinZ(), MathUtils.bukkit2MovecraftLoc(plr.getLocation()))) {
-						if (!c.playersRiding.contains(plr.getUniqueId())) {
-							c.playersRiding.add(plr.getUniqueId());
+						if (!c.playersRidingShip.contains(plr.getUniqueId())) {
+							c.playersRidingShip.add(plr.getUniqueId());
 							plr.sendMessage("You board a craft of type " + c.getType().getCraftName() + " under the command of captain " + c.pilot.getName() + ".");
 						}
 					}
+				}
+				c.playersRidingLock.release();
+				} catch (Exception e){
+					e.printStackTrace();
 				}
 			}
 		}
