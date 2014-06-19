@@ -1,4 +1,4 @@
-package net.countercraft.movecraft.utils;
+package net.countercraft.movecraft.utils.mechanism;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;

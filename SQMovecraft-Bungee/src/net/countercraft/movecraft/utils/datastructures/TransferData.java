@@ -21,16 +21,13 @@ import net.countercraft.movecraft.craft.Craft;
 
 public class TransferData {
 	private final byte data;
-	public boolean isLastUpdate;
-	public final Craft c;
 
-	public TransferData( byte data, Craft c ) {
+	public TransferData( byte data ) {
 		this.data = data;
-		isLastUpdate = false;
-		this.c = c;
 	}
 
 	public byte getData() {
 		return data;
 	}
 }
+

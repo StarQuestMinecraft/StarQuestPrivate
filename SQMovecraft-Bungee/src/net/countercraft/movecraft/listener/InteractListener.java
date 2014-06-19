@@ -27,13 +27,13 @@ import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.craft.Torpedo;
 import net.countercraft.movecraft.localisation.I18nSupport;
-import net.countercraft.movecraft.utils.BoardingRampUtils;
-import net.countercraft.movecraft.utils.BomberUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.Rotation;
-import net.countercraft.movecraft.utils.WarpStartTask;
-import net.countercraft.movecraft.utils.WarpUtils;
+import net.countercraft.movecraft.utils.mechanism.BoardingRampUtils;
+import net.countercraft.movecraft.utils.mechanism.BomberUtils;
+import net.countercraft.movecraft.utils.mechanism.WarpStartTask;
+import net.countercraft.movecraft.utils.mechanism.WarpUtils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

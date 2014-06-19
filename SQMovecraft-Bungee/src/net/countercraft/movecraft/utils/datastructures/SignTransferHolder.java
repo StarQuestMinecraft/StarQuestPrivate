@@ -17,13 +17,11 @@
 
 package net.countercraft.movecraft.utils.datastructures;
 
-import net.countercraft.movecraft.craft.Craft;
-
 public class SignTransferHolder extends TransferData {
 	private final String[] lines;
 
-	public SignTransferHolder( byte data, String[] lines, Craft c ) {
-		super( data, c);
+	public SignTransferHolder( byte data, String[] lines ) {
+		super( data );
 		this.lines = lines;
 	}
 
@@ -31,3 +29,4 @@ public class SignTransferHolder extends TransferData {
 		return lines;
 	}
 }
+

@@ -21,7 +21,7 @@ import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.utils.MathUtils;
-import net.countercraft.movecraft.utils.WarpUtils;
+import net.countercraft.movecraft.utils.mechanism.WarpUtils;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

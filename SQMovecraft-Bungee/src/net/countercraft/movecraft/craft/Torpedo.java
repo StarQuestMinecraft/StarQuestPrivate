@@ -1,8 +1,8 @@
 package net.countercraft.movecraft.craft;
 
 import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.utils.LocationUtils;
-import net.countercraft.movecraft.utils.TorpedoFlyTask;
+import net.countercraft.movecraft.utils.map.LocationUtils;
+import net.countercraft.movecraft.utils.mechanism.TorpedoFlyTask;
 
 import org.bukkit.Effect;
 import org.bukkit.Material;
