@@ -71,7 +71,7 @@ public class MapUpdateManager extends BukkitRunnable {
                 private static final MapUpdateManager INSTANCE = new MapUpdateManager();
         }
         
-        private void updateBlock(MapUpdateCommand m, ArrayList<Chunk> chunkList, World w, Map<MovecraftLocation, TransferData> dataMap, Set<net.minecraft.server.v1_7_R3.Chunk> chunks, Set<Chunk> cmChunks, boolean placeDispensers) {
+        private void updateBlock(MapUpdateCommand m, ArrayList<Chunk> chunkList, World w, Map<MovecraftLocation, TransferData> dataMap, Set<net.minecraft.server.v1_7_R3.Chunk> chunks, Set<Chunk> cmChunks/*, boolean placeDispensers*/) {
                 MovecraftLocation workingL = m.getNewBlockLocation();
 
                 int x = workingL.getX();
@@ -110,9 +110,9 @@ public class MapUpdateManager extends BukkitRunnable {
                 //modify the block in the chunk
 
                 int newTypeID = m.getTypeID();
-                if(newTypeID==23 && !placeDispensers) {
+                /*if(newTypeID==23 && !placeDispensers) {
                         newTypeID=1;
-                }
+                }*/
                 TransferData transferData = dataMap.get( workingL );
 
                 byte data;
@@ -184,9 +184,9 @@ public class MapUpdateManager extends BukkitRunnable {
                             							}
                                                 }
                                                 //remove dispensers and replace them with stone blocks to prevent firing during ship reconstruction
-                                                if(w.getBlockAt( l.getX(), l.getY(), l.getZ() ).getTypeId()==23) {
+                                                /*if(w.getBlockAt( l.getX(), l.getY(), l.getZ() ).getTypeId()==23) {
                                                         w.getBlockAt( l.getX(), l.getY(), l.getZ() ).setTypeIdAndData( 1, (byte) 0, false );
-                                                }
+                                                }*/
                                         }
 
                                 } 
@@ -214,7 +214,7 @@ public class MapUpdateManager extends BukkitRunnable {
                                         boolean isFragile=(Arrays.binarySearch(fragileBlocks,m.getTypeID())>=0);
                                         
                                         if(!isFragile) {
-                                                updateBlock(m, chunkList, w, dataMap, chunks, cmChunks, false);
+                                                updateBlock(m, chunkList, w, dataMap, chunks, cmChunks);
                                         }
                                         
                                         // if the block you just updated had any entities on it, move them. If they are moving, add in their motion to the craft motion
@@ -243,9 +243,9 @@ public class MapUpdateManager extends BukkitRunnable {
                                                         }
                                                 }
                                                 entityMap.remove(m.getNewBlockLocation());
-                                                if(m.isLastUpdate()){
-                                                	AsyncManager.getInstance().clear(m.getCraft());
-                                                }
+                                        }
+                                        if(m.isLastUpdate()){
+                                        	AsyncManager.getInstance().clear(m.getCraft());
                                         }
                                 }
 
@@ -253,16 +253,16 @@ public class MapUpdateManager extends BukkitRunnable {
                                 for ( MapUpdateCommand i : updatesInWorld ) {
                                         boolean isFragile=(Arrays.binarySearch(fragileBlocks,i.getTypeID())>=0);
                                         if(isFragile) {
-                                                updateBlock(i, chunkList, w, dataMap, chunks, cmChunks, false);
+                                                updateBlock(i, chunkList, w, dataMap, chunks, cmChunks);
                                         }
                                 }
 
-                                // Put Dispensers back in now that the ship is reconstructed
+                                /*// Put Dispensers back in now that the ship is reconstructed
                                 for ( MapUpdateCommand i : updatesInWorld ) {
                                         if(i.getTypeID()==23) {
-                                                updateBlock(i, chunkList, w, dataMap, chunks, cmChunks, true);
+                                                updateBlock(i, chunkList, w, dataMap, chunks, cmChunks);
                                         }
-                                }
+                                }*/
 
                                 // Restore block specific information
                                 for ( MovecraftLocation l : dataMap.keySet() ) {

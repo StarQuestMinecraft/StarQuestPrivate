@@ -36,7 +36,6 @@ import net.countercraft.movecraft.utils.Rotation;
 import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -76,8 +75,8 @@ public class Craft {
 		yDist = 0;
 		zDist = 0;
 	}
-
-	public void setOriginalPilotLoc(Location l) {
+	
+	public void setOriginalPilotLoc(Location l){
 		originalPilotLoc = l;
 	}
 
@@ -138,11 +137,11 @@ public class Craft {
 	public void rotate(Rotation rotation, MovecraftLocation originPoint) {
 		AsyncManager.getInstance().submitTask(new RotationTask(this, originPoint, this.getBlockList(), rotation, this.getW()), this);
 	}
-
-	public void messageShipPlayers(String message) {
-		for (UUID u : playersRidingShip) {
+	
+	public void messageShipPlayers(String message){
+		for(UUID u : playersRidingShip){
 			Player p = Movecraft.playerIndex.get(u);
-			if (p != null) {
+			if(p != null){
 				p.sendMessage(message);
 			}
 		}
@@ -171,28 +170,22 @@ public class Craft {
 	public void setMoveTaskId(int taskID) {
 		moveTaskID = taskID;
 	}
-
-	public boolean isProcessing() {
+	public boolean isProcessing(){
 		return processing.get();
 	}
-
-	public void setProcessing(boolean processing) {
+	public void setProcessing(boolean processing){
 		this.processing.set(processing);
 	}
-
-	public boolean processingCompareAndSet(boolean expect, boolean set) {
+	public boolean processingCompareAndSet(boolean expect, boolean set){
 		return this.processing.compareAndSet(expect, set);
 	}
-
-	public boolean isProcessingTeleport() {
+	public boolean isProcessingTeleport(){
 		return processingTeleport.get();
 	}
-
-	public void setProcessingTeleport(boolean processingTeleport) {
+	public void setProcessingTeleport(boolean processingTeleport){
 		this.processingTeleport.set(processingTeleport);
 	}
-
-	public boolean processingTeleportCompareAndSet(boolean expect, boolean set) {
+	public boolean processingTeleportCompareAndSet(boolean expect, boolean set){
 		return this.processingTeleport.compareAndSet(expect, set);
 	}
 

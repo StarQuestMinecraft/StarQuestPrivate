@@ -79,20 +79,19 @@ public class TranslationTask extends AsyncTask {
 				fail(event.getMessage());
 			}
 			
-			if(!data.failed()){
-				Location l = getCraft().pilot.getLocation();
-				int nx = l.getBlockX() + data.getDx();
-				int nz = l.getBlockZ() + data.getDz();
-				if(AutopilotRunTask.autopilotingCrafts.contains(getCraft())){
-					if(!BorderUtils.isWithinBorderIncludePadding(nx, nz, 30)){
-						fail("You left the autopilot on a bit too long and are almost at the worldborder!");
-					}
-				} else {
-					if (!BorderUtils.isWithinBorderIncludePadding(nx, nz)) {
-						fail("You have almost reached the world border! Turn back now!");
-					}
+			Location l = getCraft().pilot.getLocation();
+			int nx = l.getBlockX() + data.getDx();
+			int nz = l.getBlockZ() + data.getDz();
+			if(AutopilotRunTask.autopilotingCrafts.contains(getCraft())){
+				if(!BorderUtils.isWithinBorderIncludePadding(nx, nz, 30)){
+					fail("You left the autopilot on a bit too long and are almost at the worldborder!");
+				}
+			} else {
+				if (!BorderUtils.isWithinBorderIncludePadding(nx, nz)) {
+					fail("You have almost reached the world border! Turn back now!");
 				}
 			}
+			
 			for (int i = 0; i < blocksList.length; i++) {
 				MovecraftLocation oldLoc = blocksList[i];
 				MovecraftLocation newLoc = oldLoc.translate(data.getDx(), data.getDy(), data.getDz());
