@@ -343,7 +343,7 @@ public class MapUpdateManager extends BukkitRunnable {
 							updateBlock(i, chunkList, w, dataMap, chunks, cmChunks, true);					
 						}
 						
-						// if a bed was moved, check to see if any spawn points need to be updated
+						/*// if a bed was moved, check to see if any spawn points need to be updated
 						if(i.getTypeID()==26) {
 							Iterator<Player> iter=unupdatedPlayers.iterator();
 							while (iter.hasNext()) {
@@ -359,7 +359,7 @@ public class MapUpdateManager extends BukkitRunnable {
 											if(i.getOldBlockLocation().getZ()-spawnLoc.getZ()<=1 && i.getOldBlockLocation().getZ()-spawnLoc.getZ()>=-1) {
 												foundSpawn=true;
 											}
-										}
+				s						}
 										
 										if(foundSpawn) {
 											Location newSpawnLoc = new Location( w, i.getNewBlockLocation().getX(), i.getNewBlockLocation().getY(), i.getNewBlockLocation().getZ() );
@@ -369,7 +369,7 @@ public class MapUpdateManager extends BukkitRunnable {
 									}
 								}
 							}
-						}
+						}*/
 					}
 				}
 				

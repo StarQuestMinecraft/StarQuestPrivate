@@ -41,7 +41,6 @@ public class StarshipMenu implements Listener{
 	public void onPlayerInteract(PlayerInteractEvent event){
 		if(event.getAction() == Action.RIGHT_CLICK_BLOCK && (event.getClickedBlock().getType() == Material.WALL_SIGN || event.getClickedBlock().getType() == Material.SIGN_POST));
 		Sign s = (Sign) event.getClickedBlock().getState();
-		if()
 		event.getPlayer().openInventory(menu);
 		craftNamePlayerMap.put(event.getPlayer(), s.getLines());
 	}
