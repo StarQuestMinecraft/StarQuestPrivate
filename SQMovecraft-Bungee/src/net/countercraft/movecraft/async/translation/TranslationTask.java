@@ -18,8 +18,10 @@ import net.countercraft.movecraft.utils.mechanism.BorderUtils;
 import org.apache.commons.collections.ListUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
+import org.bukkit.ChunkSnapshot;
 import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -52,50 +54,27 @@ public class TranslationTask extends AsyncTask {
 
 		int [][][] hb=getCraft().getHitBox();
 
-		// start by finding the crafts borders
-		int minY=65535;
-		int maxY=-65535;
-		for (int [][] i1 : hb) {
-			for (int [] i2 : i1) {
-				if(i2!=null) {
-					if(i2[0]<minY) {
-						minY=i2[0];
-					}
-					if(i2[1]>maxY) {
-						maxY=i2[1];
-					}
-				}
-			}
-		}
-		int maxX=getCraft().getMinX()+hb.length;
-		int maxZ=getCraft().getMinZ()+hb[0].length;  // safe because if the first x array doesn't have a z array, then it wouldn't be the first x array
-		int minX=getCraft().getMinX();
-		int minZ=getCraft().getMinZ();
-		
-		// Load any chunks that you are moving into that are not loaded 
-		for (int posX=minX+data.getDx();posX<=maxX+data.getDx();posX++) {
-			for (int posZ=minZ+data.getDz();posZ<=maxZ+data.getDz();posZ++) {
-				Chunk chunk=getCraft().getW().getBlockAt(posX,minY,posZ).getChunk();
-				if (!chunk.isLoaded()) {
-					chunk.load();
-				}
-			}
-		}
 		
 		if (getCraft().getType().isGroundVehicle()) {
 			data.setDy(CarUtils.getNewdY(getCraft(), data.getDx(), data.getDz()));
 		}
 		
-		Location l = getCraft().pilot.getLocation();
-		int nx = l.getBlockX() + data.getDx();
-		int nz = l.getBlockZ() + data.getDz();
-		if(AutopilotRunTask.autopilotingCrafts.contains(getCraft())){
-			if(!BorderUtils.isWithinBorderIncludePadding(nx, nz, 30)){
-				fail("You left the autopilot on a bit too long and are almost at the worldborder!");
-			}
-		} else {
-			if (!BorderUtils.isWithinBorderIncludePadding(nx, nz)) {
-				fail("You have almost reached the world border! Turn back now!");
+		if(!checkChunks(getCraft().getW(), getCraft().getMinX(), getCraft().getMinZ(), getCraft().getHitBox(), data.getDx(), data.getDz())){
+			fail("You're going a bit fast and the chunks can't render fast enough.");
+		}
+		
+		if(!data.failed()){
+			Location l = getCraft().pilot.getLocation();
+			int nx = l.getBlockX() + data.getDx();
+			int nz = l.getBlockZ() + data.getDz();
+			if(AutopilotRunTask.autopilotingCrafts.contains(getCraft())){
+				if(!BorderUtils.isWithinBorderIncludePadding(nx, nz, 30)){
+					fail("You left the autopilot on a bit too long and are almost at the worldborder!");
+				}
+			} else {
+				if (!BorderUtils.isWithinBorderIncludePadding(nx, nz)) {
+					fail("You have almost reached the world border! Turn back now!");
+				}
 			}
 		}
 		
@@ -104,36 +83,37 @@ public class TranslationTask extends AsyncTask {
 		HashSet<EntityUpdateCommand> entityUpdateSet = new HashSet<EntityUpdateCommand>();
 		Set<MapUpdateCommand> updateSet = new HashSet<MapUpdateCommand>();
 		
-        for ( int i = 0; i < blocksList.length; i++ ) {
-			MovecraftLocation oldLoc = blocksList[i];
-			MovecraftLocation newLoc = oldLoc.translate( data.getDx(), data.getDy(), data.getDz() );
-//			newBlockList[i] = newLoc;
-
-			if ( newLoc.getY() > data.getMaxHeight() && newLoc.getY() > oldLoc.getY() ) {
-				fail( String.format( I18nSupport.getInternationalisedString( "Translation - Failed Craft hit height limit" ) ) );
-				break;
-			} else if ( newLoc.getY() < data.getMinHeight()  && newLoc.getY() < oldLoc.getY()) {
-				fail( String.format( I18nSupport.getInternationalisedString( "Translation - Failed Craft hit minimum height limit" ) ) );
-				break;
-			}
-            Material testMaterial;
-            
-            testMaterial = getCraft().getW().getBlockAt( newLoc.getX(), newLoc.getY(), newLoc.getZ() ).getType();
-            boolean blockObstructed = (!testMaterial.equals(Material.AIR) && !testMaterial.equals(Material.PISTON_EXTENSION)) && !existingBlockSet.contains( newLoc );
-			
-			if ( blockObstructed ) {
- 				 	// Explode if the craft is set to have a CollisionExplosion. Also keep moving for spectacular ramming collisions
-				 		fail( String.format( I18nSupport.getInternationalisedString( "Translation - Failed Craft is obstructed" )+" @ %d,%d,%d", oldLoc.getX(), oldLoc.getY(), oldLoc.getZ() ) );
-				 		break;
-			} else {
-				int oldID = getCraft().getW().getBlockTypeIdAt( oldLoc.getX(), oldLoc.getY(), oldLoc.getZ() );
-				// remove water from sinking crafts
-
-				updateSet.add( new MapUpdateCommand( oldLoc, newLoc, oldID, getCraft() ) );
-				tempBlockList.add(newLoc);
+		if(! data.failed()){
+	        for ( int i = 0; i < blocksList.length; i++ ) {
+				MovecraftLocation oldLoc = blocksList[i];
+				MovecraftLocation newLoc = oldLoc.translate( data.getDx(), data.getDy(), data.getDz() );
+	//			newBlockList[i] = newLoc;
+	
+				if ( newLoc.getY() > data.getMaxHeight() && newLoc.getY() > oldLoc.getY() ) {
+					fail( String.format( I18nSupport.getInternationalisedString( "Translation - Failed Craft hit height limit" ) ) );
+					break;
+				} else if ( newLoc.getY() < data.getMinHeight()  && newLoc.getY() < oldLoc.getY()) {
+					fail( String.format( I18nSupport.getInternationalisedString( "Translation - Failed Craft hit minimum height limit" ) ) );
+					break;
+				}
+	            
+	            int testID = getCraft().getW().getBlockTypeIdAt(newLoc.getX(), newLoc.getY(), newLoc.getZ());
+	            boolean blockObstructed = (testID != 0 && testID != 36 && !existingBlockSet.contains( newLoc ));
 				
+				if ( blockObstructed ) {
+	 				 	// Explode if the craft is set to have a CollisionExplosion. Also keep moving for spectacular ramming collisions
+					 		fail( String.format( I18nSupport.getInternationalisedString( "Translation - Failed Craft is obstructed" )+" @ %d,%d,%d", oldLoc.getX(), oldLoc.getY(), oldLoc.getZ() ) );
+					 		break;
+				} else {
+					int oldID = getCraft().getW().getBlockTypeIdAt( oldLoc.getX(), oldLoc.getY(), oldLoc.getZ() );
+					// remove water from sinking crafts
+	
+					updateSet.add( new MapUpdateCommand( oldLoc, newLoc, oldID, getCraft() ) );
+					tempBlockList.add(newLoc);
+					
+				}
+	
 			}
-
 		}
 
 		if ( !data.failed() ) {
@@ -145,18 +125,23 @@ public class TranslationTask extends AsyncTask {
 
 			Iterator<UUID> i = getCraft().playersRidingShip.iterator();
 			while (i.hasNext()) {
-				Player pTest= Movecraft.playerIndex.get(i);
-				if ( MathUtils.playerIsWithinBoundingPolygon( getCraft().getHitBox(), getCraft().getMinX(), getCraft().getMinZ(), MathUtils.bukkit2MovecraftLoc( pTest.getLocation() ) ) ) {
-					Location tempLoc = pTest.getLocation(); 
-					tempLoc=tempLoc.add( data.getDx(), data.getDy(), data.getDz() );
-					Location newPLoc=new Location(getCraft().getW(), tempLoc.getX(), tempLoc.getY(), tempLoc.getZ());
-					newPLoc.setPitch(pTest.getLocation().getPitch());
-					newPLoc.setYaw(pTest.getLocation().getYaw());
-					
-					EntityUpdateCommand eUp=new EntityUpdateCommand(pTest.getLocation().clone(),newPLoc,pTest);
-					entityUpdateSet.add(eUp);
+				UUID uid = i.next();
+				Player pTest = Movecraft.playerIndex.get(uid);
+				if(pTest != null){
+					if ( MathUtils.playerIsWithinBoundingPolygon( getCraft().getHitBox(), getCraft().getMinX(), getCraft().getMinZ(), MathUtils.bukkit2MovecraftLoc( pTest.getLocation() ) ) ) {
+						Location tempLoc = pTest.getLocation(); 
+						tempLoc=tempLoc.add( data.getDx(), data.getDy(), data.getDz() );
+						Location newPLoc=new Location(getCraft().getW(), tempLoc.getX(), tempLoc.getY(), tempLoc.getZ());
+						newPLoc.setPitch(pTest.getLocation().getPitch());
+						newPLoc.setYaw(pTest.getLocation().getYaw());
+						
+						EntityUpdateCommand eUp=new EntityUpdateCommand(pTest.getLocation().clone(),newPLoc,pTest);
+						entityUpdateSet.add(eUp);
+					}
 				}
 			}
+			
+			getCraft().originalPilotLoc = getCraft().originalPilotLoc.add(data.getDx(), data.getDy(), data.getDz());
 			
 			//Set blocks that are no longer craft to air
 			List<MovecraftLocation> airLocation = ListUtils.subtract( Arrays.asList( blocksList ), Arrays.asList( newBlockList ) );
@@ -217,6 +202,28 @@ public class TranslationTask extends AsyncTask {
 				task2.runTaskTimer(Movecraft.getInstance(), 0, 1);
 			}
 		}
+	}
+	//a thread safe method that checks the chunks with no chance of crashing
+	public boolean checkChunks(World w, int minX, int minZ, int[][][] hitBox, int dx, int dz) {
+		if (dx == 0 && dz == 0)
+			return true;
+
+		int maxX = minX + hitBox.length;
+		int maxZ = minZ + hitBox[0].length;
+		
+		int minChunkX = minX >> 4;
+		int minChunkZ = minZ >> 4;
+		int maxChunkX = maxX >> 4;
+		int maxChunkZ = maxZ >> 4;
+
+		for (int x = minChunkX; x <= maxChunkX; x++) {
+			for (int z = minChunkZ; z <= maxChunkZ; z++) {
+				if (!w.isChunkLoaded(x, z)) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	private void fail( String message ) {

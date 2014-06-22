@@ -106,19 +106,6 @@ public class RotationTask extends AsyncTask {
 		Integer maxZ=getCraft().getMinZ()+hb[0].length;  // safe because if the first x array doesn't have a z array, then it wouldn't be the first x array
 		minX=getCraft().getMinX();
 		minZ=getCraft().getMinZ();
-
-		int distX=maxX-minX;
-		int distZ=maxZ-minZ; 
-		
-		// Load any chunks that you could possibly rotate into that are not loaded 
-		for (int posX=minX-distZ;posX<=maxX+distZ;posX++) {
-			for (int posZ=minZ-distX;posZ<=maxZ+distX;posZ++) {
-				Chunk chunk=getCraft().getW().getBlockAt(posX,minY,posZ).getChunk();
-				if (!chunk.isLoaded()) {
-					chunk.load();
-				}
-			}
-		}
 		
 		// Rotate the block set
 		MovecraftLocation[] centeredBlockList = new MovecraftLocation[blockList.length];
