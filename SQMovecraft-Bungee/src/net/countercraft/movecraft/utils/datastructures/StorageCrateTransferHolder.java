@@ -19,18 +19,12 @@ package net.countercraft.movecraft.utils.datastructures;
 
 import net.countercraft.movecraft.craft.Craft;
 
-public class TransferData {
-	private final byte data;
-	public boolean isLastUpdate;
-	public final Craft c;
+import org.bukkit.inventory.ItemStack;
 
-	public TransferData( byte data, Craft c ) {
-		this.data = data;
-		isLastUpdate = false;
-		this.c = c;
+public class StorageCrateTransferHolder extends  InventoryTransferHolder {
+
+	public StorageCrateTransferHolder( byte data, ItemStack[] invetory, Craft c) {
+		super( data, invetory, c);
 	}
 
-	public byte getData() {
-		return data;
-	}
 }

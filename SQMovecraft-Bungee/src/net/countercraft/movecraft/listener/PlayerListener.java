@@ -31,7 +31,7 @@ import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.OfflinePilotUtils;
 import net.countercraft.movecraft.utils.SneakMoveTask;
-import net.countercraft.movecraft.utils.mechanism.WarpUtils;
+import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

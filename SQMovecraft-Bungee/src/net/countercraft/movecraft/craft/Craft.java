@@ -30,10 +30,10 @@ import net.countercraft.movecraft.async.translation.TranslationTask;
 import net.countercraft.movecraft.async.translation.TranslationTaskData;
 import net.countercraft.movecraft.event.CraftPilotEvent;
 import net.countercraft.movecraft.event.CraftSyncTranslateEvent;
+import net.countercraft.movecraft.utils.GunUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.Rotation;
-import net.countercraft.movecraft.utils.mechanism.GunUtils;
-import net.countercraft.movecraft.utils.mechanism.WarpUtils;
+import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;

@@ -24,8 +24,8 @@ import org.bukkit.inventory.ItemStack;
 public class InventoryTransferHolder extends TransferData {
 	private final ItemStack[] invetory;
 
-	public InventoryTransferHolder( byte data, ItemStack[] invetory ) {
-		super( data );
+	public InventoryTransferHolder( byte data, ItemStack[] invetory, Craft c) {
+		super( data, c );
 		this.invetory = invetory;
 	}
 
@@ -33,4 +33,3 @@ public class InventoryTransferHolder extends TransferData {
 		return invetory;
 	}
 }
-

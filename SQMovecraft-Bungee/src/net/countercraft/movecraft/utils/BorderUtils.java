@@ -1,4 +1,4 @@
-package net.countercraft.movecraft.utils.mechanism;
+package net.countercraft.movecraft.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;

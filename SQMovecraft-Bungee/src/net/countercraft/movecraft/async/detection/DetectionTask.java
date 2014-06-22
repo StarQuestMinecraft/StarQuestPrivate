@@ -1,4 +1,26 @@
+/*
+ * This file is part of Movecraft.
+ *
+ *     Movecraft is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     Movecraft is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with Movecraft.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package net.countercraft.movecraft.async.detection;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Stack;
 
 import net.countercraft.movecraft.async.AsyncTask;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
@@ -13,11 +35,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Stack;
 
 public class DetectionTask extends AsyncTask {
 	private final MovecraftLocation startLocation;
@@ -34,39 +51,38 @@ public class DetectionTask extends AsyncTask {
 	private final ArrayList<MovecraftLocation> signLocations = new ArrayList<MovecraftLocation>();
 	private final DetectionTaskData data;
 
-	public DetectionTask( Craft c, MovecraftLocation startLocation, int minSize, int maxSize, Integer[] allowedBlocks, Integer[] forbiddenBlocks, String player, World w ) {
-		super( c );
+	public DetectionTask(Craft c, MovecraftLocation startLocation, int minSize, int maxSize, Integer[] allowedBlocks, Integer[] forbiddenBlocks, String player, World w) {
+		super(c);
 		this.startLocation = startLocation;
 		this.minSize = minSize;
 		this.maxSize = maxSize;
-		data = new DetectionTaskData( w, player, allowedBlocks, forbiddenBlocks );
+		data = new DetectionTaskData(w, player, allowedBlocks, forbiddenBlocks);
 	}
 
 	@Override
 	public void excecute() {
-		
-		HashMap<Integer, ArrayList<Double>> flyBlocks = (HashMap<Integer, ArrayList<Double>>) getCraft().getType().getFlyBlocks().clone();
-		
-		blockStack.push( startLocation );
+
+		blockStack.push(startLocation);
 
 		do {
-			detectSurrounding( blockStack.pop() );
-		}
-		while ( !blockStack.isEmpty() );
+			detectSurrounding(blockStack.pop());
+		} while (!blockStack.isEmpty());
 
-		if ( data.failed() ) {
+		if (data.failed()) {
 			return;
 		}
 
-		if ( isWithinLimit( blockList.size(), minSize, maxSize ) ) {
+		if (isWithinLimit(blockList.size(), minSize, maxSize)) {
 
-			data.setBlockList( finaliseBlockList( blockList ) );
+			data.setBlockList(finaliseBlockList(blockList));
 			data.setSignLocations(signLocations);
+			@SuppressWarnings("unchecked")
+			HashMap<Integer, ArrayList<Double>> flyBlocks = (HashMap<Integer, ArrayList<Double>>) getCraft().getType().getFlyBlocks().clone();
 
-			if ( confirmStructureRequirements( flyBlocks, blockTypeCount ) ) {
+			if (confirmStructureRequirements(flyBlocks, blockTypeCount)) {
 
-				data.setHitBox( BoundingBoxUtils.formBoundingBox( data.getBlockList(), data.getMinX(), maxX, data.getMinZ(), maxZ ) );
-				
+				data.setHitBox(BoundingBoxUtils.formBoundingBox(data.getBlockList(), data.getMinX(), maxX, data.getMinZ(), maxZ));
+
 				Craft c = getCraft();
 				// detect bedspawns, may be an expensive operation?
 				try{
@@ -95,25 +111,25 @@ public class DetectionTask extends AsyncTask {
 					e.printStackTrace();
 				}
 			}
-
 		}
 
 	}
 
-	private void detectBlock( int x, int y, int z ) {
+	@SuppressWarnings("deprecation")
+	private void detectBlock(int x, int y, int z) {
 
-		MovecraftLocation workingLocation = new MovecraftLocation( x, y, z );
+		MovecraftLocation workingLocation = new MovecraftLocation(x, y, z);
 
-		if ( notVisited( workingLocation, visited ) ) {
+		if (notVisited(workingLocation, visited)) {
 
-			int testID = data.getWorld().getBlockTypeIdAt( x, y, z );
-			int testData = data.getWorld().getBlockAt(x, y, z).getData();
+			int testID = data.getWorld().getBlockTypeIdAt(x, y, z);
 
-			if ( isForbiddenBlock( testID) ) {
+			if (isForbiddenBlock(testID)) {
 
-				fail( String.format( I18nSupport.getInternationalisedString( "Detection - Forbidden block found" ) ) );
+				fail(String.format(I18nSupport.getInternationalisedString("Detection - Forbidden block found")));
 
-			} else if ( isAllowedBlock( testID) ) {
+			} else if (isAllowedBlock(testID)) {
+
 				addToBlockList(workingLocation);
 				addToBlockCount(testID);
 
@@ -147,7 +163,6 @@ public class DetectionTask extends AsyncTask {
 			}
 		}
 
-
 	}
 
 	private boolean isAllowedBlock(int test) {
@@ -176,21 +191,21 @@ public class DetectionTask extends AsyncTask {
 		return data;
 	}
 
-	private boolean notVisited( MovecraftLocation l, HashSet<MovecraftLocation> locations ) {
-		if ( locations.contains( l ) ) {
+	private boolean notVisited(MovecraftLocation l, HashSet<MovecraftLocation> locations) {
+		if (locations.contains(l)) {
 			return false;
 		} else {
-			locations.add( l );
+			locations.add(l);
 			return true;
 		}
 	}
 
-	private void addToBlockList( MovecraftLocation l ) {
-		blockList.add( l );
+	private void addToBlockList(MovecraftLocation l) {
+		blockList.add(l);
 	}
 
-	private void addToDetectionStack( MovecraftLocation l ) {
-		blockStack.push( l );
+	private void addToDetectionStack(MovecraftLocation l) {
+		blockStack.push(l);
 	}
 
 	private void addToBlockCount(int id) {
@@ -203,66 +218,66 @@ public class DetectionTask extends AsyncTask {
 		blockTypeCount.put(id, count + 1);
 	}
 
-	private void detectSurrounding( MovecraftLocation l ) {
+	private void detectSurrounding(MovecraftLocation l) {
 		int x = l.getX();
 		int y = l.getY();
 		int z = l.getZ();
 
-		for ( int xMod = -1; xMod < 2; xMod += 2 ) {
+		for (int xMod = -1; xMod < 2; xMod += 2) {
 
-			for ( int yMod = -1; yMod < 2; yMod++ ) {
+			for (int yMod = -1; yMod < 2; yMod++) {
 
-				detectBlock( x + xMod, y + yMod, z );
-
-			}
-
-		}
-
-		for ( int zMod = -1; zMod < 2; zMod += 2 ) {
-
-			for ( int yMod = -1; yMod < 2; yMod++ ) {
-
-				detectBlock( x, y + yMod, z + zMod );
+				detectBlock(x + xMod, y + yMod, z);
 
 			}
 
 		}
 
-		for ( int yMod = -1; yMod < 2; yMod += 2 ) {
+		for (int zMod = -1; zMod < 2; zMod += 2) {
 
-			detectBlock( x, y + yMod, z );
+			for (int yMod = -1; yMod < 2; yMod++) {
+
+				detectBlock(x, y + yMod, z + zMod);
+
+			}
+
+		}
+
+		for (int yMod = -1; yMod < 2; yMod += 2) {
+
+			detectBlock(x, y + yMod, z);
 
 		}
 
 	}
 
-	private void calculateBounds( MovecraftLocation l ) {
-		if ( maxX == null || l.getX() > maxX ) {
+	private void calculateBounds(MovecraftLocation l) {
+		if (maxX == null || l.getX() > maxX) {
 			maxX = l.getX();
 		}
-		if ( maxY == null || l.getY() > maxY ) {
+		if (maxY == null || l.getY() > maxY) {
 			maxY = l.getY();
 		}
-		if ( maxZ == null || l.getZ() > maxZ ) {
+		if (maxZ == null || l.getZ() > maxZ) {
 			maxZ = l.getZ();
 		}
-		if ( data.getMinX() == null || l.getX() < data.getMinX() ) {
-			data.setMinX( l.getX() );
+		if (data.getMinX() == null || l.getX() < data.getMinX()) {
+			data.setMinX(l.getX());
 		}
-		if ( minY == null || l.getY() < minY ) {
+		if (minY == null || l.getY() < minY) {
 			minY = l.getY();
 		}
-		if ( data.getMinZ() == null || l.getZ() < data.getMinZ() ) {
-			data.setMinZ( l.getZ() );
+		if (data.getMinZ() == null || l.getZ() < data.getMinZ()) {
+			data.setMinZ(l.getZ());
 		}
 	}
 
-	private boolean isWithinLimit( int size, int min, int max ) {
-		if ( size < min ) {
-			fail( String.format( I18nSupport.getInternationalisedString( "Detection - Craft too small" ), min ) );
+	private boolean isWithinLimit(int size, int min, int max) {
+		if (size < min) {
+			fail(String.format(I18nSupport.getInternationalisedString("Detection - Craft too small"), min));
 			return false;
-		} else if ( size > max ) {
-			fail( String.format( I18nSupport.getInternationalisedString( "Detection - Craft too large" ), max ) );
+		} else if (size > max) {
+			fail(String.format(I18nSupport.getInternationalisedString("Detection - Craft too large"), max));
 			return false;
 		} else {
 			return true;
@@ -270,21 +285,8 @@ public class DetectionTask extends AsyncTask {
 
 	}
 
-	private MovecraftLocation[] finaliseBlockList( HashSet<MovecraftLocation> blockSet ) {
-		//MovecraftLocation[] finalList=blockSet.toArray( new MovecraftLocation[1] );
-		MovecraftLocation[] finalList=new MovecraftLocation[blockSet.size()];
-		
-		// Sort the blocks from the bottom up to minimize lower altitude block updates
-		int index=0;
-		for(int posY=this.minY;posY<=this.maxY;posY++) {
-			for(MovecraftLocation loc : blockSet) {
-				if(loc.getY()==posY) {
-					finalList[index]=loc;
-					index++;
-				}
-			}
-		}
-		return blockSet.toArray( finalList );
+	private MovecraftLocation[] finaliseBlockList(HashSet<MovecraftLocation> blockSet) {
+		return blockSet.toArray(new MovecraftLocation[1]);
 	}
 
 	private boolean confirmStructureRequirements(HashMap<Integer, ArrayList<Double>> flyBlocks, HashMap<Integer, Integer> countData) {
@@ -315,8 +317,8 @@ public class DetectionTask extends AsyncTask {
 		return true;
 	}
 
-	private void fail( String message ) {
-		data.setFailed( true );
-		data.setFailMessage( message );
+	private void fail(String message) {
+		data.setFailed(true);
+		data.setFailMessage(message);
 	}
 }

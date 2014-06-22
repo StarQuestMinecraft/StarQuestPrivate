@@ -17,9 +17,9 @@
 
 package net.countercraft.movecraft.async.translation;
 
+import net.countercraft.movecraft.utils.EntityUpdateCommand;
+import net.countercraft.movecraft.utils.MapUpdateCommand;
 import net.countercraft.movecraft.utils.MovecraftLocation;
-import net.countercraft.movecraft.utils.map.EntityUpdateCommand;
-import net.countercraft.movecraft.utils.map.MapUpdateCommand;
 
 public class TranslationTaskData {
 	private int dx;

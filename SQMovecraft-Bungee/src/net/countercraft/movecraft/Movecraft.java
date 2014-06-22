@@ -43,10 +43,10 @@ import net.countercraft.movecraft.listener.PartListener;
 import net.countercraft.movecraft.listener.PlayerListener;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.metrics.MovecraftMetrics;
+import net.countercraft.movecraft.utils.LocationUtils;
+import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.ShipNuker;
-import net.countercraft.movecraft.utils.map.LocationUtils;
-import net.countercraft.movecraft.utils.map.MapUpdateManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

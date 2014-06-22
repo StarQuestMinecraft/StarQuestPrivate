@@ -1,12 +1,10 @@
-package net.countercraft.movecraft.utils.mechanism;
+package net.countercraft.movecraft.utils;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.translation.RepeatTryWorldJumpTask;
 import net.countercraft.movecraft.bungee.RepeatTryServerJumpTask;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
-import net.countercraft.movecraft.utils.MovecraftLocation;
-import net.countercraft.movecraft.utils.map.LocationUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

@@ -8,8 +8,8 @@ import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.listener.InteractListener;
+import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MathUtils;
-import net.countercraft.movecraft.utils.map.MapUpdateManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -64,7 +64,7 @@ public class BungeeCraftConstructor {
 		}
 	}
 	public static void buildCraft(final World w, int X, int Y, int Z, int dX, int dY, int dZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> names, ArrayList<UUID> namesOnShip){
-		int[] fragileBlocks = MapUpdateManager.fragileBlocks;
+		int[] fragileBlocks = MapUpdateManager.getInstance().fragileBlocks;
 		ArrayList<LocAndBlock> fragiles = new ArrayList<LocAndBlock>();
 		
 		//update bedspawns
