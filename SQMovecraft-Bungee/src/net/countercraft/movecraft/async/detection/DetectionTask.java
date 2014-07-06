@@ -287,19 +287,7 @@ public class DetectionTask extends AsyncTask {
 
 	private MovecraftLocation[] finaliseBlockList( HashSet<MovecraftLocation> blockSet ) {
 		//MovecraftLocation[] finalList=blockSet.toArray( new MovecraftLocation[1] );
-		MovecraftLocation[] finalList=new MovecraftLocation[blockSet.size()];
-
-		// Sort the blocks from the bottom up to minimize lower altitude block updates
-		int index=0;
-		for(int posY=this.minY;posY<=this.maxY;posY++) {
-			for(MovecraftLocation loc : blockSet) {
-				if(loc.getY()==posY) {
-					finalList[index]=loc;
-					index++;
-				}
-			}
-		}
-		return blockSet.toArray( finalList );
+		return blockSet.toArray(new MovecraftLocation[1]);
 	}
 
 	private boolean confirmStructureRequirements(HashMap<Integer, ArrayList<Double>> flyBlocks, HashMap<Integer, Integer> countData) {
