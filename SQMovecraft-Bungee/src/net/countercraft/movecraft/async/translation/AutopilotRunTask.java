@@ -37,9 +37,11 @@ public class AutopilotRunTask extends BukkitRunnable{
 		p.sendMessage(ChatColor.RED + "Autopilot Engaged.");
 	}
 	public static void stopAutopiloting(Craft c, Player p){
-		if (autopilotingCrafts.contains(c)) autopilotingCrafts.remove(c);
-		if (p != null){
-			p.sendMessage(ChatColor.RED + "Your autopilot has turned off.");
+		if (autopilotingCrafts.contains(c)){
+			autopilotingCrafts.remove(c);
+			if (p != null){
+				p.sendMessage(ChatColor.RED + "Your autopilot has turned off.");
+			}
 		}
 		for(MovecraftLocation l : c.getBlockList()){
 			Block b = c.getW().getBlockAt(l.getX(), l.getY(), l.getZ());

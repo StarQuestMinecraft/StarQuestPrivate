@@ -16,16 +16,17 @@ import org.bukkit.entity.Player;
 public class WarpUtils {
 	
 	public static void enterWarp(Player p, Craft c){
-		Location l = p.getLocation();
+		return;
+		/*Location l = p.getLocation();
 		World w = getEnd(p.getWorld());
 		if(w == null) return;
 		RepeatTryWorldJumpTask task = new RepeatTryWorldJumpTask(c, p, new Location(w, l.getX(), l.getY(), l.getZ()));
 		task.runTaskTimer(Movecraft.getInstance(), 0, 1);
 		c.warpCoordsX = l.getBlockX();
-		c.warpCoordsZ = l.getBlockZ();
+		c.warpCoordsZ = l.getBlockZ();*/
 	}
 	public static void leaveWarp(Player p, Craft c){
-		if(!c.isProcessing()){
+		/*if(!c.isProcessing()){
 			Location l = p.getLocation();
 			World w2 = getNormal(p.getWorld());
 			if(w2 == null) return;
@@ -45,7 +46,8 @@ public class WarpUtils {
 				RepeatTryWorldJumpTask task = new RepeatTryWorldJumpTask(c, p, targ);
 				task.runTaskTimer(Movecraft.getInstance(), 0, 1);
 			}
-		}
+		}*/
+		return;
 	}
 	public static void translate(Craft c, int x, int y, int z){
 		c.warpCoordsX =  c.warpCoordsX + x;

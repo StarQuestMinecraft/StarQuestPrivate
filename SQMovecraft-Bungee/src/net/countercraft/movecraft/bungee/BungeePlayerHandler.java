@@ -44,10 +44,10 @@ public class BungeePlayerHandler {
 				if(c != null){
 					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 						public void run(){
-							if(c.originalPilotLoc == null){
+							if(c.getOriginalPilotLoc() == null){
 								c.detect(p.getName(), MathUtils.bukkit2MovecraftLoc(p.getLocation()));
 							} else {
-								c.detect(p.getName(), MathUtils.bukkit2MovecraftLoc(c.originalPilotLoc));
+								c.detect(p.getName(), MathUtils.bukkit2MovecraftLoc(c.getOriginalPilotLoc()));
 							}
 							pilotQueue.remove(uid);
 						}

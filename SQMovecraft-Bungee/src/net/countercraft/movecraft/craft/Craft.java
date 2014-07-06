@@ -45,6 +45,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 public class Craft {
 	private int[][][] hitBox;
@@ -63,7 +64,8 @@ public class Craft {
 	public Semaphore playersRidingLock = new Semaphore(1);
 	public int warpCoordsX;
 	public int warpCoordsZ;
-	public Location originalPilotLoc = null;
+	private Location originalPilotLoc = null;
+	private Location previousOriginalPilotLoc = null;
 	public Player pilot;
 
 	public Craft(CraftType type, World world) {
@@ -77,7 +79,40 @@ public class Craft {
 	}
 	
 	public void setOriginalPilotLoc(Location l){
+		previousOriginalPilotLoc = originalPilotLoc;
 		originalPilotLoc = l;
+	}
+	
+	public Location getOriginalPilotLoc(){
+		return originalPilotLoc;
+	}
+	
+	public void teleportToOriginalPilotLoc(Player p){
+		if(checkForSuitableLocation(originalPilotLoc)){
+			p.teleport(originalPilotLoc);
+		} else if(checkForSuitableLocation(previousOriginalPilotLoc)){
+			p.teleport(previousOriginalPilotLoc);
+		} else{
+			Location l = extrapolateFuturePilotLoc();
+			if(checkForSuitableLocation(l)){
+				p.teleport(l);
+			}
+		}
+		//TODO something sophisticated if it doesn't work properly
+	}
+	
+	private Location extrapolateFuturePilotLoc(){
+		double xdiff = originalPilotLoc.getX() - previousOriginalPilotLoc.getX();
+		double ydiff = originalPilotLoc.getY() - previousOriginalPilotLoc.getY();
+		double zdiff = originalPilotLoc.getZ() - previousOriginalPilotLoc.getZ();
+		Location l = originalPilotLoc.add(xdiff,ydiff,zdiff);
+		return l;
+	}
+	
+	private boolean checkForSuitableLocation(Location l){
+		Block b = l.getBlock().getRelative(0, -1, 0);
+		if(b.getType() == Material.AIR) return false;
+		return true;
 	}
 
 	/*
@@ -116,6 +151,10 @@ public class Craft {
 	}
 
 	public void detect(String playerName, MovecraftLocation startPoint) {
+		if(playerName == null){
+			System.out.println("Pilot failed!");
+			return;
+		}
 		pilot = Bukkit.getServer().getPlayer(playerName);
 		CraftPilotEvent event = new CraftPilotEvent(this);
 		if (event.call())

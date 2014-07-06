@@ -219,31 +219,19 @@ public class MapUpdateManager extends BukkitRunnable {
                                         
                                         // if the block you just updated had any entities on it, move them. If they are moving, add in their motion to the craft motion
                                         if( entityMap.containsKey(m.getNewBlockLocation()) ) {
-                                                List<EntityUpdateCommand> mapUpdateList=entityMap.get(m.getNewBlockLocation());
-                                                for(EntityUpdateCommand entityUpdate : mapUpdateList) {
-                                                        Entity entity=entityUpdate.getEntity();
-                                                        if(entity.isValid()){
-                                                            Location newLoc=entityUpdate.getNewLocation();
-                                                            
-                                                            if(newLoc.getY() - entityUpdate.getOldLocation().getY() != 0){
-                                                            	 double decimalY=newLoc.getY()-Math.floor(newLoc.getY());
-                                                            	 if(decimalY>0.40) {
-                                                            	 newLoc.setY( Math.ceil( newLoc.getY() ) );
-                                                            	 }
-                                                            }
-	                                                        Vector pVel=new Vector(entity.getVelocity().getX(),0.0,entity.getVelocity().getZ());
-	                                                        
-	                                                        if( pVel.getX()==0.0 && entity.getVelocity().getZ()==0.0 ) {
-	                                                                entity.teleport(newLoc);
-	                                                        } else {
-	                                                                Location craftMove=newLoc.subtract(entityUpdate.getOldLocation());
-	                                                                entity.teleport(newLoc.add(craftMove));
-	                                                        }
-	                                                        entity.setVelocity(pVel);
-                                                        }
-                                                }
-                                                entityMap.remove(m.getNewBlockLocation());
-                                        }
+                							List<EntityUpdateCommand> mapUpdateList=entityMap.get(m.getNewBlockLocation());
+                							for(EntityUpdateCommand entityUpdate : mapUpdateList) {
+                								Entity entity=entityUpdate.getEntity();
+                								Vector pVel=new Vector(entity.getVelocity().getX(),0.0,entity.getVelocity().getZ());
+                							/*	Location newLoc=entity.getLocation();
+                								newLoc.setX(entityUpdate.getNewLocation().getX());
+                								newLoc.setY(entityUpdate.getNewLocation().getY());
+                								newLoc.setZ(entityUpdate.getNewLocation().getZ());*/
+                								entity.teleport(entityUpdate.getNewLocation());
+                								entity.setVelocity(pVel);
+                							}
+                							entityMap.remove(m.getNewBlockLocation());
+                						}
                                         if(m.isLastUpdate()){
                                         	AsyncManager.getInstance().clear(m.getCraft());
                                         }

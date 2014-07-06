@@ -146,10 +146,10 @@ public class RotationTask extends AsyncTask {
 
                         }
                          //rotate the center point
-            			Location adjustedCenter = getCraft().originalPilotLoc.subtract(tOP);
+            			Location adjustedCenter = getCraft().getOriginalPilotLoc().subtract(tOP);
             			double[] rotatedCoords = MathUtils.rotateVecNoRound( rotation, adjustedCenter.getX(), adjustedCenter.getZ() );
-            			Location rotatedCenter = new Location( getCraft().getW(), rotatedCoords[0], getCraft().originalPilotLoc.getY(), rotatedCoords[1] );
-            			getCraft().originalPilotLoc = rotatedCenter.add( tOP );
+            			Location rotatedCenter = new Location( getCraft().getW(), rotatedCoords[0], getCraft().getOriginalPilotLoc().getY(), rotatedCoords[1] );
+            			getCraft().setOriginalPilotLoc(rotatedCenter.add( tOP ));
                         
                         // Calculate air changes
                         List<MovecraftLocation> airLocation = ListUtils.subtract( Arrays.asList( originalBlockList ), Arrays.asList( blockList ) );

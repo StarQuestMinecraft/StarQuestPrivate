@@ -56,6 +56,12 @@ public class PlayerTeleport {
 	public void execute() {
 
 		final Player p = Movecraft.playerIndex.get(uuid);
+		
+		if(p == null){
+			System.out.println("MOVECRAFT ERROR: t.execute() called on null player!");
+			return;
+		}
+		
 		World w = Bukkit.getServer().getWorld(worldname);
 		
 		Location l = new Location(w, x + 0.5, (double) y, z + 0.5, yaw, pitch);

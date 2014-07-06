@@ -94,7 +94,7 @@ public class CraftManager {
 		
 		if(c.playersRidingShip.contains(p.getUniqueId())){
 			if(!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))){
-				p.teleport(c.originalPilotLoc);
+				c.teleportToOriginalPilotLoc(p);
 			}
 		}
 		if(p != null){

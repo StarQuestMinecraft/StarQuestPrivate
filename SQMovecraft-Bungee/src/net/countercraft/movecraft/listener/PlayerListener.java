@@ -67,7 +67,7 @@ public class PlayerListener implements Listener {
 	}*/
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerLogin(PlayerJoinEvent event){
+	public void onPlayerJoin(PlayerJoinEvent event){
 		Player p = event.getPlayer();
 		Movecraft.playerIndex.put(p.getUniqueId(), p);
 		BungeePlayerHandler.onLogin(p);
@@ -154,7 +154,7 @@ public class PlayerListener implements Listener {
 					if(!MathUtils.playerIsWithinBoundingPolygon( c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc( event.getTo() ) ) ){
 						if(!c.isProcessingTeleport()){
 							p.setFallDistance(0.0F);
-							p.teleport(c.originalPilotLoc);
+							c.teleportToOriginalPilotLoc(p);
 							p.sendMessage("You attempted to leave the craft. If you want to leave the ship, type /stopriding.");
 						}
 					}
@@ -269,7 +269,7 @@ public class PlayerListener implements Listener {
 			if(event.getEntity() != null && crafts != null){
 				for(Craft c : crafts){
 					if(c.playersRidingShip.contains(plr.getUniqueId())){
-						plr.teleport(c.originalPilotLoc);
+						c.teleportToOriginalPilotLoc(plr);
 						plr.setHealth(plr.getMaxHealth());
 						plr.sendMessage("Whoa there! You kissed a wall...");
 						return;
