@@ -37,26 +37,28 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 public class DetectionTask extends AsyncTask {
-	private final MovecraftLocation startLocation;
-	private final Integer minSize;
-	private final Integer maxSize;
-	private Integer maxX;
-	private Integer maxY;
-	private Integer maxZ;
-	private Integer minY;
-	private final Stack<MovecraftLocation> blockStack = new Stack<MovecraftLocation>();
-	private final HashSet<MovecraftLocation> blockList = new HashSet<MovecraftLocation>();
-	private final HashSet<MovecraftLocation> visited = new HashSet<MovecraftLocation>();
-	private final HashMap<Integer, Integer> blockTypeCount = new HashMap<Integer, Integer>();
-	private final ArrayList<MovecraftLocation> signLocations = new ArrayList<MovecraftLocation>();
-	private final DetectionTaskData data;
+	protected final MovecraftLocation startLocation;
+	protected final Integer minSize;
+	protected final Integer maxSize;
+	protected Integer maxX;
+	protected Integer maxY;
+	protected Integer maxZ;
+	protected Integer minY;
+	protected final Stack<MovecraftLocation> blockStack = new Stack<MovecraftLocation>();
+	protected final HashSet<MovecraftLocation> blockList = new HashSet<MovecraftLocation>();
+	protected final HashSet<MovecraftLocation> visited = new HashSet<MovecraftLocation>();
+	protected final HashMap<Integer, Integer> blockTypeCount = new HashMap<Integer, Integer>();
+	protected final ArrayList<MovecraftLocation> signLocations = new ArrayList<MovecraftLocation>();
+	protected final DetectionTaskData data;
+	
+	private static final MovecraftLocation[] FINALISE_BASE_ARRAY = new MovecraftLocation[0];
 
 	public DetectionTask(Craft c, MovecraftLocation startLocation, int minSize, int maxSize, Integer[] allowedBlocks, Integer[] forbiddenBlocks, String player, World w) {
 		super(c);
 		this.startLocation = startLocation;
 		this.minSize = minSize;
 		this.maxSize = maxSize;
-		data = new DetectionTaskData(w, player, allowedBlocks, forbiddenBlocks);
+		data = new DetectionTaskData(w, player, allowedBlocks, forbiddenBlocks, startLocation);
 	}
 
 	@Override
@@ -74,7 +76,7 @@ public class DetectionTask extends AsyncTask {
 
 		if (isWithinLimit(blockList.size(), minSize, maxSize)) {
 
-			data.setBlockList(finaliseBlockList(blockList));
+			data.setBlockList(finaliseBlockList(blockList, minY, maxY));
 			data.setSignLocations(signLocations);
 			@SuppressWarnings("unchecked")
 			HashMap<Integer, ArrayList<Double>> flyBlocks = (HashMap<Integer, ArrayList<Double>>) getCraft().getType().getFlyBlocks().clone();
@@ -272,7 +274,7 @@ public class DetectionTask extends AsyncTask {
 		}
 	}
 
-	private boolean isWithinLimit(int size, int min, int max) {
+	protected boolean isWithinLimit(int size, int min, int max) {
 		if (size < min) {
 			fail(String.format(I18nSupport.getInternationalisedString("Detection - Craft too small"), min));
 			return false;
@@ -285,12 +287,29 @@ public class DetectionTask extends AsyncTask {
 
 	}
 
-	private MovecraftLocation[] finaliseBlockList( HashSet<MovecraftLocation> blockSet ) {
-		//MovecraftLocation[] finalList=blockSet.toArray( new MovecraftLocation[1] );
-		return blockSet.toArray(new MovecraftLocation[1]);
-	}
+	private MovecraftLocation[] finaliseBlockList( HashSet<MovecraftLocation> blockSet, int minY, int maxY) {
+		return blockSet.toArray( FINALISE_BASE_ARRAY );
+		
+		/*ArrayList <MovecraftLocation> finalList=new ArrayList <MovecraftLocation>();
+  		
+  		// Sort the blocks from the bottom up to minimize lower altitude block updates
+  		for(int posY=minY;posY<=maxY;posY++) {
+  			for(MovecraftLocation loc : blockSet) {
+  				if(loc.getY()==posY) {
+ 					finalList.add(loc);
+  				}
+  			}
+  		}
+ 		MovecraftLocation[] retval = finalList.toArray(FINALISE_BASE_ARRAY);
+ 		if(retval != null){
+ 			return retval;
+ 		} else {
+ 			System.out.println("RETVAL IS NULL DetectionTask finaliseBlockList!");
+ 			return null;
+ 		}*/
+  	}
 
-	private boolean confirmStructureRequirements(HashMap<Integer, ArrayList<Double>> flyBlocks, HashMap<Integer, Integer> countData) {
+	protected boolean confirmStructureRequirements(HashMap<Integer, ArrayList<Double>> flyBlocks, HashMap<Integer, Integer> countData) {
 		for (Integer i : flyBlocks.keySet()) {
 			Integer numberOfBlocks = countData.get(i);
 
@@ -318,7 +337,7 @@ public class DetectionTask extends AsyncTask {
 		return true;
 	}
 
-	private void fail(String message) {
+	protected void fail(String message) {
 		data.setFailed(true);
 		data.setFailMessage(message);
 	}

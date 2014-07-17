@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.AsyncManager;
 import net.countercraft.movecraft.async.detection.DetectionTask;
+import net.countercraft.movecraft.async.detection.RedetectTask;
 import net.countercraft.movecraft.async.rotation.RotationTask;
 import net.countercraft.movecraft.async.translation.TranslationTask;
 import net.countercraft.movecraft.async.translation.TranslationTaskData;
@@ -66,6 +67,7 @@ public class Craft {
 	public int warpCoordsZ;
 	private Location originalPilotLoc = null;
 	private Location previousOriginalPilotLoc = null;
+	private Location pilotSign = null;
 	public Player pilot;
 
 	public Craft(CraftType type, World world) {
@@ -81,6 +83,10 @@ public class Craft {
 	public void setOriginalPilotLoc(Location l){
 		previousOriginalPilotLoc = originalPilotLoc;
 		originalPilotLoc = l;
+	}
+	
+	public void setPilotSignLocation(Location l){
+		pilotSign = l;
 	}
 	
 	public Location getOriginalPilotLoc(){
@@ -110,6 +116,8 @@ public class Craft {
 	}
 	
 	private boolean checkForSuitableLocation(Location l){
+		if(l == null) return false;
+		if(l.getY() < 2) return false;
 		Block b = l.getBlock().getRelative(0, -1, 0);
 		if(b.getType() == Material.AIR) return false;
 		return true;
@@ -159,6 +167,17 @@ public class Craft {
 		CraftPilotEvent event = new CraftPilotEvent(this);
 		if (event.call())
 			AsyncManager.getInstance().submitTask(new DetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), playerName, w), this);
+	}
+	
+	public void redetect(String playerName, MovecraftLocation startPoint){
+		if(playerName == null){
+			System.out.println("Pilot failed!");
+			return;
+		}
+		pilot = Bukkit.getServer().getPlayer(playerName);
+		CraftPilotEvent event = new CraftPilotEvent(this);
+		if (event.call())
+			AsyncManager.getInstance().submitTask(new RedetectTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), playerName, w), this);
 	}
 
 	public void translate(int dx, int dy, int dz) {
@@ -227,6 +246,9 @@ public class Craft {
 	public boolean processingTeleportCompareAndSet(boolean expect, boolean set){
 		return this.processingTeleport.compareAndSet(expect, set);
 	}
+	public Location getPilotSignLocation(){
+		return pilotSign;
+	}
 
 	@SuppressWarnings("deprecation")
 	public void extendLandingGear() {
@@ -268,6 +290,8 @@ public class Craft {
 
 		if (!this.processing.get()) {
 			this.processing.set(true);
+			int cannonCount = 0;
+			int allowed = this.getType().getAllowedCannons();
 			for (MovecraftLocation l : getBlockList()) {
 
 				Block b = w.getBlockAt(l.getX(), l.getY(), l.getZ());
@@ -276,54 +300,60 @@ public class Craft {
 
 					if (b.getData() == datavalue) {
 						final Block behind = GunUtils.getBlockBehind(b);
-						if (behind.getType() == Material.SPONGE) {
-
-							Block twoinfront = b.getRelative(playerFacing).getRelative(playerFacing);
-
-							behind.setType(Material.REDSTONE_BLOCK);
-
-							// Location fLoc =
-							// twoinfront.getLocation().toVector().add(GunUtils.getFireBallVelocity(playerFacing).multiply(2)).toLocation(twoinfront.getWorld(),
-							// 0, 0);
-							Fireball f = ((Fireball) twoinfront.getLocation().getWorld().spawn(twoinfront.getLocation(), Fireball.class));/*
-																																		 * .
-																																		 * spawnEntity
-																																		 * (
-																																		 * twoinfront
-																																		 * .
-																																		 * getLocation
-																																		 * (
-																																		 * )
-																																		 * ,
-																																		 * Fireball
-																																		 * .
-																																		 * class
-																																		 * )
-																																		 * )
-																																		 */
-							f.setDirection(GunUtils.getFireBallVelocity(playerFacing).multiply(2));
-							f.setShooter(pilot);
-							twoinfront.getWorld().playSound(twoinfront.getLocation(), Sound.SHOOT_ARROW, 2.0F, 1.0F);
-
-							Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
-
-								@Override
-								public void run() {
-									behind.setType(Material.SPONGE);
-								}
-							}, 5L);
-
-							Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
-
-								@Override
-								public void run() {
-									processing.set(false);
-								}
-							}, 7L);
+							if (behind.getType() == Material.SPONGE) {
+								
+								cannonCount++;
+								
+								if(cannonCount <= allowed){
+	
+								Block twoinfront = b.getRelative(playerFacing).getRelative(playerFacing);
+	
+								behind.setType(Material.REDSTONE_BLOCK);
+	
+								// Location fLoc =
+								// twoinfront.getLocation().toVector().add(GunUtils.getFireBallVelocity(playerFacing).multiply(2)).toLocation(twoinfront.getWorld(),
+								// 0, 0);
+								Fireball f = ((Fireball) twoinfront.getLocation().getWorld().spawn(twoinfront.getLocation(), Fireball.class));
+	
+								f.setDirection(GunUtils.getFireBallVelocity(playerFacing).multiply(2));
+								f.setShooter(pilot);
+								twoinfront.getWorld().playSound(twoinfront.getLocation(), Sound.SHOOT_ARROW, 2.0F, 1.0F);
+	
+								Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+	
+									@Override
+									public void run() {
+										behind.setType(Material.SPONGE);
+									}
+								}, 5L);
+	
+								Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+	
+									@Override
+									public void run() {
+										processing.set(false);
+									}
+								}, 7L);
+							}
 						}
 					}
 				}
 			}
 		}
+	}
+
+	public String getGivenName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ArrayList<UUID> getPilot() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ArrayList<UUID> getMembers() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

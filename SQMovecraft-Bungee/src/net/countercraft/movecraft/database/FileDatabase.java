@@ -8,9 +8,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
+import net.countercraft.movecraft.async.detection.SaveableBlock;
 import net.countercraft.movecraft.bungee.LocAndBlock;
 
 import org.bukkit.Location;
@@ -23,20 +25,36 @@ public class FileDatabase implements StarshipDatabase {
 
 	@Override
 	public StarshipData getStarshipByLocation(Location l) {
-		// TODO Auto-generated method stub
-		return null;
+		byte[] cbytes = readCraftBytes(l);
+		StarshipData d;
+		try {
+			d = unserialize(cbytes);
+		} catch (IOException e) {
+			e.printStackTrace();
+			d = null;
+		}
+		return d;
 	}
 
 	@Override
 	public void removeStarshipAtLocation(Location l) {
-		// TODO Auto-generated method stub
-		
+		File target = new File(folder + "/" + locToString(l) + ".sdata");
+		if(target.exists()){
+			target.delete();
+		}
 	}
 
 	@Override
 	public void saveStarshipDataAtLocation(Location l, StarshipData d) {
-		// TODO Auto-generated method stub
-		
+		byte[] ser;
+		try {
+			ser = serialize(d);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			ser = null;
+		}
+		saveBytes(ser, l);
 	}
 	
 	private static byte[] serialize(StarshipData d) throws IOException{
@@ -53,17 +71,46 @@ public class FileDatabase implements StarshipDatabase {
 		for(UUID u : d.getPilots()){
 			msgout.writeUTF(u.toString());
 		}
-		msgout.writeInt(d.getLBBA().length);
-		for(LocAndBlock b : d.getLBBA()){
-			
+		msgout.writeInt(d.getBlockList().length);
+		for(SaveableBlock b : d.getBlockList()){
+			msgout.writeUTF(b.getWorld());
+			msgout.writeInt(b.getX());
+			msgout.writeInt(b.getY());
+			msgout.writeInt(b.getZ());
+			msgout.writeInt(b.getType());
+			msgout.writeByte(b.getData());
 		}
 		return msgbytes.toByteArray();
 	}
 	
-	private static StarshipData unserialize(byte[] b){
+	private static StarshipData unserialize(byte[] b) throws IOException{
 		DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(b));
-		return null;
-		//TODO
+		
+		String name = msgin.readUTF();
+		String ctype = msgin.readUTF();
+		UUID captain = UUID.fromString(msgin.readUTF());
+		int membersLength = msgin.readInt();
+		ArrayList<UUID> members = new ArrayList<UUID>();
+		for(int i = 0; i < membersLength; i++){
+			members.add(UUID.fromString(msgin.readUTF()));
+		}
+		int pilotsLength = msgin.readInt();
+		ArrayList<UUID> pilots = new ArrayList<UUID>();
+		for(int i = 0; i < pilotsLength; i++){
+			pilots.add(UUID.fromString(msgin.readUTF()));
+		}
+		int blocksLength = msgin.readInt();
+		SaveableBlock[] blocksList = new SaveableBlock[blocksLength];
+		for(int i = 0; i < pilotsLength; i++){
+			String world = msgin.readUTF();
+			int x = msgin.readInt();
+			int y = msgin.readInt();
+			int z = msgin.readInt();
+			int type = msgin.readInt();
+			byte data = msgin.readByte();
+			blocksList[i] = new SaveableBlock(world,x,y,z,type,data);
+		}
+		return new StarshipData(blocksList, ctype, captain, name, pilots, members);
 	}
 	private static void saveBytes(byte[] craftdata, Location l){
 		File target = new File(folder + "/" + locToString(l) + ".sdata");
@@ -103,6 +150,6 @@ public class FileDatabase implements StarshipDatabase {
 		return inbytes;
 	}
 	private static String locToString(Location l){
-		return l.getWorld() + "@" + l.getX() + "," + l.getY() + "," + l.getZ();
+		return l.getWorld() + "@" + l.getBlockX() + "," + l.getBlockY() + "," + l.getBlockZ();
 	}
 }

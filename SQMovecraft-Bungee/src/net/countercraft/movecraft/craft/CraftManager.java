@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.translation.AutopilotRunTask;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
+import net.countercraft.movecraft.database.StarshipData;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.utils.MathUtils;
 
@@ -41,6 +42,8 @@ public class CraftManager {
 	private CraftType[] craftTypes;
 	private final Map<World, Set<Craft>> craftList = new ConcurrentHashMap<World, Set<Craft>>();
 	private final HashMap<UUID, Craft> craftPlayerIndex = new HashMap<UUID, Craft>();
+	
+	private static boolean SAVE_CRAFTS = true;
 
 	public static CraftManager getInstance() {
 		return ourInstance;
@@ -107,6 +110,9 @@ public class CraftManager {
 		}
 		c.messageShipPlayers("The ship has been released, you are no longer riding on it.");
 		updateBedspawns(c);
+		if(SAVE_CRAFTS){
+			Movecraft.getInstance().getStarshipDatabase().saveStarshipDataAtLocation(c.getPilotSignLocation(), StarshipData.fromCraft(c));
+		}
 	}
 	
 	public void updateBedspawns(Craft c){

@@ -110,7 +110,7 @@ public class TranslationTask extends AsyncTask {
 						fail(String.format(I18nSupport.getInternationalisedString("Translation - Failed Craft hit minimum height limit")));
 						break;
 					}
-	
+					try{
 					int testID = getCraft().getW().getBlockTypeIdAt(newLoc.getX(), newLoc.getY(), newLoc.getZ());
 						int oldID = getCraft().getW().getBlockTypeIdAt(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ());
 						if (testID != 0 && testID != 36 && !existingBlockSet.contains(newLoc)) {
@@ -123,6 +123,9 @@ public class TranslationTask extends AsyncTask {
 						}
 	
 						updateSet.add(new MapUpdateCommand(blocksList[i], newBlockList[i], oldID, getCraft()));
+					} catch (Exception e){
+						fail("Unexpected exception! We'll try to save your ship...");
+					}
 				}
 			}
 
@@ -151,6 +154,7 @@ public class TranslationTask extends AsyncTask {
 				}
 
 				getCraft().setOriginalPilotLoc(getCraft().getOriginalPilotLoc().add(data.getDx(), data.getDy(), data.getDz()));
+				getCraft().setPilotSignLocation(getCraft().getOriginalPilotLoc().add(data.getDx(), data.getDy(), data.getDz()));
 
 				// Set blocks that are no longer craft to air
 				List<MovecraftLocation> airLocation = ListUtils.subtract(Arrays.asList(blocksList), Arrays.asList(newBlockList));
@@ -255,7 +259,6 @@ public class TranslationTask extends AsyncTask {
 			for (int x = minChunkX; x <= maxChunkX; x++) {
 				for (int z = minChunkZ; z <= maxChunkZ; z++) {
 					if (!w.isChunkLoaded(x, z)) {
-						Movecraft.getInstance().getLogger().severe("MOVECRAFT CHUNKS NOT LOADED CAUGHT!");
 						return false;
 					}
 				}

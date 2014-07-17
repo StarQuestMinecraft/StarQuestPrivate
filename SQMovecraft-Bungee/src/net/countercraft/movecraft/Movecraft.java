@@ -36,6 +36,8 @@ import net.countercraft.movecraft.bungee.BungeeListener;
 import net.countercraft.movecraft.bungee.PingUtils;
 import net.countercraft.movecraft.config.Settings;
 import net.countercraft.movecraft.craft.CraftManager;
+import net.countercraft.movecraft.database.FileDatabase;
+import net.countercraft.movecraft.database.StarshipDatabase;
 import net.countercraft.movecraft.listener.BlockListener;
 import net.countercraft.movecraft.listener.CommandListener;
 import net.countercraft.movecraft.listener.InteractListener;
@@ -62,6 +64,7 @@ public class Movecraft extends JavaPlugin {
 	private static Movecraft instance;
 	private Logger logger;
 	private boolean shuttingDown;
+	private StarshipDatabase database;
 	
 	public static HashMap<UUID, Player> playerIndex = new HashMap<UUID, Player>();
 	
@@ -178,6 +181,8 @@ public class Movecraft extends JavaPlugin {
 			Bedspawn.setUp();
 			//PingUtils.setUp();
 			
+			database = new FileDatabase();
+			
 			logger.log( Level.INFO, String.format( I18nSupport.getInternationalisedString( "Startup - Enabled message" ), getDescription().getVersion() ) );
 		}
 	}
@@ -191,6 +196,10 @@ public class Movecraft extends JavaPlugin {
 
 	public static Movecraft getInstance() {
 		return instance;
+	}
+	
+	public StarshipDatabase getStarshipDatabase(){
+		return database;
 	}
 	
 	/*public WorldGuardPlugin getWorldGuard() {

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
+import org.bukkit.Location;
 import org.bukkit.World;
 
 public class DetectionTaskData {
@@ -33,12 +34,14 @@ public class DetectionTaskData {
 	private Integer minX, minZ;
 	private Integer[] allowedBlocks, forbiddenBlocks;
 	private ArrayList<MovecraftLocation> signLocations;
+	private MovecraftLocation startLocation;
 
-	public DetectionTaskData( World w, String playerName, Integer[] allowedBlocks, Integer[] forbiddenBlocks ) {
+	public DetectionTaskData( World w, String playerName, Integer[] allowedBlocks, Integer[] forbiddenBlocks, MovecraftLocation startLocation ) {
 		this.w = w;
 		this.playerName = playerName;
 		this.allowedBlocks = allowedBlocks;
 		this.forbiddenBlocks = forbiddenBlocks;
+		this.startLocation = startLocation;
 	}
 
 	public DetectionTaskData() {
@@ -120,5 +123,9 @@ public class DetectionTaskData {
 	}
 	public ArrayList<MovecraftLocation> getSignLocations(){
 		return signLocations;
+	}
+
+	public MovecraftLocation getStartLocation() {
+		return startLocation;
 	}
 }

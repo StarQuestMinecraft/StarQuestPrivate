@@ -51,10 +51,9 @@ public class Crate implements Serializable {
 
 		ArrayList<ItemStack> unpacked = this.unpackBoxes();
 
-		for (int x = 0; x < i.getSize() - 1; x++) {
+		for (int x = 0; x < i.getSize(); x++) {
 			i.setItem(x, unpacked.get(x));
 		}
-
 	}
 
 	public ItemStack[] unpackItemArray() {
