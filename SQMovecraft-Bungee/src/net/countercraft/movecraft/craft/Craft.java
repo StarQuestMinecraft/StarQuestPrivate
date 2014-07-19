@@ -108,6 +108,7 @@ public class Craft {
 	}
 	
 	private Location extrapolateFuturePilotLoc(){
+		if(originalPilotLoc == null) return null;
 		double xdiff = originalPilotLoc.getX() - previousOriginalPilotLoc.getX();
 		double ydiff = originalPilotLoc.getY() - previousOriginalPilotLoc.getY();
 		double zdiff = originalPilotLoc.getZ() - previousOriginalPilotLoc.getZ();
