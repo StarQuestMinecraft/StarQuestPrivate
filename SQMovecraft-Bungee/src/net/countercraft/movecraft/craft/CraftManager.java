@@ -43,7 +43,7 @@ public class CraftManager {
 	private final Map<World, Set<Craft>> craftList = new ConcurrentHashMap<World, Set<Craft>>();
 	private final HashMap<UUID, Craft> craftPlayerIndex = new HashMap<UUID, Craft>();
 	
-	private static boolean SAVE_CRAFTS = true;
+	private static boolean SAVE_CRAFTS = false;
 
 	public static CraftManager getInstance() {
 		return ourInstance;
