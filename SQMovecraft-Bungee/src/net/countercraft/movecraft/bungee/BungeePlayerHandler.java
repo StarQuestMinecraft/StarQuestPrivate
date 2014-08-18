@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,10 +45,10 @@ public class BungeePlayerHandler {
 				if(c != null){
 					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 						public void run(){
-							if(c.getOriginalPilotLoc() == null){
+							if(c.originalPilotLoc == null){
 								c.detect(p.getName(), MathUtils.bukkit2MovecraftLoc(p.getLocation()));
 							} else {
-								c.detect(p.getName(), MathUtils.bukkit2MovecraftLoc(c.getOriginalPilotLoc()));
+								c.detect(p.getName(), MathUtils.bukkit2MovecraftLoc(c.originalPilotLoc));
 							}
 							pilotQueue.remove(uid);
 						}
@@ -144,11 +145,13 @@ public class BungeePlayerHandler {
 			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
 
 			PlayerTeleport t = recievePlayerTeleport(msgin);
-
-			if (Movecraft.playerIndex.get(t.uuid) != null) {
-				t.execute();
-			} else {
-				teleportQueue.add(t);
+			
+			if(t != null){
+				if (Movecraft.getPlayer(t.uuid) != null) {
+					t.execute();
+				} else {
+					teleportQueue.add(t);
+				}
 			}
 
 		} catch (Exception e) {
@@ -157,26 +160,30 @@ public class BungeePlayerHandler {
 	}
 
 	public static PlayerTeleport recievePlayerTeleport(DataInputStream msgin) throws IOException {
-
-		String worldname = msgin.readUTF();
-		UUID uuid = UUID.fromString(msgin.readUTF());
-		int coordX = msgin.readInt();
-		int coordY = msgin.readInt();
-		int coordZ = msgin.readInt();
-		double yaw = msgin.readDouble();
-		double pitch = msgin.readDouble();
-		Knapsack playerKnap = InventoryUtils.readPlayer(msgin);
-		GameMode gamemode = intToGameMode(msgin.readInt());
-		boolean isBedspawn = msgin.readBoolean();
-
-		if (coordY > 256) {
-			Location loc = Bukkit.getServer().getWorld(worldname).getSpawnLocation();
-			coordX = loc.getBlockX();
-			coordY = loc.getBlockY();
-			coordZ = loc.getBlockZ();
+		try{
+			String worldname = msgin.readUTF();
+			UUID uuid = UUID.fromString(msgin.readUTF());
+			int coordX = msgin.readInt();
+			int coordY = msgin.readInt();
+			int coordZ = msgin.readInt();
+			double yaw = msgin.readDouble();
+			double pitch = msgin.readDouble();
+			Knapsack playerKnap = InventoryUtils.readPlayer(msgin);
+			GameMode gamemode = intToGameMode(msgin.readInt());
+			boolean isBedspawn = msgin.readBoolean();
+	
+			if (coordY > 256) {
+				Location loc = Bukkit.getServer().getWorld(worldname).getSpawnLocation();
+				coordX = loc.getBlockX();
+				coordY = loc.getBlockY();
+				coordZ = loc.getBlockZ();
+			}
+			PlayerTeleport t = new PlayerTeleport(uuid, worldname, coordX, coordY, coordZ, yaw, pitch, playerKnap, gamemode, isBedspawn);
+			return t;
+		} catch (EOFException e){
+			System.out.println("EOFException in movecraft: told to recieve player teleport but none found!");
+			return null;
 		}
-		PlayerTeleport t = new PlayerTeleport(uuid, worldname, coordX, coordY, coordZ, yaw, pitch, playerKnap, gamemode, isBedspawn);
-		return t;
 	}
 
 	private static int gameModeToInt(GameMode g) {

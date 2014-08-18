@@ -51,7 +51,7 @@ public class TranslationTask extends AsyncTask {
 			//int maxX=getCraft().getMinX()+getCraft().getHitBox().length;
 			//int maxZ=getCraft().getMinZ()+getCraft().getHitBox()[0].length;  // safe because if the first x array doesn't have a z array, then it wouldn't be the first x array
 			//int minX=getCraft().getMinX();
-			//int minZ=getCraft().getMinZ();
+			//int minZ=getCraft().geftMinZ();
 						
 			MovecraftLocation[] blocksList = data.getBlockList();
 
@@ -137,7 +137,7 @@ public class TranslationTask extends AsyncTask {
 				Iterator<UUID> i = getCraft().playersRidingShip.iterator();
 				while (i.hasNext()) {
 					UUID uid = i.next();
-					Player pTest = Movecraft.playerIndex.get(uid);
+					Player pTest = Movecraft.getPlayer(uid);
 					if(pTest != null){
 						if (MathUtils.playerIsWithinBoundingPolygon(getCraft().getHitBox(), getCraft().getMinX(), getCraft().getMinZ(), MathUtils.bukkit2MovecraftLoc(pTest.getLocation()))) {
 							Location tempLoc = pTest.getLocation();
@@ -153,8 +153,8 @@ public class TranslationTask extends AsyncTask {
 					}
 				}
 
-				getCraft().setOriginalPilotLoc(getCraft().getOriginalPilotLoc().add(data.getDx(), data.getDy(), data.getDz()));
-				getCraft().setPilotSignLocation(getCraft().getOriginalPilotLoc().add(data.getDx(), data.getDy(), data.getDz()));
+				getCraft().originalPilotLoc = getCraft().originalPilotLoc.add(data.getDx(), data.getDy(), data.getDz());
+				//getCraft().setPilotSignLocation(getRelativeLocation(getCraft().getPilotSignLocation(), data.getDx(), data.getDy(), data.getDz()));
 
 				// Set blocks that are no longer craft to air
 				List<MovecraftLocation> airLocation = ListUtils.subtract(Arrays.asList(blocksList), Arrays.asList(newBlockList));
@@ -259,10 +259,15 @@ public class TranslationTask extends AsyncTask {
 			for (int x = minChunkX; x <= maxChunkX; x++) {
 				for (int z = minChunkZ; z <= maxChunkZ; z++) {
 					if (!w.isChunkLoaded(x, z)) {
+						System.out.println("Chunks not loaded caught!");
 						return false;
 					}
 				}
 			}
 			return true;
+		}
+		
+		private Location getRelativeLocation(Location l, int dx, int dy, int dz){
+			return new Location(l.getWorld(), l.getX() + dx, l.getY() + dy, l.getZ() + dz, l.getYaw(), l.getPitch());
 		}
 }

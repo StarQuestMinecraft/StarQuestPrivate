@@ -169,8 +169,8 @@ public class AsyncManager extends BukkitRunnable {
 							c.setHitBox( data.getHitBox() );
 							c.setMinX( data.getMinX() );
 							c.setMinZ( data.getMinZ() );
-							c.setOriginalPilotLoc(p.getLocation());
-							c.setPilotSignLocation(new Location(data.getWorld(), data.getStartLocation().getX(), data.getStartLocation().getY(), data.getStartLocation().getZ()));
+							c.originalPilotLoc = p.getLocation();
+							c.pilotSign = new Location(data.getWorld(), data.getStartLocation().getX(), data.getStartLocation().getY(), data.getStartLocation().getZ());
 							c.retractLandingGear();
 							p.sendMessage( String.format( I18nSupport.getInternationalisedString( "Detection - Successfully piloted craft" ) ) );
 							Movecraft.getInstance().getLogger().log( Level.INFO, String.format( I18nSupport.getInternationalisedString( "Detection - Success - Log Output" ), p.getName(), c.getType().getCraftName(), c.getBlockList().length, c.getMinX(), c.getMinZ() ) );

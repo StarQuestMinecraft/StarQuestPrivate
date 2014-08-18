@@ -266,4 +266,16 @@ public class Movecraft extends JavaPlugin {
 		StackTraceElement e = stackTraceElements[3];
 		return e.getClassName() + " by method " + e.getMethodName() + " at line " + e.getLineNumber();
 	}
+	
+	//gets the player with given UUID. Attempts to resolve from cache, if it cannot it gets from bukkit.
+	public static Player getPlayer(UUID u){
+		Player p = playerIndex.get(u);
+		if(p == null){
+			p = Bukkit.getPlayer(u);
+		}
+		if(p == null){
+			return null;
+		}
+		return p;
+	}
 }

@@ -28,7 +28,7 @@ public class OfflinePilotUtils {
 	public static void onPlayerLogin(Player p){
 		Craft c = offlinePilotIndex.get(p.getUniqueId());
 		if(c != null){
-			c.teleportToOriginalPilotLoc(p);
+			p.teleport(c.originalPilotLoc);
 			p.sendMessage("Hey, you logged out while flying a ship. We teleported you back to your ship, just in case you weren't there!");
 			offlinePilotIndex.remove(p.getUniqueId());
 		}

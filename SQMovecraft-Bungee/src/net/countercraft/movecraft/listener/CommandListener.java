@@ -71,17 +71,19 @@ public class CommandListener implements Listener {
 			e.setCancelled(true);
 			Player p = e.getPlayer();
 			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
-			for(Craft c : crafts){
-				if(MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))){
-					try{
-						c.playersRidingLock.acquire();
-						c.playersRidingShip.add(p.getUniqueId());
-						c.playersRidingLock.release();
-					} catch (Exception ex){
-						ex.printStackTrace();
+			if(crafts != null){
+				for(Craft c : crafts){
+					if(MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))){
+						try{
+							c.playersRidingLock.acquire();
+							c.playersRidingShip.add(p.getUniqueId());
+							c.playersRidingLock.release();
+						} catch (Exception ex){
+							ex.printStackTrace();
+						}
+						p.sendMessage("You board a craft of type " + c.getType().getCraftName() + " under the command of captain " + c.pilot.getName() + ".");
+						return;
 					}
-					p.sendMessage("You board a craft of type " + c.getType().getCraftName() + " under the command of captain " + c.pilot.getName() + ".");
-					return;
 				}
 			}
 			p.sendMessage("No craft found at your location for you to ride.");

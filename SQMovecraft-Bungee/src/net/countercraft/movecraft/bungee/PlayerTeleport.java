@@ -55,7 +55,7 @@ public class PlayerTeleport {
 
 	public void execute() {
 
-		final Player p = Movecraft.playerIndex.get(uuid);
+		final Player p = Movecraft.getPlayer(uuid);
 		
 		if(p == null){
 			System.out.println("MOVECRAFT ERROR: t.execute() called on null player!");

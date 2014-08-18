@@ -50,8 +50,6 @@ public class DetectionTask extends AsyncTask {
 	protected final HashMap<Integer, Integer> blockTypeCount = new HashMap<Integer, Integer>();
 	protected final ArrayList<MovecraftLocation> signLocations = new ArrayList<MovecraftLocation>();
 	protected final DetectionTaskData data;
-	
-	private static final MovecraftLocation[] FINALISE_BASE_ARRAY = new MovecraftLocation[0];
 
 	public DetectionTask(Craft c, MovecraftLocation startLocation, int minSize, int maxSize, Integer[] allowedBlocks, Integer[] forbiddenBlocks, String player, World w) {
 		super(c);
@@ -147,9 +145,11 @@ public class DetectionTask extends AsyncTask {
 							Block blk = data.getWorld().getBlockAt(x, y, z).getRelative(BlockFace.DOWN);
 							if (blk.getType() == Material.AIR) {
 								// the landing gear is retracted
-								addToBlockList(MathUtils.bukkit2MovecraftLoc(blk.getLocation()));
+								MovecraftLocation pistonAirBlock = MathUtils.bukkit2MovecraftLoc(blk.getLocation());
+								addToBlockList(pistonAirBlock);
 								// make it landing gear even if it's retracted
 								addToBlockCount(34);
+								calculateBounds(pistonAirBlock);
 							}
 						}
 					}
@@ -288,25 +288,20 @@ public class DetectionTask extends AsyncTask {
 	}
 
 	private MovecraftLocation[] finaliseBlockList( HashSet<MovecraftLocation> blockSet, int minY, int maxY) {
-		return blockSet.toArray( FINALISE_BASE_ARRAY );
 		
-		/*ArrayList <MovecraftLocation> finalList=new ArrayList <MovecraftLocation>();
-  		
-  		// Sort the blocks from the bottom up to minimize lower altitude block updates
-  		for(int posY=minY;posY<=maxY;posY++) {
-  			for(MovecraftLocation loc : blockSet) {
-  				if(loc.getY()==posY) {
- 					finalList.add(loc);
-  				}
-  			}
-  		}
- 		MovecraftLocation[] retval = finalList.toArray(FINALISE_BASE_ARRAY);
- 		if(retval != null){
- 			return retval;
- 		} else {
- 			System.out.println("RETVAL IS NULL DetectionTask finaliseBlockList!");
- 			return null;
- 		}*/
+		/*ArrayList<MovecraftLocation> finalList = new ArrayList<MovecraftLocation>();
+		for(int posY = this.minY; posY <= this.maxY; posY++){
+			for(MovecraftLocation loc : blockSet){
+				if(loc.getY() == posY){
+					finalList.add(loc);
+				}
+			}
+		}
+		MovecraftLocation[] retval = finalList.toArray(new MovecraftLocation[finalList.size()]);
+		return retval;*/
+		
+		return blockSet.toArray(new MovecraftLocation[blockSet.size()]);
+
   	}
 
 	protected boolean confirmStructureRequirements(HashMap<Integer, ArrayList<Double>> flyBlocks, HashMap<Integer, Integer> countData) {

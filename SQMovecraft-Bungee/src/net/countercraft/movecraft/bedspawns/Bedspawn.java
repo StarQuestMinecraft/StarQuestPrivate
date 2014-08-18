@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
+
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
@@ -26,7 +28,8 @@ public class Bedspawn {
 	public static Connection cntx = null;
 	public static String dsn = ("jdbc:mysql://" + hostname + ":" + port + "/" + db_name);
 	public final static Bedspawn DEFAULT = Movecraft.getInstance().getDefaultBedspawn();
-
+	
+	public static final boolean SAVE_BEDSPAWNS = !Movecraft.getInstance().getConfig().getBoolean("ignoreBedspawns");
 	public Bedspawn(String player, String server, String world, int x, int y, int z) {
 		this.player = player;
 		this.server = server;
@@ -42,7 +45,7 @@ public class Bedspawn {
 
 	public static void setUp() {
 		// called from onEnable
-
+		if(!SAVE_BEDSPAWNS) return;
 		String bedspawn_table = "CREATE TABLE IF NOT EXISTS " + "BEDSPAWNS (" + "`name` VARCHAR(32) NOT NULL," + "`server` VARCHAR(32) DEFAULT NULL," + "`world` VARCHAR(32) DEFAULT NULL,"
 				+ "`x` int(11) DEFAULT 0," + "`y` int(11) DEFAULT 0," + "`z` int(11) DEFAULT 0," + "PRIMARY KEY (`name`)" + ")";
 		getContext();
@@ -67,6 +70,7 @@ public class Bedspawn {
 	}
 
 	public static Bedspawn getBedspawn(String player) {
+		if(!SAVE_BEDSPAWNS) return getDefault(player);
 		return loadBedspawn(player);
 	}
 
@@ -75,6 +79,8 @@ public class Bedspawn {
 	}
 	
 	public static ArrayList<Bedspawn> loadBedspawnList(MovecraftLocation location, String world) {
+		
+		if(!SAVE_BEDSPAWNS) return new ArrayList<Bedspawn>();
 		//TODO This method needs to be redone for a smaller radius!
 		int craftX = location.getX() - 1;
 		int craftZ = location.getZ() - 1;
@@ -134,6 +140,8 @@ public class Bedspawn {
 	}
 
 	public static void deleteBedspawn(String player) {
+		if(!SAVE_BEDSPAWNS) return;
+		
 		PreparedStatement s = null;
 		try {
 			s = cntx.prepareStatement("DELETE FROM BEDSPAWNS WHERE `name` = ?");
@@ -176,6 +184,9 @@ public class Bedspawn {
 	}
 
 	public static ArrayList<Bedspawn> loadBedspawnList() {
+		
+		if(!SAVE_BEDSPAWNS) return new ArrayList<Bedspawn>();
+		
 		ArrayList<Bedspawn> bedspawnList = new ArrayList<Bedspawn>();
 		String playerName;
 		String playerWorld;
@@ -215,6 +226,8 @@ public class Bedspawn {
 	}
 
 	public static Bedspawn loadBedspawn(String player) {
+		
+		if(!SAVE_BEDSPAWNS) return getDefault(player);
 		String playerName;
 		String playerWorld;
 		String playerServer;
@@ -252,6 +265,8 @@ public class Bedspawn {
 	}
 
 	public static void saveBedspawn(Bedspawn b) {
+		
+		if(!SAVE_BEDSPAWNS) return;
 
 		String playerName = b.player;
 		String playerWorld = b.world;
@@ -287,6 +302,8 @@ public class Bedspawn {
 	}
 
 	public static void saveNewBedspawn(Bedspawn b) {
+		
+		if(!SAVE_BEDSPAWNS) return;
 
 		String playerName = b.player;
 		String playerWorld = b.world;
@@ -322,6 +339,8 @@ public class Bedspawn {
 	}
 
 	public static boolean hasKey(Bedspawn b) {
+		
+		if(!SAVE_BEDSPAWNS) return true;
 
 		String playerName = b.player;
 

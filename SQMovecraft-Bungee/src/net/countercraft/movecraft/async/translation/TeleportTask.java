@@ -92,7 +92,7 @@ public class TeleportTask {
 		try{
 			c.playersRidingLock.acquire();
 			for (UUID s : c.playersRidingShip) {
-				Player p = Movecraft.playerIndex.get(s);
+				Player p = Movecraft.getPlayer(s);
 				if (p != null) {
 					if (MathUtils.playerIsWithinBoundingPolygon(oldHitBox, oldMinX, oldMinZ, MathUtils.bukkit2MovecraftLoc(p.getLocation()))) {
 						Location loc = p.getLocation();

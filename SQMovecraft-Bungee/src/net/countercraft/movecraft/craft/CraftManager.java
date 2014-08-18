@@ -91,15 +91,16 @@ public class CraftManager {
 
 	public void removeCraft( Craft c) {
 		c.extendLandingGear();
-		craftList.get( c.getW() ).remove( c );
 		Player p = c.pilot;
-		AutopilotRunTask.stopAutopiloting(c, p);
-		
 		if(c.playersRidingShip.contains(p.getUniqueId())){
 			if(!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))){
-				c.teleportToOriginalPilotLoc(p);
+				p.teleport(c.originalPilotLoc);
 			}
 		}
+		
+		craftList.get( c.getW() ).remove( c );
+		AutopilotRunTask.stopAutopiloting(c, p);
+		
 		if(p != null){
 			craftPlayerIndex.remove( p.getUniqueId() );
 			if (p.isOnline()) {
@@ -142,7 +143,7 @@ public class CraftManager {
 		for ( Map.Entry<UUID, Craft> playerCraftEntry : craftPlayerIndex.entrySet() ) {
 
 			if ( playerCraftEntry.getValue() == c ) {
-				return Movecraft.playerIndex.get(playerCraftEntry.getKey());
+				return Movecraft.getPlayer(playerCraftEntry.getKey());
 			}
 
 		}

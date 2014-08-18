@@ -105,7 +105,7 @@ public class RotationTask extends AsyncTask {
                         Location tOP = new Location( getCraft().getW(), originPoint.getX(), originPoint.getY(), originPoint.getZ() );
                         Iterator<UUID> i= getCraft().playersRidingShip.iterator();
                         while (i.hasNext()) {
-                                Player pTest = Movecraft.playerIndex.get(i.next());
+                                Player pTest = Movecraft.getPlayer(i.next());
                                 if (pTest != null && MathUtils.playerIsWithinBoundingPolygon( getCraft().getHitBox(), getCraft().getMinX(), getCraft().getMinZ(), MathUtils.bukkit2MovecraftLoc( pTest.getLocation() ) ) ) {
                                         if(pTest.getType()!=org.bukkit.entity.EntityType.DROPPED_ITEM ) {
                                                 // Player is onboard this craft
@@ -146,11 +146,13 @@ public class RotationTask extends AsyncTask {
 
                         }
                          //rotate the center point
-            			Location adjustedCenter = getCraft().getOriginalPilotLoc().subtract(tOP);
+            			Location adjustedCenter = getCraft().originalPilotLoc.subtract(tOP);
             			double[] rotatedCoords = MathUtils.rotateVecNoRound( rotation, adjustedCenter.getX(), adjustedCenter.getZ() );
-            			Location rotatedCenter = new Location( getCraft().getW(), rotatedCoords[0], getCraft().getOriginalPilotLoc().getY(), rotatedCoords[1] );
-            			getCraft().setOriginalPilotLoc(rotatedCenter.add( tOP ));
-            			getCraft().setPilotSignLocation(rotatedCenter.add(tOP));
+            			Location rotatedCenter = new Location( getCraft().getW(), rotatedCoords[0], getCraft().originalPilotLoc.getY(), rotatedCoords[1] );
+            			getCraft().originalPilotLoc = rotatedCenter.add( tOP );
+            			
+            			//ADD BACK LATER
+            			//getCraft().setPilotSignLocation(rotatedCenter.add(tOP));
                         
                         // Calculate air changes
                         List<MovecraftLocation> airLocation = ListUtils.subtract( Arrays.asList( originalBlockList ), Arrays.asList( blockList ) );

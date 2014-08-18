@@ -16,16 +16,18 @@ public class BoardingRampUtils {
 		Block movingstepsup = changeblock.getRelative(facingdirection);
 		Block movingstepsdown = movingstepsup.getRelative(BlockFace.DOWN);
 		
-		s.setLine(2, changeblock.getTypeId() + "");
-		s.setLine(3, changeblock.getData() + "");
-		s.update();
 		
-		movingstepsdown.setTypeIdAndData(movingstepsup.getTypeId(), movingstepsup.getData(), true);
-		movingstepsup.setType(Material.AIR);
-		
-		changeblock.setTypeIdAndData(0, (byte) 0, false);
-		
-		
+		//stop exploit with boarding ramps removing blocks
+		if(movingstepsdown.getType() == Material.AIR){
+			s.setLine(2, changeblock.getTypeId() + "");
+			s.setLine(3, changeblock.getData() + "");
+			s.update();
+			
+			movingstepsdown.setTypeIdAndData(movingstepsup.getTypeId(), movingstepsup.getData(), true);
+			movingstepsup.setType(Material.AIR);
+			
+			changeblock.setTypeIdAndData(0, (byte) 0, false);
+		}
 	}
 	@SuppressWarnings("deprecation")
 	public static boolean closeRamp(Sign s, Player interactor){
@@ -49,8 +51,10 @@ public class BoardingRampUtils {
 		}
 		
 		changeblock.setTypeIdAndData(id, data, true);
-		movingstepsup.setTypeIdAndData(movingstepsdown.getTypeId(), movingstepsdown.getData(), true);
-		movingstepsdown.setType(Material.AIR);
+		if(movingstepsup.getType() == Material.AIR){
+			movingstepsup.setTypeIdAndData(movingstepsdown.getTypeId(), movingstepsdown.getData(), true);
+			movingstepsdown.setType(Material.AIR);
+		}
 		
 		s.setLine(2, "");
 		s.setLine(3, "");

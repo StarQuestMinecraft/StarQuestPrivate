@@ -154,7 +154,7 @@ public class PlayerListener implements Listener {
 					if(!MathUtils.playerIsWithinBoundingPolygon( c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc( event.getTo() ) ) ){
 						if(!c.isProcessingTeleport()){
 							p.setFallDistance(0.0F);
-							c.teleportToOriginalPilotLoc(p);
+							p.teleport(c.originalPilotLoc);
 							p.sendMessage("You attempted to leave the craft. If you want to leave the ship, type /stopriding.");
 						}
 					}
@@ -269,7 +269,7 @@ public class PlayerListener implements Listener {
 			if(event.getEntity() != null && crafts != null){
 				for(Craft c : crafts){
 					if(c.playersRidingShip.contains(plr.getUniqueId())){
-						c.teleportToOriginalPilotLoc(plr);
+						plr.teleport(c.originalPilotLoc);
 						plr.setHealth(plr.getMaxHealth());
 						plr.sendMessage("Whoa there! You kissed a wall...");
 						return;

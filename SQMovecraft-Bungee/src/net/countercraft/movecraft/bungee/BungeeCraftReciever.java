@@ -54,7 +54,7 @@ public class BungeeCraftReciever {
         	UUID pUUID = UUID.fromString(msgin.readUTF());
         	
         	if(!affectPlayers){
-        		Player p = Movecraft.playerIndex.get(pUUID);
+        		Player p = Movecraft.getPlayer(pUUID);
         		if(p != null){
         			Location loc = p.getLocation();
         			Xcoord = loc.getBlockX();
@@ -121,7 +121,10 @@ public class BungeeCraftReciever {
 	        	}
 	        	int playersLength = msgin.readInt();
 	        	for(int i = 0; i < playersLength; i++){
-	        		playersOnShip.add(BungeePlayerHandler.recievePlayerTeleport(msgin));
+	        		PlayerTeleport t = BungeePlayerHandler.recievePlayerTeleport(msgin);
+	        		if(t != null){
+	        			playersOnShip.add(t);
+	        		}
 	        	}
         	}
         	BungeeCraftConstructor.calculateLocationAndBuild(targetworld,Xcoord,Ycoord,Zcoord, oldX, oldY, oldZ, cName, pName, pUUID, blockloclist, bedspawnNames, playersOnShip);

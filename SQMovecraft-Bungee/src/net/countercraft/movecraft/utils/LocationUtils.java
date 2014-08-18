@@ -34,15 +34,15 @@ public class LocationUtils {
 		} else if(SYSTEM.equals("Defalos")){
 			planets.put("Krystallos", locationFromConfig(cfg, "Krystallos"));
 			planets.put("Emera", locationFromConfig(cfg, "Emera"));
-			planets.put("Drakos", locationFromConfig(cfg, "Drakos"));
+			//planets.put("Drakos", locationFromConfig(cfg, "Drakos"));
 			planets.put("Acualis", locationFromConfig(cfg, "Acualis"));
 			
 			stargates.put("Regalis", stargateFromConfig(cfg, "Regalis"));
 			stargates.put("Digitalia", stargateFromConfig(cfg, "Digitalia"));
 			
 		} else if(SYSTEM.equals("Digitalia")){
-			planets.put("Inaris", locationFromConfig(cfg, "Inaris"));
-			planets.put("AsteroidBelt", locationFromConfig(cfg, "AsteroidBelt"));
+			//planets.put("Inaris", locationFromConfig(cfg, "Inaris"));
+			//planets.put("AsteroidBelt", locationFromConfig(cfg, "AsteroidBelt"));
 			planets.put("Valadro", locationFromConfig(cfg, "Valadro"));
 			planets.put("Iffrizar", locationFromConfig(cfg, "Iffrizar"));
 			planets.put("Ceharram", locationFromConfig(cfg, "Ceharram"));

@@ -65,9 +65,8 @@ public class Craft {
 	public Semaphore playersRidingLock = new Semaphore(1);
 	public int warpCoordsX;
 	public int warpCoordsZ;
-	private Location originalPilotLoc = null;
-	private Location previousOriginalPilotLoc = null;
-	private Location pilotSign = null;
+	public Location originalPilotLoc = null;
+	public Location pilotSign = null;
 	public Player pilot;
 
 	public Craft(CraftType type, World world) {
@@ -78,50 +77,6 @@ public class Craft {
 		xDist = 0;
 		yDist = 0;
 		zDist = 0;
-	}
-	
-	public void setOriginalPilotLoc(Location l){
-		previousOriginalPilotLoc = originalPilotLoc;
-		originalPilotLoc = l;
-	}
-	
-	public void setPilotSignLocation(Location l){
-		pilotSign = l;
-	}
-	
-	public Location getOriginalPilotLoc(){
-		return originalPilotLoc;
-	}
-	
-	public void teleportToOriginalPilotLoc(Player p){
-		if(checkForSuitableLocation(originalPilotLoc)){
-			p.teleport(originalPilotLoc);
-		} else if(checkForSuitableLocation(previousOriginalPilotLoc)){
-			p.teleport(previousOriginalPilotLoc);
-		} else{
-			Location l = extrapolateFuturePilotLoc();
-			if(checkForSuitableLocation(l)){
-				p.teleport(l);
-			}
-		}
-		//TODO something sophisticated if it doesn't work properly
-	}
-	
-	private Location extrapolateFuturePilotLoc(){
-		if(originalPilotLoc == null) return null;
-		double xdiff = originalPilotLoc.getX() - previousOriginalPilotLoc.getX();
-		double ydiff = originalPilotLoc.getY() - previousOriginalPilotLoc.getY();
-		double zdiff = originalPilotLoc.getZ() - previousOriginalPilotLoc.getZ();
-		Location l = originalPilotLoc.add(xdiff,ydiff,zdiff);
-		return l;
-	}
-	
-	private boolean checkForSuitableLocation(Location l){
-		if(l == null) return false;
-		if(l.getY() < 2) return false;
-		Block b = l.getBlock().getRelative(0, -1, 0);
-		if(b.getType() == Material.AIR) return false;
-		return true;
 	}
 
 	/*
@@ -199,7 +154,7 @@ public class Craft {
 	
 	public void messageShipPlayers(String message){
 		for(UUID u : playersRidingShip){
-			Player p = Movecraft.playerIndex.get(u);
+			Player p = Movecraft.getPlayer(u);
 			if(p != null){
 				p.sendMessage(message);
 			}

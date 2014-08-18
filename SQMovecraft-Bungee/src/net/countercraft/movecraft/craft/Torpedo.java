@@ -22,12 +22,9 @@ public class Torpedo {
 	TorpedoFlyTask myTask;
 	BlockFace myDirection;
 	long myStartTime;
+	Material myBlockType = Material.TNT;
 	
 	public static void testAndLaunch(Sign sign, Player p){
-		if(!LocationUtils.spaceCheck(p)){
-			p.sendMessage("You can't fire space torpedoes on a planet...");
-			return;
-		}
 		BlockFace direction = getFacingBlockFace(sign);
 		Block oneForward = sign.getBlock().getRelative(direction);
 		Block twoForward = oneForward.getRelative(direction);
@@ -36,10 +33,19 @@ public class Torpedo {
 			Dispenser d = (Dispenser) dispenser.getState();
 			Inventory di = d.getInventory();
 			di.setMaxStackSize(1);
-			ItemStack m = new ItemStack(Material.FIREWORK, 1);
 			if(di.contains(Material.FIREWORK)){
+				if(!LocationUtils.spaceCheck(p)){
+					p.sendMessage("You can't fire TNT torpedoes on a planet.");
+					return;
+				}
+				ItemStack m = new ItemStack(Material.FIREWORK, 1);
 				di.removeItem(m);
 				new Torpedo(dispenser.getRelative(direction), direction);
+				return;
+			} else if(di.contains(Material.GLOWSTONE_DUST)){
+				ItemStack m = new ItemStack(Material.GLOWSTONE_DUST, 1);
+				di.removeItem(m);
+				new InterdictionTorpedo(dispenser.getRelative(direction), direction);
 				return;
 			}
 			p.sendMessage("No ammo!");
@@ -69,7 +75,7 @@ public class Torpedo {
 		}
 		
 		//otherwise move forwards.
-		target.setType(Material.TNT);
+		target.setType(myBlockType);
 		myBlock.setType(Material.AIR);
 		myBlock = target;
 		myBlock.getWorld().playEffect(myBlock.getLocation(), Effect.SMOKE, 20);

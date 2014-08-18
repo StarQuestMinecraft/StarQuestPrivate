@@ -8,6 +8,7 @@ import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.listener.InteractListener;
+import net.countercraft.movecraft.utils.BorderUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MathUtils;
 
@@ -30,10 +31,21 @@ public class BungeeCraftConstructor {
 		int dY = getdY(oldLoc, targetLoc);
 		int dZ = getdZ(oldLoc, targetLoc);
 		int count = 0;
+		boolean reversed = false;
 		while(count < 100 && destinationObstructed(bll, w, dX, dY, dZ)){
 			count++;
-			dX += 10;
-			tX += 10;
+			if(!reversed){
+				dX += 10;
+				tX += 10;
+			} else {
+				dX -= 10;
+				tX -= 10;
+			}
+			
+			if(!isInsideBorder(tX, tY, tZ) && !reversed){
+				reversed = true;
+				count = 0;
+			}
 		}
 		
 		//create a list of string playernames on ship from player teleports
@@ -50,9 +62,13 @@ public class BungeeCraftConstructor {
 		warpPlayers(playersOnShip);
 	}
 	
+	private static boolean isInsideBorder(int tX, int tY, int tZ){
+		return BorderUtils.isWithinBorder(tX, tZ);
+	}
+	
 	private static void warpPlayers(ArrayList<PlayerTeleport> playersOnShip) {
 		for(final PlayerTeleport t : playersOnShip){
-			Player p = Movecraft.playerIndex.get(t.uuid);
+			Player p = Movecraft.getPlayer(t.uuid);
 			if (p != null && p.isOnline()) {
 				t.execute();
 			} else {
@@ -93,7 +109,7 @@ public class BungeeCraftConstructor {
 		}
 		//final int XDIFF = xDiff;
 		Craft c = new Craft(InteractListener.getCraftTypeFromString( type ), w);
-		c.setOriginalPilotLoc(new Location(w, X, Y, Z));
+		c.originalPilotLoc = new Location(w, X, Y, Z);
 		try{
 			c.playersRidingLock.acquire();
 			for(UUID s : namesOnShip){
