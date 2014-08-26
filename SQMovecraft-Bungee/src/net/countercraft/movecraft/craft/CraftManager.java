@@ -43,7 +43,7 @@ public class CraftManager {
 	private final Map<World, Set<Craft>> craftList = new ConcurrentHashMap<World, Set<Craft>>();
 	private final HashMap<UUID, Craft> craftPlayerIndex = new HashMap<UUID, Craft>();
 	
-	private static boolean SAVE_CRAFTS = false;
+	private static boolean SAVE_CRAFTS = true;
 
 	public static CraftManager getInstance() {
 		return ourInstance;
@@ -88,10 +88,20 @@ public class CraftManager {
 		craftList.get( c.getW() ).add( c );
 		craftPlayerIndex.put( p.getUniqueId(), c );
 	}
+	
+	public void removeCraft( final Craft c){
+		removeCraft(c, true);
+	}
 
-	public void removeCraft( Craft c) {
+	public void removeCraft( final Craft c, final boolean save) {
 		c.extendLandingGear();
 		Player p = c.pilot;
+		
+		if(c.getMoveTaskId() != -1){
+			Bukkit.getScheduler().cancelTask(c.getMoveTaskId());
+			c.setMoveTaskId(-1);
+		}
+		
 		if(c.playersRidingShip.contains(p.getUniqueId())){
 			if(!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))){
 				p.teleport(c.originalPilotLoc);
@@ -111,9 +121,14 @@ public class CraftManager {
 		}
 		c.messageShipPlayers("The ship has been released, you are no longer riding on it.");
 		updateBedspawns(c);
-		if(SAVE_CRAFTS){
-			Movecraft.getInstance().getStarshipDatabase().saveStarshipDataAtLocation(c.getPilotSignLocation(), StarshipData.fromCraft(c));
-		}
+		
+		Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+			public void run(){
+				if(SAVE_CRAFTS && save){
+					Movecraft.getInstance().getStarshipDatabase().saveStarshipAtLocation(c);
+				}
+			}
+		},4L);
 	}
 	
 	public void updateBedspawns(Craft c){

@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.detection.DetectionTask;
 import net.countercraft.movecraft.async.detection.DetectionTaskData;
+import net.countercraft.movecraft.async.detection.RedetectTask;
 import net.countercraft.movecraft.async.rotation.RotationTask;
 import net.countercraft.movecraft.async.translation.AutopilotRunTask;
 import net.countercraft.movecraft.async.translation.TranslationTask;
@@ -98,6 +99,7 @@ public class AsyncManager extends BukkitRunnable {
 
 				Player p = Movecraft.getInstance().getServer().getPlayer( data.getPlayername() );
 				Craft pCraft = CraftManager.getInstance().getCraftByPlayer( p );
+				Sign mainSign = null;
 
 				if ( pCraft != null ) {
 					//Player is already controlling a craft
@@ -129,7 +131,7 @@ public class AsyncManager extends BukkitRunnable {
 								Location loc = new Location(c.getW(), l.getX(), l.getY(), l.getZ());
 								Sign s = (Sign) loc.getBlock().getState();
 								//check for [private] signs
-								if (s.getLine(0).equals("[private]")){
+								if (s.getLine(0).equalsIgnoreCase("[private]")){
 									if (!Movecraft.signContainsPlayername(s, data.getPlayername())){
 										failed = true;
 										p.sendMessage(ChatColor.RED + "You are attatched to a door that is locked to someone besides you.");
@@ -153,6 +155,7 @@ public class AsyncManager extends BukkitRunnable {
 											if(c.getType().equals(InteractListener.getCraftTypeFromString(s.getLine(0)))){
 												if (Movecraft.signContainsPlayername(s, data.getPlayername())){
 													foundMainSign = true;
+													mainSign = s;
 												}
 											}
 										}else{
@@ -170,12 +173,17 @@ public class AsyncManager extends BukkitRunnable {
 							c.setMinX( data.getMinX() );
 							c.setMinZ( data.getMinZ() );
 							c.originalPilotLoc = p.getLocation();
-							c.pilotSign = new Location(data.getWorld(), data.getStartLocation().getX(), data.getStartLocation().getY(), data.getStartLocation().getZ());
 							c.retractLandingGear();
-							p.sendMessage( String.format( I18nSupport.getInternationalisedString( "Detection - Successfully piloted craft" ) ) );
 							Movecraft.getInstance().getLogger().log( Level.INFO, String.format( I18nSupport.getInternationalisedString( "Detection - Success - Log Output" ), p.getName(), c.getType().getCraftName(), c.getBlockList().length, c.getMinX(), c.getMinZ() ) );
 							CraftManager.getInstance().addCraft( c, p );
-							
+							if(mainSign != null){
+								Movecraft.getInstance().getStarshipDatabase().removeStarshipAtLocation(mainSign.getLocation());
+							}
+							if(poll instanceof RedetectTask){
+								p.sendMessage("Succesfully piloted existing starship!");
+							} else {
+								p.sendMessage("Succesfully detected and piloted a new starship! Your ship is now saved, you can right-click the sign to pilot it without detecting.");
+							}
 						}
 					}
 				}

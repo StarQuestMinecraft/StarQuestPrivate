@@ -37,12 +37,15 @@ public class InterdictionTorpedo extends Torpedo{
 		smoke(myBlock);
 		Block hit = super.myBlock.getRelative(super.myDirection);
 		MovecraftLocation bloc = new MovecraftLocation(hit.getX(), hit.getY(), hit.getZ());
-		for(Craft c : CraftManager.getInstance().getCraftsInWorld(hit.getWorld())){
-			MovecraftLocation[] blocks = c.getBlockList();
-			for(MovecraftLocation l : blocks){
-				if(bloc.equals(l)){
-					emp(blocks, c);
-					return;
+		Craft[] craftsInWorld = CraftManager.getInstance().getCraftsInWorld(hit.getWorld());
+		if(craftsInWorld != null){
+			for(Craft c : craftsInWorld){
+				MovecraftLocation[] blocks = c.getBlockList();
+				for(MovecraftLocation l : blocks){
+					if(bloc.equals(l)){
+						emp(blocks, c);
+						return;
+					}
 				}
 			}
 		}

@@ -159,12 +159,9 @@ public class DetectionTask extends AsyncTask {
 					if (testID == 63 || testID == 68) {
 						signLocations.add(workingLocation);
 					}
-
 				}
-
 			}
 		}
-
 	}
 
 	private boolean isAllowedBlock(int test) {
@@ -210,7 +207,7 @@ public class DetectionTask extends AsyncTask {
 		blockStack.push(l);
 	}
 
-	private void addToBlockCount(int id) {
+	protected void addToBlockCount(int id) {
 		Integer count = blockTypeCount.get(id);
 
 		if (count == null) {
@@ -253,7 +250,7 @@ public class DetectionTask extends AsyncTask {
 
 	}
 
-	private void calculateBounds(MovecraftLocation l) {
+	protected void calculateBounds(MovecraftLocation l) {
 		if (maxX == null || l.getX() > maxX) {
 			maxX = l.getX();
 		}

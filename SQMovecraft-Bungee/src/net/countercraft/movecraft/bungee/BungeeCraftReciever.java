@@ -42,6 +42,7 @@ public class BungeeCraftReciever {
         	int Zcoord = msgin.readInt();
         	
         	//recieve initial location data
+        	String oldworld = msgin.readUTF();
         	int oldX = msgin.readInt();
         	int oldY = msgin.readInt();
         	int oldZ = msgin.readInt();
@@ -127,7 +128,7 @@ public class BungeeCraftReciever {
 	        		}
 	        	}
         	}
-        	BungeeCraftConstructor.calculateLocationAndBuild(targetworld,Xcoord,Ycoord,Zcoord, oldX, oldY, oldZ, cName, pName, pUUID, blockloclist, bedspawnNames, playersOnShip);
+        	BungeeCraftConstructor.calculateLocationAndBuild(targetworld,Xcoord,Ycoord,Zcoord, oldworld, oldX, oldY, oldZ, cName, pName, pUUID, blockloclist, bedspawnNames, playersOnShip);
         }
         catch(IOException e){
         	e.printStackTrace();

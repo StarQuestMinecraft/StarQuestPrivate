@@ -35,7 +35,8 @@ import org.bukkit.entity.Player;
 
 public class TranslationTask extends AsyncTask {
 	private TranslationTaskData data;
-
+	
+	private static final Location STANDARD_SPAWN = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
 	public TranslationTask(Craft c, TranslationTaskData data) {
 		super(c);
 		this.data = data;
@@ -194,8 +195,10 @@ public class TranslationTask extends AsyncTask {
 				String s = LocationUtils.locationCheck(p);
 				if (s != null) {
 					// if(PingUtils.isOnline(s)){
+					double angle = LocationUtils.getAngleFromGivenPointTo(LocationUtils.locationOfPlanet(s), p.getLocation());
+					Location target = LocationUtils.getSpawnLocationFromAngle(angle, STANDARD_SPAWN, 1500);
 					c.setProcessingTeleport(true);
-					RepeatTryServerJumpTask task2 = new RepeatTryServerJumpTask(p, c, s, 0, 205, 0);
+					RepeatTryServerJumpTask task2 = new RepeatTryServerJumpTask(p, c, s, target.getBlockX(), 205, target.getBlockY());
 					task2.runTaskTimer(Movecraft.getInstance(), 0, 1);
 					/*
 					 * } else { p.sendMessage(
@@ -209,7 +212,7 @@ public class TranslationTask extends AsyncTask {
 					if (!LocationUtils.spaceCheck(p, false)) {
 						// if(PingUtils.isOnline(s)){
 						p.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + " Leaving the atmosphere!");
-						Location loc = LocationUtils.getWarpLocation(p.getWorld().getName());
+						Location loc = LocationUtils.getWarpLocation(p.getWorld().getName(), p.getLocation());
 						c.setProcessingTeleport(true);
 						RepeatTryServerJumpTask task2 = new RepeatTryServerJumpTask(p, c, LocationUtils.getSystem(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 						task2.runTaskTimer(Movecraft.getInstance(), 0, 1);

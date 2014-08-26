@@ -140,7 +140,7 @@ public class TeleportTask {
 		Location loc = pilot.getLocation();
 		MovecraftLocation startPoint = new MovecraftLocation(loc.getBlockX(), loc.getBlockY() - 1, loc.getBlockZ());
 		Craft newCraft = new Craft(c.getType(), loc.getWorld());
-		newCraft.detect(pilot.getName(), startPoint);
+		newCraft.detect(pilot, startPoint);
 
 		// all done!
 		// w.write("===============================");

@@ -122,7 +122,7 @@ public class PartListener implements Listener{
 								Craft c = CraftManager.getInstance().getCraftByPlayer(p);
 								CraftManager.getInstance().removeCraft(c);
 								c = new Craft(c.getType(), c.getW());
-								c.detect(p.getName(), MathUtils.bukkit2MovecraftLoc(p.getLocation()));
+								c.detect(p, MathUtils.bukkit2MovecraftLoc(p.getLocation()));
 								return;
 							}
 						}
@@ -145,7 +145,7 @@ public class PartListener implements Listener{
 								Craft c = CraftManager.getInstance().getCraftByPlayer(p);
 								CraftManager.getInstance().removeCraft(c);
 								c = new Craft(c.getType(), c.getW());
-								c.detect(p.getName(), MathUtils.bukkit2MovecraftLoc(p.getLocation()));
+								c.detect(p, MathUtils.bukkit2MovecraftLoc(p.getLocation()));
 								return;
 							}
 						}

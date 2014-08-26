@@ -109,6 +109,39 @@ public class InteractListener implements Listener {
 						}
 					}
 				}
+				if(event.getPlayer().getItemInHand().getType() == Material.WATCH){
+					if ( getCraftTypeFromString( sign.getLine( 0 ) ) != null ) {
+						if (Movecraft.signContainsPlayername(sign, event.getPlayer().getName()) || event.getPlayer().hasPermission("movecraft.override")) {
+							// Valid sign prompt for ship command.
+							if ( event.getPlayer().hasPermission( "movecraft." + sign.getLine( 0 ) + ".pilot" ) || event.getPlayer().hasPermission("movecraft.override") ) {
+									// Attempt to run detection
+									Location loc = event.getClickedBlock().getLocation();
+									MovecraftLocation startPoint = new MovecraftLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+		
+									if (CraftManager.getInstance().getCraftByPlayer(event.getPlayer()) == null) {
+										Craft c = new Craft(getCraftTypeFromString(sign.getLine(0)), loc.getWorld());
+										//redetection now.
+										c.detect(event.getPlayer(), startPoint);
+									} else {
+										Craft pCraft = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());
+										CraftManager.getInstance().removeCraft(pCraft);
+										pCraft.extendLandingGear();
+										event.getPlayer().sendMessage(String.format(I18nSupport.getInternationalisedString("Player- Craft has been released")));
+									}
+	
+								event.setCancelled(true);
+								return;
+							} else {
+								event.getPlayer().sendMessage(ChatColor.RED + "You do not have permission for this type of craft!");
+								return;
+							}
+						} else {
+								event.getPlayer().sendMessage("You are not the captain of this ship.");
+								event.setCancelled(true);
+								return;
+						}
+					}
+				}
 			}
 		}
 	}
@@ -132,7 +165,8 @@ public class InteractListener implements Listener {
 
 					if (CraftManager.getInstance().getCraftByPlayer(event.getPlayer()) == null) {
 						Craft c = new Craft(getCraftTypeFromString(sign.getLine(0)), loc.getWorld());
-						c.detect(event.getPlayer().getName(), startPoint);
+						//redetection now.
+						c.redetect(event.getPlayer(), startPoint);
 					} else {
 						Craft pCraft = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());
 						CraftManager.getInstance().removeCraft(pCraft);
@@ -317,5 +351,4 @@ public class InteractListener implements Listener {
 			}
 		}
 	}
-
 }

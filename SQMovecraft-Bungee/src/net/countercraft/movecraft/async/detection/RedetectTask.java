@@ -2,13 +2,11 @@ package net.countercraft.movecraft.async.detection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.database.StarshipData;
-import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.utils.BoundingBoxUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
@@ -18,12 +16,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 public class RedetectTask extends DetectionTask{
-
-	
 	
 	public RedetectTask(Craft c, MovecraftLocation startLocation, int minSize, int maxSize, Integer[] allowedBlocks, Integer[] forbiddenBlocks, String player, World w) {
 		super(c, startLocation, minSize, maxSize, allowedBlocks, forbiddenBlocks, player, w);
@@ -34,6 +29,10 @@ public class RedetectTask extends DetectionTask{
 	public void excecute() {
 		
 		StarshipData d = Movecraft.getInstance().getStarshipDatabase().getStarshipByLocation(new Location(data.getWorld(), startLocation.getX(), startLocation.getY(), startLocation.getZ()));
+		if(d == null){
+			fail("This ship is not saved in the database, perhaps it is a new ship? Try left-clicking the sign with a ship controller to detect the ship.");
+			return;
+		}
 		SaveableBlock[] savedList = d.getBlockList();
 		
 		World w = Bukkit.getWorld(savedList[0].getWorld());
@@ -44,12 +43,15 @@ public class RedetectTask extends DetectionTask{
 			Block compare = b.getBlockObject(w);
 			if(!b.matchesTypeData(compare)){
 				fail("This ship has been modified since it was last piloted; Block at " + compare.getX() + ", " + compare.getY() + ", " + compare.getZ()
-						+ " has id " + compare.getTypeId() + ", expected ID " + b.type + ".");
+						+ " has id " + Material.getMaterial(compare.getTypeId()).toString().toLowerCase() + ", expected ID " + Material.getMaterial(b.type).toString().toLowerCase() + ". If this is intentional, Redetect your ship by left-clicking this sign with a ship controller.");
 			}
-			blockList[i] = b.toMovecraftLocation();
+			MovecraftLocation loc = b.toMovecraftLocation();
+			blockList[i] = loc;
 			if (b.type == 63 || b.type == 68) {
 				signLocations.add(blockList[i]);
 			}
+			addToBlockCount(b.type);
+			calculateBounds(loc);
 		}
 
 

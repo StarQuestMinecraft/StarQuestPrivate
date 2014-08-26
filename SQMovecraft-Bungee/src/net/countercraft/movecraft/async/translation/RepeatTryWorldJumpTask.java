@@ -20,13 +20,19 @@ public class RepeatTryWorldJumpTask extends BukkitRunnable{
 	}
 	@Override
 	public void run(){
-		if (!c.isProcessing()){
-			boolean success = false;
-			while(!success){
-				success = TeleportTask.worldJump(pilot, c, locto);
-				locto = new Location(locto.getWorld(), locto.getX() + 50, locto.getY(), locto.getZ());
+		int tries = 0;
+		if(tries < 100){
+			if (!c.isProcessing()){
+				boolean success = false;
+				while(!success){
+					success = TeleportTask.worldJump(pilot, c, locto);
+					locto = new Location(locto.getWorld(), locto.getX() + 50, locto.getY(), locto.getZ());
+				}
+				c.setProcessingTeleport(false);
+				this.cancel();
 			}
-			c.setProcessingTeleport(false);
+			tries++;
+		} else {
 			this.cancel();
 		}
 	}

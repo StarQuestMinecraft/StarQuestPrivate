@@ -9,6 +9,7 @@ import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.utils.BorderUtils;
+import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MathUtils;
 
@@ -23,23 +24,48 @@ import org.bukkit.inventory.InventoryHolder;
 public class BungeeCraftConstructor {
 	
 	//calculate for destination obstructions and then build the craft
-	public static void calculateLocationAndBuild(String world, int tX, int tY, int tZ, int oldX, int oldY, int oldZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> bedSpawnPlayersOnShip, final ArrayList<PlayerTeleport> playersOnShip){
+	public static void calculateLocationAndBuild(String world, int tX, int tY, int tZ, String oldworld, int oldX, int oldY, int oldZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> bedSpawnPlayersOnShip, final ArrayList<PlayerTeleport> playersOnShip){
 		World w = Movecraft.getInstance().getServer().getWorld(world);
 		Location targetLoc = new Location(w, tX, tY, tZ);
 		Location oldLoc = new Location(w, oldX, oldY, oldZ);
 		int dX = getdX(oldLoc, targetLoc);
 		int dY = getdY(oldLoc, targetLoc);
 		int dZ = getdZ(oldLoc, targetLoc);
+		
+		boolean isSpaceWorld = LocationUtils.spaceCheck(world);
+		System.out.println("This serverjump came from: " + oldworld);
+		
+		//if it's a space world, the obstruction check may need to take place in the opposite direction
+		//needs to take place in an "outward" searching direction
+		
+		double angle = 0;
+		if(isSpaceWorld){
+			if(LocationUtils.spaceCheck(oldworld)){
+				angle = 0;
+			}else{
+				System.out.println(oldworld);
+				System.out.println(LocationUtils.locationOfPlanet(oldworld));
+				angle = LocationUtils.getAngleFromGivenPointTo(LocationUtils.locationOfPlanet(oldworld), targetLoc);
+			}
+		} else {
+			angle = LocationUtils.getAngleFromOriginTo(targetLoc);
+		}
+		double xVal = Math.cos(angle) * 10;
+		double zVal = Math.sin(angle) * 10;
 		int count = 0;
 		boolean reversed = false;
-		while(count < 100 && destinationObstructed(bll, w, dX, dY, dZ)){
+		while(count < 20 && destinationObstructed(bll, w, dX, dY, dZ)){
 			count++;
 			if(!reversed){
-				dX += 10;
-				tX += 10;
+				dX += xVal;
+				tX += xVal;
+				dZ += zVal;
+				tZ += zVal;
 			} else {
-				dX -= 10;
-				tX -= 10;
+				dX -= xVal;
+				tX -= xVal;
+				dZ -= zVal;
+				tZ -= zVal;
 			}
 			
 			if(!isInsideBorder(tX, tY, tZ) && !reversed){
@@ -142,7 +168,9 @@ public class BungeeCraftConstructor {
 	public static boolean destinationObstructed(LocAndBlock[] bll, World targ, int dX, int dY, int dZ){
 		for (int i = 0; i < bll.length; i++) {
 			Location newLoc = new Location (targ, bll[i].X + dX, bll[i].Y + dY, bll[i].Z + dZ);
-			for(Block b : getEdges(newLoc)){
+			Block lBlock = newLoc.getBlock();
+			if(lBlock == null) return true;
+			for(Block b : getEdges(lBlock)){
 				int testID = b.getTypeId();
 				if (testID != 0) {
 					return true;
@@ -160,8 +188,7 @@ public class BungeeCraftConstructor {
 			}
 		}, 60L);
 	}
-	public static Block[] getEdges(Location l){
-		Block b = l.getBlock();
+	public static Block[] getEdges(Block b){
 		Block[] retval = new Block[19];
 		//block itself
 		retval[0] = b;
@@ -226,7 +253,7 @@ public class BungeeCraftConstructor {
 			public void run(){
 				Player p = Bukkit.getServer().getPlayer(pilot);
 				if(p != null){
-					c.detect(pilot,  MathUtils.bukkit2MovecraftLoc(p.getLocation()));
+					c.detect(p,  MathUtils.bukkit2MovecraftLoc(p.getLocation()));
 				} else {
 					//player is not logged in yet, but has a playerteleport set to execute when they do log in (hopefully)
 					BungeePlayerHandler.pilotQueue.put(uid, c);

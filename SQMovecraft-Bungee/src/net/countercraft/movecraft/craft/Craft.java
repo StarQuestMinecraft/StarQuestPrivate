@@ -66,7 +66,6 @@ public class Craft {
 	public int warpCoordsX;
 	public int warpCoordsZ;
 	public Location originalPilotLoc = null;
-	public Location pilotSign = null;
 	public Player pilot;
 
 	public Craft(CraftType type, World world) {
@@ -114,26 +113,18 @@ public class Craft {
 		this.hitBox = hitBox;
 	}
 
-	public void detect(String playerName, MovecraftLocation startPoint) {
-		if(playerName == null){
-			System.out.println("Pilot failed!");
-			return;
-		}
-		pilot = Bukkit.getServer().getPlayer(playerName);
+	public void detect(Player p, MovecraftLocation startPoint) {
+		pilot = p;
 		CraftPilotEvent event = new CraftPilotEvent(this);
 		if (event.call())
-			AsyncManager.getInstance().submitTask(new DetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), playerName, w), this);
+			AsyncManager.getInstance().submitTask(new DetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w), this);
 	}
 	
-	public void redetect(String playerName, MovecraftLocation startPoint){
-		if(playerName == null){
-			System.out.println("Pilot failed!");
-			return;
-		}
-		pilot = Bukkit.getServer().getPlayer(playerName);
+	public void redetect(Player p, MovecraftLocation startPoint){
+		pilot = p;
 		CraftPilotEvent event = new CraftPilotEvent(this);
 		if (event.call())
-			AsyncManager.getInstance().submitTask(new RedetectTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), playerName, w), this);
+			AsyncManager.getInstance().submitTask(new RedetectTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w), this);
 	}
 
 	public void translate(int dx, int dy, int dz) {
@@ -201,9 +192,6 @@ public class Craft {
 	}
 	public boolean processingTeleportCompareAndSet(boolean expect, boolean set){
 		return this.processingTeleport.compareAndSet(expect, set);
-	}
-	public Location getPilotSignLocation(){
-		return pilotSign;
 	}
 
 	@SuppressWarnings("deprecation")

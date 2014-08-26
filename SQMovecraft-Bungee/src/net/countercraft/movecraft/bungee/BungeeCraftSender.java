@@ -24,7 +24,7 @@ public class BungeeCraftSender {
 	
 	public static void sendCraft(Player p, String targetserver, String world, int X, int Y, int Z, Craft c) throws IOException{
 		byte[] craftData = serialize(p, targetserver, world, X, Y, Z, c);
-		CraftManager.getInstance().removeCraft(c);
+		CraftManager.getInstance().removeCraft(c, false);
 		BungeeFileHandler.saveCraftBytes(craftData, p.getName());
 		System.out.println("Saved craft.");
 		sendCraftSpawnPacket(p.getName(), targetserver);
@@ -70,6 +70,7 @@ public class BungeeCraftSender {
 		
 		//send the existing location
 		Location lctn = p.getLocation();
+		msgout.writeUTF(lctn.getWorld().getName());
 		msgout.writeInt(lctn.getBlockX());
 		msgout.writeInt(lctn.getBlockY());
 		msgout.writeInt(lctn.getBlockZ());

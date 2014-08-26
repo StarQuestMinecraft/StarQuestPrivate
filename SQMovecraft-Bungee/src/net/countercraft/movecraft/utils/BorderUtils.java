@@ -14,6 +14,8 @@ public class BorderUtils {
 		World w = Bukkit.getServer().getWorld(Bukkit.getServerName());
 		if(w == null){
 			System.out.println("MOVECRAFT ERROR: No world found with name == server name!");
+		} else if(worldBorderPlugin == null){
+			System.out.println("MOVECRAFT ERROR: No worldborder found!");
 		} else {
 			WORLD_RADIUS = getRadius(w.getName());
 		}

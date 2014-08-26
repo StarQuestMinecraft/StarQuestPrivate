@@ -114,6 +114,10 @@ public class LocationUtils {
 		return null;
 	}
 	
+	public static Location locationOfPlanet(String planet){
+		return planets.get(planet);
+	}
+	
 	private static boolean check(Location planet, Location pilot){
 		if(planet.getX() - 100 < pilot.getX() && pilot.getX() < planet.getX() + 100){
 			if(planet.getZ() - 100 < pilot.getZ() && pilot.getZ() < planet.getZ() + 100){
@@ -123,14 +127,33 @@ public class LocationUtils {
 		return false;
 	}
 	
-	public static Location getWarpLocation(String planet){
+	public static Location getWarpLocation(String planet, Location playerLoc){
 		for(String s : planets.keySet()){
 			if(s.equals(planet)){
-				Location pLoc = planets.get(s);
-				return new Location(pLoc.getWorld(), pLoc.getX(), 100, pLoc.getZ() + 120);
+				Location planetLoc = planets.get(s);
+				double angle = getAngleFromOriginTo(playerLoc);
+				Location target = getSpawnLocationFromAngle(angle, planetLoc, 120);
+				return target;
 			}
 		}
 		return null;
+	}
+	
+	public static double getAngleFromOriginTo(Location loc){
+		return Math.atan(loc.getZ() / loc.getX());
+	}
+	
+	public static double getAngleFromGivenPointTo(Location point, Location loc){
+		if(point == null || loc == null) return 0;
+		double x = loc.getX() - point.getX();
+		double z = loc.getZ() - point.getZ();
+		return Math.atan(z / x);
+	}
+	
+	public static Location getSpawnLocationFromAngle(double angle, Location origin, int distance){
+		double x = origin.getX() + (Math.cos(angle) * distance);
+		double z = origin.getZ() + (Math.sin(angle) * distance);
+		return new Location(origin.getWorld(), x, 100, z);
 	}
 	
 	public static RepeatTryServerJumpTask checkStargateJump(Player p, Craft c){
