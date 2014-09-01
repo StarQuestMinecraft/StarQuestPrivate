@@ -6,5 +6,7 @@
 	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/WorldEdit.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/bukkit-1.7.9-R0.3-20140603.211345-2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/spigot-1.7.9-R0.3-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/WorldGuard.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/Towny.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

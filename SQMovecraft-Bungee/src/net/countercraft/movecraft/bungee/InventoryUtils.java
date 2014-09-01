@@ -125,10 +125,10 @@ public class InventoryUtils {
 			return;
 		}
 	}
-	public static Inventory readInventory(DataInputStream ips){
+	public static Inventory readInventory(DataInputStream ips, InventoryType type){
 		int length = 27;
 		try{ length = ips.readInt(); } catch (Exception e){ e.printStackTrace();};
-		Inventory inv = getInventory(length);
+		Inventory inv = getInventory(length, type);
 		try {
 			ObjectInputStream in = new ObjectInputStream(ips);
 			CardboardBox[] cardboardBoxes = (CardboardBox[]) in.readObject();
@@ -143,106 +143,7 @@ public class InventoryUtils {
 		}
 		return inv;
 	}
-	/*
-	public static void writePlayerInventory(DataOutputStream os, PlayerInventory inventory){
-		try {
-			ObjectOutputStream out = new ObjectOutputStream(os);
-			ItemStack[] is = inventory.getContents();
-			CardboardBox[] cardboardBoxes = new CardboardBox[is.length + 4];
-			//do their armor first
-			
-			cardboardBoxes[0] = pack(inventory.getHelmet());
-			cardboardBoxes[1] = pack(inventory.getChestplate());
-			cardboardBoxes[2] = pack(inventory.getLeggings());
-			cardboardBoxes[3] = pack(inventory.getBoots());
-			
-			for(int i = 0; i < is.length; i++){
-				cardboardBoxes[i+4] = pack(is[i]);
-			}
-			out.writeObject(cardboardBoxes);
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return;
-		}
-	}
-	*/
-/*	
-	public static ItemStack[] readPlayerInventory(DataInputStream ips){
-		ItemStack[] data = new ItemStack[40];
-		try {
-			ObjectInputStream in = new ObjectInputStream(ips);
-			CardboardBox[] cardboardBoxes = (CardboardBox[]) in.readObject();
-			in.close();
-			data[0] = (unpack(cardboardBoxes[0]));
-			data[1] = (unpack(cardboardBoxes[1]));
-			data[2] = (unpack(cardboardBoxes[2]));
-			data[3] = (unpack(cardboardBoxes[3]));
-			for(int i = 4; i < cardboardBoxes.length; i++){
-				data[i] = unpack(cardboardBoxes[i]);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return data;
-	}
-	public static void applyInventory(ItemStack[] items, Player p){
-		PlayerInventory inv = p.getInventory();
-		inv.setHelmet(items[0]);
-		inv.setChestplate(items[1]);
-		inv.setLeggings(items[2]);
-		inv.setBoots(items[3]);
-		ItemStack[] invcontents = Arrays.copyOfRange(items, 4, items.length);
-		inv.setContents(invcontents);
-	}
-   */
 	
-   /* public static Inventory StringToInventory (String invString)
-    {
-        String[] serializedBlocks = invString.split(";");
-        String invInfo = serializedBlocks[0];
-        Inventory deserializedInventory = Bukkit.getServer().createInventory(null, Integer.valueOf(invInfo));
-       
-        for (int i = 1; i < serializedBlocks.length; i++)
-        {
-            String[] serializedBlock = serializedBlocks[i].split("#");
-            int stackPosition = Integer.valueOf(serializedBlock[0]);
-           
-            if (stackPosition >= deserializedInventory.getSize())
-            {
-                continue;
-            }
-           
-            ItemStack is = null;
-            Boolean createdItemStack = false;
-           
-            String[] serializedItemStack = serializedBlock[1].split(":");
-            for (String itemInfo : serializedItemStack)
-            {
-                String[] itemAttribute = itemInfo.split("@");
-                if (itemAttribute[0].equals("t"))
-                {
-                    is = new ItemStack(Material.getMaterial(Integer.valueOf(itemAttribute[1])));
-                    createdItemStack = true;
-                }
-                else if (itemAttribute[0].equals("d") && createdItemStack)
-                {
-                    is.setDurability(Short.valueOf(itemAttribute[1]));
-                }
-                else if (itemAttribute[0].equals("a") && createdItemStack)
-                {
-                    is.setAmount(Integer.valueOf(itemAttribute[1]));
-                }
-                else if (itemAttribute[0].equals("e") && createdItemStack)
-                {
-                    is.addEnchantment(Enchantment.getById(Integer.valueOf(itemAttribute[1])), Integer.valueOf(itemAttribute[2]));
-                }
-            }
-            deserializedInventory.setItem(stackPosition, is);
-        }
-       
-        return deserializedInventory;
-    }*/
 	private static CardboardBox pack(ItemStack itm){
 		if(itm != null){
 			return new CardboardBox(itm);
@@ -257,22 +158,12 @@ public class InventoryUtils {
 			return null;
 		}
 	}
-	private static Inventory getInventory(int length){
-		InventoryType type = getInventoryType(length);
+	private static Inventory getInventory(int length, InventoryType type){
 		if(type != null){
 			return Bukkit.createInventory(null, type);
 		} else {
 			System.out.println("LENGTH: " + length);
 			return Bukkit.createInventory(null, length);
-		}
-	}
-	
-	private static InventoryType getInventoryType(int length){
-		switch(length){
-		case 3: return InventoryType.FURNACE;
-		case 4: return InventoryType.BREWING;
-		case 5: return InventoryType.HOPPER;
-		default: return null;
 		}
 	}
 }

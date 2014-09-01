@@ -12,6 +12,7 @@ import net.countercraft.movecraft.Movecraft;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
 public class BungeeCraftReciever {
@@ -35,6 +36,9 @@ public class BungeeCraftReciever {
 	public static void readCraftAndBuild(byte[] databytes, boolean affectPlayers){
         try {
         	DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(databytes));
+        	//recieve slip data
+        	boolean slip = msgin.readBoolean();
+        	
         	//recieve target location data
         	String targetworld = msgin.readUTF();
         	int Xcoord = msgin.readInt();
@@ -75,29 +79,11 @@ public class BungeeCraftReciever {
         		int Z = msgin.readInt();
         		int id = msgin.readInt();
         		int data = msgin.readInt();
-        		
+        		boolean inv = msgin.readBoolean();
         		//recieve inventory blocks
-        		if (Arrays.binarySearch(inventoryIDs, id) >= 0){
-        			Inventory contents;
-        			/*boolean continuing = true;
-        			while (continuing){
-        				String continuingstring = msgin.readUTF();
-        				if (continuingstring.equals("continue")){
-        					System.out.println("continuing.");
-        					int itemid = msgin.readInt();
-        					int itemdata = msgin.readInt();
-        					int amount = msgin.readInt();
-        					int slot = msgin.readInt();
-        					System.out.println("ItemStack: " + itemid + "," + itemdata + "," + amount + "," + slot);
-        					ItemStack stack = new ItemStack(itemid, amount, (short) itemdata);
-        					contents.add(new ItemStackHolder(stack,slot));
-        				}
-        				else if (continuingstring.equals("stop")){
-        					System.out.println("stopping.");
-        					continuing = false;
-        				}
-        			}*/
-        			contents = InventoryUtils.readInventory(msgin);
+        		if (inv){
+        			InventoryType type = InventoryType.valueOf(msgin.readUTF());
+        			Inventory contents = InventoryUtils.readInventory(msgin, type);
         			LocAndBlock b = new LocAndBlock(X, Y, Z, id, data, contents);
         			blockloclist[i] = b;	        		
     			} else if(id == 63 || id == 68){
@@ -128,7 +114,7 @@ public class BungeeCraftReciever {
 	        		}
 	        	}
         	}
-        	BungeeCraftConstructor.calculateLocationAndBuild(targetworld,Xcoord,Ycoord,Zcoord, oldworld, oldX, oldY, oldZ, cName, pName, pUUID, blockloclist, bedspawnNames, playersOnShip);
+        	BungeeCraftConstructor.calculateLocationAndBuild(slip, targetworld,Xcoord,Ycoord,Zcoord, oldworld, oldX, oldY, oldZ, cName, pName, pUUID, blockloclist, bedspawnNames, playersOnShip);
         }
         catch(IOException e){
         	e.printStackTrace();

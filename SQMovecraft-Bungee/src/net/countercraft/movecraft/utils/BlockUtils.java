@@ -18,6 +18,10 @@
 package net.countercraft.movecraft.utils;
 
 import java.util.Arrays;
+import java.util.List;
+
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 
 public class BlockUtils {
 	private static final int[] dataBlocks = new int[]{ 17, 51, 18, 84, 6, 81, 83, 8, 3, 59, 115, 86, 50, 66, 53, 69, 64, 77, 63, 65, 23, 70, 43, 78, 92, 26, 93, 55, 2, 96, 29, 34, 98, 99, 106, 107, 117, 118, 120, 139, 140, 144, 145, 5, 155, 9, 60, 141, 75, 27, 67, 71, 143, 68, 72, 44, 94, 33, 100, 10, 142, 76, 28, 108, 61, 147, 11, 109, 62, 148, 114, 128, 134, 135, 136, 156, 35, 126, 24, 25, 31, 46, 52, 91, 104, 105, 116, 125, 127, 130, 131, 132, 137, 138, 149, 151, 154, 157, 158, 159, 170, 171 };
@@ -49,6 +53,57 @@ public class BlockUtils {
 		}
 
 		return false;
+	}
+	
+	public static Block[] getEdges(Block b, boolean includeDiagnoals, boolean includeSelf){
+		
+		int size;
+		if(includeDiagnoals){
+			size = 18;
+		} else {
+			size = 6;
+		}
+		
+		if(includeSelf){
+			size++;
+		}
+		Block[] retval = new Block[size];
+		
+		int index = 0;
+		//block itself
+		if(includeSelf){
+			retval[index++] = b;
+		}
+		
+		//faces
+		retval[index++] = b.getRelative(0, 1, 0);
+		retval[index++] = b.getRelative(0, -1, 0);
+		retval[index++] = b.getRelative(1, 0, 0);
+		retval[index++] = b.getRelative(-1, 0, 0);
+		retval[index++] = b.getRelative(0, 0, 1);
+		retval[index++] = b.getRelative(0, 0, -1);
+		
+		if(includeDiagnoals){
+			//edges on the upper side
+			retval[index++] = b.getRelative(1, 1, 0);
+			retval[index++] = b.getRelative(-1, 1, 0);
+			retval[index++] = b.getRelative(0, 1, 1);
+			retval[index++] = b.getRelative(0, 1, -1);
+			
+			//edges on the lower side
+			retval[index++] = b.getRelative(1, -1, 0);
+			retval[index++] = b.getRelative(-1, -1, 0);
+			retval[index++] = b.getRelative(0, -1, 1);
+			retval[index++] = b.getRelative(0, -1, -1);
+			
+			//edges on the same plane
+			retval[index++] = b.getRelative(1, 0, 1);
+			retval[index++] = b.getRelative(-1, 0, 1);
+			retval[index++] = b.getRelative(1, 0, -1);
+			retval[index++] = b.getRelative(-1, 0, -1);
+		}
+		
+		return retval;
 	}
 
 	public static byte rotate( byte data, int typeID, Rotation rotation ) {

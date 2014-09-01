@@ -14,6 +14,7 @@ import net.countercraft.movecraft.utils.MovecraftLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -62,6 +63,9 @@ public class BungeeCraftSender {
 		ByteArrayOutputStream msgbytes = new ByteArrayOutputStream();
 		DataOutputStream msgout = new DataOutputStream(msgbytes);
 		
+		//write out if it's slipspace
+		boolean slip = c.getW().getEnvironment() == Environment.THE_END;
+		msgout.writeBoolean(slip);
 		//send the location
 		msgout.writeUTF(world);
 		msgout.writeInt(X);
@@ -96,8 +100,11 @@ public class BungeeCraftSender {
 			msgout.writeInt(id);
 			msgout.writeInt(data);
 			//send inventory
-			if (Arrays.binarySearch(inventoryIDs, id) >= 0){
+			if (loc.getBlock().getState() instanceof InventoryHolder){
+				msgout.writeBoolean(true);
+				System.out.println("Inventory block of type" + loc.getBlock().getType());
 				Inventory i = ((InventoryHolder) loc.getBlock().getState()).getInventory();
+				msgout.writeUTF(i.getType().name());
 				/*for (int index = 0; index < i.getSize(); index++){
 					System.out.println("Scanning inventory slot.");
 					ItemStack s = i.getItem(index);
@@ -114,6 +121,8 @@ public class BungeeCraftSender {
 				}*/
 				InventoryUtils.writeInventory(msgout, i);
 				i.clear();
+			}else{
+				msgout.writeBoolean(false);
 			}
 			if(id == 63 || id == 68){
 				Sign s = (Sign) loc.getBlock().getState();

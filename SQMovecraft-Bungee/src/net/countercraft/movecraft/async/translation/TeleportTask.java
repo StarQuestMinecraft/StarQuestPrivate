@@ -6,20 +6,24 @@ import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
+import net.countercraft.movecraft.bungee.LocAndBlock;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
+import net.countercraft.movecraft.utils.BlockUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Dropper;
 import org.bukkit.block.Furnace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 
 public class TeleportTask {
 	public static boolean worldJump(Player pilot, Craft c, Location locto) {
@@ -35,7 +39,7 @@ public class TeleportTask {
 		MovecraftLocation[] blocksList = c.getBlockList();
 
 		// check for destination obstructions and if obstructed quit.
-		boolean obstructed = destinationObstructed(blocksList, locto, dX, dY, dZ);
+		boolean obstructed = destinationObstructed(blocksList, locto.getWorld(), dX, dY, dZ);
 		if (obstructed) {
 			return false;
 		}
@@ -108,7 +112,7 @@ public class TeleportTask {
 		
 			
 		// remove the old craft
-		CraftManager.getInstance().removeCraft(c);
+		CraftManager.getInstance().removeCraft(c, false);
 
 		// w.write("BEGIN teleportBlocks: " + System.currentTimeMillis());
 		// w.newLine();
@@ -140,6 +144,8 @@ public class TeleportTask {
 		Location loc = pilot.getLocation();
 		MovecraftLocation startPoint = new MovecraftLocation(loc.getBlockX(), loc.getBlockY() - 1, loc.getBlockZ());
 		Craft newCraft = new Craft(c.getType(), loc.getWorld());
+		newCraft.warpCoordsX = pilot.getLocation().getBlockX();
+		newCraft.warpCoordsZ = pilot.getLocation().getBlockZ();
 		newCraft.detect(pilot, startPoint);
 
 		// all done!
@@ -165,22 +171,23 @@ public class TeleportTask {
 		// Iterate through the blocks list
 		for (int i = 0; i < blocksList.length; i++) {
 			MovecraftLocation oldLoc = blocksList[i];
-
-			final int oldID = w.getBlockTypeIdAt(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ());
-			final byte oldData = w.getBlockAt(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ()).getData();
+			
+			Block b = w.getBlockAt(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ());
+			final int oldID = b.getTypeId();
+			final byte oldData = b.getData();
 			// wrt.write("Index: " + i + " ID: " + oldID + " Data: " + oldData);
 			// .newLine();
 			Location newLoc = new Location(locto.getWorld(), oldLoc.getX() + dX, oldLoc.getY() + dY, oldLoc.getZ() + dZ);
 			if (!newLoc.getChunk().isLoaded()) {
 				newLoc.getChunk().load();
 			}
-			processSingleBlock(oldLoc, newLoc, w, oldID, oldData);
+			processSingleBlock(b, oldLoc, newLoc, w, oldID, oldData);
 		}
 	}
 
 	// single block processor
 	@SuppressWarnings("deprecation")
-	private static void processSingleBlock(MovecraftLocation oldLoc, Location newLoc, World w, int oldID, byte oldData) {
+	private static void processSingleBlock(Block b, MovecraftLocation oldLoc, Location newLoc, World w, int oldID, byte oldData) {
 
 		// set the new block to the correct type id and data
 		// .write("Id updated to " + oldID + " and data updated to " + oldData +
@@ -204,45 +211,13 @@ public class TeleportTask {
 			ns.setLine(3, lines[3]);
 			ns.update();
 		}
-		// if it has an inventory update the inventory.
-		if (oldID == 23) {
-			// wrt.write("Found to be a dispenser.");
-			// wrt.newLine();
-			Dispenser d = (Dispenser) w.getBlockAt(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ()).getState();
-			Inventory inv = d.getInventory();
-			((Dispenser) newLoc.getBlock().getState()).getInventory().setContents(inv.getContents());
-			d.getInventory().clear();
+		if(b instanceof InventoryHolder){
+			InventoryHolder h = (InventoryHolder) b;
+			Inventory inv = h.getInventory();
+			Block targ = newLoc.getBlock();
+			InventoryHolder th = ((InventoryHolder) targ);
+			th.getInventory().setContents(inv.getContents());
 		}
-		if (oldID == 158) {
-			// wrt.write("Found to be a dropper.");
-			// wrt.newLine();
-			Dropper d = (Dropper) w.getBlockAt(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ()).getState();
-			Inventory inv = d.getInventory();
-			((Dropper) newLoc.getBlock().getState()).getInventory().setContents(inv.getContents());
-			d.getInventory().clear();
-		}
-		if (oldID == 61 || oldID == 62) {
-			// wrt.write("Found to be a furnace.");
-			// wrt.newLine();
-			Furnace d = (Furnace) w.getBlockAt(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ()).getState();
-			Inventory inv = d.getInventory();
-			((Furnace) newLoc.getBlock().getState()).getInventory().setContents(inv.getContents());
-			d.getInventory().clear();
-		}
-		// update the storage crates
-		/*
-		 * if (oldID == 121){ //wrt.write("Found to be a storage crate.");
-		 * //wrt.newLine(); Inventory inventory =
-		 * StorageChestItem.getInventoryOfCrateAtLocation(oldLoc, w);
-		 * StorageChestItem.removeInventoryAtLocation(w, oldLoc);
-		 * StorageChestItem.setInventoryOfCrateAtLocation(inventory, new
-		 * MovecraftLocation(newLoc.getBlockX(), newLoc.getBlockY(),
-		 * newLoc.getBlockZ()), newLoc.getWorld()); }
-		 */
-
-		// wrt.write("Setting old block to air.");
-		// wrt.newLine();
-		// set the old block to air
 		w.getBlockAt(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ()).setTypeIdAndData(0, (byte) 0, false);
 
 	}
@@ -259,14 +234,16 @@ public class TeleportTask {
 	}
 
 	// helping method to check for destination obstruction
-	@SuppressWarnings("deprecation")
-	public static boolean destinationObstructed(MovecraftLocation[] blocksList, Location locto, int dX, int dY, int dZ) {
-		for (int i = 0; i < blocksList.length; i++) {
-			MovecraftLocation oldLoc = blocksList[i];
-			Location newLoc = new Location(locto.getWorld(), oldLoc.getX() + dX, oldLoc.getY() + dY, oldLoc.getZ() + dZ);
-			int testID = newLoc.getWorld().getBlockTypeIdAt(newLoc);
-			if (testID != 0) {
-				return true;
+	public static boolean destinationObstructed(MovecraftLocation[] bll, World targ, int dX, int dY, int dZ){
+		for (int i = 0; i < bll.length; i++) {
+			Location newLoc = new Location (targ, bll[i].getX() + dX, bll[i].getY() + dY, bll[i].getZ() + dZ);
+			Block lBlock = newLoc.getBlock();
+			if(lBlock == null) return true;
+			for(Block b : BlockUtils.getEdges(lBlock, true, true)){
+				int testID = b.getTypeId();
+				if (testID != 0) {
+					return true;
+				}
 			}
 		}
 		return false;

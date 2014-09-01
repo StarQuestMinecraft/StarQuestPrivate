@@ -30,6 +30,7 @@ commands:
       usage: sdfsdf
 depend:
    - WorldEdit
+   - WorldGuard
 
 permissions:
     movecraft.*:

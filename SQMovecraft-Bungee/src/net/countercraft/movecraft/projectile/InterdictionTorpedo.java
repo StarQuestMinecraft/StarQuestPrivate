@@ -1,7 +1,9 @@
-package net.countercraft.movecraft.craft;
+package net.countercraft.movecraft.projectile;
 import java.util.Arrays;
 import java.util.List;
 
+import net.countercraft.movecraft.craft.Craft;
+import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 

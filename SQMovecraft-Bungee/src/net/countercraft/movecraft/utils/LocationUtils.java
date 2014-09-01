@@ -197,7 +197,7 @@ public class LocationUtils {
 			//Defalos is to the south of Regalis
 			if(warpZ > 5000) return "Defalos";
 			//Digitalis is to the east of Regalis
-			if(warpX > 5000) return "Digitalis";
+			if(warpX > 5000) return "Digitalia";
 		} else if(SYSTEM.equals("Digitalia")){
 			//Regalis is to the west of Digitalia
 			if(warpX < -5000) return "Regalis";
@@ -212,37 +212,37 @@ public class LocationUtils {
 		return null;
 	}
 	
-	public static int getSlipCoordX(String system){
+	public static int getSlipCoordX(String systarget, int coordX){
 		if(SYSTEM.equals("Regalis")){
-			if(system.equals("Defalos")){
-				return 0;	
+			if(systarget.equals("Defalos")){
+				return coordX;	
 			} else {
 				return -4500;
 			}
 		}else if(SYSTEM.equals("Defalos")){
-			if(system.equals("Regalis")){
-				return 0;	
+			if(systarget.equals("Regalis")){
+				return coordX;	
 			} else {
 				return 4500;
 			}
 		}else{
-			if(system.equals("Regalis")){
+			if(systarget.equals("Regalis")){
 				return 4500;	
 			} else {
-				return 0;
+				return coordX;
 			}
 		}
 	}
-	public static int getSlipCoordZ(String system){
+	public static int getSlipCoordZ(String system, int coordZ){
 		if(SYSTEM.equals("Regalis")){
 			if(system.equals("Defalos")){
-				return 0;	
+				return coordZ;	
 			} else {
 				return -4500;
 			}
 		}else if(SYSTEM.equals("Defalos")){
 			if(system.equals("Regalis")){
-				return 0;	
+				return coordZ;	
 			} else {
 				return 4500;
 			}
@@ -250,7 +250,7 @@ public class LocationUtils {
 			if(system.equals("Regalis")){
 				return 4500;	
 			} else {
-				return 0;
+				return coordZ;
 			}
 		}
 	}

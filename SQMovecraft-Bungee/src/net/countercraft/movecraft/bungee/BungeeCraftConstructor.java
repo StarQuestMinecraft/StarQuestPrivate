@@ -8,6 +8,7 @@ import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.listener.InteractListener;
+import net.countercraft.movecraft.utils.BlockUtils;
 import net.countercraft.movecraft.utils.BorderUtils;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
@@ -24,7 +25,7 @@ import org.bukkit.inventory.InventoryHolder;
 public class BungeeCraftConstructor {
 	
 	//calculate for destination obstructions and then build the craft
-	public static void calculateLocationAndBuild(String world, int tX, int tY, int tZ, String oldworld, int oldX, int oldY, int oldZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> bedSpawnPlayersOnShip, final ArrayList<PlayerTeleport> playersOnShip){
+	public static void calculateLocationAndBuild(boolean slip, String world, int tX, int tY, int tZ, String oldworld, int oldX, int oldY, int oldZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> bedSpawnPlayersOnShip, final ArrayList<PlayerTeleport> playersOnShip){
 		World w = Movecraft.getInstance().getServer().getWorld(world);
 		Location targetLoc = new Location(w, tX, tY, tZ);
 		Location oldLoc = new Location(w, oldX, oldY, oldZ);
@@ -40,7 +41,7 @@ public class BungeeCraftConstructor {
 		
 		double angle = 0;
 		if(isSpaceWorld){
-			if(LocationUtils.spaceCheck(oldworld)){
+			if(LocationUtils.spaceCheck(oldworld) || slip){
 				angle = 0;
 			}else{
 				System.out.println(oldworld);
@@ -84,7 +85,7 @@ public class BungeeCraftConstructor {
 			t.z = t.z + dZ;
 			playersOnShipString.add(t.uuid);
 		}
-		buildCraft(w, tX, tY, tZ, dX, dY, dZ, type, pilot, pilotUUID, bll, bedSpawnPlayersOnShip, playersOnShipString);
+		buildCraft(slip, w, tX, tY, tZ, dX, dY, dZ, type, pilot, pilotUUID, bll, bedSpawnPlayersOnShip, playersOnShipString);
 		warpPlayers(playersOnShip);
 	}
 	
@@ -102,7 +103,7 @@ public class BungeeCraftConstructor {
 			}
 		}
 	}
-	public static void buildCraft(final World w, int X, int Y, int Z, int dX, int dY, int dZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> names, ArrayList<UUID> namesOnShip){
+	public static void buildCraft(boolean slip, final World w, int X, int Y, int Z, int dX, int dY, int dZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> names, ArrayList<UUID> namesOnShip){
 		int[] fragileBlocks = MapUpdateManager.getInstance().fragileBlocks;
 		ArrayList<LocAndBlock> fragiles = new ArrayList<LocAndBlock>();
 		
@@ -136,6 +137,8 @@ public class BungeeCraftConstructor {
 		//final int XDIFF = xDiff;
 		Craft c = new Craft(InteractListener.getCraftTypeFromString( type ), w);
 		c.originalPilotLoc = new Location(w, X, Y, Z);
+		c.warpCoordsX = X;
+		c.warpCoordsZ = Z;
 		try{
 			c.playersRidingLock.acquire();
 			for(UUID s : namesOnShip){
@@ -170,7 +173,7 @@ public class BungeeCraftConstructor {
 			Location newLoc = new Location (targ, bll[i].X + dX, bll[i].Y + dY, bll[i].Z + dZ);
 			Block lBlock = newLoc.getBlock();
 			if(lBlock == null) return true;
-			for(Block b : getEdges(lBlock)){
+			for(Block b : BlockUtils.getEdges(lBlock, true, true)){
 				int testID = b.getTypeId();
 				if (testID != 0) {
 					return true;
@@ -187,39 +190,6 @@ public class BungeeCraftConstructor {
 				c.setProcessingTeleport(false);
 			}
 		}, 60L);
-	}
-	public static Block[] getEdges(Block b){
-		Block[] retval = new Block[19];
-		//block itself
-		retval[0] = b;
-		
-		//faces
-		retval[1] = b.getRelative(0, 1, 0);
-		retval[2] = b.getRelative(0, -1, 0);
-		retval[3] = b.getRelative(1, 0, 0);
-		retval[4] = b.getRelative(-1, 0, 0);
-		retval[5] = b.getRelative(0, 0, 1);
-		retval[6] = b.getRelative(0, 0, -1);
-		
-		//edges on the upper side
-		retval[7] = b.getRelative(1, 1, 0);
-		retval[8] = b.getRelative(-1, 1, 0);
-		retval[9] = b.getRelative(0, 1, 1);
-		retval[10] = b.getRelative(0, 1, -1);
-		
-		//edges on the lower side
-		retval[11] = b.getRelative(1, -1, 0);
-		retval[12] = b.getRelative(-1, -1, 0);
-		retval[13] = b.getRelative(0, -1, 1);
-		retval[14] = b.getRelative(0, -1, -1);
-		
-		//edges on the same plane
-		retval[15] = b.getRelative(1, 0, 1);
-		retval[16] = b.getRelative(-1, 0, 1);
-		retval[17] = b.getRelative(1, 0, -1);
-		retval[18] = b.getRelative(-1, 0, -1);
-		
-		return retval;
 	}
 	
 	//helping methods for calculating differences in X, Y, and Z

@@ -19,15 +19,18 @@
 package net.countercraft.movecraft.listener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.async.translation.AutopilotRunTask;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.bungee.BungeePlayerHandler;
-import net.countercraft.movecraft.bungee.PlayerTeleport;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
+import net.countercraft.movecraft.craft.CraftType;
+import net.countercraft.movecraft.utils.BlockUtils;
+import net.countercraft.movecraft.utils.BoardingRampUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.OfflinePilotUtils;
 import net.countercraft.movecraft.utils.SneakMoveTask;
@@ -39,6 +42,8 @@ import org.bukkit.Material;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -46,6 +51,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -56,15 +62,85 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.palmergames.bukkit.towny.Towny;
+import com.palmergames.bukkit.towny.TownySettings;
+import com.palmergames.bukkit.towny.regen.TownyRegenAPI;
+import com.palmergames.bukkit.towny.regen.block.BlockLocation;
+import com.palmergames.bukkit.towny.tasks.ProtectionRegenTask;
+import com.palmergames.bukkit.util.ArraySort;
+
 public class PlayerListener implements Listener {
 	private final HashMap<Player, BukkitTask> releaseEvents = new HashMap<Player, BukkitTask>();
-
 /*	public void onPlayerDamaged( EntityDamageByEntityEvent e ) {
 		if ( e instanceof Player ) {
 			Player p = ( Player ) e;
 			CraftManager.getInstance().removeCraft( CraftManager.getInstance().getCraftByPlayer( p ) );
 		}
 	}*/
+	
+	private final static Towny plugin = (Towny) Bukkit.getServer().getPluginManager().getPlugin("Towny");
+	
+	@EventHandler(priority = EventPriority.LOW)
+	public void onEntityExplode(EntityExplodeEvent event){
+		System.out.println(event.getLocation());
+		List<Block> affectedBlocks = event.blockList();
+		Collections.sort(affectedBlocks, ArraySort.getInstance());
+		int count = 0;
+		for(int i = affectedBlocks.size() - 1; i >= 0; i--){
+			count++;
+			Block b = affectedBlocks.get(i);
+			if(b.getType() == Material.SIGN_POST && isCraftSign(b)){
+				affectedBlocks.remove(i);
+				continue;
+			} else if(b.getType() == Material.WALL_SIGN && isCraftSign(b)){
+				affectedBlocks.remove(i);
+				continue;
+			} else if(b.getType() == Material.LAPIS_BLOCK){
+				affectedBlocks.remove(i);
+				continue;
+			} else {
+				Block[] edges = BlockUtils.getEdges(b, false, false);
+				for(Block e : edges){
+					if(e.getType() == Material.SIGN_POST && isCraftSign(e)){
+						if(e.getFace(b) == BlockFace.DOWN){
+							affectedBlocks.remove(b);
+							break;
+						}
+					} else if(e.getType() == Material.WALL_SIGN && isCraftSign(e)){
+						BlockFace face = b.getFace(e);
+						if(face == BoardingRampUtils.getFacingBlockFace((Sign) e.getState())){
+							affectedBlocks.remove(b);
+							break;
+						}
+					}
+				}
+			}
+		}
+		if(event.getEntity() == null){
+			for(Block b : affectedBlocks){
+				if ((!TownyRegenAPI.hasProtectionRegenTask(new BlockLocation(b.getLocation()))) && (b.getType() != Material.TNT) && (b.getType() != Material.STAINED_GLASS)) {
+					ProtectionRegenTask task = new ProtectionRegenTask(plugin, b, false);
+					task.setTaskId(Movecraft.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, ((TownySettings.getPlotManagementWildRegenDelay() + count) * 20)));
+					TownyRegenAPI.addProtectionRegenTask(task);
+					event.setYield((float) 0.0);
+					b.getDrops().clear();
+				}
+			}
+		}
+	}
+	
+	private static boolean isCraftSign(Block sign) {
+		Sign s = (Sign) sign.getState();
+		String l = s.getLine(0);
+		for (CraftType t : CraftManager.getInstance().getCraftTypes()) {
+			if (l.equalsIgnoreCase(t.getCraftName())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerJoin(PlayerJoinEvent event){

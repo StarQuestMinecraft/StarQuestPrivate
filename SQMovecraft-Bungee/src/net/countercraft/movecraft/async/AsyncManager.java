@@ -33,6 +33,7 @@ import net.countercraft.movecraft.async.translation.TranslationTask;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
+import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.utils.BlockUtils;
@@ -58,6 +59,8 @@ public class AsyncManager extends BukkitRunnable {
 	private final HashMap<AsyncTask, Craft> ownershipMap = new HashMap<AsyncTask, Craft>();
 	private final BlockingQueue<AsyncTask> finishedAlgorithms = new LinkedBlockingQueue<AsyncTask>();
 	private final HashSet<Craft> clearanceSet = new HashSet<Craft>();
+	private static CraftType CARRIER = InteractListener.getCraftTypeFromString("Carrier");
+	private static CraftType FLAGSHIP = InteractListener.getCraftTypeFromString("Flagship");
 
 	public static AsyncManager getInstance() {
 		return instance;
@@ -120,6 +123,9 @@ public class AsyncManager extends BukkitRunnable {
 
 								if ( BlockUtils.arrayContainsOverlap( craft.getBlockList(), data.getBlockList() ) ) {
 									p.sendMessage( String.format( I18nSupport.getInternationalisedString( "Detection - Failed Craft is already being controlled" ) ) );
+									System.out.println("MOVECRAFT-DETECTION: craft already controlled!");
+									System.out.println(c.pilot.getName() + " is already controlling part of this ship!");
+									System.out.println(c.getType().getCraftName() + " = type, " + c.getBlockList().length + " = size");
 									failed = true;
 								}
 
@@ -141,7 +147,7 @@ public class AsyncManager extends BukkitRunnable {
 								boolean isCraftType = (InteractListener.getCraftTypeFromString(s.getLine(0)) != null);
 								if (isCraftType){
 									//special rules for carriers!
-									if (c.getType().equals(InteractListener.getCraftTypeFromString("Carrier")) || c.getType().equals(InteractListener.getCraftTypeFromString("Flagship"))){
+									if (c.getType().equals(CARRIER) || c.getType().equals(FLAGSHIP)){
 										if (!Movecraft.signContainsPlayername(s, data.getPlayername())){
 											failed = true;
 											p.sendMessage(ChatColor.RED + "Your ship seems to be attatched to another ship that isn't yours.");

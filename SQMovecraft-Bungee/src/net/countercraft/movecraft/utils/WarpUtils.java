@@ -1,16 +1,11 @@
 package net.countercraft.movecraft.utils;
-
-import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.async.translation.RepeatTryWorldJumpTask;
 import net.countercraft.movecraft.bungee.RepeatTryServerJumpTask;
 import net.countercraft.movecraft.craft.Craft;
-import net.countercraft.movecraft.craft.CraftManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public class WarpUtils {
@@ -60,16 +55,12 @@ public class WarpUtils {
 		if(system != null){
 			p.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + " You have reached the edge of the solar system!");
 			p.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + "Your ship's computer will now navigate through the Slip to the next solar system.");
-			RepeatTryServerJumpTask t = new RepeatTryServerJumpTask(p, c, system + "_the_end", LocationUtils.getSlipCoordX(system), 100, LocationUtils.getSlipCoordZ(system));
+			RepeatTryServerJumpTask t = new RepeatTryServerJumpTask(p, c, system, system + "_the_end", LocationUtils.getSlipCoordX(system, c.warpCoordsX), 100, LocationUtils.getSlipCoordZ(system, c.warpCoordsZ));
 		}
 	}
 	
 	public static World getEnd(World normal){
 		return Bukkit.getWorld(normal.getName() + "_the_End");
-	}
-	
-	public static World getNormal(World end){
-		return Bukkit.getWorld(end.getName().substring(0, end.getName().indexOf("_the")));
 	}
 
 	public static boolean destinationObstructed(Location me, Craft c, Location targ){

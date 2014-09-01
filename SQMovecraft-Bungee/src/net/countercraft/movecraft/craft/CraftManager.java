@@ -110,14 +110,11 @@ public class CraftManager {
 		
 		craftList.get( c.getW() ).remove( c );
 		AutopilotRunTask.stopAutopiloting(c, p);
-		
-		if(p != null){
-			craftPlayerIndex.remove( p.getUniqueId() );
-			if (p.isOnline()) {
-				p.sendMessage( String.format( I18nSupport.getInternationalisedString( "Release - Craft has been released message" ) ) );
-				Movecraft.getInstance().getLogger().log( Level.INFO, String.format( I18nSupport.getInternationalisedString( "Release - Player has released a craft console" ), p.getName(), c.getType().getCraftName(), c.getBlockList().length, c.getMinX(), c.getMinZ() ) );
-				//process and update bedspawns
-			}
+		craftPlayerIndex.remove( p.getUniqueId() );
+		if (p.isOnline()) {
+			p.sendMessage( String.format( I18nSupport.getInternationalisedString( "Release - Craft has been released message" ) ) );
+			Movecraft.getInstance().getLogger().log( Level.INFO, String.format( I18nSupport.getInternationalisedString( "Release - Player has released a craft console" ), p.getName(), c.getType().getCraftName(), c.getBlockList().length, c.getMinX(), c.getMinZ() ) );
+			//process and update bedspawns
 		}
 		c.messageShipPlayers("The ship has been released, you are no longer riding on it.");
 		updateBedspawns(c);

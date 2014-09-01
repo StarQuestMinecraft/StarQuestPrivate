@@ -1,8 +1,7 @@
-package net.countercraft.movecraft.craft;
+package net.countercraft.movecraft.projectile;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.utils.LocationUtils;
-import net.countercraft.movecraft.utils.TorpedoFlyTask;
 
 import org.bukkit.Effect;
 import org.bukkit.Material;
@@ -16,13 +15,7 @@ import org.bukkit.entity.TNTPrimed;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class Torpedo {
-	
-	Block myBlock;
-	TorpedoFlyTask myTask;
-	BlockFace myDirection;
-	long myStartTime;
-	Material myBlockType = Material.TNT;
+public class Torpedo extends Projectile{
 	
 	public static void testAndLaunch(Sign sign, Player p){
 		BlockFace direction = getFacingBlockFace(sign);
@@ -54,35 +47,18 @@ public class Torpedo {
 		p.sendMessage("Improperly built torpedo tube.");
 	}
 	public Torpedo(Block block, BlockFace direction){
-		myStartTime = System.currentTimeMillis();
-		myBlock = block;
-		myTask = new TorpedoFlyTask(this);
-		myDirection = direction;
+		super(block, direction);
+		super.myBlockType = Material.TNT;
 		myTask.runTaskTimer(Movecraft.getInstance(), 3, 3);
 	}
-	public void move(){
-		//if it's been flying longer than 10 seconds nuke it.
-		if(System.currentTimeMillis() - myStartTime > 10000){
-			detonate();
-			return;
-		}
-		Block target = myBlock.getRelative(myDirection);
-		
-		//if the target block isn't air, it must have hit something, so detonate.
-		if (target.getType() != Material.AIR){
-			detonate();
-			return;
-		}
-		
-		//otherwise move forwards.
-		target.setType(myBlockType);
-		myBlock.setType(Material.AIR);
-		myBlock = target;
+	
+	public void move(Block target){
+		super.move(target);
 		myBlock.getWorld().playEffect(myBlock.getLocation(), Effect.SMOKE, 20);
 		myBlock.getWorld().playSound(myBlock.getLocation(), Sound.FIREWORK_LAUNCH, 2.0F, 1.0F);
 	}
+	
 	public void detonate(){
-		myTask.cancel();
 		myBlock.setType(Material.AIR);
 		TNTPrimed tnt = myBlock.getWorld().spawn(myBlock.getLocation(), TNTPrimed.class);
 		tnt.setFuseTicks(1);

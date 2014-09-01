@@ -8,12 +8,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.detection.SaveableBlock;
-import net.countercraft.movecraft.bungee.LocAndBlock;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.listener.InteractListener;
@@ -22,7 +20,6 @@ import net.countercraft.movecraft.utils.MovecraftLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
@@ -31,6 +28,7 @@ public class FileDatabase implements StarshipDatabase {
 	private static File folder = new File(Movecraft.getInstance().getDataFolder().getAbsolutePath() +
 			  "/savedstarships");
 	
+	private static final int VERSION_ID = 1;
 	static{
 		if(!folder.exists()){
 			folder.mkdirs();
@@ -102,6 +100,7 @@ public class FileDatabase implements StarshipDatabase {
 		ByteArrayOutputStream msgbytes = new ByteArrayOutputStream();
 		DataOutputStream msgout = new DataOutputStream(msgbytes);
 		msgout.writeUTF(d.getType());
+		msgout.writeUTF(VERSION_ID + "");
 		msgout.writeUTF(d.getCaptain().toString());
 		msgout.writeInt(d.getBlockList().length);
 		for(SaveableBlock b : d.getBlockList()){
@@ -110,48 +109,57 @@ public class FileDatabase implements StarshipDatabase {
 			msgout.writeInt(b.getY());
 			msgout.writeInt(b.getZ());
 			msgout.writeInt(b.getType());
-			msgout.writeByte(b.getData());
-			if(b.getType() == 63 || b.getType() == 68){
-				msgout.writeUTF(b.line0);
-				msgout.writeUTF(b.line1);
-				msgout.writeUTF(b.line2);
-				msgout.writeUTF(b.line3);
-			}
 		}
 		return msgbytes.toByteArray();
 	}
 	
 	private static StarshipData unserialize(byte[] b) throws IOException{
 		try{
-		DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(b));
-		
-		String ctype = msgin.readUTF();
-		UUID captain = UUID.fromString(msgin.readUTF());
-		int blocksLength = msgin.readInt();
-		SaveableBlock[] blocksList = new SaveableBlock[blocksLength];
-		for(int i = 0; i < blocksLength; i++){
-			String world = msgin.readUTF();
-			int x = msgin.readInt();
-			int y = msgin.readInt();
-			int z = msgin.readInt();
-			int type = msgin.readInt();
-			byte data = msgin.readByte();
-			if(type == 63 || type == 68){
-				try{
-				String line0 = msgin.readUTF();
-				String line1 = msgin.readUTF();
-				String line2 = msgin.readUTF();
-				String line3 = msgin.readUTF();
-				blocksList[i] = new SaveableBlock(world,x,y,z,type,data,line0,line1,line2,line3);
-				} catch (Exception e){
-					blocksList[i] = new SaveableBlock(world,x,y,z,type,data);
-				}
-			} else {
-				blocksList[i] = new SaveableBlock(world,x,y,z,type,data);
+			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(b));
+			
+			String ctype = msgin.readUTF();
+			String testID = msgin.readUTF();
+			UUID captain;
+			int versionID;
+			try{
+				 versionID = Integer.parseInt(testID);
+				 String captainstr = msgin.readUTF();
+				 captain = UUID.fromString(captainstr);
+			} catch (Exception e){
+				versionID = 0;
+				captain = UUID.fromString(testID);
 			}
-		}
+			int blocksLength = msgin.readInt();
+			SaveableBlock[] blocksList = new SaveableBlock[blocksLength];
+			for(int i = 0; i < blocksLength; i++){
+				String world = msgin.readUTF();
+				int x = msgin.readInt();
+				int y = msgin.readInt();
+				int z = msgin.readInt();
+				int type = msgin.readInt();
+				//version zero has string verification
+				if(versionID == 0){
+					byte data = msgin.readByte();
+					if(type == 63 || type == 68){
+						try{
+							String line0 = msgin.readUTF();
+							String line1 = msgin.readUTF();
+							String line2 = msgin.readUTF();
+							String line3 = msgin.readUTF();
+						blocksList[i] = new SaveableBlock(world,x,y,z,type);
+						} catch (Exception e){
+							blocksList[i] = new SaveableBlock(world,x,y,z,type);
+						}
+					} else {
+						blocksList[i] = new SaveableBlock(world,x,y,z,type);
+					}
+				} else {
+					blocksList[i] = new SaveableBlock(world,x,y,z,type);
+				}
+			}
 		return new StarshipData(blocksList, ctype, captain);
 		} catch (Exception e){
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -173,7 +181,6 @@ public class FileDatabase implements StarshipDatabase {
 	}
 	private static byte[] readCraftBytes(Location l){
 		File target = new File(folder + "/" + locToString(l) + ".sdata");
-		System.out.println("possibility 1");
 		if(!target.exists()){
 			System.out.println("ERROR: File does not exist!: " + target.toString());
 			return null;
@@ -186,10 +193,8 @@ public class FileDatabase implements StarshipDatabase {
 			in.read(inbytes);
 			in.close();
 		} catch (Exception e){
-			System.out.println("crash possibility 2");
 			e.printStackTrace();
 		}
-		System.out.println("Inbytes: " + inbytes);
 		return inbytes;
 	}
 	private static String locToString(Location l){

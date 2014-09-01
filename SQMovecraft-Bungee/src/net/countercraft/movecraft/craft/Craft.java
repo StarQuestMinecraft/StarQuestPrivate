@@ -31,6 +31,7 @@ import net.countercraft.movecraft.async.translation.TranslationTask;
 import net.countercraft.movecraft.async.translation.TranslationTaskData;
 import net.countercraft.movecraft.event.CraftPilotEvent;
 import net.countercraft.movecraft.event.CraftSyncTranslateEvent;
+import net.countercraft.movecraft.projectile.LaserBolt;
 import net.countercraft.movecraft.utils.GunUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.Rotation;
@@ -46,6 +47,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.util.Vector;
 
 public class Craft {
@@ -257,12 +259,16 @@ public class Craft {
 								// Location fLoc =
 								// twoinfront.getLocation().toVector().add(GunUtils.getFireBallVelocity(playerFacing).multiply(2)).toLocation(twoinfront.getWorld(),
 								// 0, 0);
-								Fireball f = ((Fireball) twoinfront.getLocation().getWorld().spawn(twoinfront.getLocation(), Fireball.class));
+								/*Fireball f = ((Fireball) twoinfront.getLocation().getWorld().spawn(twoinfront.getLocation(), Fireball.class));
 	
 								f.setDirection(GunUtils.getFireBallVelocity(playerFacing).multiply(2));
 								f.setShooter(pilot);
+								f.setIsIncendiary(true);
+								f.setYield(2.5F);
+								f.setBounce(false);*/
+								new LaserBolt(twoinfront, playerFacing);
 								twoinfront.getWorld().playSound(twoinfront.getLocation(), Sound.SHOOT_ARROW, 2.0F, 1.0F);
-	
+								
 								Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
 	
 									@Override

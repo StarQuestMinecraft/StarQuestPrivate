@@ -40,10 +40,10 @@ public class RedetectTask extends DetectionTask{
 		
 		for(int i = 0; i < savedList.length; i++){
 			SaveableBlock b = savedList[i];
-			Block compare = b.getBlockObject(w);
-			if(!b.matchesTypeData(compare)){
-				fail("This ship has been modified since it was last piloted; Block at " + compare.getX() + ", " + compare.getY() + ", " + compare.getZ()
-						+ " has id " + Material.getMaterial(compare.getTypeId()).toString().toLowerCase() + ", expected ID " + Material.getMaterial(b.type).toString().toLowerCase() + ". If this is intentional, Redetect your ship by left-clicking this sign with a ship controller.");
+			int id = w.getBlockTypeIdAt(b.getX(), b.getY(), b.getZ());
+			if(!b.matchesTypeData(w)){
+				fail("This ship has been modified since it was last piloted; Block at " + b.getX() + ", " + b.getY() + ", " + b.getZ()
+						+ " has id " + Material.getMaterial(id).toString().toLowerCase() + ", expected ID " + Material.getMaterial(b.type).toString().toLowerCase() + ". If this is intentional, Redetect your ship by left-clicking this sign with a ship controller.");
 			}
 			MovecraftLocation loc = b.toMovecraftLocation();
 			blockList[i] = loc;
