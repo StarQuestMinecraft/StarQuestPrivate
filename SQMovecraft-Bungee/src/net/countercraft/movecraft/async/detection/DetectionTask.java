@@ -94,19 +94,6 @@ public class DetectionTask extends AsyncTask {
 					}
 				}
 				c.bedspawnsLock.release();
-				
-				
-				// add any players to the ship that should be on it
-				c.playersRidingLock.acquire();
-				for (Player plr : data.getWorld().getPlayers()) {
-					if (MathUtils.playerIsWithinBoundingPolygon(data.getHitBox(), data.getMinX(), data.getMinZ(), MathUtils.bukkit2MovecraftLoc(plr.getLocation()))) {
-						if (!c.playersRidingShip.contains(plr.getUniqueId())) {
-							c.playersRidingShip.add(plr.getUniqueId());
-							plr.sendMessage("You board a craft of type " + c.getType().getCraftName() + " under the command of captain " + c.pilot.getName() + ".");
-						}
-					}
-				}
-				c.playersRidingLock.release();
 				} catch (Exception e){
 					e.printStackTrace();
 				}
@@ -286,7 +273,7 @@ public class DetectionTask extends AsyncTask {
 
 	private MovecraftLocation[] finaliseBlockList( HashSet<MovecraftLocation> blockSet, int minY, int maxY) {
 		
-		/*ArrayList<MovecraftLocation> finalList = new ArrayList<MovecraftLocation>();
+		ArrayList<MovecraftLocation> finalList = new ArrayList<MovecraftLocation>();
 		for(int posY = this.minY; posY <= this.maxY; posY++){
 			for(MovecraftLocation loc : blockSet){
 				if(loc.getY() == posY){
@@ -295,9 +282,9 @@ public class DetectionTask extends AsyncTask {
 			}
 		}
 		MovecraftLocation[] retval = finalList.toArray(new MovecraftLocation[finalList.size()]);
-		return retval;*/
+		return retval;
 		
-		return blockSet.toArray(new MovecraftLocation[blockSet.size()]);
+		//return blockSet.toArray(new MovecraftLocation[blockSet.size()]);
 
   	}
 

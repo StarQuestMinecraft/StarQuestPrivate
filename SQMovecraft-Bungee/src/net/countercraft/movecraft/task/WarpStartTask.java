@@ -1,8 +1,11 @@
-package net.countercraft.movecraft.utils;
+package net.countercraft.movecraft.task;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
+import net.countercraft.movecraft.utils.DirectionUtils;
+import net.countercraft.movecraft.utils.LocationUtils;
+import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -32,7 +35,7 @@ public class WarpStartTask extends BukkitRunnable{
 			p.sendMessage("Activating slipdrive while not in a vacuum will blow your starship to subatomic particles.");
 			return;
 		}
-		boolean success = takeFuel(s);
+		boolean success = WarpUtils.takeFuel(s, 1);
 		if(!success){ p.sendMessage("No catalyst found."); return;}
 		this.c = c;
 		this.p = p;
@@ -74,43 +77,5 @@ public class WarpStartTask extends BukkitRunnable{
 			return;
 		}
 	}
-	
-	private boolean takeFuel(Sign s){
-		BlockFace dir = DirectionUtils.getGateDirection(s.getBlock());
-		Block dia = s.getBlock().getRelative(dir);
-		if(dia.getType() != Material.DIAMOND_BLOCK) return false;
-		Block hopperLeft = dia.getRelative(DirectionUtils.getBlockFaceLeft(dir));
-		if(hopperLeft.getType() != Material.HOPPER) return false;
-		Block hopperRight = dia.getRelative(DirectionUtils.getBlockFaceRight(dir));
-		if(hopperRight.getType() != Material.HOPPER) return false;
-		
-		Hopper hpr1 = (Hopper) hopperLeft.getState();
-		Hopper hpr2 = (Hopper) hopperRight.getState();
-		
-		Inventory i = hpr1.getInventory();
-		Inventory i2 = hpr2.getInventory();
-		
-		if(i.contains(Material.EYE_OF_ENDER)) {
-			ItemStack iStack=i.getItem(i.first(Material.EYE_OF_ENDER));
-			int amount=iStack.getAmount();
-			if(amount==1) {
-				i.remove(263);
-			} else {
-				iStack.setAmount(amount-1);
-			}
-			return true;
-			
-		} else if(i2.contains(Material.EYE_OF_ENDER)){
-			ItemStack iStack= i2.getItem(i2.first(Material.EYE_OF_ENDER));
-			int amount=iStack.getAmount();
-			if(amount==1) {
-				i2.remove(173);
-			} else {
-				iStack.setAmount(amount-1);
-			}
-			return true;
-		} else {
-			return false;
-		}
-	}
+
 }

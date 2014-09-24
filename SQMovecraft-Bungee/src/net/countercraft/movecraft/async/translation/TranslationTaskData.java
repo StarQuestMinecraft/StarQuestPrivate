@@ -33,6 +33,7 @@ public class TranslationTaskData {
 	private int[][][] hitbox;
 	private int minX, minZ;
 	private int maxHeight, minHeight;
+	private boolean chunksFail = false;
 
 	public TranslationTaskData( int dx, int dz, int dy, MovecraftLocation[] blockList, int[][][] hitbox, int minZ, int minX, int maxHeight, int minHeight) {
 		this.dx = dx;
@@ -130,5 +131,13 @@ public class TranslationTaskData {
 
 	public int getMaxHeight() {
 		return maxHeight;
+	}
+	
+	public boolean isChunksFail(){
+		return chunksFail;
+	}
+	
+	public void setChunksFail(boolean val){
+		chunksFail = val;
 	}
 }

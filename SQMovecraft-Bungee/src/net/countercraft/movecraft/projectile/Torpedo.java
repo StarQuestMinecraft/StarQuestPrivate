@@ -35,8 +35,8 @@ public class Torpedo extends Projectile{
 				di.removeItem(m);
 				new Torpedo(dispenser.getRelative(direction), direction);
 				return;
-			} else if(di.contains(Material.GLOWSTONE_DUST)){
-				ItemStack m = new ItemStack(Material.GLOWSTONE_DUST, 1);
+			} else if(di.contains(Material.REDSTONE)){
+				ItemStack m = new ItemStack(Material.REDSTONE, 1);
 				di.removeItem(m);
 				new InterdictionTorpedo(dispenser.getRelative(direction), direction);
 				return;
@@ -48,7 +48,6 @@ public class Torpedo extends Projectile{
 	}
 	public Torpedo(Block block, BlockFace direction){
 		super(block, direction);
-		super.myBlockType = Material.TNT;
 		myTask.runTaskTimer(Movecraft.getInstance(), 3, 3);
 	}
 	

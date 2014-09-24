@@ -1,4 +1,4 @@
-package net.countercraft.movecraft.async.translation;
+package net.countercraft.movecraft.task;
 
 import java.util.ArrayList;
 

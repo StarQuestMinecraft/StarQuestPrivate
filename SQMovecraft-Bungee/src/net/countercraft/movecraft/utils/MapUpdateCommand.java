@@ -29,6 +29,7 @@ public class MapUpdateCommand {
 	private final Rotation rotation;
 	private final Craft myCraft;
 	private boolean isLastUpdate;
+	private boolean drill;
 
 	public MapUpdateCommand( MovecraftLocation blockLocation, MovecraftLocation newBlockLocation, int typeID, Rotation rotation, Craft c) {
 		this.blockLocation = blockLocation;
@@ -39,21 +40,23 @@ public class MapUpdateCommand {
 		this.isLastUpdate = false;
 	}
 
-	public MapUpdateCommand( MovecraftLocation blockLocation, MovecraftLocation newBlockLocation, int typeID, Craft c) {
+	public MapUpdateCommand( MovecraftLocation blockLocation, MovecraftLocation newBlockLocation, int typeID, Craft c, boolean drill) {
 		this.blockLocation = blockLocation;
 		this.newBlockLocation = newBlockLocation;
 		this.typeID = typeID;
 		this.rotation = Rotation.NONE;
 		this.myCraft = c;
 		this.isLastUpdate = false;
+		this.drill = drill;
 	}
 
-	public MapUpdateCommand( MovecraftLocation newBlockLocation, int typeID, Craft c) {
+	public MapUpdateCommand( MovecraftLocation newBlockLocation, int typeID, Craft c, boolean drill) {
 		this.newBlockLocation = newBlockLocation;
 		this.typeID = typeID;
 		this.rotation = Rotation.NONE;
 		this.myCraft = c;
 		this.isLastUpdate = false;
+		this.drill = drill;
 	}
 	
 	public boolean isLastUpdate(){
@@ -82,5 +85,9 @@ public class MapUpdateCommand {
 
 	public Rotation getRotation() {
 		return rotation;
+	}
+	
+	public boolean shouldDrill(){
+		return drill;
 	}
 }

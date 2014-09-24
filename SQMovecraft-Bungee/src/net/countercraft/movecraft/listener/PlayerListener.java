@@ -29,11 +29,12 @@ import net.countercraft.movecraft.bungee.BungeePlayerHandler;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
+import net.countercraft.movecraft.projectile.LaserBolt;
+import net.countercraft.movecraft.task.SneakMoveTask;
 import net.countercraft.movecraft.utils.BlockUtils;
 import net.countercraft.movecraft.utils.BoardingRampUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.OfflinePilotUtils;
-import net.countercraft.movecraft.utils.SneakMoveTask;
 import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.Bukkit;
@@ -89,15 +90,21 @@ public class PlayerListener implements Listener {
 		for(int i = affectedBlocks.size() - 1; i >= 0; i--){
 			count++;
 			Block b = affectedBlocks.get(i);
-			if(b.getType() == Material.SIGN_POST && isCraftSign(b)){
+			Material type = b.getType();
+			if(type == Material.SIGN_POST && isCraftSign(b)){
 				affectedBlocks.remove(i);
 				continue;
-			} else if(b.getType() == Material.WALL_SIGN && isCraftSign(b)){
+			} else if(type  == Material.WALL_SIGN && isCraftSign(b)){
 				affectedBlocks.remove(i);
 				continue;
-			} else if(b.getType() == Material.LAPIS_BLOCK){
+			} else if(type  == Material.LAPIS_BLOCK ){
 				affectedBlocks.remove(i);
 				continue;
+			} else if(type == Material.STAINED_GLASS){
+				if(LaserBolt.getBoltBlocks().contains(b)){
+					affectedBlocks.remove(i);
+					continue;
+				}
 			} else {
 				Block[] edges = BlockUtils.getEdges(b, false, false);
 				for(Block e : edges){
@@ -118,7 +125,7 @@ public class PlayerListener implements Listener {
 		}
 		if(event.getEntity() == null){
 			for(Block b : affectedBlocks){
-				if ((!TownyRegenAPI.hasProtectionRegenTask(new BlockLocation(b.getLocation()))) && (b.getType() != Material.TNT) && (b.getType() != Material.STAINED_GLASS)) {
+				if ((!TownyRegenAPI.hasProtectionRegenTask(new BlockLocation(b.getLocation()))) && (b.getType() != Material.TNT)) {
 					ProtectionRegenTask task = new ProtectionRegenTask(plugin, b, false);
 					task.setTaskId(Movecraft.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, ((TownySettings.getPlotManagementWildRegenDelay() + count) * 20)));
 					TownyRegenAPI.addProtectionRegenTask(task);
@@ -242,7 +249,7 @@ public class PlayerListener implements Listener {
 			if ( !MathUtils.playerIsWithinBoundingPolygon( c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc( p.getLocation() ) ) ) {
 				if(p.getWorld().getEnvironment() == Environment.THE_END){
 					event.setCancelled(true);
-					WarpUtils.leaveWarp(p, c);
+					WarpUtils.leaveWarp(p, c, true);
 					return;
 				}
 				if ( !releaseEvents.containsKey( p ) ) {

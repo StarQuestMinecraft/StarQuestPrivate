@@ -103,9 +103,8 @@ public class RotationTask extends AsyncTask {
                 if ( !failed ) {
                         //rotate entities in the craft
                         Location tOP = new Location( getCraft().getW(), originPoint.getX(), originPoint.getY(), originPoint.getZ() );
-                        Iterator<UUID> i= getCraft().playersRidingShip.iterator();
-                        while (i.hasNext()) {
-                                Player pTest = Movecraft.getPlayer(i.next());
+                        for(int i = 0; i < getCraft().playersRidingShip.size(); i++){
+                                Player pTest = Movecraft.getPlayer(getCraft().playersRidingShip.get(i));
                                 if (pTest != null && MathUtils.playerIsWithinBoundingPolygon( getCraft().getHitBox(), getCraft().getMinX(), getCraft().getMinZ(), MathUtils.bukkit2MovecraftLoc( pTest.getLocation() ) ) ) {
                                         if(pTest.getType()!=org.bukkit.entity.EntityType.DROPPED_ITEM ) {
                                                 // Player is onboard this craft
@@ -158,7 +157,7 @@ public class RotationTask extends AsyncTask {
                         List<MovecraftLocation> airLocation = ListUtils.subtract( Arrays.asList( originalBlockList ), Arrays.asList( blockList ) );
                         
                         for ( MovecraftLocation l1 : airLocation ) {
-                        	mapUpdates.add( new MapUpdateCommand( l1, 0, getCraft() ) );
+                        	mapUpdates.add( new MapUpdateCommand( l1, 0, getCraft(), false) );
                         }
                         
             			MapUpdateCommand[] temp = mapUpdates.toArray(new MapUpdateCommand[1]);

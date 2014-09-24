@@ -1,4 +1,6 @@
-package net.countercraft.movecraft.projectile;
+package net.countercraft.movecraft.task;
+
+import net.countercraft.movecraft.projectile.Projectile;
 
 import org.bukkit.scheduler.BukkitRunnable;
 

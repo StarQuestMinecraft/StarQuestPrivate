@@ -21,18 +21,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.async.translation.AutopilotRunTask;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.projectile.Torpedo;
+import net.countercraft.movecraft.task.AutopilotRunTask;
+import net.countercraft.movecraft.task.WarpStartTask;
 import net.countercraft.movecraft.utils.BoardingRampUtils;
 import net.countercraft.movecraft.utils.BomberUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.Rotation;
-import net.countercraft.movecraft.utils.WarpStartTask;
 import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.ChatColor;
@@ -120,7 +120,6 @@ public class InteractListener implements Listener {
 		
 									if (CraftManager.getInstance().getCraftByPlayer(event.getPlayer()) == null) {
 										Craft c = new Craft(getCraftTypeFromString(sign.getLine(0)), loc.getWorld());
-										//redetection now.
 										c.detect(event.getPlayer(), startPoint);
 									} else {
 										Craft pCraft = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());
@@ -241,6 +240,8 @@ public class InteractListener implements Listener {
 		} else if (sign.getLine(0).equalsIgnoreCase("[boardingramp]")) {
 			sign.setLine(0, ChatColor.RED + "Boarding Ramp");
 			sign.setLine(1, "{" + ChatColor.GREEN + "SHUT" + ChatColor.BLACK + "}");
+			sign.setLine(2, "");
+			sign.setLine(3, "");
 			sign.update();
 			return;
 
@@ -293,7 +294,7 @@ public class InteractListener implements Listener {
 		} else if (sign.getLine(2).equals(ChatColor.GREEN + "Disabled.")) {
 			new WarpStartTask(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer(), sign);
 		} else if (sign.getLine(2).equals(ChatColor.BLUE + "Stable Slip.")) {
-			WarpUtils.leaveWarp(event.getPlayer(), CraftManager.getInstance().getCraftByPlayer(event.getPlayer()));
+			WarpUtils.leaveWarp(event.getPlayer(), CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), true);
 			sign.setLine(2, ChatColor.GREEN + "Disabled.");
 			sign.update();
 

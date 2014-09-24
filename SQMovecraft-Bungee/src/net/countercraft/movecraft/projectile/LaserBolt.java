@@ -1,5 +1,7 @@
 package net.countercraft.movecraft.projectile;
 
+import java.util.HashSet;
+
 import net.countercraft.movecraft.Movecraft;
 
 import org.bukkit.Bukkit;
@@ -11,15 +13,19 @@ import org.bukkit.block.BlockFace;
 
 public class LaserBolt extends Projectile{
 	
+	private static HashSet<Block> blocks = new HashSet<Block>();
+	
+	private byte myData = 0;
 	public LaserBolt(Block block, BlockFace direction) {
 		super(block, direction);
-		super.myBlockType = Material.STAINED_GLASS;
+		blocks.add(block);
+		System.out.println("Blocks active in world: " + blocks.size());
 		BlockFace behind = getOppsoiteBlockFace(direction);
 		Block behind4 = block.getRelative(behind).getRelative(behind).getRelative(behind).getRelative(behind);
 		if(behind4.getType() == Material.WOOL){
-			super.myData = behind4.getData();
+			myData = behind4.getData();
 		} else {
-			super.myData = 0;
+			myData = 0;
 		}
 		
 		myTask.runTaskTimer(Movecraft.getInstance(), 1, 1);
@@ -27,6 +33,8 @@ public class LaserBolt extends Projectile{
 	
 	@Override
 	public void move(Block target){
+		blocks.remove(myBlock);
+		blocks.add(target);
 		super.move(target);
 		myBlock.getWorld().playEffect(myBlock.getLocation(), Effect.MOBSPAWNER_FLAMES, 20);
 		myBlock.getWorld().playSound(myBlock.getLocation(), Sound.SPLASH, 2.0F, 1.0F);
@@ -42,6 +50,11 @@ public class LaserBolt extends Projectile{
 		}, 1L);
 	}
 	
+	@Override
+	public void removeData(){
+		blocks.remove(myBlock);
+	}
+	
 	private BlockFace getOppsoiteBlockFace(BlockFace face){
 		switch(face){
 		case NORTH:
@@ -55,5 +68,19 @@ public class LaserBolt extends Projectile{
 		default:
 			return BlockFace.SELF;
 		}
+	}
+	
+	@Override
+	protected Material getMyBlockType(){
+		return Material.STAINED_GLASS;
+	}
+	
+	@Override
+	protected byte getMyData(){
+		return myData;
+	}
+	
+	public static HashSet<Block> getBoltBlocks(){
+		return blocks;
 	}
 }

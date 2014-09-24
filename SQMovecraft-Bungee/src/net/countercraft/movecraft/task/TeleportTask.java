@@ -1,4 +1,4 @@
-package net.countercraft.movecraft.async.translation;
+package net.countercraft.movecraft.task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,9 +26,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 public class TeleportTask {
-	public static boolean worldJump(Player pilot, Craft c, Location locto) {
+	public static boolean worldJump(Player pilot, Craft c, Location locto, boolean repilot) {
 
-		// calculate the difference in x and difference in y of the current
+		/*// calculate the difference in x and difference in y of the current
 		// location to the target location
 		Location startloc = pilot.getLocation();
 		int dX = getdX(startloc, locto);
@@ -93,21 +93,15 @@ public class TeleportTask {
 		HashMap<Player, Location> players = new HashMap<Player, Location>();
 
 		// fill the player list
-		try{
-			c.playersRidingLock.acquire();
-			for (UUID s : c.playersRidingShip) {
-				Player p = Movecraft.getPlayer(s);
-				if (p != null) {
-					if (MathUtils.playerIsWithinBoundingPolygon(oldHitBox, oldMinX, oldMinZ, MathUtils.bukkit2MovecraftLoc(p.getLocation()))) {
-						Location loc = p.getLocation();
-						Location target = new Location(locto.getWorld(), loc.getX() + dX, loc.getY() + dY, loc.getZ() + dZ, loc.getYaw(), loc.getPitch());
-						players.put(p, target);
-					}
+		for (int i = 0; i < c.playersRidingShip.size(); i++) {
+			Player p = Movecraft.getPlayer(c.playersRidingShip.get(i));
+			if (p != null) {
+				if (MathUtils.playerIsWithinBoundingPolygon(oldHitBox, oldMinX, oldMinZ, MathUtils.bukkit2MovecraftLoc(p.getLocation()))) {
+					Location loc = p.getLocation();
+					Location target = new Location(locto.getWorld(), loc.getX() + dX, loc.getY() + dY, loc.getZ() + dZ, loc.getYaw(), loc.getPitch());
+					players.put(p, target);
 				}
 			}
-			c.playersRidingLock.release();
-		} catch (Exception e){
-			e.printStackTrace();
 		}
 		
 			
@@ -141,12 +135,14 @@ public class TeleportTask {
 		// w.newLine();
 
 		// pilot the new craft
-		Location loc = pilot.getLocation();
-		MovecraftLocation startPoint = new MovecraftLocation(loc.getBlockX(), loc.getBlockY() - 1, loc.getBlockZ());
-		Craft newCraft = new Craft(c.getType(), loc.getWorld());
-		newCraft.warpCoordsX = pilot.getLocation().getBlockX();
-		newCraft.warpCoordsZ = pilot.getLocation().getBlockZ();
-		newCraft.detect(pilot, startPoint);
+		if(repilot){
+			Location loc = pilot.getLocation();
+			MovecraftLocation startPoint = new MovecraftLocation(loc.getBlockX(), loc.getBlockY() - 1, loc.getBlockZ());
+			Craft newCraft = new Craft(c.getType(), loc.getWorld());
+			newCraft.warpCoordsX = pilot.getLocation().getBlockX();
+			newCraft.warpCoordsZ = pilot.getLocation().getBlockZ();
+			newCraft.detect(pilot, startPoint);
+		}
 
 		// all done!
 		// w.write("===============================");
@@ -161,6 +157,8 @@ public class TeleportTask {
 		// w.newLine();
 		// w.write("===============================");
 		// w.close();
+		return true;
+		*/
 		return true;
 	}
 
@@ -211,15 +209,15 @@ public class TeleportTask {
 			ns.setLine(3, lines[3]);
 			ns.update();
 		}
-		if(b instanceof InventoryHolder){
+		if(b.getState() instanceof InventoryHolder){
 			InventoryHolder h = (InventoryHolder) b;
 			Inventory inv = h.getInventory();
 			Block targ = newLoc.getBlock();
 			InventoryHolder th = ((InventoryHolder) targ);
 			th.getInventory().setContents(inv.getContents());
 		}
-		w.getBlockAt(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ()).setTypeIdAndData(0, (byte) 0, false);
-
+		b.setTypeIdAndData(0, (byte) 0, false);
+	
 	}
 
 	// helping method for updating bedspawns

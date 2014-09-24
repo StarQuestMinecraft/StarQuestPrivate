@@ -69,6 +69,7 @@ public class Craft {
 	public int warpCoordsZ;
 	public Location originalPilotLoc = null;
 	public Player pilot;
+	private boolean released = false;
 
 	public Craft(CraftType type, World world) {
 		this.type = type;
@@ -146,11 +147,15 @@ public class Craft {
 	}
 	
 	public void messageShipPlayers(String message){
-		for(UUID u : playersRidingShip){
-			Player p = Movecraft.getPlayer(u);
-			if(p != null){
-				p.sendMessage(message);
+		try{
+			for(int i = 0; i < playersRidingShip.size(); i++){
+				Player p = Movecraft.getPlayer(playersRidingShip.get(i));
+				if(p != null){
+					p.sendMessage(message);
+				}
 			}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 
@@ -305,5 +310,13 @@ public class Craft {
 	public ArrayList<UUID> getMembers() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public void setReleased(boolean released){
+		this.released = released;
+	}
+	
+	public boolean isReleased(){
+		return released;
 	}
 }

@@ -28,7 +28,6 @@ import net.countercraft.movecraft.async.detection.DetectionTask;
 import net.countercraft.movecraft.async.detection.DetectionTaskData;
 import net.countercraft.movecraft.async.detection.RedetectTask;
 import net.countercraft.movecraft.async.rotation.RotationTask;
-import net.countercraft.movecraft.async.translation.AutopilotRunTask;
 import net.countercraft.movecraft.async.translation.TranslationTask;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.craft.Craft;
@@ -36,14 +35,17 @@ import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.localisation.I18nSupport;
+import net.countercraft.movecraft.task.AutopilotRunTask;
 import net.countercraft.movecraft.utils.BlockUtils;
 import net.countercraft.movecraft.utils.EntityUpdateCommand;
 import net.countercraft.movecraft.utils.MapUpdateCommand;
 import net.countercraft.movecraft.utils.MapUpdateManager;
+import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.MovingPartUtils;
 import net.countercraft.movecraft.utils.Rotation;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -122,11 +124,15 @@ public class AsyncManager extends BukkitRunnable {
 							for ( Craft craft : craftsInWorld ) {
 
 								if ( BlockUtils.arrayContainsOverlap( craft.getBlockList(), data.getBlockList() ) ) {
-									p.sendMessage( String.format( I18nSupport.getInternationalisedString( "Detection - Failed Craft is already being controlled" ) ) );
-									System.out.println("MOVECRAFT-DETECTION: craft already controlled!");
-									System.out.println(c.pilot.getName() + " is already controlling part of this ship!");
-									System.out.println(c.getType().getCraftName() + " = type, " + c.getBlockList().length + " = size");
-									failed = true;
+									if(craft.pilot == p){
+										CraftManager.getInstance().removeCraft(craft);
+									} else {
+										p.sendMessage( String.format( I18nSupport.getInternationalisedString( "Detection - Failed Craft is already being controlled" ) ) );
+										System.out.println("MOVECRAFT-DETECTION: craft already controlled!");
+										System.out.println(c.pilot.getName() + " is already controlling part of this ship!");
+										System.out.println(c.getType().getCraftName() + " = type, " + c.getBlockList().length + " = size");
+										failed = true;
+									}
 								}
 
 							}
@@ -174,6 +180,22 @@ public class AsyncManager extends BukkitRunnable {
 							}
 						}
 						if ( !failed ) {
+							
+							// add any players to the ship that should be on it
+							try{
+								c.playersRidingLock.acquire();
+								for (Player plr : data.getWorld().getPlayers()) {
+									if (MathUtils.playerIsWithinBoundingPolygon(data.getHitBox(), data.getMinX(), data.getMinZ(), MathUtils.bukkit2MovecraftLoc(plr.getLocation()))) {
+										if (!c.playersRidingShip.contains(plr.getUniqueId())) {
+											c.playersRidingShip.add(plr.getUniqueId());
+											plr.sendMessage("You board a craft of type " + c.getType().getCraftName() + " under the command of captain " + c.pilot.getName() + ".");
+										}
+									}
+								}
+							}catch(Exception e){
+								e.printStackTrace();
+							}
+							c.playersRidingLock.release();
 							c.setBlockList( data.getBlockList() );
 							c.setHitBox( data.getHitBox() );
 							c.setMinX( data.getMinX() );
@@ -207,7 +229,15 @@ public class AsyncManager extends BukkitRunnable {
 					if ( task.getData().failed()) {
 						//The craft translation failed
 						p.sendMessage( task.getData().getFailMessage() );
-						clear(c);
+						if(task.getData().isChunksFail()){
+							Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+								public void run(){
+									clear(c);
+								}
+							}, 5L);
+						} else {
+							clear(c);
+						}
 						if (AutopilotRunTask.autopilotingCrafts.contains(c)){
 							AutopilotRunTask.stopAutopiloting(c, p);
 						}

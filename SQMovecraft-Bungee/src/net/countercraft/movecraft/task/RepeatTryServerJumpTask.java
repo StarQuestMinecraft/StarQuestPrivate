@@ -1,7 +1,8 @@
-package net.countercraft.movecraft.bungee;
+package net.countercraft.movecraft.task;
 
 import java.io.IOException;
 
+import net.countercraft.movecraft.bungee.BungeeCraftSender;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.utils.WarpUtils;
 

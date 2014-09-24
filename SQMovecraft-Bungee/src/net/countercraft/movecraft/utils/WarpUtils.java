@@ -1,48 +1,54 @@
 package net.countercraft.movecraft.utils;
-import net.countercraft.movecraft.bungee.RepeatTryServerJumpTask;
+import java.util.UUID;
+
+import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
+import net.countercraft.movecraft.craft.CraftManager;
+import net.countercraft.movecraft.task.RepeatTryServerJumpTask;
+import net.countercraft.movecraft.task.RepeatTryWorldJumpTask;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Hopper;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class WarpUtils {
 	
 	public static void enterWarp(Player p, Craft c){
-		return;
-		/*Location l = p.getLocation();
+		Location l = p.getLocation();
+		for(UUID u : c.playersRidingShip){
+			Player plr = Movecraft.playerIndex.get(u);
+			plr.playSound(plr.getLocation(), Sound.PORTAL_TRAVEL, 2.0F, 1.0F);
+		}
 		World w = getEnd(p.getWorld());
 		if(w == null) return;
-		RepeatTryWorldJumpTask task = new RepeatTryWorldJumpTask(c, p, new Location(w, l.getX(), l.getY(), l.getZ()));
+		RepeatTryWorldJumpTask task = new RepeatTryWorldJumpTask(c, p, new Location(w, l.getX(), l.getY(), l.getZ()), true);
 		task.runTaskTimer(Movecraft.getInstance(), 0, 1);
 		c.warpCoordsX = l.getBlockX();
-		c.warpCoordsZ = l.getBlockZ();*/
+		c.warpCoordsZ = l.getBlockZ();
 	}
-	public static void leaveWarp(Player p, Craft c){
-		/*if(!c.isProcessing()){
+	public static void leaveWarp(Player p, Craft c, boolean repilot){
+		if(!c.isProcessing()){
 			Location l = p.getLocation();
 			World w2 = getNormal(p.getWorld());
 			if(w2 == null) return;
 			Location targ = new Location(w2, c.warpCoordsX, l.getY(), c.warpCoordsZ);
-			boolean success = !destinationObstructed(l, c, targ);	
-			World w = l.getWorld();
-			if(!success){
-				for (MovecraftLocation ml : c.getBlockList()){
-					Block b = w.getBlockAt(ml.getX(), ml.getY(), ml.getZ());
-					b.setTypeIdAndData(0, (byte)0, false);
-					Location bckl = b.getLocation();
-					w.createExplosion(l, 0.0F);
-				}
-				
-				CraftManager.getInstance().removeCraft(c);
-			} else {
-				RepeatTryWorldJumpTask task = new RepeatTryWorldJumpTask(c, p, targ);
-				task.runTaskTimer(Movecraft.getInstance(), 0, 1);
+			for(int i = 0; i < c.playersRidingShip.size(); i++){
+				Player plr = Movecraft.playerIndex.get(c.playersRidingShip.get(i));
+				plr.playSound(plr.getLocation(), Sound.PORTAL_TRAVEL, 2.0F, 1.0F);
 			}
-		}*/
-		return;
+			RepeatTryWorldJumpTask task = new RepeatTryWorldJumpTask(c, p, targ, repilot);
+			task.runTaskTimer(Movecraft.getInstance(), 0, 1);
+		}
 	}
 	public static void translate(Craft c, int x, int y, int z){
 		c.warpCoordsX =  c.warpCoordsX + x;
@@ -62,44 +68,35 @@ public class WarpUtils {
 	public static World getEnd(World normal){
 		return Bukkit.getWorld(normal.getName() + "_the_End");
 	}
-
-	public static boolean destinationObstructed(Location me, Craft c, Location targ){
-    	int dX = getdX(me, targ);
-    	int dY = getdY(me, targ);
-    	int dZ = getdZ(me, targ);
-    	
-    	MovecraftLocation[] blockslist = c.getBlockList();
-    	World w = targ.getWorld();
-    	for (int i = 0; i < blockslist.length; i++) {
-			MovecraftLocation oldLoc = blockslist[i];
-			Location newLoc = new Location (w, oldLoc.getX() + dX, oldLoc.getY() + dY, oldLoc.getZ() + dZ);
-			newLoc.getChunk().load();
-			int testID = newLoc.getWorld().getBlockTypeIdAt(newLoc);
-			if (testID != 0) {
-				return true;
-			}
-		}
-    	return false;
-    }
-	//helping methods for calculating differences in X, Y, and Z
-	private static int getdX(Location from, Location to){
-		int fromX = from.getBlockX();
-		int toX = to.getBlockX();
-		return (toX - fromX);
+	public static World getNormal(World end){
+		return Bukkit.getWorld(end.getName().substring(0, end.getName().length() - 8));
+	}
+	
+	
+	public static boolean takeFuel(Sign s, int amount){
+		BlockFace dir = DirectionUtils.getGateDirection(s.getBlock());
+		Block dia = s.getBlock().getRelative(dir);
+		if(dia.getType() != Material.DIAMOND_BLOCK) return false;
+		Block hopperLeft = dia.getRelative(DirectionUtils.getBlockFaceLeft(dir));
+		if(hopperLeft.getType() != Material.HOPPER) return false;
+		Block hopperRight = dia.getRelative(DirectionUtils.getBlockFaceRight(dir));
+		if(hopperRight.getType() != Material.HOPPER) return false;
 		
-	}
-	
-	//dY calculator
-	private static int getdY(Location from, Location to){
-		int fromY = from.getBlockY();
-		int toY = to.getBlockY();
-		return (toY - fromY);
-	}
-	
-	//dZ calculator
-	private static int getdZ(Location from, Location to){
-		int fromZ = from.getBlockZ();
-		int toZ = to.getBlockZ();
-		return (toZ - fromZ);
+		Hopper hpr1 = (Hopper) hopperLeft.getState();
+		Hopper hpr2 = (Hopper) hopperRight.getState();
+		
+		Inventory i = hpr1.getInventory();
+		Inventory i2 = hpr2.getInventory();
+		
+		if(i.contains(Material.EYE_OF_ENDER, amount)) {
+			i.removeItem(new ItemStack(Material.EYE_OF_ENDER, amount));
+			return true;
+			
+		} else if(i2.contains(Material.EYE_OF_ENDER, amount)){
+			i.removeItem(new ItemStack(Material.EYE_OF_ENDER, amount));
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

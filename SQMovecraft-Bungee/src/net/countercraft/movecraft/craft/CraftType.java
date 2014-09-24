@@ -89,7 +89,7 @@ public class CraftType {
 			System.out.println("drill head loading.");
 			drillHeadID = (Integer) data.get("drillHeadID");
 		} else {
-			drillHeadID = 0;
+			drillHeadID = -1;
 		}
 		if(data.containsKey("isGroundVehicle")) {
 			isGroundVehicle =(Boolean) data.get("isGroundVehicle");

@@ -44,6 +44,7 @@ public class RedetectTask extends DetectionTask{
 			if(!b.matchesTypeData(w)){
 				fail("This ship has been modified since it was last piloted; Block at " + b.getX() + ", " + b.getY() + ", " + b.getZ()
 						+ " has id " + Material.getMaterial(id).toString().toLowerCase() + ", expected ID " + Material.getMaterial(b.type).toString().toLowerCase() + ". If this is intentional, Redetect your ship by left-clicking this sign with a ship controller.");
+				return;
 			}
 			MovecraftLocation loc = b.toMovecraftLocation();
 			blockList[i] = loc;
@@ -68,30 +69,17 @@ public class RedetectTask extends DetectionTask{
 			Craft c = getCraft();
 			// detect bedspawns, may be an expensive operation?
 			try{
-			c.bedspawnsLock.acquire();
-			for (Bedspawn b : Bedspawn.loadBedspawnList(new MovecraftLocation(c.getMinX(), 0, c.getMinZ()), c.getW().getName())) {
-				MovecraftLocation loc = new MovecraftLocation(b.x, b.y, b.z);
-				if (MathUtils.playerIsWithinBoundingPolygon(data.getHitBox(), data.getMinX(), data.getMinZ(), loc)) {
-					c.playersWithBedspawnsOnShip.add(b.player);
-				}
-			}
-			c.bedspawnsLock.release();
-			
-			
-			// add any players to the ship that should be on it
-			c.playersRidingLock.acquire();
-			for (Player plr : data.getWorld().getPlayers()) {
-				if (MathUtils.playerIsWithinBoundingPolygon(data.getHitBox(), data.getMinX(), data.getMinZ(), MathUtils.bukkit2MovecraftLoc(plr.getLocation()))) {
-					if (!c.playersRidingShip.contains(plr.getUniqueId())) {
-						c.playersRidingShip.add(plr.getUniqueId());
-						plr.sendMessage("You board a craft of type " + c.getType().getCraftName() + " under the command of captain " + c.pilot.getName() + ".");
+				c.bedspawnsLock.acquire();
+				for (Bedspawn b : Bedspawn.loadBedspawnList(new MovecraftLocation(c.getMinX(), 0, c.getMinZ()), c.getW().getName())) {
+					MovecraftLocation loc = new MovecraftLocation(b.x, b.y, b.z);
+					if (MathUtils.playerIsWithinBoundingPolygon(data.getHitBox(), data.getMinX(), data.getMinZ(), loc)) {
+						c.playersWithBedspawnsOnShip.add(b.player);
 					}
 				}
-			}
-			c.playersRidingLock.release();
-			} catch (Exception e){
+			}catch(Exception e){
 				e.printStackTrace();
 			}
+			c.bedspawnsLock.release();
 		}
 	}
 }

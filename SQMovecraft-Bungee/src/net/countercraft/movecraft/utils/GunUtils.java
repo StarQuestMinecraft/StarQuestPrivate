@@ -1,10 +1,20 @@
 package net.countercraft.movecraft.utils;
 
+import net.countercraft.movecraft.Movecraft;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
 
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+
 public class GunUtils {
+	
+	private static WorldGuardPlugin wg = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin("WorldGuard");
+	private static ProtectedRegion spawn = null;
 	@SuppressWarnings("deprecation")
 	public static Block getBlockBehind(Block piston){
 		Byte data = piston.getData();
@@ -89,5 +99,18 @@ public class GunUtils {
         } else {
             return axis[Math.round(yaw / 90f) & 0x3];
         }
+    }
+    
+    public static boolean isInSpawn(Location l){
+    	if(Bukkit.getServerName().equals("Regalis")){
+    		if(spawn == null){
+    			spawn = wg.getRegionManager(Bukkit.getWorld("Regalis")).getRegion("spawn");
+    			if(spawn == null){
+    				return false;
+    			}
+    		}
+    		return (spawn.contains(l.getBlockX(), l.getBlockY(), l.getBlockZ()));
+    	}
+    	return false;
     }
 }

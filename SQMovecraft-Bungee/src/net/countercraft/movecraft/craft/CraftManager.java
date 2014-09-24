@@ -27,10 +27,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.async.translation.AutopilotRunTask;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.database.StarshipData;
 import net.countercraft.movecraft.localisation.I18nSupport;
+import net.countercraft.movecraft.task.AutopilotRunTask;
 import net.countercraft.movecraft.utils.MathUtils;
 
 import org.bukkit.Bukkit;
@@ -102,10 +102,12 @@ public class CraftManager {
 			c.setMoveTaskId(-1);
 		}
 		
-		if(c.playersRidingShip.contains(p.getUniqueId())){
+		try{
 			if(!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))){
 				p.teleport(c.originalPilotLoc);
 			}
+		} catch (Exception e){
+			e.printStackTrace();
 		}
 		
 		craftList.get( c.getW() ).remove( c );

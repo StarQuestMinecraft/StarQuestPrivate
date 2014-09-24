@@ -9,10 +9,12 @@ import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.AsyncTask;
-import net.countercraft.movecraft.bungee.RepeatTryServerJumpTask;
 import net.countercraft.movecraft.craft.Craft;
+import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.event.CraftAsyncTranslateEvent;
 import net.countercraft.movecraft.localisation.I18nSupport;
+import net.countercraft.movecraft.task.AutopilotRunTask;
+import net.countercraft.movecraft.task.RepeatTryServerJumpTask;
 import net.countercraft.movecraft.utils.BorderUtils;
 import net.countercraft.movecraft.utils.BoundingBoxUtils;
 import net.countercraft.movecraft.utils.CarUtils;
@@ -29,9 +31,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
 
 public class TranslationTask extends AsyncTask {
 	private TranslationTaskData data;
@@ -82,6 +87,7 @@ public class TranslationTask extends AsyncTask {
 			
 			if(!checkChunks(getCraft().getW(), getCraft().getMinX(), getCraft().getMinZ(), getCraft().getHitBox(), data.getDx(), data.getDz())){
 				fail("You're going a bit fast and the chunks can't render fast enough.");
+				data.setChunksFail(true);
 			}
 			
 			if(!data.failed()){
@@ -112,9 +118,10 @@ public class TranslationTask extends AsyncTask {
 						break;
 					}
 					try{
-					int testID = getCraft().getW().getBlockTypeIdAt(newLoc.getX(), newLoc.getY(), newLoc.getZ());
+						int testID = getCraft().getW().getBlockTypeIdAt(newLoc.getX(), newLoc.getY(), newLoc.getZ());
 						int oldID = getCraft().getW().getBlockTypeIdAt(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ());
-						if (testID != 0 && testID != 36 && !existingBlockSet.contains(newLoc)) {
+						boolean drillable = canDrillBlock(getCraft(), oldID, testID, getCraft().getW(), newLoc);
+						if (testID != 0 && testID != 36 && !existingBlockSet.contains(newLoc) && !drillable) {
 							// New block is not air and is not part of the existing
 							// ship
 	
@@ -123,7 +130,7 @@ public class TranslationTask extends AsyncTask {
 							break;
 						}
 	
-						updateSet.add(new MapUpdateCommand(blocksList[i], newBlockList[i], oldID, getCraft()));
+						updateSet.add(new MapUpdateCommand(blocksList[i], newBlockList[i], oldID, getCraft(), drillable));
 					} catch (Exception e){
 						fail("Unexpected exception! We'll try to save your ship...");
 					}
@@ -135,23 +142,26 @@ public class TranslationTask extends AsyncTask {
 
 				// Move entities within the craft
 				
-				Iterator<UUID> i = getCraft().playersRidingShip.iterator();
-				while (i.hasNext()) {
-					UUID uid = i.next();
-					Player pTest = Movecraft.getPlayer(uid);
-					if(pTest != null){
-						if (MathUtils.playerIsWithinBoundingPolygon(getCraft().getHitBox(), getCraft().getMinX(), getCraft().getMinZ(), MathUtils.bukkit2MovecraftLoc(pTest.getLocation()))) {
-							Location tempLoc = pTest.getLocation();
-							tempLoc=tempLoc.add( data.getDx(), data.getDy(), data.getDz() );
-							Location newPLoc=new Location(getCraft().getW(), tempLoc.getX(), tempLoc.getY(), tempLoc.getZ());
-							newPLoc.setPitch(pTest.getLocation().getPitch());
-							newPLoc.setYaw(pTest.getLocation().getYaw());
-							pTest.teleport(newPLoc);
-							EntityUpdateCommand eUp=new EntityUpdateCommand(pTest.getLocation().clone(),newPLoc,pTest, pTest.getVelocity(), getCraft());
-							entityUpdateSet.add(eUp);
-							continue;
+				try{
+					for(int i = 0; i < getCraft().playersRidingShip.size(); i++) {
+						UUID uid = getCraft().playersRidingShip.get(i);
+						Player pTest = Movecraft.getPlayer(uid);
+						if(pTest != null){
+							if (MathUtils.playerIsWithinBoundingPolygon(getCraft().getHitBox(), getCraft().getMinX(), getCraft().getMinZ(), MathUtils.bukkit2MovecraftLoc(pTest.getLocation()))) {
+								Location tempLoc = pTest.getLocation();
+								tempLoc=tempLoc.add( data.getDx(), data.getDy(), data.getDz() );
+								Location newPLoc=new Location(getCraft().getW(), tempLoc.getX(), tempLoc.getY(), tempLoc.getZ());
+								newPLoc.setPitch(pTest.getLocation().getPitch());
+								newPLoc.setYaw(pTest.getLocation().getYaw());
+								pTest.teleport(newPLoc);
+								EntityUpdateCommand eUp=new EntityUpdateCommand(pTest.getLocation().clone(),newPLoc,pTest, pTest.getVelocity(), getCraft());
+								entityUpdateSet.add(eUp);
+								continue;
+							}
 						}
 					}
+				} catch (Exception e){
+					e.printStackTrace();
 				}
 
 				getCraft().originalPilotLoc = getCraft().originalPilotLoc.add(data.getDx(), data.getDy(), data.getDz());
@@ -161,7 +171,7 @@ public class TranslationTask extends AsyncTask {
 				List<MovecraftLocation> airLocation = ListUtils.subtract(Arrays.asList(blocksList), Arrays.asList(newBlockList));
 
 				for (MovecraftLocation l1 : airLocation) {
-					updateSet.add(new MapUpdateCommand(l1, 0, getCraft()));
+					updateSet.add(new MapUpdateCommand(l1, 0, getCraft(), false));
 				}
 
 				MapUpdateCommand[] temp = updateSet.toArray(new MapUpdateCommand[1]);
@@ -228,6 +238,10 @@ public class TranslationTask extends AsyncTask {
 				// if they are near a stargate initialize solar system jump
 				RepeatTryServerJumpTask task2 = LocationUtils.checkStargateJump(p, c);
 				if (task2 != null) {
+					for(UUID u : c.playersRidingShip){
+						Player plr = Movecraft.playerIndex.get(u);
+						plr.playSound(plr.getLocation(), Sound.PORTAL_TRAVEL, 2.0F, 1.0F);
+					}
 					c.setProcessingTeleport(true);
 					task2.runTaskTimer(Movecraft.getInstance(), 0, 1);
 				}
@@ -247,30 +261,41 @@ public class TranslationTask extends AsyncTask {
 		return data;
 	}
 	//a thread safe method that checks the chunks with no chance of crashing
-		public boolean checkChunks(World w, int minX, int minZ, int[][][] hitBox, int dx, int dz) {
-			if (dx == 0 && dz == 0)
-				return true;
+	public boolean checkChunks(World w, int minX, int minZ, int[][][] hitBox, int dx, int dz) {
+		if (dx == 0 && dz == 0)
+			return true;
 
-			int maxX = minX + hitBox.length;
-			int maxZ = minZ + hitBox[0].length;
-			
-			int minChunkX = minX >> 4;
-			int minChunkZ = minZ >> 4;
-			int maxChunkX = maxX >> 4;
-			int maxChunkZ = maxZ >> 4;
+		int maxX = minX + hitBox.length;
+		int maxZ = minZ + hitBox[0].length;
+		
+		int minChunkX = minX >> 4;
+		int minChunkZ = minZ >> 4;
+		int maxChunkX = maxX >> 4;
+		int maxChunkZ = maxZ >> 4;
 
-			for (int x = minChunkX; x <= maxChunkX; x++) {
-				for (int z = minChunkZ; z <= maxChunkZ; z++) {
-					if (!w.isChunkLoaded(x, z)) {
-						System.out.println("Chunks not loaded caught!");
-						return false;
-					}
+		for (int x = minChunkX; x <= maxChunkX; x++) {
+			for (int z = minChunkZ; z <= maxChunkZ; z++) {
+				if (!w.isChunkLoaded(x, z)) {
+					System.out.println("Chunks not loaded caught!");
+					return false;
 				}
 			}
-			return true;
 		}
-		
-		private Location getRelativeLocation(Location l, int dx, int dy, int dz){
-			return new Location(l.getWorld(), l.getX() + dx, l.getY() + dy, l.getZ() + dz, l.getYaw(), l.getPitch());
+		return true;
+	}
+	
+	private boolean canDrillBlock(Craft c,int oldID, int newID, World w, MovecraftLocation l){
+		try{
+			if(c.getType().getDrillHeadID() == oldID && c.getType().getDrilledBlocks().contains(newID)){
+				BlockBreakEvent event = new BlockBreakEvent(w.getBlockAt(l.getX(), l.getY(), l.getZ()), c.pilot);
+				Bukkit.getServer().getPluginManager().callEvent(event);
+				return !event.isCancelled();
+			}
+			return false;
+
+		} catch (Exception e){
+			c.pilot.sendMessage("Whoa there, your drill got stuck for a minute. If you try again it may go through.");
+			return false;
 		}
+	}
 }

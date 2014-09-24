@@ -1,4 +1,4 @@
-package net.countercraft.movecraft.async.translation;
+package net.countercraft.movecraft.task;
 
 import net.countercraft.movecraft.craft.Craft;
 
@@ -10,10 +10,10 @@ public class RepeatTryWorldJumpTask extends BukkitRunnable{
 	Craft c;
 	Player pilot;
 	Location locto;
-	boolean isEnteringPlanet;
 	String targetWorldName;
+	boolean repilot;
 	
-	public RepeatTryWorldJumpTask(Craft c, Player pilot, Location locto){
+	public RepeatTryWorldJumpTask(Craft c, Player pilot, Location locto, boolean repilot){
 		this.c = c;
 		this.pilot = pilot;
 		this.locto = locto;
@@ -25,7 +25,7 @@ public class RepeatTryWorldJumpTask extends BukkitRunnable{
 			if (!c.isProcessing()){
 				boolean success = false;
 				while(!success){
-					success = TeleportTask.worldJump(pilot, c, locto);
+					success = TeleportTask.worldJump(pilot, c, locto, repilot);
 					locto = new Location(locto.getWorld(), locto.getX() + 50, locto.getY(), locto.getZ());
 				}
 				c.setProcessingTeleport(false);

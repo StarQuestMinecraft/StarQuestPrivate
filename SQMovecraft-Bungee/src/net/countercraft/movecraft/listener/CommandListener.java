@@ -34,7 +34,7 @@ public class CommandListener implements Listener {
 	@EventHandler
 	public void onCommand( PlayerCommandPreprocessEvent e ) {
 
-		if ( e.getMessage().equalsIgnoreCase( "/release" ) ) {
+		if ( e.getMessage().equalsIgnoreCase( "/release") ) {
 			final Craft pCraft = CraftManager.getInstance().getCraftByPlayer( e.getPlayer() );
 
 			if ( pCraft != null ) {
@@ -61,7 +61,7 @@ public class CommandListener implements Listener {
 			final Craft pCraft = CraftManager.getInstance().getCraftByPlayer( e.getPlayer() );
 
 			if ( pCraft != null ) {
-				WarpUtils.leaveWarp(e.getPlayer(), pCraft);
+				WarpUtils.leaveWarp(e.getPlayer(), pCraft, true);
 			}
 
 			e.setCancelled( true );
@@ -78,7 +78,8 @@ public class CommandListener implements Listener {
 							c.playersRidingLock.acquire();
 							c.playersRidingShip.add(p.getUniqueId());
 							c.playersRidingLock.release();
-						} catch (Exception ex){
+						}
+						catch(Exception ex){
 							ex.printStackTrace();
 						}
 						p.sendMessage("You board a craft of type " + c.getType().getCraftName() + " under the command of captain " + c.pilot.getName() + ".");
@@ -95,16 +96,17 @@ public class CommandListener implements Listener {
 			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
 			if(crafts == null) return;
 			for(Craft c : crafts){
-				if(c.playersRidingShip.contains(p.getUniqueId())){
-					try{
-						c.playersRidingLock.acquire();
+				try{
+					c.playersRidingLock.acquire();
+					if(c.playersRidingShip.contains(p.getUniqueId())){
 						c.playersRidingShip.remove(p.getUniqueId());
 						c.playersRidingLock.release();
-					} catch (Exception ex){
-						ex.printStackTrace();
+						p.sendMessage("You get off the craft.");
+						return;
 					}
-					p.sendMessage("You get off the craft.");
-					return;
+					c.playersRidingLock.release();
+				}catch (Exception ex){
+					ex.printStackTrace();
 				}
 			}
 			p.sendMessage("You aren't on a craft, you have nothing to stop riding.");

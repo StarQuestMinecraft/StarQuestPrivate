@@ -3,8 +3,8 @@ package net.countercraft.movecraft.utils;
 import java.util.HashMap;
 import java.util.logging.Level;
 
-import net.countercraft.movecraft.bungee.RepeatTryServerJumpTask;
 import net.countercraft.movecraft.craft.Craft;
+import net.countercraft.movecraft.task.RepeatTryServerJumpTask;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -140,14 +140,14 @@ public class LocationUtils {
 	}
 	
 	public static double getAngleFromOriginTo(Location loc){
-		return Math.atan(loc.getZ() / loc.getX());
+		return Math.atan2(loc.getZ() , loc.getX());
 	}
 	
 	public static double getAngleFromGivenPointTo(Location point, Location loc){
 		if(point == null || loc == null) return 0;
 		double x = loc.getX() - point.getX();
 		double z = loc.getZ() - point.getZ();
-		return Math.atan(z / x);
+		return Math.atan2(z , x);
 	}
 	
 	public static Location getSpawnLocationFromAngle(double angle, Location origin, int distance){
