@@ -36,16 +36,15 @@ public class AutopilotRunTask extends BukkitRunnable{
 		autopilotingCrafts.add(c);
 		p.sendMessage(ChatColor.RED + "Autopilot Engaged.");
 	}
-	public static void stopAutopiloting(Craft c, Player p){
+	public static void stopAutopiloting(Craft c, Player p, ArrayList<MovecraftLocation> signLocations){
 		if (autopilotingCrafts.contains(c)){
 			autopilotingCrafts.remove(c);
 			if (p != null){
 				p.sendMessage(ChatColor.RED + "Your autopilot has turned off.");
 			}
 		}
-		for(MovecraftLocation l : c.getBlockList()){
+		for(MovecraftLocation l : signLocations){
 			Block b = c.getW().getBlockAt(l.getX(), l.getY(), l.getZ());
-			if (b.getType() == Material.WALL_SIGN){
 				Sign s = (Sign) b.getState();
 				if (s.getLine(0).equals(ChatColor.BLUE + "AUTOPILOT")){
 					if (s.getLine(1).equals(ChatColor.RED + "{ENGAGED}")){
@@ -55,7 +54,28 @@ public class AutopilotRunTask extends BukkitRunnable{
 						break;
 					}
 				}
+		}
+	}
+	public static void stopAutopiloting(Craft c, Player p){
+		if (autopilotingCrafts.contains(c)){
+			autopilotingCrafts.remove(c);
+			if (p != null){
+				p.sendMessage(ChatColor.RED + "Your autopilot has turned off.");
 			}
+		}
+		for(MovecraftLocation l : c.getBlockList()){
+			Block b = c.getW().getBlockAt(l.getX(), l.getY(), l.getZ());
+				if(b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN_POST){
+					Sign s = (Sign) b.getState();
+					if (s.getLine(0).equals(ChatColor.BLUE + "AUTOPILOT")){
+						if (s.getLine(1).equals(ChatColor.RED + "{ENGAGED}")){
+							s.setLine(1, ChatColor.GREEN + "{DISABLED}");
+							s.setLine(2, "");
+							s.update();
+							break;
+						}
+					}
+				}
 		}
 	}
 	public static void stopAutopiloting(Craft c, Player p, Sign s){

@@ -19,6 +19,7 @@
 package net.countercraft.movecraft.listener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,7 @@ import net.countercraft.movecraft.projectile.LaserBolt;
 import net.countercraft.movecraft.task.SneakMoveTask;
 import net.countercraft.movecraft.utils.BlockUtils;
 import net.countercraft.movecraft.utils.BoardingRampUtils;
+import net.countercraft.movecraft.utils.JammerUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.OfflinePilotUtils;
 import net.countercraft.movecraft.utils.WarpUtils;
@@ -70,8 +72,9 @@ import com.palmergames.bukkit.towny.regen.block.BlockLocation;
 import com.palmergames.bukkit.towny.tasks.ProtectionRegenTask;
 import com.palmergames.bukkit.util.ArraySort;
 
-public class PlayerListener implements Listener {
+public class EntityListener implements Listener {
 	private final HashMap<Player, BukkitTask> releaseEvents = new HashMap<Player, BukkitTask>();
+	private static int[] NON_EXPLODABLES = {1,4,7,14,15,16,21,22,24,41,42,45,48,49,56,57,64,71,73,74,98,101,133,155,159};
 /*	public void onPlayerDamaged( EntityDamageByEntityEvent e ) {
 		if ( e instanceof Player ) {
 			Player p = ( Player ) e;
@@ -97,7 +100,7 @@ public class PlayerListener implements Listener {
 			} else if(type  == Material.WALL_SIGN && isCraftSign(b)){
 				affectedBlocks.remove(i);
 				continue;
-			} else if(type  == Material.LAPIS_BLOCK ){
+			} else if(Arrays.binarySearch(NON_EXPLODABLES, b.getTypeId()) >= 0){
 				affectedBlocks.remove(i);
 				continue;
 			} else if(type == Material.STAINED_GLASS){
@@ -122,6 +125,10 @@ public class PlayerListener implements Listener {
 					}
 				}
 			}
+		}
+		for(Block b : affectedBlocks){
+			boolean yes = JammerUtils.checkForAndDisableJammer(b);
+			if(yes) break;
 		}
 		if(event.getEntity() == null){
 			for(Block b : affectedBlocks){
@@ -152,7 +159,6 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerJoin(PlayerJoinEvent event){
 		Player p = event.getPlayer();
-		Movecraft.playerIndex.put(p.getUniqueId(), p);
 		BungeePlayerHandler.onLogin(p);
 		OfflinePilotUtils.onPlayerLogin(p);
 		/*boolean isTeleported = false;
@@ -203,7 +209,6 @@ public class PlayerListener implements Listener {
 			}
 			
 			System.out.println("Removed player " + e.getPlayer().getName() + " with UUID " + e.getPlayer().getUniqueId() + " from index.");
-			Movecraft.playerIndex.remove(e.getPlayer().getUniqueId());
 	}
 	
 	@EventHandler
@@ -386,7 +391,7 @@ public class PlayerListener implements Listener {
 		while (!found && tries < 5){
 			tries++;
 			testblock = testblock.getRelative(BlockFace.DOWN);
-			if (testblock.getType() != Material.AIR){
+			if (testblock.getType().isSolid()){
 				found = true;
 				break;
 			}

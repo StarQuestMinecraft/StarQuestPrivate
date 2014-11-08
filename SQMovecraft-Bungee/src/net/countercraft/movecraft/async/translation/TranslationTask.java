@@ -90,6 +90,8 @@ public class TranslationTask extends AsyncTask {
 				data.setChunksFail(true);
 			}
 			
+			
+			
 			if(!data.failed()){
 				Location l = getCraft().pilot.getLocation();
 				int nx = l.getBlockX() + data.getDx();
@@ -97,6 +99,8 @@ public class TranslationTask extends AsyncTask {
 				if(AutopilotRunTask.autopilotingCrafts.contains(getCraft())){
 					if(!BorderUtils.isWithinBorderIncludePadding(nx, nz, 30)){
 						fail("You left the autopilot on a bit too long and are almost at the worldborder!");
+					} else if(LocationUtils.isBeingJammed(getCraft().getW(), getCraft().getMinX(), getCraft().getMinZ())){
+						fail("Your autopilot drive was interrupted by a jamming device! Be careful, you may be under attack!");
 					}
 				} else {
 					if (!BorderUtils.isWithinBorderIncludePadding(nx, nz)) {
@@ -144,8 +148,7 @@ public class TranslationTask extends AsyncTask {
 				
 				try{
 					for(int i = 0; i < getCraft().playersRidingShip.size(); i++) {
-						UUID uid = getCraft().playersRidingShip.get(i);
-						Player pTest = Movecraft.getPlayer(uid);
+						Player pTest = Movecraft.getPlayer(getCraft().playersRidingShip.get(i));
 						if(pTest != null){
 							if (MathUtils.playerIsWithinBoundingPolygon(getCraft().getHitBox(), getCraft().getMinX(), getCraft().getMinZ(), MathUtils.bukkit2MovecraftLoc(pTest.getLocation()))) {
 								Location tempLoc = pTest.getLocation();
@@ -239,7 +242,7 @@ public class TranslationTask extends AsyncTask {
 				RepeatTryServerJumpTask task2 = LocationUtils.checkStargateJump(p, c);
 				if (task2 != null) {
 					for(UUID u : c.playersRidingShip){
-						Player plr = Movecraft.playerIndex.get(u);
+						Player plr = Movecraft.getPlayer(u);
 						plr.playSound(plr.getLocation(), Sound.PORTAL_TRAVEL, 2.0F, 1.0F);
 					}
 					c.setProcessingTeleport(true);

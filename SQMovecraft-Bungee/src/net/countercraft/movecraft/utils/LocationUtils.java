@@ -1,9 +1,11 @@
 package net.countercraft.movecraft.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 
 import net.countercraft.movecraft.craft.Craft;
+import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.task.RepeatTryServerJumpTask;
 
 import org.bukkit.Bukkit;
@@ -256,5 +258,29 @@ public class LocationUtils {
 	}
 	public static String getSystem(){
 		return SYSTEM;
+	}
+	
+	public static ArrayList<Craft> getCraftsWithinRadius(World w, int X, int Z, int radius){
+		int compareValue = radius * radius;
+		Craft[] inWorld = CraftManager.getInstance().getCraftsInWorld(w);
+		ArrayList<Craft> retval = new ArrayList<Craft>();
+		for(Craft c : inWorld){
+			int xDiff = c.getMinX() - X;
+			int zDiff = c.getMinZ() - Z;
+			if(compareValue >= xDiff * xDiff + zDiff * zDiff){
+				retval.add(c);
+			}
+		}
+		return retval;
+	}
+	
+	public static boolean isBeingJammed(World w, int X, int Z){
+		ArrayList<Craft> crafts = getCraftsWithinRadius(w, X, Z, 100);
+		for(Craft c : crafts){
+			if(c.isJamming){
+				return true;
+			}
+		}
+		return false;
 	}
 }

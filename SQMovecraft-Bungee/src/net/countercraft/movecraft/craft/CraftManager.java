@@ -18,6 +18,7 @@
 package net.countercraft.movecraft.craft;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -31,7 +32,10 @@ import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.database.StarshipData;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.task.AutopilotRunTask;
+import net.countercraft.movecraft.utils.JammerUtils;
 import net.countercraft.movecraft.utils.MathUtils;
+import net.countercraft.movecraft.utils.MovecraftLocation;
+import net.countercraft.movecraft.utils.ShieldUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -101,7 +105,9 @@ public class CraftManager {
 			Bukkit.getScheduler().cancelTask(c.getMoveTaskId());
 			c.setMoveTaskId(-1);
 		}
-		
+		ArrayList<MovecraftLocation> signLocations = c.getSignLocations();
+		JammerUtils.disableJammer(c, signLocations);
+		ShieldUtils.enableShield(c, signLocations);
 		try{
 			if(!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))){
 				p.teleport(c.originalPilotLoc);
@@ -111,7 +117,7 @@ public class CraftManager {
 		}
 		
 		craftList.get( c.getW() ).remove( c );
-		AutopilotRunTask.stopAutopiloting(c, p);
+		AutopilotRunTask.stopAutopiloting(c, p, signLocations);
 		craftPlayerIndex.remove( p.getUniqueId() );
 		if (p.isOnline()) {
 			p.sendMessage( String.format( I18nSupport.getInternationalisedString( "Release - Craft has been released message" ) ) );

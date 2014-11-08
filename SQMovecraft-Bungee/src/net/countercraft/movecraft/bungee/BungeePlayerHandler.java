@@ -30,8 +30,21 @@ public class BungeePlayerHandler {
 //@formatting:off
 	public static ArrayList<PlayerTeleport> teleportQueue = new ArrayList<PlayerTeleport>();
 	static HashMap<UUID, Craft> pilotQueue = new HashMap<UUID, Craft>();
+	static Location spawnLocation;
 	
 	public static void onLogin(final Player p){
+		if(!p.hasPlayedBefore() && Bukkit.getServer().getServerName().equals("Regalis")){
+			System.out.println("New player on Regalis!");
+			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+				public void run(){
+					if(spawnLocation == null){
+						spawnLocation = Movecraft.getInstance().getDefaultSpawnLocation();
+					}
+					p.teleport(spawnLocation);
+				}
+			}, 1L);
+			return;
+		}
 		final UUID uid = p.getUniqueId();
 		for(int i = 0; i < teleportQueue.size(); i++){
 			final PlayerTeleport t = teleportQueue.get(i);

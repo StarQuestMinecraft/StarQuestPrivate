@@ -70,6 +70,7 @@ public class Craft {
 	public Location originalPilotLoc = null;
 	public Player pilot;
 	private boolean released = false;
+	public boolean isJamming = false;
 
 	public Craft(CraftType type, World world) {
 		this.type = type;
@@ -318,5 +319,16 @@ public class Craft {
 	
 	public boolean isReleased(){
 		return released;
+	}
+	
+	public ArrayList<MovecraftLocation> getSignLocations(){
+		ArrayList<MovecraftLocation> retval = new ArrayList<MovecraftLocation>();
+		for(MovecraftLocation l : getBlockList()){
+			int id = getW().getBlockTypeIdAt(l.getX(), l.getY(), l.getZ());
+			if(id == 68 || id == 63){
+				retval.add(l);
+			}
+		}
+		return retval;
 	}
 }

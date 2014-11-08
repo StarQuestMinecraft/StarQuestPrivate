@@ -17,6 +17,8 @@
 
 package net.countercraft.movecraft.utils;
 
+import org.bukkit.block.Block;
+
 import net.countercraft.movecraft.craft.Craft;
 
 /**
@@ -25,25 +27,29 @@ import net.countercraft.movecraft.craft.Craft;
 public class MapUpdateCommand {
 	private MovecraftLocation blockLocation;
 	private final MovecraftLocation newBlockLocation;
-	private final int typeID;
+	private final int newTypeID;
 	private final Rotation rotation;
 	private final Craft myCraft;
 	private boolean isLastUpdate;
 	private boolean drill;
+	private boolean finalBlockFragile;
+	private boolean initialBlockFragile;
+	Block block;
+	private net.minecraft.server.v1_7_R4.Chunk chunk = null;
 
-	public MapUpdateCommand( MovecraftLocation blockLocation, MovecraftLocation newBlockLocation, int typeID, Rotation rotation, Craft c) {
+	public MapUpdateCommand( MovecraftLocation blockLocation, MovecraftLocation newBlockLocation, int newTypeID, Rotation rotation, Craft c) {
 		this.blockLocation = blockLocation;
 		this.newBlockLocation = newBlockLocation;
-		this.typeID = typeID;
+		this.newTypeID = newTypeID;
 		this.rotation = rotation;
 		this.myCraft = c;
 		this.isLastUpdate = false;
 	}
 
-	public MapUpdateCommand( MovecraftLocation blockLocation, MovecraftLocation newBlockLocation, int typeID, Craft c, boolean drill) {
+	public MapUpdateCommand( MovecraftLocation blockLocation, MovecraftLocation newBlockLocation, int newTypeID, Craft c, boolean drill) {
 		this.blockLocation = blockLocation;
 		this.newBlockLocation = newBlockLocation;
-		this.typeID = typeID;
+		this.newTypeID = newTypeID;
 		this.rotation = Rotation.NONE;
 		this.myCraft = c;
 		this.isLastUpdate = false;
@@ -52,7 +58,7 @@ public class MapUpdateCommand {
 
 	public MapUpdateCommand( MovecraftLocation newBlockLocation, int typeID, Craft c, boolean drill) {
 		this.newBlockLocation = newBlockLocation;
-		this.typeID = typeID;
+		this.newTypeID = typeID;
 		this.rotation = Rotation.NONE;
 		this.myCraft = c;
 		this.isLastUpdate = false;
@@ -72,7 +78,7 @@ public class MapUpdateCommand {
 	}
 	
 	public int getTypeID() {
-		return typeID;
+		return newTypeID;
 	}
 
 	public MovecraftLocation getOldBlockLocation() {
@@ -89,5 +95,34 @@ public class MapUpdateCommand {
 	
 	public boolean shouldDrill(){
 		return drill;
+	}
+	
+	public boolean isFinalBlockFragile(){
+		return finalBlockFragile;
+	}
+	
+	public void setFinalBlockFragile(boolean fragile){
+		finalBlockFragile = fragile;
+	}
+	
+	public boolean isInitialBlockFragile(){
+		return initialBlockFragile;
+	}
+	
+	public void setInitialBlockFragile(boolean fragile){
+		initialBlockFragile = fragile;
+	}
+	
+	public void setChunk(net.minecraft.server.v1_7_R4.Chunk chunk){
+		this.chunk = chunk;
+	}
+	public net.minecraft.server.v1_7_R4.Chunk getChunk(){
+		return chunk;
+	}
+	public Block getBlock(){
+		return block;
+	}
+	public void setBlock(Block b){
+		block = b;
 	}
 }

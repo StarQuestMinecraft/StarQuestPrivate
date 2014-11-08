@@ -26,7 +26,7 @@ public class WarpUtils {
 	public static void enterWarp(Player p, Craft c){
 		Location l = p.getLocation();
 		for(UUID u : c.playersRidingShip){
-			Player plr = Movecraft.playerIndex.get(u);
+			Player plr = Movecraft.getPlayer(u);
 			plr.playSound(plr.getLocation(), Sound.PORTAL_TRAVEL, 2.0F, 1.0F);
 		}
 		World w = getEnd(p.getWorld());
@@ -43,7 +43,7 @@ public class WarpUtils {
 			if(w2 == null) return;
 			Location targ = new Location(w2, c.warpCoordsX, l.getY(), c.warpCoordsZ);
 			for(int i = 0; i < c.playersRidingShip.size(); i++){
-				Player plr = Movecraft.playerIndex.get(c.playersRidingShip.get(i));
+				Player plr = Movecraft.getPlayer(c.playersRidingShip.get(i));
 				plr.playSound(plr.getLocation(), Sound.PORTAL_TRAVEL, 2.0F, 1.0F);
 			}
 			RepeatTryWorldJumpTask task = new RepeatTryWorldJumpTask(c, p, targ, repilot);
@@ -51,6 +51,11 @@ public class WarpUtils {
 		}
 	}
 	public static void translate(Craft c, int x, int y, int z){
+		if(LocationUtils.isBeingJammed(getNormal(c.getW()), c.getMinX(), c.getMinZ())){
+			leaveWarp(c.pilot, c, true);
+			c.pilot.sendMessage("Your warp field was disrupted by a jamming device!");
+			return;
+		}
 		c.warpCoordsX =  c.warpCoordsX + x;
 		c.warpCoordsZ = c.warpCoordsZ + z;
 		Player p = c.pilot;

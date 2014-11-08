@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
-import net.countercraft.movecraft.listener.PlayerListener;
+import net.countercraft.movecraft.listener.EntityListener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -75,7 +75,7 @@ public class PlayerTeleport {
 		if(!isBedspawn){
 			p.teleport(l);
 		} else {
-			if (PlayerListener.checkForNotAir(l)){
+			if (EntityListener.checkForNotAir(l)){
 				p.teleport(l);
 			} else {
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){

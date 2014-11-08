@@ -44,6 +44,7 @@ import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.MovingPartUtils;
 import net.countercraft.movecraft.utils.Rotation;
+import net.countercraft.movecraft.utils.ShieldUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -176,6 +177,10 @@ public class AsyncManager extends BukkitRunnable {
 											break;
 										}
 									}
+								}
+								
+								if(ShieldUtils.isShieldSign(s)){
+									ShieldUtils.disableShield(s, c);
 								}
 							}
 						}

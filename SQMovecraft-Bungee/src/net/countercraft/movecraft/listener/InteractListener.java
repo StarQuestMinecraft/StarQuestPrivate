@@ -30,6 +30,8 @@ import net.countercraft.movecraft.task.AutopilotRunTask;
 import net.countercraft.movecraft.task.WarpStartTask;
 import net.countercraft.movecraft.utils.BoardingRampUtils;
 import net.countercraft.movecraft.utils.BomberUtils;
+import net.countercraft.movecraft.utils.JammerUtils;
+import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.Rotation;
@@ -58,7 +60,7 @@ public class InteractListener implements Listener {
 
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Material m = event.getClickedBlock().getType();
-			if (m.equals(Material.SIGN_POST) || m.equals(Material.WALL_SIGN)) {
+			if (m == Material.SIGN_POST || m == Material.WALL_SIGN) {
 				onSignRightClick(event);
 			}
 			if (event.getItem() != null && event.getItem().getType() == Material.BONE) {
@@ -127,7 +129,6 @@ public class InteractListener implements Listener {
 										pCraft.extendLandingGear();
 										event.getPlayer().sendMessage(String.format(I18nSupport.getInternationalisedString("Player- Craft has been released")));
 									}
-	
 								event.setCancelled(true);
 								return;
 							} else {
@@ -224,6 +225,10 @@ public class InteractListener implements Listener {
 				Craft c = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());
 				if (c != null) {
 					if (!AutopilotRunTask.autopilotingCrafts.contains(c)) {
+						if(LocationUtils.isBeingJammed(c.getW(), c.getMinX(), c.getMinZ())){
+							c.pilot.sendMessage("Your autopilot drive is being jammed and cannot start.");
+							return;
+						}
 						sign.setLine(1, ChatColor.RED + "{ENGAGED}");
 						sign.update();
 						AutopilotRunTask.startAutopiloting(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer());
@@ -291,7 +296,16 @@ public class InteractListener implements Listener {
 			sign.setLine(1, ChatColor.AQUA + "Drive");
 			sign.setLine(2, ChatColor.GREEN + "Disabled.");
 			sign.update();
+		} else if(sign.getLine(0).equals("[jammer]")){
+			JammerUtils.setupJammerSign(sign, event.getPlayer());
+		} else if(JammerUtils.isJammerSign(sign)){
+			JammerUtils.toggleJammer(sign, event.getPlayer());
 		} else if (sign.getLine(2).equals(ChatColor.GREEN + "Disabled.")) {
+			Craft c = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());
+			if(LocationUtils.isBeingJammed(c.getW(), c.getMinX(), c.getMinZ())){
+				c.pilot.sendMessage("Your slipdrive is being jammed and cannot start.");
+				return;
+			}
 			new WarpStartTask(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer(), sign);
 		} else if (sign.getLine(2).equals(ChatColor.BLUE + "Stable Slip.")) {
 			WarpUtils.leaveWarp(event.getPlayer(), CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), true);

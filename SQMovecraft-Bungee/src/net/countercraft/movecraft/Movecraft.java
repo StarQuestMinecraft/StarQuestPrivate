@@ -39,9 +39,9 @@ import net.countercraft.movecraft.database.FileDatabase;
 import net.countercraft.movecraft.database.StarshipDatabase;
 import net.countercraft.movecraft.listener.BlockListener;
 import net.countercraft.movecraft.listener.CommandListener;
+import net.countercraft.movecraft.listener.EntityListener;
 import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.listener.PartListener;
-import net.countercraft.movecraft.listener.PlayerListener;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.metrics.MovecraftMetrics;
 import net.countercraft.movecraft.task.AutopilotRunTask;
@@ -65,8 +65,6 @@ public class Movecraft extends JavaPlugin {
 	private Logger logger;
 	private boolean shuttingDown;
 	private StarshipDatabase database;
-	
-	public static HashMap<UUID, Player> playerIndex = new HashMap<UUID, Player>();
 	
 	public void onDisable() {
 		// Process the storage crates to disk
@@ -164,7 +162,7 @@ public class Movecraft extends JavaPlugin {
 			getServer().getPluginManager().registerEvents( new InteractListener(), this );
 			getServer().getPluginManager().registerEvents( new CommandListener(), this );
 			getServer().getPluginManager().registerEvents( new BlockListener(), this );
-			getServer().getPluginManager().registerEvents( new PlayerListener(), this );
+			getServer().getPluginManager().registerEvents( new EntityListener(), this );
 			getServer().getPluginManager().registerEvents( new PartListener(), this );
 			
 			this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -260,6 +258,14 @@ public class Movecraft extends JavaPlugin {
 		return new Bedspawn(null, server, world, X, Y, Z);
 	}
 	
+	public Location getDefaultSpawnLocation(){
+		int X = getConfig().getInt("defaultBedspawnX");
+		int Y = getConfig().getInt("defaultBedspawnY");
+		int Z = getConfig().getInt("defaultBedspawnZ");
+		String world = getConfig().getString("defaultBedspawnWorld");
+		return new Location(Bukkit.getServer().getWorld(world), X, Y, Z);
+	}
+	
 	//returns the caller of the method that called this method.
 	public static String getMethodCaller(){
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
@@ -269,13 +275,6 @@ public class Movecraft extends JavaPlugin {
 	
 	//gets the player with given UUID. Attempts to resolve from cache, if it cannot it gets from bukkit.
 	public static Player getPlayer(UUID u){
-		Player p = playerIndex.get(u);
-		if(p == null){
-			p = Bukkit.getPlayer(u);
-		}
-		if(p == null){
-			return null;
-		}
-		return p;
+		return Bukkit.getPlayer(u);
 	}
 }
