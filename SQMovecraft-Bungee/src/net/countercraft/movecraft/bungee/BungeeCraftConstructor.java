@@ -25,7 +25,7 @@ import org.bukkit.inventory.InventoryHolder;
 public class BungeeCraftConstructor {
 	
 	//calculate for destination obstructions and then build the craft
-	public static void calculateLocationAndBuild(boolean slip, String world, int tX, int tY, int tZ, String oldworld, int oldX, int oldY, int oldZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> bedSpawnPlayersOnShip, final ArrayList<PlayerTeleport> playersOnShip){
+	public static void calculateLocationAndBuild(boolean slip, String world, int tX, int tY, int tZ, String oldworld, int oldX, int oldY, int oldZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> bedSpawnPlayersOnShip, final ArrayList<ServerjumpTeleport> playersOnShip){
 		World w = Movecraft.getInstance().getServer().getWorld(world);
 		Location targetLoc = new Location(w, tX, tY, tZ);
 		Location oldLoc = new Location(w, oldX, oldY, oldZ);
@@ -79,7 +79,7 @@ public class BungeeCraftConstructor {
 		ArrayList<UUID> playersOnShipString = new ArrayList<UUID>();
 		
 		//modify the players' locations for collision detection and also add them to the string list
-		for(PlayerTeleport t : playersOnShip){
+		for(ServerjumpTeleport t : playersOnShip){
 			t.x = t.x + dX;
 			t.y = t.y + dY;
 			t.z = t.z + dZ;
@@ -93,8 +93,8 @@ public class BungeeCraftConstructor {
 		return BorderUtils.isWithinBorder(tX, tZ);
 	}
 	
-	private static void warpPlayers(ArrayList<PlayerTeleport> playersOnShip) {
-		for(final PlayerTeleport t : playersOnShip){
+	private static void warpPlayers(ArrayList<ServerjumpTeleport> playersOnShip) {
+		for(final ServerjumpTeleport t : playersOnShip){
 			Player p = Movecraft.getPlayer(t.uuid);
 			if (p != null && p.isOnline()) {
 				t.execute();

@@ -20,7 +20,7 @@ public class Bedspawn {
 	public String world;
 	public int x, y, z;
 	public static String driver = "com.mysql.jdbc.Driver";
-	public static String hostname = "localhost";
+	public static String hostname = "play.starquestminecraft.com";
 	public static String port = "3306";
 	public static String db_name = "minecraft";
 	public static String username = "minecraft";

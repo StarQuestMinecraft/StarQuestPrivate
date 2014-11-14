@@ -35,6 +35,7 @@ import net.countercraft.movecraft.bungee.BungeeListener;
 import net.countercraft.movecraft.bungee.PingUtils;
 import net.countercraft.movecraft.config.Settings;
 import net.countercraft.movecraft.craft.CraftManager;
+import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.database.FileDatabase;
 import net.countercraft.movecraft.database.StarshipDatabase;
 import net.countercraft.movecraft.listener.BlockListener;
@@ -177,6 +178,7 @@ public class Movecraft extends JavaPlugin {
 			new AutopilotRunTask();
 			
 			Bedspawn.setUp();
+			CryoSpawn.setUp();
 			//PingUtils.setUp();
 			
 			database = new FileDatabase();

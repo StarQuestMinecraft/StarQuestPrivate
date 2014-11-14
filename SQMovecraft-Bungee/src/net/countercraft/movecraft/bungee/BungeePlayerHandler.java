@@ -48,7 +48,7 @@ public class BungeePlayerHandler {
 		final UUID uid = p.getUniqueId();
 		for(int i = 0; i < teleportQueue.size(); i++){
 			final PlayerTeleport t = teleportQueue.get(i);
-			if(uid.equals(t.uuid)){
+			if(uid.equals(t.getUUID())){
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 					public void run(){
 						t.execute();
@@ -93,6 +93,35 @@ public class BungeePlayerHandler {
 			e.printStackTrace();
 		}
 		p.sendPluginMessage(Movecraft.getInstance(), "BungeeCord", b.toByteArray());
+	}
+	
+	public static void sendDeath(Player p, String targetserver) {
+		sendPlayerDeathData(p, targetserver);
+		sendPlayer(p, targetserver);
+	}
+	
+	private static void sendPlayerDeathData(Player p, String targetserver){
+		ByteArrayOutputStream b = new ByteArrayOutputStream();
+		DataOutputStream out = new DataOutputStream(b);
+		// send player data of where they should be teleported to
+		try {
+			out.writeUTF("Forward");
+			out.writeUTF(targetserver);
+			out.writeUTF("movecraftDeath");
+
+			ByteArrayOutputStream msgbytes = new ByteArrayOutputStream();
+			DataOutputStream msgout = new DataOutputStream(msgbytes);
+
+			msgout.writeUTF(p.getUniqueId().toString());
+
+			byte[] outbytes = msgbytes.toByteArray();
+			out.writeShort(outbytes.length);
+			out.write(outbytes);
+			p.sendPluginMessage(Movecraft.getInstance(), "BungeeCord", b.toByteArray());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private static void sendPlayerCoordinateData(Player p, String targetserver, String world, int X, int Y, int Z, boolean isBedspawn) {
@@ -157,7 +186,7 @@ public class BungeePlayerHandler {
 
 			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
 
-			PlayerTeleport t = recievePlayerTeleport(msgin);
+			ServerjumpTeleport t = recievePlayerTeleport(msgin);
 			
 			if(t != null){
 				if (Movecraft.getPlayer(t.uuid) != null) {
@@ -171,8 +200,31 @@ public class BungeePlayerHandler {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void recievePlayerDeath(DataInputStream in) {
+		try {
+			short len = in.readShort();
+			byte[] msgbytes = new byte[len];
+			in.readFully(msgbytes);
 
-	public static PlayerTeleport recievePlayerTeleport(DataInputStream msgin) throws IOException {
+			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
+
+			DeathTeleport t = new DeathTeleport(UUID.fromString(msgin.readUTF()));
+			
+			if(t != null){
+				if (Movecraft.getPlayer(t.getUUID()) != null) {
+					t.execute();
+				} else {
+					teleportQueue.add(t);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static ServerjumpTeleport recievePlayerTeleport(DataInputStream msgin) throws IOException {
 		try{
 			String worldname = msgin.readUTF();
 			UUID uuid = UUID.fromString(msgin.readUTF());
@@ -191,7 +243,7 @@ public class BungeePlayerHandler {
 				coordY = loc.getBlockY();
 				coordZ = loc.getBlockZ();
 			}
-			PlayerTeleport t = new PlayerTeleport(uuid, worldname, coordX, coordY, coordZ, yaw, pitch, playerKnap, gamemode, isBedspawn);
+			ServerjumpTeleport t = new ServerjumpTeleport(uuid, worldname, coordX, coordY, coordZ, yaw, pitch, playerKnap, gamemode, isBedspawn);
 			return t;
 		} catch (EOFException e){
 			System.out.println("EOFException in movecraft: told to recieve player teleport but none found!");
@@ -230,7 +282,7 @@ public class BungeePlayerHandler {
 	public static PlayerTeleport teleportFromUUID(UUID u) {
 
 		for (PlayerTeleport t : teleportQueue) {
-			if (t.uuid.equals(u)) {
+			if (t.getUUID().equals(u)) {
 				return t;
 			}
 		}

@@ -21,14 +21,24 @@ package net.countercraft.movecraft.listener;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
 
+
+
+
+
+import net.countercraft.movecraft.cryo.CryoSpawn;
+
+import org.bukkit.Material;
+import org.bukkit.block.Sign;
 //import net.countercraft.movecraft.items.StorageChestItem;
 //import net.countercraft.movecraft.localisation.I18nSupport;
 //import net.countercraft.movecraft.utils.MovecraftLocation;
 //import org.bukkit.Location;
 //import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 //import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 //import org.bukkit.event.block.Action;
 //import org.bukkit.event.block.BlockBreakEvent;
 //import org.bukkit.event.block.BlockPlaceEvent;
@@ -91,28 +101,18 @@ public class BlockListener implements Listener {
 			}
 		}
 	}*/
-
-	/*@EventHandler(priority = EventPriority.HIGHEST)
+	
+	//#CRYO
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled=true)
 	public void onBlockBreak( final BlockBreakEvent e ) {
-
-		if ( e.isCancelled() ) {
-			return;
-		}
-		if ( e.getBlock().getTypeId() == 33 && e.getBlock().getData() == ( ( byte ) 6 ) ) {
-			Location l = e.getBlock().getLocation();
-			MovecraftLocation l1 = new MovecraftLocation( l.getBlockX(), l.getBlockY(), l.getBlockZ() );
-			for ( ItemStack i : StorageChestItem.getInventoryOfCrateAtLocation( l1, e.getBlock().getWorld() ).getContents() ) {
-				if ( i != null ) {
-					e.getBlock().getWorld().dropItemNaturally( e.getBlock().getLocation(), i );
-				}
+		
+		if(e.getBlock().getType() == Material.WALL_SIGN){
+			Sign s = ((Sign) e.getBlock().getState());
+			if(s.getLine(0).equals(CryoSpawn.KEY_LINE)){
+				CryoSpawn.removePodSpawn(s);
+				e.getPlayer().sendMessage("CryoPod spawn removed.");
 			}
-			StorageChestItem.removeInventoryAtLocation( e.getBlock().getWorld(), l1 );
-			e.setCancelled( true );
-			e.getBlock().setType( Material.AIR );
-			e.getBlock().getLocation().getWorld().dropItemNaturally( e.getBlock().getLocation(), new StorageChestItem().getItemStack() );
-
-
 		}
-	}*/
+	}
 
 }

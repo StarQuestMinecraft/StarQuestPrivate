@@ -24,6 +24,7 @@ import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
+import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.projectile.Torpedo;
 import net.countercraft.movecraft.task.AutopilotRunTask;
@@ -72,9 +73,6 @@ public class InteractListener implements Listener {
 		} else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
 			Material m = event.getClickedBlock().getType();
 			if (m.equals(Material.SIGN_POST) || m.equals(Material.WALL_SIGN)) {
-				if (event.getClickedBlock() == null) {
-					return;
-				}
 				Sign sign = (Sign) event.getClickedBlock().getState();
 				String signText = sign.getLine(0);
 
@@ -242,6 +240,8 @@ public class InteractListener implements Listener {
 			} else if (sign.getLine(1).equals(ChatColor.RED + "{ENGAGED}")) {
 				AutopilotRunTask.stopAutopiloting(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer(), sign);
 			}
+		} else if (sign.getLine(0).equalsIgnoreCase("[cryopod]")){
+			CryoSpawn.setUpCryoTube(sign, event.getPlayer().getName());
 		} else if (sign.getLine(0).equalsIgnoreCase("[boardingramp]")) {
 			sign.setLine(0, ChatColor.RED + "Boarding Ramp");
 			sign.setLine(1, "{" + ChatColor.GREEN + "SHUT" + ChatColor.BLACK + "}");

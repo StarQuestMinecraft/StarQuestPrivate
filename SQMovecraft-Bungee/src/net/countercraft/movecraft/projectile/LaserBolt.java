@@ -55,6 +55,8 @@ public class LaserBolt extends Projectile{
 		blocks.remove(myBlock);
 	}
 	
+	//region info __global__ -w 
+	
 	private BlockFace getOppsoiteBlockFace(BlockFace face){
 		switch(face){
 		case NORTH:

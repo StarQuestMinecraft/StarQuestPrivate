@@ -30,6 +30,7 @@ import net.countercraft.movecraft.bungee.BungeePlayerHandler;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
+import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.projectile.LaserBolt;
 import net.countercraft.movecraft.task.SneakMoveTask;
 import net.countercraft.movecraft.utils.BlockUtils;
@@ -40,6 +41,7 @@ import net.countercraft.movecraft.utils.OfflinePilotUtils;
 import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
@@ -55,6 +57,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -74,7 +77,8 @@ import com.palmergames.bukkit.util.ArraySort;
 
 public class EntityListener implements Listener {
 	private final HashMap<Player, BukkitTask> releaseEvents = new HashMap<Player, BukkitTask>();
-	private static int[] NON_EXPLODABLES = {1,4,7,14,15,16,21,22,24,41,42,45,48,49,56,57,64,71,73,74,98,101,133,155,159};
+	private static int[] NON_EXPLODABLES = {1,4,7,14,15,16,21,22,24,41,42,45,48,49,56,57,64,71,73,74,98,133,155,159};
+	//private static int[] TORPEDO_EXCEPTIONS = {42, 101, 167};
 /*	public void onPlayerDamaged( EntityDamageByEntityEvent e ) {
 		if ( e instanceof Player ) {
 			Player p = ( Player ) e;
@@ -101,6 +105,12 @@ public class EntityListener implements Listener {
 				affectedBlocks.remove(i);
 				continue;
 			} else if(Arrays.binarySearch(NON_EXPLODABLES, b.getTypeId()) >= 0){
+				/*if(event.getEntity() != null){
+					if(!(Arrays.binarySearch(TORPEDO_EXCEPTIONS, b.getTypeId()) >= 0)){
+						affectedBlocks.remove(i);
+					}
+					
+				}*/
 				affectedBlocks.remove(i);
 				continue;
 			} else if(type == Material.STAINED_GLASS){
@@ -191,13 +201,11 @@ public class EntityListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onPlayerDeath( EntityDamageByEntityEvent e ) {  // changed to death so when you shoot up an airship and hit the pilot, it still sinks
-		if ( e.getEntity() instanceof Player ) {
+	public void onPlayerDeath( PlayerDeathEvent e ) {  // changed to death so when you shoot up an airship and hit the pilot, it still sinks
 			Player p = ( Player ) e.getEntity();
 			Craft c = CraftManager.getInstance().getCraftByPlayer( p );
 			if (c != null)
 			CraftManager.getInstance().removeCraft( CraftManager.getInstance().getCraftByPlayer( p ) );
-		}
 	}
 	@EventHandler
 	public void onPlayerQuit( PlayerQuitEvent e ) {  // changed to death so when you shoot up an airship and hit the pilot, it still sinks
@@ -318,33 +326,45 @@ public class EntityListener implements Listener {
 			Bedspawn.saveBedspawn(b);
 		}
 		event.getPlayer().sendMessage("Bedspawn updated. If this bed is on a ship, make sure you release and repilot your ship before flying it away.");
+		event.getPlayer().sendMessage(ChatColor.RED + "Bedspawns are DEPRECATED, they will be removed soon!");
+		event.getPlayer().sendMessage(ChatColor.RED + "Please use a cryopod instead! " + ChatColor.GOLD + " http://tinyurl.com/sqcryo");
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerRespawn(final PlayerRespawnEvent event){
-		Bedspawn b = Bedspawn.getBedspawn(event.getPlayer().getName());
-		if(b == null) b = Bedspawn.DEFAULT;
-		System.out.println(b);
-		System.out.println("Player Current Server: " + Bukkit.getServerName());
-		if(!b.server.equals(Bukkit.getServerName())){
-			System.out.println("server name and target server name aren't equal, teleporting.");
-			final Bedspawn b2 = b;
-			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
-				public void run(){
-					BungeePlayerHandler.sendPlayer(event.getPlayer(), b2.server, b2.world, b2.x, b2.y, b2.z);
-				}
-			}, 3L);
+		if(CryoSpawn.respawnPlayer(event, event.getPlayer())){
+			return;
 		} else {
-			Location loc2 = new Location(Bukkit.getWorld(b.world), b.x, b.y, b.z);
-			if (checkForNotAir(loc2)){
-				event.setRespawnLocation(loc2);
-			} else {
+			Bedspawn b = Bedspawn.getBedspawn(event.getPlayer().getName());
+			if(b == null){
+				b = Bedspawn.DEFAULT;
+			}
+			/*else {
+				event.getPlayer().sendMessage(ChatColor.RED + "Bedspawns are DEPRECATED, they will be removed soon!");
+				event.getPlayer().sendMessage(ChatColor.RED + "Please use a cryopod instead! " + ChatColor.GOLD + " http://tinyurl.com/sqcryo");
+			}*/
+			System.out.println(b);
+			System.out.println("Player Current Server: " + Bukkit.getServerName());
+			if(!b.server.equals(Bukkit.getServerName())){
+				System.out.println("server name and target server name aren't equal, teleporting.");
+				final Bedspawn b2 = b;
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 					public void run(){
-						BungeePlayerHandler.sendPlayer(event.getPlayer(), Bedspawn.DEFAULT.server, Bedspawn.DEFAULT.world, Bedspawn.DEFAULT.x, Bedspawn.DEFAULT.y, Bedspawn.DEFAULT.z);
+						BungeePlayerHandler.sendPlayer(event.getPlayer(), b2.server, b2.world, b2.x, b2.y, b2.z);
 					}
-				}, 20L);
-				Bedspawn.deleteBedspawn(event.getPlayer().getName());
+				}, 3L);
+			} else {
+				Location loc2 = new Location(Bukkit.getWorld(b.world), b.x, b.y, b.z);
+				if (checkForNotAir(loc2)){
+					event.setRespawnLocation(loc2);
+				} else {
+					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+						public void run(){
+							BungeePlayerHandler.sendPlayer(event.getPlayer(), Bedspawn.DEFAULT.server, Bedspawn.DEFAULT.world, Bedspawn.DEFAULT.x, Bedspawn.DEFAULT.y, Bedspawn.DEFAULT.z);
+						}
+					}, 20L);
+					Bedspawn.deleteBedspawn(event.getPlayer().getName());
+				}
 			}
 		}
 	}

@@ -29,6 +29,7 @@ import java.util.logging.Level;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
+import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.database.StarshipData;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.task.AutopilotRunTask;
@@ -107,7 +108,8 @@ public class CraftManager {
 		}
 		ArrayList<MovecraftLocation> signLocations = c.getSignLocations();
 		JammerUtils.disableJammer(c, signLocations);
-		ShieldUtils.enableShield(c, signLocations);
+		//ShieldUtils.enableShield(c, signLocations);
+		CryoSpawn.updatePodSpawns(c.getW(), signLocations);
 		try{
 			if(!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))){
 				p.teleport(c.originalPilotLoc);

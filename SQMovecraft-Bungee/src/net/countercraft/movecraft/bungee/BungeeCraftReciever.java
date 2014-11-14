@@ -99,7 +99,7 @@ public class BungeeCraftReciever {
         		}
         	}
         	ArrayList<String> bedspawnNames = new ArrayList<String>();
-        	ArrayList<PlayerTeleport> playersOnShip = new ArrayList<PlayerTeleport>();
+        	ArrayList<ServerjumpTeleport> playersOnShip = new ArrayList<ServerjumpTeleport>();
         	if(affectPlayers){
 	        	int bedspawnsLength = msgin.readInt();
 	        	for(int i = 0; i < bedspawnsLength; i++){
@@ -108,7 +108,7 @@ public class BungeeCraftReciever {
 	        	}
 	        	int playersLength = msgin.readInt();
 	        	for(int i = 0; i < playersLength; i++){
-	        		PlayerTeleport t = BungeePlayerHandler.recievePlayerTeleport(msgin);
+	        		ServerjumpTeleport t = BungeePlayerHandler.recievePlayerTeleport(msgin);
 	        		if(t != null){
 	        			playersOnShip.add(t);
 	        		}
