@@ -111,11 +111,7 @@ public class MapUpdateManager extends BukkitRunnable {
                 int origType=b.getTypeId();
                 
 	            if(m.shouldDrill()){
-	            	World wrld = m.getCraft().getW();
-	            	Location l = b.getLocation().add(0.5, 1.5, 0.5);
-	            	for(ItemStack i : b.getDrops()){
-	            		wrld.dropItem(l, i);
-	            	}
+            		m.getCraft().pilot.getInventory().addItem(b.getDrops().toArray(new ItemStack[1]));
 	            }
 	            
 	        	//don't blank out block if it's already air, or if blocktype will not be changed

@@ -318,15 +318,15 @@ public class EntityListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerSleep(PlayerBedLeaveEvent event){
 		//if someone sleeps, update their bedspawn.
-		Location l = getValidLocationToRespawn(event.getBed().getLocation().getBlock());
-		Bedspawn b = new Bedspawn(event.getPlayer().getName(), Bukkit.getServerName(), l.getWorld().getName(), l.getBlockX(), l.getBlockY(), l.getBlockZ());
+		//Location l = getValidLocationToRespawn(event.getBed().getLocation().getBlock());
+		/*Bedspawn b = new Bedspawn(event.getPlayer().getName(), Bukkit.getServerName(), l.getWorld().getName(), l.getBlockX(), l.getBlockY(), l.getBlockZ());
 		if(!Bedspawn.hasKey(b)){
 			Bedspawn.saveNewBedspawn(b);
 		} else {
 			Bedspawn.saveBedspawn(b);
-		}
-		event.getPlayer().sendMessage("Bedspawn updated. If this bed is on a ship, make sure you release and repilot your ship before flying it away.");
-		event.getPlayer().sendMessage(ChatColor.RED + "Bedspawns are DEPRECATED, they will be removed soon!");
+		}*/
+		//event.getPlayer().sendMessage("Bedspawn updated. If this bed is on a ship, make sure you release and repilot your ship before flying it away.");
+		event.getPlayer().sendMessage(ChatColor.RED + "Bedspawns are now disabled on starquest!");
 		event.getPlayer().sendMessage(ChatColor.RED + "Please use a cryopod instead! " + ChatColor.GOLD + " http://tinyurl.com/sqcryo");
 	}
 	

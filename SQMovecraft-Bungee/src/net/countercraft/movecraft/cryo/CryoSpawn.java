@@ -271,8 +271,8 @@ public class CryoSpawn {
 		return false;
 	}
 	
-	private static String signTrim(String s){
-		if(s.length() < 16) return s;
+	public static String signTrim(String s){
+		if(s.length() <= 15) return s;
 		else return s.substring(0, 15);
 	}
 	

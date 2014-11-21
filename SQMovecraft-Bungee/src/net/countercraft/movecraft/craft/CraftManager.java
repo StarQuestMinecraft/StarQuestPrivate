@@ -108,7 +108,8 @@ public class CraftManager {
 		}
 		ArrayList<MovecraftLocation> signLocations = c.getSignLocations();
 		JammerUtils.disableJammer(c, signLocations);
-		//ShieldUtils.enableShield(c, signLocations);
+		System.out.println((p == null) ? ("P is null!") : ("P is not null!"));
+		ShieldUtils.enableShield(c, signLocations, p);
 		CryoSpawn.updatePodSpawns(c.getW(), signLocations);
 		try{
 			if(!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))){

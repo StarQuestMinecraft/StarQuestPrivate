@@ -289,7 +289,7 @@ public class Craft {
 									public void run() {
 										processing.set(false);
 									}
-								}, 7L);
+								}, 10L);
 							}
 						}
 					}

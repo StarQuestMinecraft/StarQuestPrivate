@@ -26,6 +26,7 @@ import net.countercraft.movecraft.craft.CraftType;
 
 
 import net.countercraft.movecraft.cryo.CryoSpawn;
+import net.countercraft.movecraft.utils.ShieldUtils;
 
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
@@ -62,7 +63,11 @@ public class BlockListener implements Listener {
 						event.setLine(1, str);
 					}
 				}
+				return;
 			}
+		}
+		if(event.getLine(0).equalsIgnoreCase("[shield]")){
+			ShieldUtils.setupShieldSign(event);
 		}
 	}
 	
@@ -111,6 +116,11 @@ public class BlockListener implements Listener {
 			if(s.getLine(0).equals(CryoSpawn.KEY_LINE)){
 				CryoSpawn.removePodSpawn(s);
 				e.getPlayer().sendMessage("CryoPod spawn removed.");
+			} else if (ShieldUtils.isShieldSign(s)){
+				if(s.getLine(1).equals(ShieldUtils.ENABLED)){
+					ShieldUtils.removeShield(s);
+					e.getPlayer().sendMessage("Removed shield!");
+				}
 			}
 		}
 	}

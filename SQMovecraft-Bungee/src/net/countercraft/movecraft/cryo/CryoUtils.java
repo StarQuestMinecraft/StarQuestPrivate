@@ -33,19 +33,15 @@ public class CryoUtils {
 		byte primaryWindowColor = -1;
 		
 		for(Block b : windows){
-			System.out.println("Window: " + b.getType());
 			if(b.getType() == Material.STAINED_GLASS){
 				if(primaryWindowColor > 0){
 					if(b.getData() != primaryWindowColor) return false;
 				} else {
 					primaryWindowColor = b.getData();
-					System.out.println("Primary window color: " + b.getData());
 				}
 			} else if(b.getType() == Material.WOODEN_DOOR){
 				continue;
 			} else {
-				System.out.println("Returning false: window was not door or glass!");
-				System.out.println(b.getLocation());
 				return false;
 			}
 		}
@@ -53,7 +49,6 @@ public class CryoUtils {
 		for(Block b : frame){
 			if(primaryFrameType == Material.AIR){
 				primaryFrameType = b.getType();
-				System.out.println("Primary frame type: " + b.getType());
 			}
 			if(primaryFrameType != b.getType()){
 				return false;
@@ -61,7 +56,6 @@ public class CryoUtils {
 		}
 		
 		if(primaryFrameType.isSolid()) return true;
-		System.out.println("primary frame type not solid, returning false.");
 		return false;
 	}
 	

@@ -1,7 +1,5 @@
 package net.countercraft.movecraft.utils;
 
-import net.countercraft.movecraft.Movecraft;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
