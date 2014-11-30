@@ -242,6 +242,8 @@ public class InteractListener implements Listener {
 			}
 		} else if (sign.getLine(0).equalsIgnoreCase("[cryopod]")){
 			CryoSpawn.setUpCryoTube(sign, event.getPlayer().getName());
+		} else if (sign.getLine(0).equalsIgnoreCase(CryoSpawn.KEY_LINE)){
+			CryoSpawn.toggleActive(sign, event.getPlayer());
 		} else if (sign.getLine(0).equalsIgnoreCase("[boardingramp]")) {
 			sign.setLine(0, ChatColor.RED + "Boarding Ramp");
 			sign.setLine(1, "{" + ChatColor.GREEN + "SHUT" + ChatColor.BLACK + "}");

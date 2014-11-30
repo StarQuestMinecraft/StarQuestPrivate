@@ -18,6 +18,7 @@
 package net.countercraft.movecraft.listener;
 
 //import net.countercraft.movecraft.Movecraft;
+import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
 
@@ -26,6 +27,7 @@ import net.countercraft.movecraft.craft.CraftType;
 
 
 import net.countercraft.movecraft.cryo.CryoSpawn;
+import net.countercraft.movecraft.utils.KillUtils;
 import net.countercraft.movecraft.utils.ShieldUtils;
 
 import org.bukkit.Material;
@@ -66,9 +68,9 @@ public class BlockListener implements Listener {
 				return;
 			}
 		}
-		if(event.getLine(0).equalsIgnoreCase("[shield]")){
+		/*if(event.getLine(0).equalsIgnoreCase("[shield]")){
 			ShieldUtils.setupShieldSign(event);
-		}
+		}*/
 	}
 	
 	/*@EventHandler
@@ -116,11 +118,16 @@ public class BlockListener implements Listener {
 			if(s.getLine(0).equals(CryoSpawn.KEY_LINE)){
 				CryoSpawn.removePodSpawn(s);
 				e.getPlayer().sendMessage("CryoPod spawn removed.");
-			} else if (ShieldUtils.isShieldSign(s)){
+			}/* else if (ShieldUtils.isShieldSign(s)){
 				if(s.getLine(1).equals(ShieldUtils.ENABLED)){
 					ShieldUtils.removeShield(s);
 					e.getPlayer().sendMessage("Removed shield!");
 				}
+			}*/
+			
+			else if(InteractListener.getCraftTypeFromString(s.getLine(0)) != null){
+				KillUtils.onBreakShipSign(s, e.getPlayer());
+				Movecraft.getInstance().getStarshipDatabase().removeStarshipAtLocation(e.getBlock().getLocation());
 			}
 		}
 	}

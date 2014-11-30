@@ -70,7 +70,7 @@ public class CommandListener implements Listener {
 		else if ( e.getMessage().equalsIgnoreCase( "/ride" ) ) {
 			e.setCancelled(true);
 			Player p = e.getPlayer();
-			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
+			/*Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
 			if(crafts != null){
 				for(Craft c : crafts){
 					if(MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))){
@@ -87,7 +87,8 @@ public class CommandListener implements Listener {
 					}
 				}
 			}
-			p.sendMessage("No craft found at your location for you to ride.");
+			p.sendMessage("No craft found at your location for you to ride.");*/
+			p.sendMessage("/ride is now disabled, to ride a ship ask the pilot to release and repilot the ship. /stopriding still works.");
 		}
 		
 		else if ( e.getMessage().equalsIgnoreCase( "/stopriding" ) ) {

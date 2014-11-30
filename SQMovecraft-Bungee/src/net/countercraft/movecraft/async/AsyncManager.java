@@ -179,11 +179,11 @@ public class AsyncManager extends BukkitRunnable {
 									}
 								}
 								
-								if(ShieldUtils.isShieldSign(s)){
+								/*if(ShieldUtils.isShieldSign(s)){
 									if(s.getLine(1).equals(ShieldUtils.ENABLED))
 									c.pilot.sendMessage(ChatColor.RED + "Disabled Shield.");
 									ShieldUtils.disableShield(s, c);
-								}
+								}*/
 							}
 						}
 						if ( !failed ) {

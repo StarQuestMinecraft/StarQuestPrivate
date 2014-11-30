@@ -13,6 +13,8 @@ import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
+import net.countercraft.movecraft.cryo.ActiveCryoHandler;
+import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.utils.MathUtils;
 
 import org.bukkit.Bukkit;
@@ -67,9 +69,10 @@ public class BungeePlayerHandler {
 						}
 					}, 2L);
 				}
-				break;
+				return;
 			}
 		}
+		ActiveCryoHandler.onPlayerLogin(p);
 	}
 	public static void sendPlayer(Player p, String targetserver, String world, int X, int Y, int Z){
 		sendPlayer(p, targetserver, world, X, Y, Z, false);

@@ -109,7 +109,7 @@ public class CraftManager {
 		ArrayList<MovecraftLocation> signLocations = c.getSignLocations();
 		JammerUtils.disableJammer(c, signLocations);
 		System.out.println((p == null) ? ("P is null!") : ("P is not null!"));
-		ShieldUtils.enableShield(c, signLocations, p);
+		//ShieldUtils.enableShield(c, signLocations, p);
 		CryoSpawn.updatePodSpawns(c.getW(), signLocations);
 		try{
 			if(!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))){
@@ -182,5 +182,26 @@ public class CraftManager {
 				removeCraft(c);
 			}
 		}
+	}
+	
+	public void playerRide(Player p){
+		Craft[] crafts = getCraftsInWorld(p.getWorld());
+		if(crafts != null){
+			for(Craft c : crafts){
+				if(MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))){
+					try{
+						c.playersRidingLock.acquire();
+						c.playersRidingShip.add(p.getUniqueId());
+						c.playersRidingLock.release();
+					}
+					catch(Exception ex){
+						ex.printStackTrace();
+					}
+					p.sendMessage("You board a craft of type " + c.getType().getCraftName() + " under the command of captain " + c.pilot.getName() + ".");
+					return;
+				}
+			}
+		}
+		p.sendMessage("No craft found at your location for you to ride.");
 	}
 }

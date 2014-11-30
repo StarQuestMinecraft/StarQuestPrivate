@@ -242,7 +242,9 @@ public class EntityListener implements Listener {
 	@EventHandler
 	public void onPlayerMove( PlayerMoveEvent event ) {
 		Player p = event.getPlayer();
-		if(! (event instanceof PlayerTeleportEvent)){
+		if(event instanceof PlayerTeleportEvent){
+			return;
+		} else {
 			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
 			if(crafts == null) return;
 			for(Craft c : crafts){

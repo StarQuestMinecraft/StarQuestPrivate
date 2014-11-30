@@ -197,6 +197,15 @@ public class FileDatabase implements StarshipDatabase {
 		}
 		return inbytes;
 	}
+	
+	public static long getFileLastModified(Location l){
+		File target = new File(folder + "/" + locToString(l) + ".sdata");
+		if(!target.exists()){
+			return -1;
+		} else {
+			return target.lastModified();
+		}
+	}
 	private static String locToString(Location l){
 		return l.getWorld().getName() + "@" + l.getBlockX() + "," + l.getBlockY() + "," + l.getBlockZ();
 	}

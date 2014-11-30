@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
+import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.listener.EntityListener;
 
 import org.bukkit.Bukkit;
@@ -74,6 +75,8 @@ public class ServerjumpTeleport implements PlayerTeleport{
 		
 		if(!isBedspawn){
 			p.teleport(l);
+			CryoSpawn.addToAnyShips(l,p );
+			CryoSpawn.checkAndPlayEffects(l);
 		} else {
 			if (EntityListener.checkForNotAir(l)){
 				p.teleport(l);

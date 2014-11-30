@@ -59,7 +59,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.Messenger;
 
 public class Movecraft extends JavaPlugin {
 	private static Movecraft instance;
@@ -159,15 +161,19 @@ public class Movecraft extends JavaPlugin {
 			MapUpdateManager.getInstance().runTaskTimer( this, 0, 1 );
 
 			CraftManager.getInstance();
-
-			getServer().getPluginManager().registerEvents( new InteractListener(), this );
-			getServer().getPluginManager().registerEvents( new CommandListener(), this );
-			getServer().getPluginManager().registerEvents( new BlockListener(), this );
-			getServer().getPluginManager().registerEvents( new EntityListener(), this );
-			getServer().getPluginManager().registerEvents( new PartListener(), this );
 			
-			this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-		    this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeListener());
+			PluginManager pm = getServer().getPluginManager();
+			pm.registerEvents( new InteractListener(), this );
+			pm.registerEvents( new CommandListener(), this );
+			pm.registerEvents( new BlockListener(), this );
+			pm.registerEvents( new EntityListener(), this );
+			pm.registerEvents( new PartListener(), this );
+			
+			Messenger m = this.getServer().getMessenger();
+			m.registerOutgoingPluginChannel(this, "BungeeCord");
+			BungeeListener b = new BungeeListener();
+		    m.registerIncomingPluginChannel(this, "BungeeCord", b);
+		    m.registerIncomingPluginChannel(this, "cryoBounce", b);
 		    
 			//StorageChestItem.readFromDisk();
 			//StorageChestItem.addRecipie();

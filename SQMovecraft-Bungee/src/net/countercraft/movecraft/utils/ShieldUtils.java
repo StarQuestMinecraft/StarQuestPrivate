@@ -28,7 +28,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class ShieldUtils {
-	
+	/*
 	static ArrayList<PendingActivation> pendingActivations = new ArrayList<PendingActivation>();
 	
 	private static WorldGuardPlugin wg = getWorldGuard();
@@ -247,5 +247,5 @@ public class ShieldUtils {
 			retval[i] = s;
 		}
 		return retval;
-	}
+	}*/
 }

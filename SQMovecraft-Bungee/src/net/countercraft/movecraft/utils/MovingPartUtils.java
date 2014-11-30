@@ -27,7 +27,9 @@ import com.sk89q.worldedit.schematic.SchematicFormat;
 public class MovingPartUtils {
 	public static File dir = new File(Movecraft.getInstance().getDataFolder().getAbsoluteFile().getParentFile().getParentFile().getParentFile().getParentFile() + "/movingpart");
 	public static boolean saveSchematic(Sign s, CuboidRegion r, WorldEditPlugin p, Player plr, boolean onState){
-		Vector min = r.getMinimumPoint();
+		plr.sendMessage("Moving parts are currently disabled.");
+		return false;
+		/*Vector min = r.getMinimumPoint();
 		Vector max = r.getMaximumPoint();
 		Block b = s.getBlock();
 		Vector pos = new Vector(b.getX(), b.getY(), b.getZ());
@@ -55,11 +57,13 @@ public class MovingPartUtils {
 			return false;
 		}
 		
-		return true;
+		return true;*/
 	}
 	
 	public static boolean switchSchematic(Sign s, WorldEditPlugin wep, Player p, boolean initialState){
-        Block b = s.getBlock();
+		p.sendMessage("Moving parts are currently disabled.");
+		return false;
+        /*Block b = s.getBlock();
         Vector signLoc = new Vector(b.getX(), b.getY(), b.getZ());
 		WorldEdit we = wep.getWorldEdit();
 		LocalConfiguration config = we.getConfiguration();
@@ -120,7 +124,8 @@ public class MovingPartUtils {
 			e.printStackTrace();
 			return false;
 		}
-    	return true;
+    	return true;*/
+		
     }
 	
 	//precondition: sign known to be a moving part sign
