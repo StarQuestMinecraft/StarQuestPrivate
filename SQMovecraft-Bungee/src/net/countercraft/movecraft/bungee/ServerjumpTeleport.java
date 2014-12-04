@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
+import net.countercraft.movecraft.cardboardbox.Knapsack;
 import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.listener.EntityListener;
 
@@ -13,8 +14,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-
-import us.higashiyama.george.CardboardBox.Knapsack;
 
 public class ServerjumpTeleport implements PlayerTeleport{
 
@@ -75,8 +74,8 @@ public class ServerjumpTeleport implements PlayerTeleport{
 		
 		if(!isBedspawn){
 			p.teleport(l);
-			CryoSpawn.addToAnyShips(l,p );
-			CryoSpawn.checkAndPlayEffects(l);
+			//CryoSpawn.addToAnyShips(l,p );
+			//CryoSpawn.checkAndPlayEffects(l);
 		} else {
 			if (EntityListener.checkForNotAir(l)){
 				p.teleport(l);

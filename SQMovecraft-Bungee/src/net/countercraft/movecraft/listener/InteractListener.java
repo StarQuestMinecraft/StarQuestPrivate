@@ -108,6 +108,10 @@ public class InteractListener implements Listener {
 
 						}
 					}
+				} else if (sign.getLine(0).equalsIgnoreCase(ChatColor.BLUE + "AUTOPILOT")) {
+					AutopilotRunTask.incrementSpeed(sign, event.getPlayer());
+					event.setCancelled(true);
+					return;
 				}
 				if(event.getPlayer().getItemInHand().getType() == Material.WATCH){
 					if ( getCraftTypeFromString( sign.getLine( 0 ) ) != null ) {
@@ -216,6 +220,7 @@ public class InteractListener implements Listener {
 		} else if (sign.getLine(0).equalsIgnoreCase("[autopilot]")) {
 			sign.setLine(0, ChatColor.BLUE + "AUTOPILOT");
 			sign.setLine(1, ChatColor.GREEN + "{DISABLED}");
+			event.getPlayer().sendMessage("You have created an autopilot. Left click to change speed, right click to activate.");
 			sign.update();
 			return;
 		} else if (sign.getLine(0).equalsIgnoreCase(ChatColor.BLUE + "AUTOPILOT")) {
@@ -229,7 +234,7 @@ public class InteractListener implements Listener {
 						}
 						sign.setLine(1, ChatColor.RED + "{ENGAGED}");
 						sign.update();
-						AutopilotRunTask.startAutopiloting(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer());
+						AutopilotRunTask.startAutopiloting(sign, CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer());
 						return;
 					}
 					event.getPlayer().sendMessage("Your craft is already autopiloting!");

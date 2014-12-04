@@ -7,14 +7,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import net.countercraft.movecraft.cardboardbox.CardboardBox;
+import net.countercraft.movecraft.cardboardbox.Knapsack;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import us.higashiyama.george.CardboardBox.CardboardBox;
-import us.higashiyama.george.CardboardBox.Knapsack;
 
 public class InventoryUtils {
 

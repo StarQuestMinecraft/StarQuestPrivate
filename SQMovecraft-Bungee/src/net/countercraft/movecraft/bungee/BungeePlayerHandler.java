@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
+import net.countercraft.movecraft.cardboardbox.Knapsack;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.cryo.ActiveCryoHandler;
 import net.countercraft.movecraft.cryo.CryoSpawn;
@@ -24,8 +25,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
-
-import us.higashiyama.george.CardboardBox.Knapsack;
 
 public class BungeePlayerHandler {
 

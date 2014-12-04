@@ -1,5 +1,5 @@
 
-package us.higashiyama.george.CardboardBox.Meta;
+package net.countercraft.movecraft.cardboardbox.Meta;
 
 import org.bukkit.inventory.meta.ItemMeta;
 

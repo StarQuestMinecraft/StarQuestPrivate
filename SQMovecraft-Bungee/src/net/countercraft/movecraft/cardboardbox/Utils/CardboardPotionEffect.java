@@ -1,5 +1,5 @@
 
-package us.higashiyama.george.CardboardBox.Utils;
+package net.countercraft.movecraft.cardboardbox.Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;

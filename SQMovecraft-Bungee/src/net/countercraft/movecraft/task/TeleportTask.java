@@ -28,7 +28,7 @@ import org.bukkit.inventory.InventoryHolder;
 public class TeleportTask {
 	public static boolean worldJump(Player pilot, Craft c, Location locto, boolean repilot) {
 
-		/*// calculate the difference in x and difference in y of the current
+		//calculate the difference in x and difference in y of the current
 		// location to the target location
 		Location startloc = pilot.getLocation();
 		int dX = getdX(startloc, locto);
@@ -157,8 +157,6 @@ public class TeleportTask {
 		// w.newLine();
 		// w.write("===============================");
 		// w.close();
-		return true;
-		*/
 		return true;
 	}
 

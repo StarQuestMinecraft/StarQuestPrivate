@@ -1,10 +1,20 @@
 
-package us.higashiyama.george.CardboardBox;
+package net.countercraft.movecraft.cardboardbox;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import net.countercraft.movecraft.cardboardbox.Meta.CardboardItemMeta;
+import net.countercraft.movecraft.cardboardbox.Meta.CardboardMetaBook;
+import net.countercraft.movecraft.cardboardbox.Meta.CardboardMetaEnchantment;
+import net.countercraft.movecraft.cardboardbox.Meta.CardboardMetaFirework;
+import net.countercraft.movecraft.cardboardbox.Meta.CardboardMetaFireworkEffect;
+import net.countercraft.movecraft.cardboardbox.Meta.CardboardMetaLeatherArmor;
+import net.countercraft.movecraft.cardboardbox.Meta.CardboardMetaMap;
+import net.countercraft.movecraft.cardboardbox.Meta.CardboardMetaSkull;
+import net.countercraft.movecraft.cardboardbox.Utils.CardboardEnchantment;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -12,16 +22,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import us.higashiyama.george.CardboardBox.Meta.CardboardItemMeta;
-import us.higashiyama.george.CardboardBox.Meta.CardboardMetaBook;
-import us.higashiyama.george.CardboardBox.Meta.CardboardMetaEnchantment;
-import us.higashiyama.george.CardboardBox.Meta.CardboardMetaFirework;
-import us.higashiyama.george.CardboardBox.Meta.CardboardMetaFireworkEffect;
-import us.higashiyama.george.CardboardBox.Meta.CardboardMetaLeatherArmor;
-import us.higashiyama.george.CardboardBox.Meta.CardboardMetaMap;
-import us.higashiyama.george.CardboardBox.Meta.CardboardMetaSkull;
-import us.higashiyama.george.CardboardBox.Utils.CardboardEnchantment;
 
 /**
  * A serializable ItemStack

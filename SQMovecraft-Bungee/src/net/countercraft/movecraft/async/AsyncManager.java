@@ -196,6 +196,7 @@ public class AsyncManager extends BukkitRunnable {
 										if (!c.playersRidingShip.contains(plr.getUniqueId())) {
 											c.playersRidingShip.add(plr.getUniqueId());
 											plr.sendMessage("You board a craft of type " + c.getType().getCraftName() + " under the command of captain " + c.pilot.getName() + ".");
+											ShieldUtils.checkForAndRemoveShield(plr);
 										}
 									}
 								}

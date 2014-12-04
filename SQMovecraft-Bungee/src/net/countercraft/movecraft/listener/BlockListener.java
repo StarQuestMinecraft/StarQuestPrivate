@@ -18,7 +18,10 @@
 package net.countercraft.movecraft.listener;
 
 //import net.countercraft.movecraft.Movecraft;
+import java.util.HashSet;
+
 import net.countercraft.movecraft.Movecraft;
+import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
 
@@ -28,6 +31,7 @@ import net.countercraft.movecraft.craft.CraftType;
 
 import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.utils.KillUtils;
+import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.ShieldUtils;
 
 import org.bukkit.Material;
@@ -127,6 +131,20 @@ public class BlockListener implements Listener {
 			
 			else if(InteractListener.getCraftTypeFromString(s.getLine(0)) != null){
 				KillUtils.onBreakShipSign(s, e.getPlayer());
+				
+				Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(e.getBlock().getWorld());
+				Craft cFound = null;
+				if(crafts != null){
+					for(Craft c : crafts){
+						if (MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(e.getBlock().getLocation()))) {
+							cFound = c;
+							break;
+						}
+					}
+					if(cFound != null){
+						CraftManager.getInstance().removeCraft(cFound);
+					}
+				}
 				Movecraft.getInstance().getStarshipDatabase().removeStarshipAtLocation(e.getBlock().getLocation());
 			}
 		}

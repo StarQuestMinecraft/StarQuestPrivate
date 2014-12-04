@@ -1,13 +1,13 @@
 
-package us.higashiyama.george.CardboardBox.Meta;
+package net.countercraft.movecraft.cardboardbox.Meta;
 
 import java.io.Serializable;
+
+import net.countercraft.movecraft.cardboardbox.Utils.CardboardColor;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-
-import us.higashiyama.george.CardboardBox.Utils.CardboardColor;
 
 public class CardboardMetaLeatherArmor implements CardboardItemMeta, Serializable {
 

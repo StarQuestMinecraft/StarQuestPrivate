@@ -50,7 +50,7 @@ public class ActiveCryoHandler {
 					System.out.println("Local teleporting player for Cryopod!");
 					Location target = new Location(Bukkit.getWorld(s.world), s.x + 0.5, s.y, s.z + 0.5);
 					p.teleport(target);
-					CryoSpawn.addToAnyShips(target, p);
+					//CryoSpawn.addToAnyShips(target, p);
 					CryoSpawn.playEffects(target);
 				}
 			}
