@@ -49,7 +49,7 @@ public class TranslationTask extends AsyncTask {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void excecute() {
+	public void execute() {
 		try {
 			if(!getCraft().pilot.isOnline()){
 				fail("Pilot is not online!");

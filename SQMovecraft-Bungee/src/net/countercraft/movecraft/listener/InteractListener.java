@@ -26,6 +26,7 @@ import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.localisation.I18nSupport;
+import net.countercraft.movecraft.projectile.LaserBolt;
 import net.countercraft.movecraft.projectile.Torpedo;
 import net.countercraft.movecraft.task.AutopilotRunTask;
 import net.countercraft.movecraft.task.WarpStartTask;
@@ -58,8 +59,20 @@ public class InteractListener implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
-
+		
+		if(event.getAction() == Action.RIGHT_CLICK_AIR){
+			if(event.getPlayer().isOp()){
+				if(event.getPlayer().getItemInHand().getType() == Material.DIAMOND_SWORD){
+					LaserBolt.createExplosion(event.getPlayer().getTargetBlock(null, 200).getLocation(), event.getPlayer(), 2.0F);
+				}
+			}
+		}
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			if(event.getPlayer().isOp()){
+				if(event.getPlayer().getItemInHand().getType() == Material.DIAMOND_SWORD){
+					LaserBolt.createExplosion(event.getPlayer().getTargetBlock(null, 200).getLocation(), event.getPlayer(), 2.0F);
+				}
+			}
 			Material m = event.getClickedBlock().getType();
 			if (m == Material.SIGN_POST || m == Material.WALL_SIGN) {
 				onSignRightClick(event);

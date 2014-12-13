@@ -102,7 +102,7 @@ public class GunUtils {
     public static boolean isInSpawn(Location l){
     	if(Bukkit.getServerName().equals("Regalis")){
     		if(spawn == null){
-    			spawn = wg.getRegionManager(Bukkit.getWorld("Regalis")).getRegion("spawn");
+    			spawn = wg.getRegionManager(Bukkit.getWorld("Regalis")).getRegion("OriginStation");
     			if(spawn == null){
     				return false;
     			}

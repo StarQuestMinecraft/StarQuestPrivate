@@ -67,7 +67,7 @@ public class RotationTask extends AsyncTask {
         }
 
         @Override
-        public void excecute() {
+        public void execute() {
                 
                 // Rotate the block set
                 MovecraftLocation[] centeredBlockList = new MovecraftLocation[blockList.length];

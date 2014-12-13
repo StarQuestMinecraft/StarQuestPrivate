@@ -33,10 +33,12 @@ public class KillUtils {
 				breaker.sendMessage("This ship has been parked for more than 5 minutes, so this kill did not count.");
 				return;
 			}
-			creditKill(breaker, Bukkit.getOfflinePlayer(u));
+			OfflinePlayer pilot = Bukkit.getOfflinePlayer(u);
+			boolean success = creditKill(breaker, pilot);
+			if(success) Bukkit.broadcastMessage(ChatColor.RED + breaker.getName() + " destroyed a ship last flown by " + pilot.getName() + "!");
 		}
 	}
-	public static void creditKill(Player killer, OfflinePlayer killed) {
+	public static boolean creditKill(Player killer, OfflinePlayer killed) {
 		RankupPlayer entry;
 		if (!Database.hasKey(killer.getName())) {
 			entry = new RankupPlayer(killer.getName(), 0L, "", 0);
@@ -45,8 +47,8 @@ public class KillUtils {
 			entry = Database.getEntry(killer.getName());
 			String lastKill = entry.getLastKillName();
 			if ((lastKill != null) && (lastKill.equals(killed.getName()) && (System.currentTimeMillis() - entry.getLastKillTime() < 1800000))) {
-				killer.sendMessage("This sign break kill did not count because you killed the pilot within the last half hour.");
-				return;
+				killer.sendMessage("This kill did not count because you killed that player within the last half hour.");
+				return false;
 			}
 		}
 		int kills = rankToKills(killed.getName());
@@ -54,8 +56,7 @@ public class KillUtils {
 		entry.setLastKillName(killed.getName());
 		entry.setLastKillTime(System.currentTimeMillis());
 		entry.saveData();
-		Bukkit.broadcastMessage(ChatColor.RED + killer.getName() + " destroyed a ship last flown by " + killed.getName() + " and recieved " + kills + " kills!");
-		return;
+		return true;
 	}
 	
 	private static UUID getPlayerLastFlew(Location sign){

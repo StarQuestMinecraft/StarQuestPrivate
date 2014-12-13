@@ -60,7 +60,7 @@ public class DetectionTask extends AsyncTask {
 	}
 
 	@Override
-	public void excecute() {
+	public void execute() {
 
 		blockStack.push(startLocation);
 
@@ -85,7 +85,7 @@ public class DetectionTask extends AsyncTask {
 
 				Craft c = getCraft();
 				// detect bedspawns, may be an expensive operation?
-				try{
+				/*try{
 				c.bedspawnsLock.acquire();
 				for (Bedspawn b : Bedspawn.loadBedspawnList(new MovecraftLocation(c.getMinX(), 0, c.getMinZ()), c.getW().getName())) {
 					MovecraftLocation loc = new MovecraftLocation(b.x, b.y, b.z);
@@ -96,7 +96,7 @@ public class DetectionTask extends AsyncTask {
 				c.bedspawnsLock.release();
 				} catch (Exception e){
 					e.printStackTrace();
-				}
+				}*/
 			}
 		}
 
@@ -186,7 +186,7 @@ public class DetectionTask extends AsyncTask {
 		}
 	}
 
-	private void addToBlockList(MovecraftLocation l) {
+	protected void addToBlockList(MovecraftLocation l) {
 		blockList.add(l);
 	}
 
@@ -271,7 +271,7 @@ public class DetectionTask extends AsyncTask {
 
 	}
 
-	private MovecraftLocation[] finaliseBlockList( HashSet<MovecraftLocation> blockSet, int minY, int maxY) {
+	protected MovecraftLocation[] finaliseBlockList( HashSet<MovecraftLocation> blockSet, int minY, int maxY) {
 		
 		ArrayList<MovecraftLocation> finalList = new ArrayList<MovecraftLocation>();
 		for(int posY = this.minY; posY <= this.maxY; posY++){

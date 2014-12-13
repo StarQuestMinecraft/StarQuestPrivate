@@ -32,10 +32,12 @@ import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.projectile.LaserBolt;
+import net.countercraft.movecraft.projectile.LaserBolt.LocationHit;
 import net.countercraft.movecraft.task.SneakMoveTask;
 import net.countercraft.movecraft.utils.BlockUtils;
 import net.countercraft.movecraft.utils.BoardingRampUtils;
 import net.countercraft.movecraft.utils.JammerUtils;
+import net.countercraft.movecraft.utils.KillUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.OfflinePilotUtils;
 import net.countercraft.movecraft.utils.WarpUtils;
@@ -53,6 +55,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -77,58 +80,67 @@ import com.palmergames.bukkit.util.ArraySort;
 
 public class EntityListener implements Listener {
 	private final HashMap<Player, BukkitTask> releaseEvents = new HashMap<Player, BukkitTask>();
-	private static int[] NON_EXPLODABLES = {1,4,7,14,15,16,21,22,24,41,42,45,48,49,56,57,64,71,73,74,98,133,155,159};
-	//private static int[] TORPEDO_EXCEPTIONS = {42, 101, 167};
-/*	public void onPlayerDamaged( EntityDamageByEntityEvent e ) {
-		if ( e instanceof Player ) {
-			Player p = ( Player ) e;
-			CraftManager.getInstance().removeCraft( CraftManager.getInstance().getCraftByPlayer( p ) );
-		}
-	}*/
-	
+	private static int[] NON_EXPLODABLES = { 1, 4, 7, 14, 15, 16, 21, 22, 24, 41, 42, 45, 48, 49, 56, 57, 64, 71, 73, 74, 98, 133, 155, 159 };
+	// private static int[] TORPEDO_EXCEPTIONS = {42, 101, 167};
+	/*
+	 * public void onPlayerDamaged( EntityDamageByEntityEvent e ) { if ( e
+	 * instanceof Player ) { Player p = ( Player ) e;
+	 * CraftManager.getInstance().removeCraft(
+	 * CraftManager.getInstance().getCraftByPlayer( p ) ); } }
+	 */
+
 	private final static Towny plugin = (Towny) Bukkit.getServer().getPluginManager().getPlugin("Towny");
-	
+
+	@EventHandler
+	public void onDamage(EntityDamageByBlockEvent event) {
+		System.out.println("Damage by block!");
+		LocationHit l = LaserBolt.getClosestExplosion(event.getEntity().getLocation());
+		if (l != null && l.distanceSquared(event.getEntity().getLocation()) < 25) {
+		}
+	}
+
 	@EventHandler(priority = EventPriority.LOW)
-	public void onEntityExplode(EntityExplodeEvent event){
+	public void onEntityExplode(EntityExplodeEvent event) {
 		System.out.println(event.getLocation());
 		List<Block> affectedBlocks = event.blockList();
 		Collections.sort(affectedBlocks, ArraySort.getInstance());
 		int count = 0;
-		for(int i = affectedBlocks.size() - 1; i >= 0; i--){
+		for (int i = affectedBlocks.size() - 1; i >= 0; i--) {
 			count++;
 			Block b = affectedBlocks.get(i);
 			Material type = b.getType();
-			if(type == Material.SIGN_POST && isCraftSign(b)){
+			if (type == Material.SIGN_POST && isCraftSign(b)) {
 				affectedBlocks.remove(i);
 				continue;
-			} else if(type  == Material.WALL_SIGN && isCraftSign(b)){
+			} else if (type == Material.WALL_SIGN && isCraftSign(b)) {
 				affectedBlocks.remove(i);
 				continue;
-			} else if(Arrays.binarySearch(NON_EXPLODABLES, b.getTypeId()) >= 0){
-				/*if(event.getEntity() != null){
-					if(!(Arrays.binarySearch(TORPEDO_EXCEPTIONS, b.getTypeId()) >= 0)){
-						affectedBlocks.remove(i);
-					}
-					
-				}*/
+			} else if (Arrays.binarySearch(NON_EXPLODABLES, b.getTypeId()) >= 0) {
+				/*
+				 * if(event.getEntity() != null){
+				 * if(!(Arrays.binarySearch(TORPEDO_EXCEPTIONS, b.getTypeId())
+				 * >= 0)){ affectedBlocks.remove(i); }
+				 * 
+				 * }
+				 */
 				affectedBlocks.remove(i);
 				continue;
-			} else if(type == Material.STAINED_GLASS){
-				if(LaserBolt.getBoltBlocks().contains(b)){
+			} else if (type == Material.STAINED_GLASS) {
+				if (LaserBolt.getBoltBlocks().contains(b)) {
 					affectedBlocks.remove(i);
 					continue;
 				}
 			} else {
 				Block[] edges = BlockUtils.getEdges(b, false, false);
-				for(Block e : edges){
-					if(e.getType() == Material.SIGN_POST && isCraftSign(e)){
-						if(e.getFace(b) == BlockFace.DOWN){
+				for (Block e : edges) {
+					if (e.getType() == Material.SIGN_POST && isCraftSign(e)) {
+						if (e.getFace(b) == BlockFace.DOWN) {
 							affectedBlocks.remove(b);
 							break;
 						}
-					} else if(e.getType() == Material.WALL_SIGN && isCraftSign(e)){
+					} else if (e.getType() == Material.WALL_SIGN && isCraftSign(e)) {
 						BlockFace face = b.getFace(e);
-						if(face == BoardingRampUtils.getFacingBlockFace((Sign) e.getState())){
+						if (face == BoardingRampUtils.getFacingBlockFace((Sign) e.getState())) {
 							affectedBlocks.remove(b);
 							break;
 						}
@@ -136,12 +148,13 @@ public class EntityListener implements Listener {
 				}
 			}
 		}
-		for(Block b : affectedBlocks){
+		for (Block b : affectedBlocks) {
 			boolean yes = JammerUtils.checkForAndDisableJammer(b);
-			if(yes) break;
+			if (yes)
+				break;
 		}
-		if(event.getEntity() == null){
-			for(Block b : affectedBlocks){
+		if (event.getEntity() == null) {
+			for (Block b : affectedBlocks) {
 				if ((!TownyRegenAPI.hasProtectionRegenTask(new BlockLocation(b.getLocation()))) && (b.getType() != Material.TNT)) {
 					ProtectionRegenTask task = new ProtectionRegenTask(plugin, b, false);
 					task.setTaskId(Movecraft.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, ((TownySettings.getPlotManagementWildRegenDelay() + count) * 20)));
@@ -152,7 +165,7 @@ public class EntityListener implements Listener {
 			}
 		}
 	}
-	
+
 	private static boolean isCraftSign(Block sign) {
 		Sign s = (Sign) sign.getState();
 		String l = s.getLine(0);
@@ -164,67 +177,61 @@ public class EntityListener implements Listener {
 
 		return false;
 	}
-	
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerJoin(PlayerJoinEvent event){
+	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player p = event.getPlayer();
 		BungeePlayerHandler.onLogin(p);
 		OfflinePilotUtils.onPlayerLogin(p);
-		/*boolean isTeleported = false;
-		
-		for(int i = 0; i < BungeePlayerHandler.teleportQueue.size(); i++){
-			final PlayerTeleport t = BungeePlayerHandler.teleportQueue.get(i);
-			String playername = event.getPlayer().getName();
-			if(playername.equals(t.playername)){
-				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
-					public void run(){
-						t.execute();
-					}
-				}, 1L);
-				isTeleported = true;
-				break;
-			}
+		/*
+		 * boolean isTeleported = false;
+		 * 
+		 * for(int i = 0; i < BungeePlayerHandler.teleportQueue.size(); i++){
+		 * final PlayerTeleport t = BungeePlayerHandler.teleportQueue.get(i);
+		 * String playername = event.getPlayer().getName();
+		 * if(playername.equals(t.playername)){
+		 * Bukkit.getServer().getScheduler()
+		 * .scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+		 * public void run(){ t.execute(); } }, 1L); isTeleported = true; break;
+		 * } }
+		 * 
+		 * if(!isTeleported){ if(p.getGameMode() == GameMode.SURVIVAL){
+		 * if(shouldTempFly(p)){ giveTempFly(p); } else {
+		 * p.setAllowFlight(false); p.setFlySpeed(0F); p.setFlying(false); } } }
+		 */
+	}
+
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent e) {
+
+		Player p = (Player) e.getEntity();
+		Craft c = CraftManager.getInstance().getCraftByPlayer(p);
+		if (c != null)
+			CraftManager.getInstance().removeCraft(CraftManager.getInstance().getCraftByPlayer(p));
+	}
+
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent e) { // changed to death so when
+													// you shoot up an airship
+													// and hit the pilot, it
+													// still sinks
+		Player p = e.getPlayer();
+		final Craft c = CraftManager.getInstance().getCraftByPlayer(p);
+		if (c != null) {
+			CraftManager.getInstance().removeCraft(c);
+			OfflinePilotUtils.registerOfflinePilot(p, c);
 		}
-		
-		if(!isTeleported){
-			if(p.getGameMode() == GameMode.SURVIVAL){
-				if(shouldTempFly(p)){
-					giveTempFly(p);
-				} else {
-						p.setAllowFlight(false);
-						p.setFlySpeed(0F);
-						p.setFlying(false);
-				}
-			}
-		}*/
+
+		System.out.println("Removed player " + e.getPlayer().getName() + " with UUID " + e.getPlayer().getUniqueId() + " from index.");
 	}
-	
+
 	@EventHandler
-	public void onPlayerDeath( PlayerDeathEvent e ) {  // changed to death so when you shoot up an airship and hit the pilot, it still sinks
-			Player p = ( Player ) e.getEntity();
-			Craft c = CraftManager.getInstance().getCraftByPlayer( p );
-			if (c != null)
-			CraftManager.getInstance().removeCraft( CraftManager.getInstance().getCraftByPlayer( p ) );
-	}
-	@EventHandler
-	public void onPlayerQuit( PlayerQuitEvent e ) {  // changed to death so when you shoot up an airship and hit the pilot, it still sinks
-			Player p = e.getPlayer();
-			final Craft c = CraftManager.getInstance().getCraftByPlayer( p );
-			if( c != null){
-				CraftManager.getInstance().removeCraft(c);
-				OfflinePilotUtils.registerOfflinePilot(p, c);
-			}
-			
-			System.out.println("Removed player " + e.getPlayer().getName() + " with UUID " + e.getPlayer().getUniqueId() + " from index.");
-	}
-	
-	@EventHandler
-	public void onPlayerToggleSneak(PlayerToggleSneakEvent event){
+	public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
 		Craft c = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());
-		if (c != null){;
-			if (event.isSneaking()){
-				if (event.getPlayer().getItemInHand().getType() == Material.WATCH){
+		if (c != null) {
+			;
+			if (event.isSneaking()) {
+				if (event.getPlayer().getItemInHand().getType() == Material.WATCH) {
 					if (event.getPlayer().hasPermission("movecraft." + c.getType().getCraftName() + ".move") || event.getPlayer().hasPermission("movecraft.override")) {
 						SneakMoveTask task = new SneakMoveTask(c, event.getPlayer());
 						task.runTaskTimer(Movecraft.getInstance(), 1, 1);
@@ -232,23 +239,25 @@ public class EntityListener implements Listener {
 					}
 				}
 			} else {
-				if (c.getMoveTaskId() != -1){
+				if (c.getMoveTaskId() != -1) {
 					Bukkit.getScheduler().cancelTask(c.getMoveTaskId());
 					c.setMoveTaskId(-1);
 				}
 			}
 		}
 	}
+
 	@EventHandler
-	public void onPlayerMove( PlayerMoveEvent event ) {
+	public void onPlayerMove(PlayerMoveEvent event) {
 		Player p = event.getPlayer();
-		if(! (event instanceof PlayerTeleportEvent)){
+		if (!(event instanceof PlayerTeleportEvent)) {
 			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
-			if(crafts == null) return;
-			for(Craft c : crafts){
-				if(c.playersRidingShip.contains(p.getUniqueId())){
-					if(!MathUtils.playerIsWithinBoundingPolygon( c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc( event.getTo() ) ) ){
-						if(!c.isProcessingTeleport()){
+			if (crafts == null)
+				return;
+			for (Craft c : crafts) {
+				if (c.playersRidingShip.contains(p.getUniqueId())) {
+					if (!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(event.getTo()))) {
+						if (!c.isProcessingTeleport()) {
 							p.setFallDistance(0.0F);
 							p.teleport(c.originalPilotLoc);
 							p.sendMessage("You attempted to leave the craft. If you want to leave the ship, type /stopriding.");
@@ -257,109 +266,111 @@ public class EntityListener implements Listener {
 				}
 			}
 		}
-		final Craft c = CraftManager.getInstance().getCraftByPlayer( p );
-		if ( c != null ) {
-			if ( !MathUtils.playerIsWithinBoundingPolygon( c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc( p.getLocation() ) ) ) {
-				if(p.getWorld().getEnvironment() == Environment.THE_END){
-					event.setCancelled(true);
-					WarpUtils.leaveWarp(p, c, true);
-					return;
-				}
-				if ( !releaseEvents.containsKey( p ) ) {
+		final Craft c = CraftManager.getInstance().getCraftByPlayer(p);
+		if (c != null) {
+			if (!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))) {
+				/*
+				 * if(p.getWorld().getEnvironment() == Environment.THE_END){
+				 * event.setCancelled(true); WarpUtils.leaveWarp(p, c, true);
+				 * return; }
+				 */
+				if (!releaseEvents.containsKey(p)) {
 					p.sendMessage("You have left the craft, you have 15 seconds to return to the craft before it auto releases.");
 
 					BukkitTask releaseTask = new BukkitRunnable() {
 
 						@Override
 						public void run() {
-							CraftManager.getInstance().removeCraft( c );
+							CraftManager.getInstance().removeCraft(c);
 						}
 
-					}.runTaskLater( Movecraft.getInstance(), ( 20 * 15 ) );
+					}.runTaskLater(Movecraft.getInstance(), (20 * 15));
 
-					releaseEvents.put( p, releaseTask );
+					releaseEvents.put(p, releaseTask);
 				}
 
-			} else if ( releaseEvents.containsKey( p ) ) {
-				releaseEvents.get( p ).cancel();
-				releaseEvents.remove( p );
+			} else if (releaseEvents.containsKey(p)) {
+				releaseEvents.get(p).cancel();
+				releaseEvents.remove(p);
 			}
 		}
 	}
-	/*@EventHandler
-	public void onAreaEnter (PlayerEnterAreaEvent event) throws IOException{
-		Player p = event.getPlayer();
-		p.sendMessage("before");
-		Area area = (Area) event.getArea();
-		String name = area.getName();
-		event.getPlayer().sendMessage("You entered area "+ name);
-		if (name.endsWith("warp")){
-			final Craft c = CraftManager.getInstance().getCraftByPlayer( event.getPlayer() );
-			if (c != null){
-				if (MathUtils.playerIsWithinBoundingPolygon( c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc( event.getPlayer().getLocation() ) ) ) {
-						
-					String[] split = name.split("_");
-					final String worldname = BungeeUtils.capitalizeFirstLeter(split[0]);
-					event.getPlayer().sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + "Entering the atmosphere of " + worldname + "!");
-					event.getPlayer().setVelocity(new Vector(0, 0, 0));					
-					
-					c.shipAttemptingTeleport = true;
-					
-					p.sendMessage("before task creation.");
-					RepeatTryServerJumpTask task = new RepeatTryServerJumpTask(p, c, worldname, 0, 205, 0);
-					task.runTaskTimer(Movecraft.getInstance(), 0, 1);
-					
 
-					return;
-				}
-			}
-		}
-	}*/
+	/*
+	 * @EventHandler public void onAreaEnter (PlayerEnterAreaEvent event) throws
+	 * IOException{ Player p = event.getPlayer(); p.sendMessage("before"); Area
+	 * area = (Area) event.getArea(); String name = area.getName();
+	 * event.getPlayer().sendMessage("You entered area "+ name); if
+	 * (name.endsWith("warp")){ final Craft c =
+	 * CraftManager.getInstance().getCraftByPlayer( event.getPlayer() ); if (c
+	 * != null){ if (MathUtils.playerIsWithinBoundingPolygon( c.getHitBox(),
+	 * c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(
+	 * event.getPlayer().getLocation() ) ) ) {
+	 * 
+	 * String[] split = name.split("_"); final String worldname =
+	 * BungeeUtils.capitalizeFirstLeter(split[0]);
+	 * event.getPlayer().sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD
+	 * + "Entering the atmosphere of " + worldname + "!");
+	 * event.getPlayer().setVelocity(new Vector(0, 0, 0));
+	 * 
+	 * c.shipAttemptingTeleport = true;
+	 * 
+	 * p.sendMessage("before task creation."); RepeatTryServerJumpTask task =
+	 * new RepeatTryServerJumpTask(p, c, worldname, 0, 205, 0);
+	 * task.runTaskTimer(Movecraft.getInstance(), 0, 1);
+	 * 
+	 * 
+	 * return; } } } }
+	 */
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerSleep(PlayerBedLeaveEvent event){
-		//if someone sleeps, update their bedspawn.
-		//Location l = getValidLocationToRespawn(event.getBed().getLocation().getBlock());
-		/*Bedspawn b = new Bedspawn(event.getPlayer().getName(), Bukkit.getServerName(), l.getWorld().getName(), l.getBlockX(), l.getBlockY(), l.getBlockZ());
-		if(!Bedspawn.hasKey(b)){
-			Bedspawn.saveNewBedspawn(b);
-		} else {
-			Bedspawn.saveBedspawn(b);
-		}*/
-		//event.getPlayer().sendMessage("Bedspawn updated. If this bed is on a ship, make sure you release and repilot your ship before flying it away.");
+	public void onPlayerSleep(PlayerBedLeaveEvent event) {
+		// if someone sleeps, update their bedspawn.
+		// Location l =
+		// getValidLocationToRespawn(event.getBed().getLocation().getBlock());
+		/*
+		 * Bedspawn b = new Bedspawn(event.getPlayer().getName(),
+		 * Bukkit.getServerName(), l.getWorld().getName(), l.getBlockX(),
+		 * l.getBlockY(), l.getBlockZ()); if(!Bedspawn.hasKey(b)){
+		 * Bedspawn.saveNewBedspawn(b); } else { Bedspawn.saveBedspawn(b); }
+		 */
+		// event.getPlayer().sendMessage("Bedspawn updated. If this bed is on a ship, make sure you release and repilot your ship before flying it away.");
 		event.getPlayer().sendMessage(ChatColor.RED + "Bedspawns are now disabled on starquest!");
 		event.getPlayer().sendMessage(ChatColor.RED + "Please use a cryopod instead! " + ChatColor.GOLD + " http://tinyurl.com/sqcryo");
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerRespawn(final PlayerRespawnEvent event){
-		if(CryoSpawn.respawnPlayer(event, event.getPlayer())){
+	public void onPlayerRespawn(final PlayerRespawnEvent event) {
+		if (CryoSpawn.respawnPlayer(event, event.getPlayer())) {
 			return;
 		} else {
 			Bedspawn b = Bedspawn.getBedspawn(event.getPlayer().getName());
-			if(b == null){
+			if (b == null) {
 				b = Bedspawn.DEFAULT;
 			}
-			/*else {
-				event.getPlayer().sendMessage(ChatColor.RED + "Bedspawns are DEPRECATED, they will be removed soon!");
-				event.getPlayer().sendMessage(ChatColor.RED + "Please use a cryopod instead! " + ChatColor.GOLD + " http://tinyurl.com/sqcryo");
-			}*/
+			/*
+			 * else { event.getPlayer().sendMessage(ChatColor.RED +
+			 * "Bedspawns are DEPRECATED, they will be removed soon!");
+			 * event.getPlayer().sendMessage(ChatColor.RED +
+			 * "Please use a cryopod instead! " + ChatColor.GOLD +
+			 * " http://tinyurl.com/sqcryo"); }
+			 */
 			System.out.println(b);
 			System.out.println("Player Current Server: " + Bukkit.getServerName());
-			if(!b.server.equals(Bukkit.getServerName())){
+			if (!b.server.equals(Bukkit.getServerName())) {
 				System.out.println("server name and target server name aren't equal, teleporting.");
 				final Bedspawn b2 = b;
-				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
-					public void run(){
+				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+					public void run() {
 						BungeePlayerHandler.sendPlayer(event.getPlayer(), b2.server, b2.world, b2.x, b2.y, b2.z);
 					}
 				}, 3L);
 			} else {
 				Location loc2 = new Location(Bukkit.getWorld(b.world), b.x, b.y, b.z);
-				if (checkForNotAir(loc2)){
+				if (checkForNotAir(loc2)) {
 					event.setRespawnLocation(loc2);
 				} else {
-					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
-						public void run(){
+					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+						public void run() {
 							BungeePlayerHandler.sendPlayer(event.getPlayer(), Bedspawn.DEFAULT.server, Bedspawn.DEFAULT.world, Bedspawn.DEFAULT.x, Bedspawn.DEFAULT.y, Bedspawn.DEFAULT.z);
 						}
 					}, 20L);
@@ -369,49 +380,67 @@ public class EntityListener implements Listener {
 		}
 	}
 
-	@EventHandler
-	public void onPlayerHit( EntityDamageEvent event ) {
-		if ( event.getEntity() instanceof Player && event.getCause() == DamageCause.SUFFOCATION) {
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerHit(EntityDamageEvent event) {
+		if (event.getEntity() instanceof Player) {
 			Player plr = (Player) event.getEntity();
-			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(event.getEntity().getWorld());
-			if(event.getEntity() != null && crafts != null){
-				for(Craft c : crafts){
-					if(c.playersRidingShip.contains(plr.getUniqueId())){
-						plr.teleport(c.originalPilotLoc);
-						plr.setHealth(plr.getMaxHealth());
-						plr.sendMessage("Whoa there! You kissed a wall...");
-						return;
+			if (event.getCause() == DamageCause.SUFFOCATION) {
+				Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(event.getEntity().getWorld());
+				if (event.getEntity() != null && crafts != null) {
+					for (Craft c : crafts) {
+						if (c.playersRidingShip.contains(plr.getUniqueId())) {
+							plr.teleport(c.originalPilotLoc);
+							plr.setHealth(plr.getMaxHealth());
+							plr.sendMessage("Whoa there! You kissed a wall...");
+							return;
+						}
 					}
 				}
 			}
+			if (event.getCause() == DamageCause.BLOCK_EXPLOSION) {
+					LocationHit l = LaserBolt.getClosestExplosion(event.getEntity().getLocation());
+					System.out.println(l.distanceSquared(event.getEntity().getLocation()));
+					if (l != null && l.distanceSquared(event.getEntity().getLocation()) < 49) {
+						event.setDamage(4D);
+						Player shooter = l.getPlayer();
+						if (shooter != null && shooter != plr) {
+							if(plr.getHealth() - event.getDamage() <= 0){
+								boolean success = KillUtils.creditKill(shooter, plr);
+								if(success) Bukkit.broadcastMessage(ChatColor.RED + "" + shooter + " killed " + plr + " with starship cannons!");
+							}
+						}
+					}
+			}
 		}
-	}   
-	private Location getValidLocationToRespawn(Block bed){
+	}
+
+	private Location getValidLocationToRespawn(Block bed) {
 		Block bed2 = bed;
 		ArrayList<Block> blocks = new ArrayList<Block>();
 		blocks.add(bed2.getRelative(BlockFace.NORTH));
 		blocks.add(bed2.getRelative(BlockFace.SOUTH));
 		blocks.add(bed2.getRelative(BlockFace.EAST));
 		blocks.add(bed2.getRelative(BlockFace.WEST));
-		
-		for (Block b : blocks){
-			if (b.getType() == Material.AIR){
-				if(b.getRelative(BlockFace.UP).getType() == Material.AIR){
+
+		for (Block b : blocks) {
+			if (b.getType() == Material.AIR) {
+				if (b.getRelative(BlockFace.UP).getType() == Material.AIR) {
 					Location bLoc = b.getLocation();
-					return new Location(bLoc.getWorld(), bLoc.getX()+0.5, bLoc.getY(), bLoc.getZ() + 0.5);
+					return new Location(bLoc.getWorld(), bLoc.getX() + 0.5, bLoc.getY(), bLoc.getZ() + 0.5);
 				}
 			}
 		}
 		return bed.getLocation();
 	}
-	public static boolean checkForNotAir(Location loc){
+
+	public static boolean checkForNotAir(Location loc) {
 		boolean found = false;
 		Block testblock = loc.getBlock();
 		int tries = 0;
-		while (!found && tries < 5){
+		while (!found && tries < 5) {
 			tries++;
 			testblock = testblock.getRelative(BlockFace.DOWN);
-			if (testblock.getType().isSolid()){
+			if (testblock.getType().isSolid()) {
 				found = true;
 				break;
 			}

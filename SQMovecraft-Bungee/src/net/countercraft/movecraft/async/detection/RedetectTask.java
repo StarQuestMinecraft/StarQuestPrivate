@@ -27,7 +27,7 @@ public class RedetectTask extends DetectionTask{
 	
 	
 	@Override
-	public void excecute() {
+	public void execute() {
 		
 		StarshipData d = Movecraft.getInstance().getStarshipDatabase().getStarshipByLocation(new Location(data.getWorld(), startLocation.getX(), startLocation.getY(), startLocation.getZ()));
 		if(d == null){

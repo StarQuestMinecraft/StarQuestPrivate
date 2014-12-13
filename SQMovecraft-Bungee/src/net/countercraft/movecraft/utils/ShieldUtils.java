@@ -231,6 +231,7 @@ public class ShieldUtils {
 		System.out.println((p == null) ? ("P is null!") : ("P is not null!"));
 		System.out.println("Enable Shield Called");
 		System.out.println("SignLocations length: " + signLocations.size());
+		// the below method has an NPE somewhere
 		Sign[] signs = toSigns(signLocations.toArray(new MovecraftLocation[1]), c.getW());
 		System.out.println("Signs length: " + signs.length);
 		for(Sign s : signs){

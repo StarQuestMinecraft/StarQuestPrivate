@@ -74,21 +74,22 @@ public class CryoSpawn {
 	}
 
 	// called when a player right clicks a [cryopod] sign
-	public static void setUpCryoTube(Sign initCryoSign, String player) {
+	public static void setUpCryoTube(Sign initCryoSign, String playerUntrimmed) {
+		String player = signTrim(playerUntrimmed);
 		if (isCryoTube(initCryoSign)) {
 			initCryoSign.setLine(0, KEY_LINE);
-			initCryoSign.setLine(1, signTrim(player));
+			initCryoSign.setLine(1, player);
 			initCryoSign.update();
 			if (hasKey(player)) {
 				updatePodSpawn(initCryoSign);
 			} else {
 				Block point = initCryoSign.getBlock().getRelative(0, -1, 0);
 				CryoSpawn spawn = new CryoSpawn(player, Bukkit.getServerName(), point.getWorld().getName(), point.getX(), point.getY(), point.getZ(), false);
-				Bukkit.getPlayer(player).sendMessage("Your spawn has been set!");
-				setNewPodSpawn(player, spawn);
+				Bukkit.getPlayer(playerUntrimmed).sendMessage("Your spawn has been set!");
+				setNewPodSpawn(spawn);
 			}
 		} else {
-			Bukkit.getPlayer(player).sendMessage("Not a valid cryopod!");
+			Bukkit.getPlayer(playerUntrimmed).sendMessage("Not a valid cryopod!");
 		}
 	}
 
@@ -103,7 +104,7 @@ public class CryoSpawn {
 		for (MovecraftLocation l : signLocations) {
 			Block b = w.getBlockAt(l.getX(), l.getY(), l.getZ());
 			Sign s = (Sign) b.getState();
-			if (isCryoTube(s)) {
+			if (isCryoTube(s) && s.getLine(0).equals(KEY_LINE)) {
 				updatePodSpawn(s);
 			}
 		}
@@ -123,9 +124,8 @@ public class CryoSpawn {
 	// SQL STUFF
 	// ==========================================================
 
-	public static void setNewPodSpawn(String name, CryoSpawn spawn) {
+	public static void setNewPodSpawn(CryoSpawn spawn) {
 		System.out.println("Setting new pod spawn!");
-		name = signTrim(name);
 		String playerName = spawn.player;
 		String playerWorld = spawn.world;
 		String playerServer = spawn.server;
@@ -197,13 +197,13 @@ public class CryoSpawn {
 		}
 	}
 
-	public static void removePodSpawn(String name) {
-		System.out.println("removing pod spawn: " + name);
-		name = signTrim(name);
+	public static void removePodSpawn(String playerUntrimmed) {
+		System.out.println("removing pod spawn: " + playerUntrimmed);
+		String player = signTrim(playerUntrimmed);
 		PreparedStatement s = null;
 		try {
 			s = Bedspawn.cntx.prepareStatement("DELETE FROM CRYOSPAWNS WHERE `name` = ?");
-			s.setString(1, name);
+			s.setString(1, player);
 			s.execute();
 			s.close();
 		} catch (Exception e) {
@@ -211,15 +211,15 @@ public class CryoSpawn {
 		} finally {
 			close(s);
 		}
-		Player p = Bukkit.getPlayer(name);
+		Player p = Bukkit.getPlayer(playerUntrimmed);
 		if (p != null) {
 			p.sendMessage(ChatColor.RED + "Your CryoSpawn was broken!");
 		}
 	}
 
-	public static CryoSpawn getSpawn(String name) {
-		System.out.println("Getting spawn for: " + name);
-		name = signTrim(name);
+	public static CryoSpawn getSpawn(String playerUntrimmed) {
+		System.out.println("Getting spawn for: " + playerUntrimmed);
+		String player = signTrim(playerUntrimmed);
 		String playerName;
 		String playerWorld;
 		String playerServer;
@@ -233,7 +233,7 @@ public class CryoSpawn {
 		Statement s = null;
 		try {
 			s = Bedspawn.cntx.createStatement();
-			ResultSet rs = s.executeQuery("SELECT * FROM CRYOSPAWNS WHERE name = " + "\'" + name + "\'");
+			ResultSet rs = s.executeQuery("SELECT * FROM CRYOSPAWNS WHERE name = " + "\'" + player + "\'");
 
 			if (rs.next()) {
 				playerName = rs.getString("name");
@@ -375,15 +375,17 @@ public class CryoSpawn {
 
 	public static void toggleActive(Sign sign, Player player2) {
 		boolean isActive = isActive(sign);
-		setActive(player2.getName(), !isActive);
-		if (isActive) {
-			sign.setLine(2, "");
-			sign.setLine(3, "");
-			player2.sendMessage("Your CryoPod is now in passive mode. You will not be warped to it unless you die.");
-		} else {
-			sign.setLine(2, ACTIVE_L1);
-			sign.setLine(3, ACTIVE_L2);
-			player2.sendMessage("Your CryoPod is now in active mode. You will be warped to it whenever you log in.");
+		if (signTrim(player2.getName()).equals(signTrim(sign.getLine(1)))) {
+			setActive(player2.getName(), !isActive);
+			if (isActive) {
+				sign.setLine(2, "");
+				sign.setLine(3, "");
+				player2.sendMessage("Your CryoPod is now in passive mode. You will not be warped to it unless you die.");
+			} else {
+				sign.setLine(2, ACTIVE_L1);
+				sign.setLine(3, ACTIVE_L2);
+				player2.sendMessage("Your CryoPod is now in active mode. You will be warped to it whenever you log in.");
+			}
 		}
 		sign.update();
 	}
@@ -439,18 +441,17 @@ public class CryoSpawn {
 
 	public static void addToAnyShips(Location target, Player p) {
 		Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
-		if(crafts != null){
-			for(Craft c : crafts){
-				if(MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))){
-					try{
+		if (crafts != null) {
+			for (Craft c : crafts) {
+				if (MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))) {
+					try {
 						c.playersRidingLock.acquire();
-						if(!c.playersRidingShip.contains(p.getUniqueId())){
+						if (!c.playersRidingShip.contains(p.getUniqueId())) {
 							c.playersRidingShip.add(p.getUniqueId());
 							p.sendMessage("You board a craft of type " + c.getType().getCraftName() + " under the command of captain " + c.pilot.getName() + ".");
 						}
 						c.playersRidingLock.release();
-					}
-					catch(Exception ex){
+					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
 					return;

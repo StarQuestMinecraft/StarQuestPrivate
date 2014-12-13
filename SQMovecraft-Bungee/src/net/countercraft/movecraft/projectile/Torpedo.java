@@ -63,12 +63,6 @@ public class Torpedo extends Projectile{
 		TNTPrimed tnt = myBlock.getWorld().spawn(myBlock.getLocation(), TNTPrimed.class);
 		tnt.setFuseTicks(1);
 		tnt.setIsIncendiary(true);
-		/*myBlock.setType(Material.AIR);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
-			public void run(){
-				myBlock.getWorld().createExplosion(myBlock.getLocation(), 4.0F);
-			}
-		}, 1L);*/
 	}
 	@SuppressWarnings("deprecation")
 	public static BlockFace getFacingBlockFace(Sign s){

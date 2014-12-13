@@ -24,7 +24,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.AsyncManager;
+import net.countercraft.movecraft.async.AsyncTask;
 import net.countercraft.movecraft.async.detection.DetectionTask;
+import net.countercraft.movecraft.async.detection.PodDetectionTask;
 import net.countercraft.movecraft.async.detection.RedetectTask;
 import net.countercraft.movecraft.async.rotation.RotationTask;
 import net.countercraft.movecraft.async.translation.TranslationTask;
@@ -119,16 +121,24 @@ public class Craft {
 
 	public void detect(Player p, MovecraftLocation startPoint) {
 		pilot = p;
-		CraftPilotEvent event = new CraftPilotEvent(this);
-		if (event.call())
-			AsyncManager.getInstance().submitTask(new DetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w), this);
+		AsyncTask task;
+		if(this.getType().getCraftName().equals("Pod")){
+			task = new PodDetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
+		} else {
+			task = new DetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
+		}
+		AsyncManager.getInstance().submitTask(task, this);
 	}
 	
 	public void redetect(Player p, MovecraftLocation startPoint){
 		pilot = p;
-		CraftPilotEvent event = new CraftPilotEvent(this);
-		if (event.call())
-			AsyncManager.getInstance().submitTask(new RedetectTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w), this);
+		AsyncTask task;
+		if(this.getType().getCraftName().equals("Pod")){
+			task = new PodDetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
+		} else {
+			task = new RedetectTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
+		}
+		AsyncManager.getInstance().submitTask(task, this);
 	}
 
 	public void translate(int dx, int dy, int dz) {
@@ -240,7 +250,7 @@ public class Craft {
 		BlockFace playerFacing = GunUtils.yawToFace(p.getLocation().getYaw());
 		int datavalue = GunUtils.getIntegerDirection(playerFacing);
 
-		if (!this.processing.get()) {
+		if (!this.processing.get() && p.getEyeLocation().getBlock().getType() == Material.AIR) {
 			this.processing.set(true);
 			int cannonCount = 0;
 			int allowed = this.getType().getAllowedCannons();
@@ -272,7 +282,7 @@ public class Craft {
 								f.setIsIncendiary(true);
 								f.setYield(2.5F);
 								f.setBounce(false);*/
-								new LaserBolt(twoinfront, playerFacing);
+								new LaserBolt(twoinfront, playerFacing, this.pilot);
 								twoinfront.getWorld().playSound(twoinfront.getLocation(), Sound.SHOOT_ARROW, 2.0F, 1.0F);
 								
 								Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
@@ -282,19 +292,18 @@ public class Craft {
 										behind.setType(Material.SPONGE);
 									}
 								}, 5L);
-	
-								Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
-	
-									@Override
-									public void run() {
-										processing.set(false);
-									}
-								}, 10L);
 							}
 						}
 					}
 				}
 			}
+			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+				
+				@Override
+				public void run() {
+					processing.set(false);
+				}
+			}, 10L);
 		}
 	}
 

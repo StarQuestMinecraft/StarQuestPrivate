@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.detection.DetectionTask;
 import net.countercraft.movecraft.async.detection.DetectionTaskData;
+import net.countercraft.movecraft.async.detection.PodDetectionTask;
 import net.countercraft.movecraft.async.detection.RedetectTask;
 import net.countercraft.movecraft.async.rotation.RotationTask;
 import net.countercraft.movecraft.async.translation.TranslationTask;
@@ -217,6 +218,8 @@ public class AsyncManager extends BukkitRunnable {
 							}
 							if(poll instanceof RedetectTask){
 								p.sendMessage("Succesfully piloted existing starship!");
+							} else if(poll instanceof PodDetectionTask){
+								p.sendMessage("Succesfully piloted a pod!");
 							} else {
 								p.sendMessage("Succesfully detected and piloted a new starship! Your ship is now saved, you can right-click the sign to pilot it without detecting.");
 							}

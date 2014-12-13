@@ -27,7 +27,7 @@ import org.bukkit.inventory.InventoryHolder;
 
 public class TeleportTask {
 	public static boolean worldJump(Player pilot, Craft c, Location locto, boolean repilot) {
-
+		try{
 		//calculate the difference in x and difference in y of the current
 		// location to the target location
 		Location startloc = pilot.getLocation();
@@ -136,6 +136,7 @@ public class TeleportTask {
 
 		// pilot the new craft
 		if(repilot){
+			System.out.println("Repiloting!");
 			Location loc = pilot.getLocation();
 			MovecraftLocation startPoint = new MovecraftLocation(loc.getBlockX(), loc.getBlockY() - 1, loc.getBlockZ());
 			Craft newCraft = new Craft(c.getType(), loc.getWorld());
@@ -157,6 +158,9 @@ public class TeleportTask {
 		// w.newLine();
 		// w.write("===============================");
 		// w.close();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 		return true;
 	}
 
@@ -169,22 +173,23 @@ public class TeleportTask {
 			MovecraftLocation oldLoc = blocksList[i];
 			
 			Block b = w.getBlockAt(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ());
-			final int oldID = b.getTypeId();
-			final byte oldData = b.getData();
 			// wrt.write("Index: " + i + " ID: " + oldID + " Data: " + oldData);
 			// .newLine();
 			Location newLoc = new Location(locto.getWorld(), oldLoc.getX() + dX, oldLoc.getY() + dY, oldLoc.getZ() + dZ);
 			if (!newLoc.getChunk().isLoaded()) {
 				newLoc.getChunk().load();
 			}
-			processSingleBlock(b, oldLoc, newLoc, w, oldID, oldData);
+			processSingleBlock(b, oldLoc, newLoc, w);
 		}
 	}
 
 	// single block processor
 	@SuppressWarnings("deprecation")
-	private static void processSingleBlock(Block b, MovecraftLocation oldLoc, Location newLoc, World w, int oldID, byte oldData) {
+	private static void processSingleBlock(Block b, MovecraftLocation oldLoc, Location newLoc, World w) {
 
+		final int oldID = b.getTypeId();
+		final byte oldData = b.getData();
+		
 		// set the new block to the correct type id and data
 		// .write("Id updated to " + oldID + " and data updated to " + oldData +
 		// " at " + newLoc.getX() + "," + newLoc.getY() + "," + newLoc.getZ());
@@ -208,10 +213,10 @@ public class TeleportTask {
 			ns.update();
 		}
 		if(b.getState() instanceof InventoryHolder){
-			InventoryHolder h = (InventoryHolder) b;
+			InventoryHolder h = (InventoryHolder) b.getState();
 			Inventory inv = h.getInventory();
 			Block targ = newLoc.getBlock();
-			InventoryHolder th = ((InventoryHolder) targ);
+			InventoryHolder th = ((InventoryHolder) targ.getState());
 			th.getInventory().setContents(inv.getContents());
 		}
 		b.setTypeIdAndData(0, (byte) 0, false);

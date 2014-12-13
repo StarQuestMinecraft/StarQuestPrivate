@@ -6,20 +6,24 @@ import net.countercraft.movecraft.Movecraft;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
 
 public class LaserBolt extends Projectile{
 	
 	private static HashSet<Block> blocks = new HashSet<Block>();
 	
+	private static HashSet<LocationHit> recentExplosions = new HashSet<LocationHit>();
+	Player shooter;
 	private byte myData = 0;
-	public LaserBolt(Block block, BlockFace direction) {
+	public LaserBolt(Block block, BlockFace direction, Player shooter) {
 		super(block, direction);
 		blocks.add(block);
-		System.out.println("Blocks active in world: " + blocks.size());
+		this.shooter = shooter;
 		BlockFace behind = getOppsoiteBlockFace(direction);
 		Block behind4 = block.getRelative(behind).getRelative(behind).getRelative(behind).getRelative(behind);
 		if(behind4.getType() == Material.WOOL){
@@ -45,7 +49,7 @@ public class LaserBolt extends Projectile{
 		myBlock.setType(Material.AIR);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 			public void run(){
-				myBlock.getWorld().createExplosion(myBlock.getLocation(), 2.0F);
+				createExplosion(myBlock.getLocation(), shooter, 2.0F);
 			}
 		}, 1L);
 	}
@@ -53,6 +57,19 @@ public class LaserBolt extends Projectile{
 	@Override
 	public void removeData(){
 		blocks.remove(myBlock);
+	}
+	
+	public static void createExplosion(Location l, Player shooter, float power){
+		recentExplosions.add(new LocationHit(l, shooter));
+		System.out.println("added to recent explosions!");
+		l.getWorld().createExplosion(l, power);
+		recentExplosions.remove(l);
+		System.out.println("removed from recent explosions!");
+		/*Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+			public void run(){
+				recentExplosions.remove(l);
+			}
+		}, 20L);*/
 	}
 	
 	//region info __global__ -w 
@@ -84,5 +101,44 @@ public class LaserBolt extends Projectile{
 	
 	public static HashSet<Block> getBoltBlocks(){
 		return blocks;
+	}
+
+	public static LocationHit getClosestExplosion(Location me) {
+		double minDist = Double.MAX_VALUE;
+		LocationHit closest = null;
+		for(LocationHit l : recentExplosions){
+			double dist = l.distanceSquared(me);
+			if(dist < minDist){
+				closest = l;
+			}
+		}
+		return closest;
+	}
+	
+	public static class LocationHit{
+		
+		Location loc;
+		Player plr;
+		public LocationHit(Location l, Player p){
+			loc = l;
+			plr = p;
+		}
+		
+		public Location getLocation(){
+			return loc;
+		}
+		
+		public Player getPlayer(){
+			return plr;
+		}
+		
+		
+		public double distanceSquared(Location l){
+			double dx = loc.getX() - l.getX();
+			double dy = loc.getY() - l.getY();
+			double dz = loc.getZ() - l.getZ();
+			
+			return dx * dx + dy * dy + dz * dz;
+		}
 	}
 }
