@@ -61,10 +61,8 @@ public class LaserBolt extends Projectile{
 	
 	public static void createExplosion(Location l, Player shooter, float power){
 		recentExplosions.add(new LocationHit(l, shooter));
-		System.out.println("added to recent explosions!");
 		l.getWorld().createExplosion(l, power);
 		recentExplosions.remove(l);
-		System.out.println("removed from recent explosions!");
 		/*Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 			public void run(){
 				recentExplosions.remove(l);

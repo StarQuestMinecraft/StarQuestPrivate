@@ -152,7 +152,7 @@ public class AsyncManager extends BukkitRunnable {
 									}
 								}
 								//check each sign to see if it's a craft sign
-								boolean isCraftType = (InteractListener.getCraftTypeFromString(s.getLine(0)) != null);
+								boolean isCraftType = (!s.getLine(0).equals("Pod")) && (InteractListener.getCraftTypeFromString(s.getLine(0)) != null);
 								if (isCraftType){
 									//special rules for carriers!
 									if (c.getType().equals(CARRIER) || c.getType().equals(FLAGSHIP)){

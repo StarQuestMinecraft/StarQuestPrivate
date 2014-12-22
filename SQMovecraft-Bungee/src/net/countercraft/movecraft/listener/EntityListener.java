@@ -402,6 +402,9 @@ public class EntityListener implements Listener {
 					System.out.println(l.distanceSquared(event.getEntity().getLocation()));
 					if (l != null && l.distanceSquared(event.getEntity().getLocation()) < 49) {
 						event.setDamage(4D);
+						Craft c = CraftManager.getInstance().getCraftByPlayer(plr);
+						if (c != null)
+						CraftManager.getInstance().removeCraft(CraftManager.getInstance().getCraftByPlayer(plr));
 						Player shooter = l.getPlayer();
 						if (shooter != null && shooter != plr) {
 							if(plr.getHealth() - event.getDamage() <= 0){
