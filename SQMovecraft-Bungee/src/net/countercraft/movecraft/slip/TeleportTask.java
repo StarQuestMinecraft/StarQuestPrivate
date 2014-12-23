@@ -1,4 +1,4 @@
-package net.countercraft.movecraft.task;
+package net.countercraft.movecraft.slip;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 public class TeleportTask {
-	public static boolean worldJump(Player pilot, Craft c, Location locto, boolean repilot) {
+	public static boolean worldJump(Player pilot, Craft c, Location locto, boolean repilot, boolean unpilot) {
 		try{
 		//calculate the difference in x and difference in y of the current
 		// location to the target location
@@ -106,7 +106,9 @@ public class TeleportTask {
 		
 			
 		// remove the old craft
-		CraftManager.getInstance().removeCraft(c, false);
+		if(unpilot){
+			CraftManager.getInstance().removeCraft(c, false);
+		}
 
 		// w.write("BEGIN teleportBlocks: " + System.currentTimeMillis());
 		// w.newLine();

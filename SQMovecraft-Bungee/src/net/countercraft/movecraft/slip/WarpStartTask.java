@@ -1,4 +1,4 @@
-package net.countercraft.movecraft.task;
+package net.countercraft.movecraft.slip;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;

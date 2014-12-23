@@ -122,7 +122,7 @@ public class Craft {
 	public void detect(Player p, MovecraftLocation startPoint) {
 		pilot = p;
 		AsyncTask task;
-		if(this.getType().getCraftName().equals("Pod")){
+		if(this.getType().getCraftName().equalsIgnoreCase("Pod")){
 			task = new PodDetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
 		} else {
 			task = new DetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
@@ -133,7 +133,7 @@ public class Craft {
 	public void redetect(Player p, MovecraftLocation startPoint){
 		pilot = p;
 		AsyncTask task;
-		if(this.getType().getCraftName().equals("Pod")){
+		if(this.getType().getCraftName().equalsIgnoreCase("Pod")){
 			task = new PodDetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
 		} else {
 			task = new RedetectTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);

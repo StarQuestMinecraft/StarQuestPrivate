@@ -28,8 +28,8 @@ import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.projectile.LaserBolt;
 import net.countercraft.movecraft.projectile.Torpedo;
+import net.countercraft.movecraft.slip.WarpStartTask;
 import net.countercraft.movecraft.task.AutopilotRunTask;
-import net.countercraft.movecraft.task.WarpStartTask;
 import net.countercraft.movecraft.utils.BoardingRampUtils;
 import net.countercraft.movecraft.utils.BomberUtils;
 import net.countercraft.movecraft.utils.JammerUtils;
@@ -123,7 +123,6 @@ public class InteractListener implements Listener {
 					}
 				} else if (sign.getLine(0).equalsIgnoreCase(ChatColor.BLUE + "AUTOPILOT")) {
 					AutopilotRunTask.incrementSpeed(sign, event.getPlayer());
-					event.setCancelled(true);
 					return;
 				}
 				if(event.getPlayer().getItemInHand().getType() == Material.WATCH){
@@ -328,7 +327,7 @@ public class InteractListener implements Listener {
 			}
 			new WarpStartTask(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer(), sign);
 		} else if (sign.getLine(2).equals(ChatColor.BLUE + "Stable Slip.")) {
-			WarpUtils.leaveWarp(event.getPlayer(), CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), true);
+			WarpUtils.leaveWarp(event.getPlayer(), CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), true, true);
 			sign.setLine(2, ChatColor.GREEN + "Disabled.");
 			sign.update();
 

@@ -91,14 +91,6 @@ public class EntityListener implements Listener {
 
 	private final static Towny plugin = (Towny) Bukkit.getServer().getPluginManager().getPlugin("Towny");
 
-	@EventHandler
-	public void onDamage(EntityDamageByBlockEvent event) {
-		System.out.println("Damage by block!");
-		LocationHit l = LaserBolt.getClosestExplosion(event.getEntity().getLocation());
-		if (l != null && l.distanceSquared(event.getEntity().getLocation()) < 25) {
-		}
-	}
-
 	@EventHandler(priority = EventPriority.LOW)
 	public void onEntityExplode(EntityExplodeEvent event) {
 		System.out.println(event.getLocation());
@@ -404,7 +396,7 @@ public class EntityListener implements Listener {
 						event.setDamage(4D);
 						Craft c = CraftManager.getInstance().getCraftByPlayer(plr);
 						if (c != null)
-						CraftManager.getInstance().removeCraft(CraftManager.getInstance().getCraftByPlayer(plr));
+							CraftManager.getInstance().removeCraft(c);
 						Player shooter = l.getPlayer();
 						if (shooter != null && shooter != plr) {
 							if(plr.getHealth() - event.getDamage() <= 0){

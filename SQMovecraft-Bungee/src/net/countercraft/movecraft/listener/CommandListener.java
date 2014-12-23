@@ -61,7 +61,7 @@ public class CommandListener implements Listener {
 			final Craft pCraft = CraftManager.getInstance().getCraftByPlayer( e.getPlayer() );
 
 			if ( pCraft != null ) {
-				WarpUtils.leaveWarp(e.getPlayer(), pCraft, true);
+				WarpUtils.leaveWarp(e.getPlayer(), pCraft, true, true);
 			}
 
 			e.setCancelled( true );
