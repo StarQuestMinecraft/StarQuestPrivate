@@ -70,6 +70,7 @@ public class ServerjumpTeleport implements PlayerTeleport{
 			this.knapsack.unpack(p);
 		}
 		p.setGameMode(gamemode);
+		p.setHealth(p.getMaxHealth());
 		BungeePlayerHandler.teleportQueue.remove(this);
 		
 		if(!isBedspawn){

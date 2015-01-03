@@ -1,9 +1,12 @@
 package net.countercraft.movecraft.utils;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -22,9 +25,14 @@ import com.massivecraft.factions.entity.BoardColls;
 import com.massivecraft.factions.entity.FactionColls;
 import com.palmergames.bukkit.towny.object.TownBlock;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
+import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
+import com.sk89q.worldedit.bukkit.selections.Selection;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.databases.ProtectionDatabaseException;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.Flag;
@@ -189,6 +197,10 @@ public class ShieldUtils {
 						s.update();
 					}
 				}*/
+				ApplicableRegionSet set = rm.getApplicableRegions(reg);
+				for(ProtectedRegion r : set){
+					//TODO check for all dock regions
+				}
 				rm.addRegion(reg);
 				DefaultDomain members = new DefaultDomain();
 				fill(members, this.members);
@@ -293,27 +305,151 @@ public class ShieldUtils {
 	}
 	
 	public static boolean checkForCanBuild(Player p, int xmin, int zmin, int xmax, int zmax){
-		int chunkx = xmin - (xmin % 16);
-		System.out.println("x min: " + chunkx);
-		int chunkz = zmin - (zmin % 16);
-		System.out.println("z min: " + chunkz);
+		//first do canbuild checks for towny and factions in all places
+		int[] cmin = getChunkCoordinates(p.getWorld(), xmin, zmin);
+		int[] cmax = getChunkCoordinates(p.getWorld(), xmax, zmax);
 		
-		boolean passed = true;
-		passcheck:
-		for(int x = chunkx; x < xmax; x += 16){
-			for(int z = chunkz; z < zmax; z += 16){
-				if(!checkCanBuild(p, x, z)){
-					passed = false;
-					break passcheck;
+		//iterate over every chunk that the region contains
+		for(int x = cmin[0]; x <= cmax[0]; x++){
+			for(int z = cmin[1]; z <= cmax[1]; z++){
+				
+				//create a block to test
+				Block b = p.getWorld().getBlockAt(x, 100, z);
+				BlockBreakEvent event = new BlockBreakEvent(b, p);
+				Bukkit.getServer().getPluginManager().callEvent(event);
+				if(event.isCancelled()) return false;
+			}
+		}
+		
+		//made it through that? Check the worldguard regions
+		Map<String, ProtectedRegion> regions = wg.getRegionManager(p.getWorld()).getRegions();
+		for(String s : regions.keySet()){
+			ProtectedRegion r = regions.get(s);
+			if(overlaps(r, xmin, zmin, xmax, zmax)){
+				if(!(r.getMembers().contains(p.getName()) || r.getOwners().contains(p.getName()))){
+					return false;
 				}
 			}
+		}
+		return true;
+	}
+	
+	private static boolean overlaps(ProtectedRegion r, int blueTopLeftX, int blueTopLeftZ, int blueBottomRightX, int blueBottomRightZ){
+		return xoverlapcheck(r, blueTopLeftX, blueBottomRightX) && zoverlapcheck(r, blueTopLeftZ, blueBottomRightZ);
+	}
+	
+	private static boolean xoverlapcheck(ProtectedRegion r, int blueTopLeftX, int blueBottomRightX){
+		Vector blackTopLeft = r.getMinimumPoint();
+		Vector blackBottomRight = r.getMaximumPoint();
+		// black left side overlaps.
+	    if ((blackTopLeft.getX() < blueBottomRightX) &&
+	        (blackTopLeft.getX() > blueTopLeftX))
+	    {
+	        return true;
+	    }
+
+	    // black right side overlaps.
+	    if ((blackBottomRight.getX() < blueBottomRightX) &&
+	        (blackBottomRight.getX() > blueTopLeftX))
+	    {
+	        return true;
+	    }
+
+	    // black fully contains blue.
+	    if ((blackBottomRight.getX() > blueBottomRightX) &&
+	        (blackTopLeft.getX() < blueTopLeftX))
+	    {
+	        return true;
+	    }
+	    return false;
+	}
+	
+	private static boolean zoverlapcheck(ProtectedRegion r, int blueTopLeftZ, int blueBottomRightZ){
+		Vector blackTopLeft = r.getMinimumPoint();
+		Vector blackBottomRight = r.getMaximumPoint();
+		 // black top side overlaps.
+	    if ((blackTopLeft.getZ() > blueTopLeftZ) &&
+	        (blackTopLeft.getZ() < blueBottomRightZ))
+	    {
+	        return true;
+	    }
+
+	    // black bottom side overlaps.
+	    if ((blackBottomRight.getZ() > blueTopLeftZ) &&
+	        (blackBottomRight.getZ() < blueBottomRightZ))
+	    {
+	        return true;
+	    }
+
+	    // black fully contains blue.
+	    if ((blackBottomRight.getZ() > blueTopLeftZ) &&
+	        (blackBottomRight.getZ() < blueBottomRightZ))
+	    {
+	        return true;
+	    }
+	    return false;
+	}
+	private static int[] getChunkCoordinates(World w, int x, int z){
+		Chunk c = w.getChunkAt(x,z);
+		int x2 = c.getX();
+		int z2 = c.getZ();
+		return new int[] {x2, z2};
+	}
+
+	public static boolean claimDock(Player sender) {
+		try {
+			Selection s = wg.getWorldEdit().getSelection(sender);
+			Location min = s.getMinimumPoint();
+			Location max = s.getMaximumPoint();
+			if(!checkForCanBuild(sender, min.getBlockX(), min.getBlockZ(), max.getBlockX(), max.getBlockZ())){
+				sender.sendMessage("Your selection overlaps an area in which you cannot build.");
+				return false;
+			}
+			String name = generateName(sender, min);
+			ProtectedRegion pr = new ProtectedCuboidRegion(name, convertToBV(min), convertToBV(max));
+			setRegionFlag(pr, DefaultFlag.PASSTHROUGH, "allow");
+			RegionManager rm = wg.getRegionManager(sender.getWorld());
+			rm.addRegion(pr);
+			saveRM(rm);
+			return true;
+		} catch (CommandException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return false;
 	}
 	
-	private static boolean checkCanBuild(Player p, int x, int z){
-		BlockBreakEvent event = new BlockBreakEvent(p.getWorld().getBlockAt(x,100,z), p);
-		Bukkit.getPluginManager().callEvent(event);
-		return !event.isCancelled();
+	public static boolean isDockRegionAndIsOwnedByPlr(ProtectedRegion r, Player p){
+		if(!r.getId().startsWith("dock_")) return false;
+		String sub = r.getId().substring(5, r.getId().length());
+		if(sub.startsWith(p.getName())) return true;
+		return false;
 	}
+	
+	public static void removeDockRegions(Player p){
+		RegionManager rm = wg.getRegionManager(p.getWorld());
+		ApplicableRegionSet set = rm.getApplicableRegions(p.getLocation());
+		ProtectedRegion remove = null;
+		for(ProtectedRegion r : set){
+			if(isDockRegionAndIsOwnedByPlr(r, p)){
+				remove = r;
+				break;
+			}
+		}
+		if(remove != null){
+			rm.removeRegion(remove.getId());
+			saveRM(rm);
+			p.sendMessage("Removed a dock region where you're standing!");
+		} else {
+			p.sendMessage("No dock region owned by you found at this location.");
+		}
+	}
+	
+	private static String generateName(Player p, Location mn){
+		return "dock_" + p.getName() + "@" + mn.getBlockX() + "," + mn.getBlockY() + "," + mn.getBlockZ();
+	}
+	
+	public static com.sk89q.worldedit.BlockVector convertToBV(Location location){
+		return new com.sk89q.worldedit.BlockVector(location.getX(),location.getY(),location.getZ());
+		}
 }

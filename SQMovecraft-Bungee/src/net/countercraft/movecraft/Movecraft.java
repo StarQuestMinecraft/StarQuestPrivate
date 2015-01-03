@@ -49,6 +49,7 @@ import net.countercraft.movecraft.task.AutopilotRunTask;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MovecraftLocation;
+import net.countercraft.movecraft.utils.ShieldUtils;
 import net.countercraft.movecraft.utils.ShipNuker;
 
 import org.bukkit.Bukkit;
@@ -124,9 +125,11 @@ public class Movecraft extends JavaPlugin {
 		} else if(cmd.getName().equalsIgnoreCase("releaseall")){
 			if(sender instanceof ConsoleCommandSender || sender.isOp() || sender.hasPermission("movecraft.override")){
 				CraftManager.getInstance().releaseAllCrafts();
-				System.out.println("All crafts released!");
+				sender.sendMessage("All crafts released!");
 				return true;
 			}
+		} else if(cmd.getName().equalsIgnoreCase("claimdock") && sender instanceof Player){
+			ShieldUtils.claimDock((Player) sender);
 		}
 		return false;
 	}
