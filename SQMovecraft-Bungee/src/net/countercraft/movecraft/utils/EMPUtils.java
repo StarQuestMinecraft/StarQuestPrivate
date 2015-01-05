@@ -48,7 +48,9 @@ public class EMPUtils {
 			if(b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN_POST){
 				Sign s = (Sign) b.getState();
 				String l1 = s.getLine(0);
-				if(InteractListener.getCraftTypeFromString(l1) != null || EXPLODE_SIGNS.contains(l1)){
+				if(InteractListener.getCraftTypeFromString(l1) != null){
+					nukeCraftSign(s);
+				} else if(EXPLODE_SIGNS.contains(l1)){
 					nukeBlock(b);
 				}
 			} else if(Math.random() < 0.25){
@@ -67,5 +69,18 @@ public class EMPUtils {
 	private static void nukeBlock(Block b){
 		b.breakNaturally();
 		smoke(b);
+	}
+	
+	private static void nukeCraftSign(Sign s){
+		String[] lines = new String[]{
+			ChatColor.RED + "EMP shorted",
+			ChatColor.RED + "control",
+			ChatColor.RED + "sign",
+			ChatColor.RED + ":("
+		};
+		for(int i = 0; i < lines.length; i++){
+			s.setLine(i, lines[i]);
+		}
+		s.update();
 	}
 }

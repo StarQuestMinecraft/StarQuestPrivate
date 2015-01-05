@@ -32,11 +32,11 @@ import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.database.StarshipData;
 import net.countercraft.movecraft.localisation.I18nSupport;
+import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.task.AutopilotRunTask;
 import net.countercraft.movecraft.utils.JammerUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
-import net.countercraft.movecraft.utils.ShieldUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -109,7 +109,7 @@ public class CraftManager {
 		ArrayList<MovecraftLocation> signLocations = c.getSignLocations();
 		JammerUtils.disableJammer(c, signLocations);
 		System.out.println((p == null) ? ("P is null!") : ("P is not null!"));
-		//ShieldUtils.enableShield(c, signLocations, p);
+		ShieldUtils.enableShield(c, signLocations, p);
 		CryoSpawn.updatePodSpawns(c.getW(), signLocations);
 		try{
 			if(!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))){

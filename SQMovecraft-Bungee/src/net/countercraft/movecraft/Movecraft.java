@@ -45,11 +45,12 @@ import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.listener.PartListener;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.metrics.MovecraftMetrics;
+import net.countercraft.movecraft.shield.DockUtils;
+import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.task.AutopilotRunTask;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MovecraftLocation;
-import net.countercraft.movecraft.utils.ShieldUtils;
 import net.countercraft.movecraft.utils.ShipNuker;
 
 import org.bukkit.Bukkit;
@@ -129,7 +130,7 @@ public class Movecraft extends JavaPlugin {
 				return true;
 			}
 		} else if(cmd.getName().equalsIgnoreCase("claimdock") && sender instanceof Player){
-			ShieldUtils.claimDock((Player) sender);
+			return DockUtils.claimDock((Player) sender);
 		}
 		return false;
 	}

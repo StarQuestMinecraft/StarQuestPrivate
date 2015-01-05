@@ -36,6 +36,7 @@ import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.localisation.I18nSupport;
+import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.task.AutopilotRunTask;
 import net.countercraft.movecraft.utils.BlockUtils;
 import net.countercraft.movecraft.utils.EntityUpdateCommand;
@@ -45,7 +46,6 @@ import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.MovingPartUtils;
 import net.countercraft.movecraft.utils.Rotation;
-import net.countercraft.movecraft.utils.ShieldUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -179,12 +179,6 @@ public class AsyncManager extends BukkitRunnable {
 										}
 									}
 								}
-								
-								/*if(ShieldUtils.isShieldSign(s)){
-									if(s.getLine(1).equals(ShieldUtils.ENABLED))
-									c.pilot.sendMessage(ChatColor.RED + "Disabled Shield.");
-									ShieldUtils.disableShield(s, c);
-								}*/
 							}
 						}
 						if ( !failed ) {

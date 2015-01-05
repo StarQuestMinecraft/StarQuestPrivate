@@ -30,10 +30,11 @@ import net.countercraft.movecraft.craft.CraftType;
 
 
 import net.countercraft.movecraft.cryo.CryoSpawn;
+import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.utils.KillUtils;
 import net.countercraft.movecraft.utils.MathUtils;
-import net.countercraft.movecraft.utils.ShieldUtils;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 //import net.countercraft.movecraft.items.StorageChestItem;
@@ -72,9 +73,9 @@ public class BlockListener implements Listener {
 				return;
 			}
 		}
-		/*if(event.getLine(0).equalsIgnoreCase("[shield]")){
+		if(event.getLine(0).equalsIgnoreCase("[shield]")){
 			ShieldUtils.setupShieldSign(event);
-		}*/
+		}
 	}
 	
 	/*@EventHandler
@@ -129,7 +130,7 @@ public class BlockListener implements Listener {
 				}
 			}*/
 			
-			else if(InteractListener.getCraftTypeFromString(s.getLine(0)) != null){
+			else if(InteractListener.getCraftTypeFromString(s.getLine(0)) != null || s.getLine(0).equals(ChatColor.RED + "EMP shorted")){
 				KillUtils.onBreakShipSign(s, e.getPlayer());
 				
 				Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(e.getBlock().getWorld());
