@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 
 public class BlockUtils {
@@ -53,6 +54,10 @@ public class BlockUtils {
 		}
 
 		return false;
+	}
+	
+	public static Block getBlockAt(World w, MovecraftLocation l){
+		return w.getBlockAt(l.getX(), l.getY(), l.getZ());
 	}
 	
 	public static Block[] getEdges(Block b, boolean includeDiagnoals, boolean includeSelf){

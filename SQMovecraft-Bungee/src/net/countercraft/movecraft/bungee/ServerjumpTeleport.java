@@ -71,6 +71,7 @@ public class ServerjumpTeleport implements PlayerTeleport{
 		}
 		p.setGameMode(gamemode);
 		p.setHealth(p.getMaxHealth());
+		p.setFallDistance(0);
 		BungeePlayerHandler.teleportQueue.remove(this);
 		
 		if(!isBedspawn){

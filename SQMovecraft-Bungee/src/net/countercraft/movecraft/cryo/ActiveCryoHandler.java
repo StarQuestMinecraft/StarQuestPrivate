@@ -17,37 +17,33 @@ public class ActiveCryoHandler {
 	private static HashSet<String> unacceptedLogins = new HashSet<String>();
 	
 	private static void onMessageRecieved(String player){
-		System.out.println("Message Recieved!");
 		Player p = Bukkit.getPlayer(player);
 		if(p != null){
 			checkAndRespawn(p);
 		} else {
 			unacceptedLogins.add(player);
-			System.out.println("Unaccepted Logins Add; size " + unacceptedLogins.size());
 		}
 	}
 	
-	public static void onPlayerLogin(Player player){
+	public static boolean onPlayerLogin(Player player){
 		if(unacceptedLogins.contains(player.getName())){
 			unacceptedLogins.remove(player.getName());
-			System.out.println("Unaccepted Logins Remove; size " +  unacceptedLogins.size());
-			checkAndRespawn(player);
+			return checkAndRespawn(player);
 		}
+		return false;
 	}
 	
 	
-	private static void checkAndRespawn(final Player p){
+	private static boolean checkAndRespawn(final Player p){
 		final CryoSpawn s = CryoSpawn.getSpawn(p.getName());
-		if(s == null || !s.isActive) return;
+		if(s == null || !s.isActive) return false;
 		
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 			public void run(){
 				
 				if(!s.server.equals(Bukkit.getServerName())){
-					System.out.println("Sending player for Cryopod!");
 					BungeePlayerHandler.sendPlayer(p, s.server, s.world, s.x, s.y, s.z);
 				} else {
-					System.out.println("Local teleporting player for Cryopod!");
 					Location target = new Location(Bukkit.getWorld(s.world), s.x + 0.5, s.y, s.z + 0.5);
 					p.teleport(target);
 					//CryoSpawn.addToAnyShips(target, p);
@@ -55,6 +51,7 @@ public class ActiveCryoHandler {
 				}
 			}
 		}, 3L);
+		return true;
 	}
 
 	public static void decodeMessage(DataInputStream in) {

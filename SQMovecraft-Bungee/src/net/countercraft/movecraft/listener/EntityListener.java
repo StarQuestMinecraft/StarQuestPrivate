@@ -33,6 +33,7 @@ import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.projectile.LaserBolt;
 import net.countercraft.movecraft.projectile.LaserBolt.LocationHit;
+import net.countercraft.movecraft.slip.WarpUtils;
 import net.countercraft.movecraft.task.SneakMoveTask;
 import net.countercraft.movecraft.utils.BlockUtils;
 import net.countercraft.movecraft.utils.BoardingRampUtils;
@@ -40,7 +41,6 @@ import net.countercraft.movecraft.utils.JammerUtils;
 import net.countercraft.movecraft.utils.KillUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.OfflinePilotUtils;
-import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -93,7 +93,8 @@ public class EntityListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void onEntityExplode(EntityExplodeEvent event) {
-		System.out.println(event.getLocation());
+		if (event.isCancelled())
+			return;
 		List<Block> affectedBlocks = event.blockList();
 		Collections.sort(affectedBlocks, ArraySort.getInstance());
 		int count = 0;
@@ -173,8 +174,9 @@ public class EntityListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player p = event.getPlayer();
-		BungeePlayerHandler.onLogin(p);
-		OfflinePilotUtils.onPlayerLogin(p);
+		boolean teleported = BungeePlayerHandler.onLogin(p);
+		if (!teleported)
+			teleported = OfflinePilotUtils.onPlayerLogin(p);
 		/*
 		 * boolean isTeleported = false;
 		 * 
@@ -214,7 +216,6 @@ public class EntityListener implements Listener {
 			OfflinePilotUtils.registerOfflinePilot(p, c);
 		}
 
-		System.out.println("Removed player " + e.getPlayer().getName() + " with UUID " + e.getPlayer().getUniqueId() + " from index.");
 	}
 
 	@EventHandler
@@ -242,7 +243,9 @@ public class EntityListener implements Listener {
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player p = event.getPlayer();
-		if (!(event instanceof PlayerTeleportEvent)) {
+		if (event instanceof PlayerTeleportEvent) {
+			return;
+		} else {
 			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
 			if (crafts == null)
 				return;
@@ -346,10 +349,8 @@ public class EntityListener implements Listener {
 			 * "Please use a cryopod instead! " + ChatColor.GOLD +
 			 * " http://tinyurl.com/sqcryo"); }
 			 */
-			System.out.println(b);
 			System.out.println("Player Current Server: " + Bukkit.getServerName());
 			if (!b.server.equals(Bukkit.getServerName())) {
-				System.out.println("server name and target server name aren't equal, teleporting.");
 				final Bedspawn b2 = b;
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
 					public void run() {
@@ -388,23 +389,25 @@ public class EntityListener implements Listener {
 						}
 					}
 				}
-			}
-			if (event.getCause() == DamageCause.BLOCK_EXPLOSION) {
+			} else {
+				if (event.getCause() == DamageCause.BLOCK_EXPLOSION) {
 					LocationHit l = LaserBolt.getClosestExplosion(event.getEntity().getLocation());
-					System.out.println(l.distanceSquared(event.getEntity().getLocation()));
 					if (l != null && l.distanceSquared(event.getEntity().getLocation()) < 49) {
 						event.setDamage(4D);
-						Craft c = CraftManager.getInstance().getCraftByPlayer(plr);
-						if (c != null)
-							CraftManager.getInstance().removeCraft(c);
 						Player shooter = l.getPlayer();
 						if (shooter != null && shooter != plr) {
-							if(plr.getHealth() - event.getDamage() <= 0){
+							if (plr.getHealth() - event.getDamage() <= 0) {
 								boolean success = KillUtils.creditKill(shooter, plr);
-								if(success) Bukkit.broadcastMessage(ChatColor.RED + "" + shooter + " killed " + plr + " with starship cannons!");
+								if (success)
+									Bukkit.broadcastMessage(ChatColor.RED + "" + shooter + " killed " + plr + " with starship cannons!");
 							}
 						}
+						return;
 					}
+				}
+				Craft c = CraftManager.getInstance().getCraftByPlayer(plr);
+				if (c != null)
+					CraftManager.getInstance().removeCraft(c);
 			}
 		}
 	}

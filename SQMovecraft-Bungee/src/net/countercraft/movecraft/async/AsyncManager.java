@@ -36,6 +36,7 @@ import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.localisation.I18nSupport;
+import net.countercraft.movecraft.shield.PendingActivation;
 import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.task.AutopilotRunTask;
 import net.countercraft.movecraft.utils.BlockUtils;
@@ -192,6 +193,7 @@ public class AsyncManager extends BukkitRunnable {
 											c.playersRidingShip.add(plr.getUniqueId());
 											plr.sendMessage("You board a craft of type " + c.getType().getCraftName() + " under the command of captain " + c.pilot.getName() + ".");
 											ShieldUtils.checkForAndRemoveShield(plr);
+											ShieldUtils.removePendingActivationsForPlayer(plr);
 										}
 									}
 								}

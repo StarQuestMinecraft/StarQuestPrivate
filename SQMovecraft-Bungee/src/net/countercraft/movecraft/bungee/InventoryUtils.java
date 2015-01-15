@@ -162,7 +162,6 @@ public class InventoryUtils {
 		if(type != null){
 			return Bukkit.createInventory(null, type);
 		} else {
-			System.out.println("LENGTH: " + length);
 			return Bukkit.createInventory(null, length);
 		}
 	}

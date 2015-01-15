@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import net.countercraft.movecraft.bungee.BungeeCraftSender;
 import net.countercraft.movecraft.craft.Craft;
-import net.countercraft.movecraft.utils.WarpUtils;
+import net.countercraft.movecraft.slip.WarpUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

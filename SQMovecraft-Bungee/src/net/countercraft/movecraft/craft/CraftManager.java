@@ -33,6 +33,7 @@ import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.database.StarshipData;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.shield.ShieldUtils;
+import net.countercraft.movecraft.slip.WarpUtils;
 import net.countercraft.movecraft.task.AutopilotRunTask;
 import net.countercraft.movecraft.utils.JammerUtils;
 import net.countercraft.movecraft.utils.MathUtils;
@@ -40,6 +41,7 @@ import net.countercraft.movecraft.utils.MovecraftLocation;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
 
 public class CraftManager {
@@ -97,8 +99,20 @@ public class CraftManager {
 	public void removeCraft( final Craft c){
 		removeCraft(c, true);
 	}
+	
+	public void removeCraft( final Craft c, final boolean save){
+		removeCraft(c, true, true);
+	}
 
-	public void removeCraft( final Craft c, final boolean save) {
+	public void removeCraft( final Craft c, final boolean save, final boolean checkSlip) {
+		
+		if(checkSlip){
+			if (c.getW().getEnvironment() == Environment.THE_END){
+				WarpUtils.leaveWarp(c.pilot, c, false);
+				return;
+			}
+		}
+		
 		c.extendLandingGear();
 		Player p = c.pilot;
 		
@@ -108,8 +122,12 @@ public class CraftManager {
 		}
 		ArrayList<MovecraftLocation> signLocations = c.getSignLocations();
 		JammerUtils.disableJammer(c, signLocations);
-		System.out.println((p == null) ? ("P is null!") : ("P is not null!"));
-		ShieldUtils.enableShield(c, signLocations, p);
+		if(save){
+			long timestamp = System.currentTimeMillis();
+			ShieldUtils.enableShield(c, signLocations, p);
+			long timestamp2 = System.currentTimeMillis();
+			
+		}
 		CryoSpawn.updatePodSpawns(c.getW(), signLocations);
 		try{
 			if(!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))){

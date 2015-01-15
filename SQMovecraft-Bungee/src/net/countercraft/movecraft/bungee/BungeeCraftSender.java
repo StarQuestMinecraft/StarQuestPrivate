@@ -28,16 +28,22 @@ public class BungeeCraftSender {
 		CraftManager.getInstance().removeCraft(c, false);
 		BungeeFileHandler.saveCraftBytes(craftData, p.getName());
 		System.out.println("Saved craft.");
-		sendCraftSpawnPacket(p.getName(), targetserver);
+		sendCraftSpawnPacket(p, targetserver);
+		try{
+		c.playersRidingLock.acquire();
 		for(int i = 0; i < c.playersRidingShip.size(); i++){
 			UUID s = c.playersRidingShip.get(i);
 			Player player = Movecraft.getPlayer(s);
 			if(player != null)
 			BungeePlayerHandler.sendPlayer(player, targetserver);
 		}
+		c.playersRidingLock.release();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 		removeCraftBlocks(c);
 	}
-	private static void sendCraftSpawnPacket(String pName, String targetserver){
+	private static void sendCraftSpawnPacket(Player p, String targetserver){
 		try{
 			ByteArrayOutputStream b = new ByteArrayOutputStream();
 			DataOutputStream out = new DataOutputStream(b);
@@ -47,13 +53,12 @@ public class BungeeCraftSender {
 
 			ByteArrayOutputStream msgbytes = new ByteArrayOutputStream();
 			DataOutputStream msgout = new DataOutputStream(msgbytes);
-			msgout.writeUTF(pName); // You can do anything you want with msgout
+			msgout.writeUTF(p.getName()); // You can do anything you want with msgout
 			
 			byte[] outmsg = msgbytes.toByteArray();
 			out.writeShort(outmsg.length);
 			out.write(outmsg);
 			
-			Player p = Bukkit.getOnlinePlayers()[0];
 			p.sendPluginMessage(Movecraft.getInstance(), "BungeeCord", b.toByteArray());
 		} catch (Exception e){
 			e.printStackTrace();
@@ -103,7 +108,6 @@ public class BungeeCraftSender {
 			//send inventory
 			if (loc.getBlock().getState() instanceof InventoryHolder){
 				msgout.writeBoolean(true);
-				System.out.println("Inventory block of type" + loc.getBlock().getType());
 				Inventory i = ((InventoryHolder) loc.getBlock().getState()).getInventory();
 				msgout.writeUTF(i.getType().name());
 				/*for (int index = 0; index < i.getSize(); index++){
@@ -137,8 +141,9 @@ public class BungeeCraftSender {
 		for(String s : c.playersWithBedspawnsOnShip){
 			msgout.writeUTF(s);
 		}
-		msgout.writeInt(c.playersRidingShip.size());
 		try{
+		c.playersRidingLock.acquire();
+		msgout.writeInt(c.playersRidingShip.size());
 			for(int i = 0; i < c.playersRidingShip.size(); i++){
 				Player plr = Movecraft.getPlayer(c.playersRidingShip.get(i));
 				if(plr != null){
@@ -147,6 +152,7 @@ public class BungeeCraftSender {
 					BungeePlayerHandler.wipePlayerInventory(plr);
 				}
 			}
+		c.playersRidingLock.release();
 		} catch (Exception e){
 			e.printStackTrace();
 		}

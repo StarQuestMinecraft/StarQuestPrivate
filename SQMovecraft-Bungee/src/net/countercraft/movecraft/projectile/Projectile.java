@@ -34,7 +34,6 @@ public abstract class Projectile {
 		
 		//if I'm not the type I should be, something is wrong, cancel.
 		if(myBlock.getType() != getMyBlockType()){
-			System.out.println(myBlock.getType());
 			myTask.cancel();
 			removeData();
 			return;

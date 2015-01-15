@@ -13,7 +13,6 @@ public class BungeeFileHandler {
 	
 	public static void saveCraftBytes(byte[] craftdata, String pilot){
 		File target = new File(folder + "/" + pilot + ".starship");
-		System.out.println("Saved starship to " + target.toString());
 		if(target.exists()){
 			target.delete();
 		}
@@ -28,9 +27,7 @@ public class BungeeFileHandler {
 		
 	}
 	public static byte[] readCraftBytes(String pilot){
-		System.out.println(pilot);
 		File target = new File(folder + "/" + pilot + ".starship");
-		System.out.println("possibility 1");
 		if(!target.exists()){
 			System.out.println("ERROR: File does not exist!: " + target.toString());
 			return null;
@@ -38,7 +35,6 @@ public class BungeeFileHandler {
 		byte[] inbytes = null;
 		try{
 			FileInputStream in = new FileInputStream(target);
-			System.out.println(in.available());
 			inbytes = new byte[in.available()];
 			in.read(inbytes);
 			in.close();
@@ -46,7 +42,6 @@ public class BungeeFileHandler {
 			System.out.println("crash possibility 2");
 			e.printStackTrace();
 		}
-		System.out.println("Inbytes: " + inbytes);
 		return inbytes;
 	}
 }

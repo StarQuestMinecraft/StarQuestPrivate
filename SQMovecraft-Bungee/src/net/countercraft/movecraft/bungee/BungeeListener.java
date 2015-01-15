@@ -18,7 +18,6 @@ public class BungeeListener implements PluginMessageListener {
 		if (channel.equals("BungeeCord")) {
 			DataInputStream in = new DataInputStream(new ByteArrayInputStream(message));
 			try {
-				System.out.println("Recieved message");
 				String subchannel = in.readUTF();
 				if (subchannel.equals("movecraftWarp")) {
 					BungeeCraftReciever.recieveCraft(in);
@@ -33,7 +32,6 @@ public class BungeeListener implements PluginMessageListener {
 			}
 		} else if( channel.equals("cryoBounce")){
 			DataInputStream in = new DataInputStream(new ByteArrayInputStream(message));
-			System.out.println("Recieved cryoBounce message!");
 			ActiveCryoHandler.decodeMessage(in);
 		}
 	}

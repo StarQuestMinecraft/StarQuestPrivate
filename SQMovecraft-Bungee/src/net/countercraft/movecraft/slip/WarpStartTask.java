@@ -5,7 +5,6 @@ import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.utils.DirectionUtils;
 import net.countercraft.movecraft.utils.LocationUtils;
-import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -55,27 +54,31 @@ public class WarpStartTask extends BukkitRunnable{
 					s.update();
 					
 					WarpUtils.enterWarp(p, CraftManager.getInstance().getCraftByPlayer(p));
-					p.sendMessage(ChatColor.AQUA +"succesfully entered the slip and in stable travel. To navigate, fly just like your normally do.");
+					message(ChatColor.AQUA +"succesfully entered the slip and in stable travel. To navigate, fly just like your normally do.");
 				}
 			}
 			this.cancel();
 			return;
 		case 1:
-			if(p != null) p.sendMessage(ChatColor.AQUA + "Energizing..."); iteration--; return;
+			if(p != null) message(ChatColor.AQUA + "Energizing..."); iteration--; return;
 		case 2:
-			if(p != null) p.sendMessage(ChatColor.AQUA +"Capacitors charged, calibrating energization ray..."); iteration--; return;
+			if(p != null) message(ChatColor.AQUA +"Capacitors charged, calibrating energization ray..."); iteration--; return;
 		case 3:
-			if(p != null) p.sendMessage(ChatColor.AQUA +"Flux field generated. Charging capacitors for energization..."); iteration--; return;
+			if(p != null) message(ChatColor.AQUA +"Flux field generated. Charging capacitors for energization..."); iteration--; return;
 		case 4:
-			if(p != null) p.sendMessage(ChatColor.AQUA +"Catalyst liquified and stable, Spinning up flux generator..."); iteration--; return;
+			if(p != null) message(ChatColor.AQUA +"Catalyst liquified and stable, Spinning up flux generator..."); iteration--; return;
 		case 5:
-			if(p != null) p.sendMessage(ChatColor.AQUA +"Beginning catalyist liquification process..."); iteration--; return;
+			if(p != null) message(ChatColor.AQUA +"Beginning catalyist liquification process..."); iteration--; return;
 		case 6:
-			if(p != null) p.sendMessage(ChatColor.AQUA +"Initializing slipdrive..."); iteration--;
+			if(p != null) message(ChatColor.AQUA +"Initializing slipdrive..."); iteration--;
 			s.setLine(2, ChatColor.AQUA + "Starting up...");
 			s.update();
 			return;
 		}
+	}
+	
+	private void message(String msg){
+		c.messageShipPlayers(msg);
 	}
 
 }

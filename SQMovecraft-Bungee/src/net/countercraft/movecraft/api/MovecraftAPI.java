@@ -2,7 +2,7 @@ package net.countercraft.movecraft.api;
 
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
-import net.countercraft.movecraft.utils.WarpUtils;
+import net.countercraft.movecraft.slip.WarpUtils;
 
 import org.bukkit.Location;
 import org.bukkit.World.Environment;

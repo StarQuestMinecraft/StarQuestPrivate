@@ -1,11 +1,12 @@
-package net.countercraft.movecraft.utils;
+package net.countercraft.movecraft.slip;
 import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
-import net.countercraft.movecraft.slip.RepeatTryWorldJumpTask;
 import net.countercraft.movecraft.task.RepeatTryServerJumpTask;
+import net.countercraft.movecraft.utils.DirectionUtils;
+import net.countercraft.movecraft.utils.LocationUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,6 +24,12 @@ import org.bukkit.inventory.ItemStack;
 
 public class WarpUtils {
 	
+	static FuelTakeTask task;
+	
+	static{
+		task = new FuelTakeTask(WarpUtils.getEnd(Bukkit.getWorld(Bukkit.getServerName())));
+	}
+	
 	public static void enterWarp(Player p, Craft c){
 		Location l = p.getLocation();
 		for(UUID u : c.playersRidingShip){
@@ -31,12 +38,16 @@ public class WarpUtils {
 		}
 		World w = getEnd(p.getWorld());
 		if(w == null) return;
-		RepeatTryWorldJumpTask task = new RepeatTryWorldJumpTask(c, p, new Location(w, l.getX(), l.getY(), l.getZ()), true, true);
+		RepeatTryWorldJumpTask task = new RepeatTryWorldJumpTask(c, p, new Location(w, l.getX(), l.getY(), l.getZ()), true, false);
 		task.runTaskTimer(Movecraft.getInstance(), 0, 1);
 		c.warpCoordsX = l.getBlockX();
 		c.warpCoordsZ = l.getBlockZ();
 	}
-	public static void leaveWarp(Player p, Craft c, boolean repilot, boolean unpilot){
+	
+	public static void leaveWarp(Player p, Craft c, boolean repilot){
+		leaveWarp(p, c, repilot, true);
+	}
+	public static void leaveWarp(Player p, Craft c, boolean repilot, boolean searchSlipSigns){
 		if(!c.isProcessing()){
 			Location l = p.getLocation();
 			World w2 = getNormal(p.getWorld());
@@ -46,13 +57,13 @@ public class WarpUtils {
 				Player plr = Movecraft.getPlayer(c.playersRidingShip.get(i));
 				plr.playSound(plr.getLocation(), Sound.PORTAL_TRAVEL, 2.0F, 1.0F);
 			}
-			RepeatTryWorldJumpTask task = new RepeatTryWorldJumpTask(c, p, targ, repilot, unpilot);
+			RepeatTryWorldJumpTask task = new RepeatTryWorldJumpTask(c, p, targ, repilot, searchSlipSigns);
 			task.runTaskTimer(Movecraft.getInstance(), 0, 1);
 		}
 	}
 	public static void translate(Craft c, int x, int y, int z){
 		if(LocationUtils.isBeingJammed(getNormal(c.getW()), c.getMinX(), c.getMinZ())){
-			leaveWarp(c.pilot, c, true, true);
+			leaveWarp(c.pilot, c, true);
 			c.pilot.sendMessage("Your warp field was disrupted by a jamming device!");
 			return;
 		}

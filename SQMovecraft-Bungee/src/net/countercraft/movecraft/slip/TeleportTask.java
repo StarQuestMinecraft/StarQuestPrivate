@@ -14,6 +14,7 @@ import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -26,7 +27,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 public class TeleportTask {
-	public static boolean worldJump(Player pilot, Craft c, Location locto, boolean repilot, boolean unpilot) {
+	public static boolean worldJump(Player pilot, Craft c, Location locto, boolean repilot, boolean searchSlipSigns) {
 		try{
 		//calculate the difference in x and difference in y of the current
 		// location to the target location
@@ -43,46 +44,6 @@ public class TeleportTask {
 		if (obstructed) {
 			return false;
 		}
-
-		// make a new output file
-		// SimpleDateFormat sdf = new SimpleDateFormat("dd:MM,HH:mm");
-		// Date resultdate = new Date(System.currentTimeMillis());
-
-		// File statText = Movecraft.getInstance().getDataFolder();
-		// ( !statText.exists() ) {
-		// statText.mkdirs();
-		// }
-		// String filePrefix = pilot.getName() + "@" +
-		// System.currentTimeMillis();
-		// File ourfile = File.createTempFile(filePrefix, ".txt", statText);
-		// FileOutputStream is = new FileOutputStream(ourfile);
-		// OutputStreamWriter osw = new OutputStreamWriter(is);
-		// BufferedWriter w = new BufferedWriter(osw);
-
-		// w.write("===============================");
-		// w.newLine();
-		// w.write("WORLDJUMP INITIATED");
-		// w.newLine();
-		// w.write("Player: " + pilot.getName());
-		// w.newLine();
-		// w.write("Craft Type: " + c.getType());
-		// w.newLine();
-		// w.write("Target World: " + locto.getWorld().getName());
-		// w.newLine();
-		// w.write("Target Coords: " + locto.getX() + "," + locto.getY() + "," +
-		// locto.getZ());
-		// w.newLine();
-		// w.write("Blocks List Length: " + blocksList.length);
-		// w.newLine();
-		// w.write("===============================")
-
-		// w.write("BLOCK LIST PREVIOUS");
-		// w.newLine();
-		// for (MovecraftLocation l : blocksList){
-		// .write(wrld.getBlockTypeIdAt(l.getX(), l.getY(), l.getZ()) + "@" +
-		// l.getX()+ "," + l.getY() + "," + l.getZ());
-		// .newLine();
-		// }
 
 		// store old hitbox and data so we can retrieve the players later
 		int[][][] oldHitBox = c.getHitBox();
@@ -106,9 +67,7 @@ public class TeleportTask {
 		
 			
 		// remove the old craft
-		if(unpilot){
-			CraftManager.getInstance().removeCraft(c, false);
-		}
+			CraftManager.getInstance().removeCraft(c, false, false);
 
 		// w.write("BEGIN teleportBlocks: " + System.currentTimeMillis());
 		// w.newLine();
@@ -117,7 +76,7 @@ public class TeleportTask {
 			p.teleport(players.get(p));
 		}
 
-		teleportBlocks(blocksList, locto, dX, dY, dZ, c.getW());
+		teleportBlocks(blocksList, locto, dX, dY, dZ, c.getW(), searchSlipSigns);
 
 		// w.write("END teleportBlocks: " + System.currentTimeMillis());
 		// w.newLine();
@@ -138,7 +97,6 @@ public class TeleportTask {
 
 		// pilot the new craft
 		if(repilot){
-			System.out.println("Repiloting!");
 			Location loc = pilot.getLocation();
 			MovecraftLocation startPoint = new MovecraftLocation(loc.getBlockX(), loc.getBlockY() - 1, loc.getBlockZ());
 			Craft newCraft = new Craft(c.getType(), loc.getWorld());
@@ -168,7 +126,7 @@ public class TeleportTask {
 
 	// block processing method
 	@SuppressWarnings("deprecation")
-	private static void teleportBlocks(MovecraftLocation[] blocksList, Location locto, int dX, int dY, int dZ, World w) {
+	private static void teleportBlocks(MovecraftLocation[] blocksList, Location locto, int dX, int dY, int dZ, World w, boolean searchSlipSigns) {
 
 		// Iterate through the blocks list
 		for (int i = 0; i < blocksList.length; i++) {
@@ -181,13 +139,13 @@ public class TeleportTask {
 			if (!newLoc.getChunk().isLoaded()) {
 				newLoc.getChunk().load();
 			}
-			processSingleBlock(b, oldLoc, newLoc, w);
+			processSingleBlock(b, oldLoc, newLoc, w, searchSlipSigns);
 		}
 	}
 
 	// single block processor
 	@SuppressWarnings("deprecation")
-	private static void processSingleBlock(Block b, MovecraftLocation oldLoc, Location newLoc, World w) {
+	private static void processSingleBlock(Block b, MovecraftLocation oldLoc, Location newLoc, World w, boolean searchSlipSigns) {
 
 		final int oldID = b.getTypeId();
 		final byte oldData = b.getData();
@@ -208,6 +166,9 @@ public class TeleportTask {
 			// wrt.write("    " + lines[1]);
 			// wrt.write("    " + lines[2]);
 			// wrt.write("    " + lines[3]);
+			if(searchSlipSigns && lines[2].equals(ChatColor.BLUE + "Stable Slip.")){
+				lines[2] = ChatColor.GREEN + "Disabled.";
+			}
 			ns.setLine(0, lines[0]);
 			ns.setLine(1, lines[1]);
 			ns.setLine(2, lines[2]);

@@ -30,6 +30,7 @@ import net.countercraft.movecraft.craft.CraftType;
 
 
 import net.countercraft.movecraft.cryo.CryoSpawn;
+import net.countercraft.movecraft.shield.DockUtils;
 import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.utils.KillUtils;
 import net.countercraft.movecraft.utils.MathUtils;
@@ -75,6 +76,8 @@ public class BlockListener implements Listener {
 		}
 		if(event.getLine(0).equalsIgnoreCase("[shield]")){
 			ShieldUtils.setupShieldSign(event);
+		} else if(event.getLine(0).equalsIgnoreCase("[shieldmore]")){
+			ShieldUtils.setupMoreShieldSign(event);
 		}
 	}
 	
@@ -113,16 +116,16 @@ public class BlockListener implements Listener {
 			}
 		}
 	}*/
-	
 	//#CRYO
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled=true)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockBreak( final BlockBreakEvent e ) {
-		
 		if(e.getBlock().getType() == Material.WALL_SIGN){
 			Sign s = ((Sign) e.getBlock().getState());
 			if(s.getLine(0).equals(CryoSpawn.KEY_LINE)){
-				CryoSpawn.removePodSpawn(s);
-				e.getPlayer().sendMessage("CryoPod spawn removed.");
+				if(!e.isCancelled() || CryoSpawn.signTrim(e.getPlayer().getName()).equals(s.getLine(1))){
+					CryoSpawn.removePodSpawn(s);
+					e.getPlayer().sendMessage("CryoPod spawn removed.");
+				}
 			}/* else if (ShieldUtils.isShieldSign(s)){
 				if(s.getLine(1).equals(ShieldUtils.ENABLED)){
 					ShieldUtils.removeShield(s);
@@ -130,7 +133,7 @@ public class BlockListener implements Listener {
 				}
 			}*/
 			
-			else if(InteractListener.getCraftTypeFromString(s.getLine(0)) != null || s.getLine(0).equals(ChatColor.RED + "EMP shorted")){
+			else if(!e.isCancelled() && (InteractListener.getCraftTypeFromString(s.getLine(0)) != null || s.getLine(0).equals(ChatColor.RED + "EMP shorted"))){
 				KillUtils.onBreakShipSign(s, e.getPlayer());
 				
 				Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(e.getBlock().getWorld());

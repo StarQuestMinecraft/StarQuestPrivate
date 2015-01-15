@@ -95,7 +95,6 @@ public class LocationUtils {
 	}
 
 	private static StargateData stargateFromConfig(FileConfiguration cfg, String key) {
-		System.out.println("loading stargate: " + key);
 		int x = cfg.getInt(key + ".Xcoord");
 		int y = cfg.getInt(key + ".Ycoord");
 		int z = cfg.getInt(key + ".Zcoord");
@@ -232,39 +231,39 @@ public class LocationUtils {
 			if (systarget.equals("Defalos")) {
 				return coordX;
 			} else {
-				return -4500;
+				return -4000;
 			}
 		} else if (SYSTEM.equals("Defalos")) {
 			if (systarget.equals("Regalis")) {
 				return coordX;
 			} else {
-				return 4500;
+				return 4000;
 			}
 		} else {
 			if (systarget.equals("Regalis")) {
-				return 4500;
+				return 3500;
 			} else {
 				return coordX;
 			}
 		}
 	}
 
-	public static int getSlipCoordZ(String system, int coordZ) {
+	public static int getSlipCoordZ(String systarget, int coordZ) {
 		if (SYSTEM.equals("Regalis")) {
-			if (system.equals("Defalos")) {
+			if (systarget.equals("Defalos")) {
 				return coordZ;
 			} else {
-				return -4500;
+				return -4000;
 			}
 		} else if (SYSTEM.equals("Defalos")) {
-			if (system.equals("Regalis")) {
+			if (systarget.equals("Regalis")) {
 				return coordZ;
 			} else {
 				return 4500;
 			}
 		} else {
-			if (system.equals("Regalis")) {
-				return 4500;
+			if (systarget.equals("Regalis")) {
+				return 3500;
 			} else {
 				return coordZ;
 			}

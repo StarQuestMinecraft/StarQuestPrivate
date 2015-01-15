@@ -156,7 +156,6 @@ public class CryoSpawn {
 		} finally {
 			close(s);
 		}
-		System.out.println("Done setting new pod spawn!");
 	}
 
 	public static void updatePodSpawn(String name, CryoSpawn b) {
@@ -198,7 +197,6 @@ public class CryoSpawn {
 	}
 
 	public static void removePodSpawn(String playerUntrimmed) {
-		System.out.println("removing pod spawn: " + playerUntrimmed);
 		String player = signTrim(playerUntrimmed);
 		PreparedStatement s = null;
 		try {
@@ -218,7 +216,6 @@ public class CryoSpawn {
 	}
 
 	public static CryoSpawn getSpawn(String playerUntrimmed) {
-		System.out.println("Getting spawn for: " + playerUntrimmed);
 		String player = signTrim(playerUntrimmed);
 		String playerName;
 		String playerWorld;
@@ -253,7 +250,6 @@ public class CryoSpawn {
 		} finally {
 			close(s);
 		}
-		System.out.println("Returning spawn!");
 		return retval;
 	}
 
@@ -310,7 +306,6 @@ public class CryoSpawn {
 			return;
 		try {
 			s.close();
-			System.out.println("[Movecraft] Closing statement");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -325,9 +320,7 @@ public class CryoSpawn {
 		}
 
 		final CryoSpawn s = spawn;
-		System.out.println("Player Current Server: " + Bukkit.getServerName());
-		if (!s.server.equals(Bukkit.getServerName())) {
-			System.out.println("server name and target server name aren't equal, teleporting.");
+		if (!s.server.equalsIgnoreCase(Bukkit.getServerName())) {
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
 				public void run() {
 					BungeePlayerHandler.sendDeath(p, s.server);
@@ -335,25 +328,25 @@ public class CryoSpawn {
 			}, 3L);
 		} else {
 			final Location loc2 = new Location(Bukkit.getWorld(s.world), s.x + 0.5, s.y, s.z + 0.5);
-			if (checkForNotAir(loc2)) {
-				if (event != null) {
-					event.setRespawnLocation(loc2);
-				} else {
-					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
-						public void run() {
-							p.teleport(loc2);
-							CryoSpawn.checkAndPlayEffects(loc2);
-						}
-					}, 3L);
-				}
+			//if (checkForNotAir(loc2)) {
+			if (event != null) {
+				event.setRespawnLocation(loc2);
 			} else {
+				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+					public void run() {
+						p.teleport(loc2);
+						CryoSpawn.checkAndPlayEffects(loc2);
+					}
+				}, 3L);
+			}
+			/* } else {
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
 					public void run() {
 						BungeePlayerHandler.sendPlayer(p, Bedspawn.DEFAULT.server, Bedspawn.DEFAULT.world, Bedspawn.DEFAULT.x, Bedspawn.DEFAULT.y, Bedspawn.DEFAULT.z);
 					}
 				}, 20L);
 				Bedspawn.deleteBedspawn(event.getPlayer().getName());
-			}
+			}*/
 		}
 		return true;
 	}
@@ -427,7 +420,6 @@ public class CryoSpawn {
 			Sign s = (Sign) up.getState();
 			if (s.getLine(0).equals(CryoSpawn.KEY_LINE)) {
 				CryoSpawn.playEffects(pe);
-				System.out.println("Playing Effects!");
 			}
 		}
 	}

@@ -45,7 +45,6 @@ public class BungeeCraftConstructor {
 				angle = 0;
 			}else{
 				System.out.println(oldworld);
-				System.out.println(LocationUtils.locationOfPlanet(oldworld));
 				angle = LocationUtils.getAngleFromGivenPointTo(LocationUtils.locationOfPlanet(oldworld), targetLoc);
 			}
 		} else {

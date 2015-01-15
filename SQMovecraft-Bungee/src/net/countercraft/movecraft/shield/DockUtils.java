@@ -10,6 +10,13 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 
+import com.massivecraft.factions.entity.MPlayer;
+import com.palmergames.bukkit.towny.object.Coord;
+import com.palmergames.bukkit.towny.object.TownyPermission;
+import com.palmergames.bukkit.towny.object.TownyUniverse;
+import com.palmergames.bukkit.towny.object.TownyWorld;
+import com.palmergames.bukkit.towny.object.WorldCoord;
+import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.Vector;
@@ -19,22 +26,26 @@ import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.massivecraft.factions.engine.EngineMain;
+import com.massivecraft.massivecore.ps.PS;
 
 public class DockUtils {
-
 	public static boolean checkForCanDeployShield(Player p, ProtectedRegion pendingShield) {
 		int[] cmin = getChunkCoordinates(p.getWorld(), pendingShield.getMinimumPoint().getBlockX(), pendingShield.getMinimumPoint().getBlockZ());
 		int[] cmax = getChunkCoordinates(p.getWorld(), pendingShield.getMaximumPoint().getBlockX(), pendingShield.getMaximumPoint().getBlockZ());
-
 		// iterate over every chunk that the region contains
 		for (int x = cmin[0]; x <= cmax[0]; x++) {
 			for (int z = cmin[1]; z <= cmax[1]; z++) {
 
 				// create a block to test
 				Block b = p.getWorld().getBlockAt(x, 100, z);
-				BlockBreakEvent event = new BlockBreakEvent(b, p);
+				/*BlockBreakEvent event = new BlockBreakEvent(b, p);
+				CALLING_EVENT = true;
 				Bukkit.getServer().getPluginManager().callEvent(event);
-				if (event.isCancelled()){
+				CALLING_EVENT = false;*/
+				boolean success = checkTownyBuild(b, p);
+				if(success) success = checkFactionsBuild(b, p);
+				if (!success){
 					//check for dock region at location
 					boolean foundDock = false;
 					ApplicableRegionSet set = ShieldUtils.wg.getRegionManager(p.getWorld()).getApplicableRegions(new BlockVector(x, 100, z));
@@ -48,15 +59,27 @@ public class DockUtils {
 				}
 			}
 		}
-
 		ApplicableRegionSet set = ShieldUtils.wg.getRegionManager(p.getWorld()).getApplicableRegions(pendingShield);
 		for (ProtectedRegion pr : set) {
 			if (!isDockRegion(pr)) {
 				return false;
 			}
 		}
-
 		return true;
+	}
+
+	public static boolean checkFactionsBuild(Block b, Player p) {
+		return (EngineMain.canPlayerBuildAt(p.getUniqueId(), PS.valueOf(b), false));
+	}
+
+	public static boolean checkTownyBuild(Block b, Player p) {
+		//TownyWorld world = TownyUniverse.getDataSource().getWorld(b.getWorld().getName());
+        //WorldCoord coord = new WorldCoord(world.getName(), Coord.parseCoord(b));
+
+        //Get build permissions (updates if none exist)
+        return PlayerCacheUtil.getCachePermission(p, b.getLocation(), b.getTypeId(), b.getData(), TownyPermission.ActionType.BUILD);
+
+        // Allow build if we are permitted
 	}
 
 	private static boolean isDockRegion(ProtectedRegion pr) {
@@ -74,10 +97,11 @@ public class DockUtils {
 
 				// create a block to test
 				Block b = p.getWorld().getBlockAt(x, 100, z);
-				BlockBreakEvent event = new BlockBreakEvent(b, p);
-				Bukkit.getServer().getPluginManager().callEvent(event);
-				if (event.isCancelled())
+				boolean success = checkTownyBuild(b, p);
+				if(success) success = checkFactionsBuild(b, p);
+				if (!success){
 					return 0;
+				}	
 			}
 		}
 
@@ -138,11 +162,8 @@ public class DockUtils {
 		return false;
 	}
 
-	private static int[] getChunkCoordinates(World w, int x, int z) {
-		Chunk c = w.getChunkAt(x, z);
-		int x2 = c.getX();
-		int z2 = c.getZ();
-		return new int[] { x2, z2 };
+	public static int[] getChunkCoordinates(World w, int x, int z) {
+		return new int[] { x >> 4, z >> 4 };
 	}
 
 	public static boolean claimDock(Player sender) {
@@ -163,6 +184,7 @@ public class DockUtils {
 			RegionManager rm = ShieldUtils.wg.getRegionManager(sender.getWorld());
 			rm.addRegion(pr);
 			ShieldUtils.saveRM(rm);
+			sender.sendMessage("Dock claimed!");
 			return true;
 		} catch (CommandException e) {
 			// TODO Auto-generated catch block

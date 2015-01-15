@@ -1,5 +1,8 @@
 package net.countercraft.movecraft.shield;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -21,11 +24,11 @@ public class PendingActivation {
 	World w;
 	BlockVector min;
 	BlockVector max;
-	String pilot;
-	String[] members;
+	public String pilot;
+	List<String> members;
 	Block sign;
 
-	public PendingActivation(World w, BlockVector min, BlockVector max, String name, String pilot, String[] members, Block sign) {
+	public PendingActivation(World w, BlockVector min, BlockVector max, String name, String pilot, ArrayList<String> members, Block sign) {
 		this.name = name;
 		this.w = w;
 		this.min = min;
@@ -76,7 +79,7 @@ public class PendingActivation {
 			ShieldUtils.setRegionFlag(reg, DefaultFlag.OTHER_EXPLOSION, "deny");
 			ShieldUtils.setRegionFlag(reg, DefaultFlag.TNT, "deny");
 			ShieldUtils.setRegionFlag(reg, DefaultFlag.CREEPER_EXPLOSION, "deny");
-			if (p.isOnline()) {
+			if (p != null && p.isOnline()) {
 				p.sendMessage(ChatColor.GREEN + "Your starship's shield is fully warmed up and is providing full protection.");
 			}
 			ShieldUtils.saveRM(rm);

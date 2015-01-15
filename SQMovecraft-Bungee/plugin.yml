@@ -31,6 +31,9 @@ commands:
    claimdock:
       description: claim a dock!
       usage: /claimdock (with a WG region selected)
+   removedock:
+      description: remove docks where you are standing.
+      usage: /removedock (standing in a dock region)
 depend:
    - WorldEdit
    - WorldGuard

@@ -29,6 +29,7 @@ import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.projectile.LaserBolt;
 import net.countercraft.movecraft.projectile.Torpedo;
 import net.countercraft.movecraft.slip.WarpStartTask;
+import net.countercraft.movecraft.slip.WarpUtils;
 import net.countercraft.movecraft.task.AutopilotRunTask;
 import net.countercraft.movecraft.utils.BoardingRampUtils;
 import net.countercraft.movecraft.utils.BomberUtils;
@@ -37,7 +38,6 @@ import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.Rotation;
-import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -327,7 +327,7 @@ public class InteractListener implements Listener {
 			}
 			new WarpStartTask(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer(), sign);
 		} else if (sign.getLine(2).equals(ChatColor.BLUE + "Stable Slip.")) {
-			WarpUtils.leaveWarp(event.getPlayer(), CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), true, true);
+			WarpUtils.leaveWarp(event.getPlayer(), CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), true, false);
 			sign.setLine(2, ChatColor.GREEN + "Disabled.");
 			sign.update();
 

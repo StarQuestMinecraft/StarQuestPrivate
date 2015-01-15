@@ -165,7 +165,6 @@ public class FileDatabase implements StarshipDatabase {
 	}
 	private static void saveBytes(byte[] craftdata, Location l){
 		File target = new File(folder + "/" + locToString(l) + ".sdata");
-		System.out.println("Saved starship to " + target.toString());
 		if(target.exists()){
 			target.delete();
 		}
@@ -188,7 +187,6 @@ public class FileDatabase implements StarshipDatabase {
 		byte[] inbytes = null;
 		try{
 			FileInputStream in = new FileInputStream(target);
-			System.out.println(in.available());
 			inbytes = new byte[in.available()];
 			in.read(inbytes);
 			in.close();

@@ -25,12 +25,14 @@ public class OfflinePilotUtils {
 		}, 12000);
 	}
 	
-	public static void onPlayerLogin(Player p){
+	public static boolean onPlayerLogin(Player p){
 		Craft c = offlinePilotIndex.get(p.getUniqueId());
 		if(c != null){
 			p.teleport(c.originalPilotLoc);
 			p.sendMessage("Hey, you logged out while flying a ship. We teleported you back to your ship, just in case you weren't there!");
 			offlinePilotIndex.remove(p.getUniqueId());
+			return true;
 		}
+		return false;
 	}
 }

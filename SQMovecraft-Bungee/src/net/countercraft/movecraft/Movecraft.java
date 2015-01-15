@@ -131,6 +131,9 @@ public class Movecraft extends JavaPlugin {
 			}
 		} else if(cmd.getName().equalsIgnoreCase("claimdock") && sender instanceof Player){
 			return DockUtils.claimDock((Player) sender);
+		} else if(cmd.getName().equalsIgnoreCase("removedock") && sender instanceof Player){
+			DockUtils.removeDockRegions((Player) sender);
+			return true;
 		}
 		return false;
 	}

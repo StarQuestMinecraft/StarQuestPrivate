@@ -26,7 +26,6 @@ public class CryoUtils {
 	}*/
 	
 	static boolean isCryoTube(Sign s){
-		System.out.println(s.getLocation());
 		Block[] windows = getWindows(s.getBlock());
 		Block[] frame = getFrame(s.getBlock());
 		

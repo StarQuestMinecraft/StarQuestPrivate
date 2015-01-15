@@ -34,10 +34,10 @@ import net.countercraft.movecraft.async.translation.TranslationTaskData;
 import net.countercraft.movecraft.event.CraftPilotEvent;
 import net.countercraft.movecraft.event.CraftSyncTranslateEvent;
 import net.countercraft.movecraft.projectile.LaserBolt;
+import net.countercraft.movecraft.slip.WarpUtils;
 import net.countercraft.movecraft.utils.GunUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.Rotation;
-import net.countercraft.movecraft.utils.WarpUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -142,9 +142,15 @@ public class Craft {
 	}
 
 	public void translate(int dx, int dy, int dz) {
-		if (w.getEnvironment() == Environment.THE_END)
+		if (w.getEnvironment() == Environment.THE_END){
 			WarpUtils.translate(this, dx, dy, dz);
-		else {
+		} else if(getType().isGroundVehicle() && dy != 0){
+			pilot.sendMessage("Ground Vehicles cannot move up and down.");
+			return;
+		} else if(getType().isFlagship()){
+			pilot.sendMessage("Flagships cannot move through realspace.");
+			return;
+		} else {
 			TranslationTaskData data = new TranslationTaskData(dx, dz, dy, getBlockList(), getHitBox(), minZ, minX, type.getMaxHeightLimit(), type.getMinHeightLimit());
 			CraftSyncTranslateEvent event = new CraftSyncTranslateEvent(this, data);
 			if (event.call()) {

@@ -33,7 +33,7 @@ public class BungeePlayerHandler {
 	static HashMap<UUID, Craft> pilotQueue = new HashMap<UUID, Craft>();
 	static Location spawnLocation;
 	
-	public static void onLogin(final Player p){
+	public static boolean onLogin(final Player p){
 		if(!p.hasPlayedBefore() && Bukkit.getServer().getServerName().equals("Regalis")){
 			System.out.println("New player on Regalis!");
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
@@ -44,7 +44,7 @@ public class BungeePlayerHandler {
 					p.teleport(spawnLocation);
 				}
 			}, 1L);
-			return;
+			return true;
 		}
 		final UUID uid = p.getUniqueId();
 		for(int i = 0; i < teleportQueue.size(); i++){
@@ -54,7 +54,7 @@ public class BungeePlayerHandler {
 					public void run(){
 						t.execute();
 					}
-				}, 1L);
+				}, 2L);
 				final Craft c = pilotQueue.get(uid);
 				if(c != null){
 					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
@@ -66,12 +66,12 @@ public class BungeePlayerHandler {
 							}
 							pilotQueue.remove(uid);
 						}
-					}, 2L);
+					}, 3L);
 				}
-				return;
+				return true;
 			}
 		}
-		ActiveCryoHandler.onPlayerLogin(p);
+		return ActiveCryoHandler.onPlayerLogin(p);
 	}
 	public static void sendPlayer(Player p, String targetserver, String world, int X, int Y, int Z){
 		sendPlayer(p, targetserver, world, X, Y, Z, false);
