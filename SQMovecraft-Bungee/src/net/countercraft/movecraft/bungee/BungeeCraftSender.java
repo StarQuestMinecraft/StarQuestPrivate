@@ -41,7 +41,7 @@ public class BungeeCraftSender {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		removeCraftBlocks(c);
+		removeCraftBlocks( c );
 	}
 	private static void sendCraftSpawnPacket(Player p, String targetserver){
 		try{
