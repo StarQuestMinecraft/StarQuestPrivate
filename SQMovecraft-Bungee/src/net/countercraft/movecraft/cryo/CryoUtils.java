@@ -1,6 +1,7 @@
 package net.countercraft.movecraft.cryo;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -25,6 +26,13 @@ public class CryoUtils {
 		return false;
 	}*/
 	
+	public static void removeBlockAtCryoSpawn(Location spawn){
+		Block sblock = spawn.getBlock();
+		
+		if(!(sblock.getType() == Material.AIR || sblock.getType() == Material.WALL_SIGN)){
+			sblock.setType(Material.AIR);
+		}
+	}
 	static boolean isCryoTube(Sign s){
 		Block[] windows = getWindows(s.getBlock());
 		Block[] frame = getFrame(s.getBlock());

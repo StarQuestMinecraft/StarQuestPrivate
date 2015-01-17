@@ -45,6 +45,7 @@ public class ActiveCryoHandler {
 					BungeePlayerHandler.sendPlayer(p, s.server, s.world, s.x, s.y, s.z);
 				} else {
 					Location target = new Location(Bukkit.getWorld(s.world), s.x + 0.5, s.y, s.z + 0.5);
+					CryoUtils.removeBlockAtCryoSpawn(target);
 					p.teleport(target);
 					//CryoSpawn.addToAnyShips(target, p);
 					CryoSpawn.playEffects(target);

@@ -8,4 +8,5 @@ public interface StarshipDatabase {
 	public StarshipData getStarshipByLocation(Location l);
 	public void removeStarshipAtLocation(Location l);
 	public void saveStarshipAtLocation(Craft c);
+	public long getFileLastModified(Location l);
 }

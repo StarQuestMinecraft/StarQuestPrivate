@@ -26,7 +26,7 @@ public class KillUtils {
 			breaker.sendMessage("No kills were credited for this sign break.");
 			return;
 		} else {
-			long lastFlew = FileDatabase.getFileLastModified(s.getLocation());
+			long lastFlew = Movecraft.getInstance().getStarshipDatabase().getFileLastModified(s.getLocation());
 			if(lastFlew < 0) return;
 			long timeGap = System.currentTimeMillis() - lastFlew;
 			if(timeGap > MAX_COOLDOWN){

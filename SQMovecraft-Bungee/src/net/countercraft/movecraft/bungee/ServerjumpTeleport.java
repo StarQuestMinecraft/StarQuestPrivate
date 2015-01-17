@@ -7,12 +7,17 @@ import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.cardboardbox.Knapsack;
 import net.countercraft.movecraft.cryo.CryoSpawn;
+import net.countercraft.movecraft.cryo.CryoUtils;
 import net.countercraft.movecraft.listener.EntityListener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
 public class ServerjumpTeleport implements PlayerTeleport{
@@ -65,7 +70,13 @@ public class ServerjumpTeleport implements PlayerTeleport{
 		World w = Bukkit.getServer().getWorld(worldname);
 		
 		Location l = new Location(w, x + 0.5, (double) y, z + 0.5, yaw, pitch);
-		
+		Block b = l.getBlock().getRelative(BlockFace.UP);
+		if(b.getType() == Material.WALL_SIGN){
+			Sign s = (Sign) b.getState();
+			if(s.getLine(0).equals(CryoSpawn.KEY_LINE)){
+				CryoUtils.removeBlockAtCryoSpawn(l);
+			}
+		}
 		if(this.knapsack != null){
 			this.knapsack.unpack(p);
 		}

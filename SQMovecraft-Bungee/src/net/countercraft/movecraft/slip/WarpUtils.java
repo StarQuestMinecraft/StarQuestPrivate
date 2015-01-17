@@ -2,9 +2,11 @@ package net.countercraft.movecraft.slip;
 import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
+import net.countercraft.movecraft.async.translation.TranslationTask;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.task.RepeatTryServerJumpTask;
+import net.countercraft.movecraft.utils.BorderUtils;
 import net.countercraft.movecraft.utils.DirectionUtils;
 import net.countercraft.movecraft.utils.LocationUtils;
 
@@ -53,6 +55,10 @@ public class WarpUtils {
 			World w2 = getNormal(p.getWorld());
 			if(w2 == null) return;
 			Location targ = new Location(w2, c.warpCoordsX, l.getY(), c.warpCoordsZ);
+			if(!BorderUtils.isWithinBorder(c.warpCoordsX,  c.warpCoordsZ)){
+				double angle = LocationUtils.getAngleFromOriginTo(targ);
+				targ = LocationUtils.getSpawnLocationFromAngle(angle, TranslationTask.STANDARD_SPAWN, BorderUtils.WORLD_RADIUS - 500);
+			}
 			for(int i = 0; i < c.playersRidingShip.size(); i++){
 				Player plr = Movecraft.getPlayer(c.playersRidingShip.get(i));
 				plr.playSound(plr.getLocation(), Sound.PORTAL_TRAVEL, 2.0F, 1.0F);

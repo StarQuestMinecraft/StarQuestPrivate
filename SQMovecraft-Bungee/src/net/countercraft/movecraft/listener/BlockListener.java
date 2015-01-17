@@ -32,11 +32,13 @@ import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.shield.DockUtils;
 import net.countercraft.movecraft.shield.ShieldUtils;
+import net.countercraft.movecraft.utils.BlockUtils;
 import net.countercraft.movecraft.utils.KillUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 //import net.countercraft.movecraft.items.StorageChestItem;
 //import net.countercraft.movecraft.localisation.I18nSupport;
@@ -48,6 +50,7 @@ import org.bukkit.event.EventPriority;
 //import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
 //import org.bukkit.event.block.Action;
 //import org.bukkit.event.block.BlockBreakEvent;
 //import org.bukkit.event.block.BlockPlaceEvent;
@@ -150,6 +153,33 @@ public class BlockListener implements Listener {
 					}
 				}
 				Movecraft.getInstance().getStarshipDatabase().removeStarshipAtLocation(e.getBlock().getLocation());
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onPistonPush(BlockPistonExtendEvent event){
+		System.out.println("piston event called.");
+		for(Block b : event.getBlocks()){
+			System.out.println("Checking block of type " + b.getType());
+			Block[] edges = BlockUtils.getEdges(b, false, false);
+			for(Block b2 : edges){
+				System.out.println("checking edge: " + b2.getType());
+				if(b2.getType() == Material.WALL_SIGN || b2.getType() == Material.SIGN_POST){
+					System.out.println("Found sign!");
+					Sign bs = (Sign) b2.getState();
+					if(InteractListener.getCraftTypeFromString(bs.getLine(0)) != null){
+						System.out.println("found craft sign!");
+						org.bukkit.material.Sign s = (org.bukkit.material.Sign) b2.getState().getData();
+						Block attachedBlock = b2.getRelative(s.getAttachedFace());
+						if(attachedBlock.equals(b)){
+							System.out.println("sign is attached to block!");
+							event.setCancelled(true);
+							System.out.println("Cancelled push due to ship sign!");
+							return;
+						}
+					}
+				}
 			}
 		}
 	}

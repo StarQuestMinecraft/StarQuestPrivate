@@ -334,6 +334,7 @@ public class CryoSpawn {
 			} else {
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
 					public void run() {
+						CryoUtils.removeBlockAtCryoSpawn(loc2);
 						p.teleport(loc2);
 						CryoSpawn.checkAndPlayEffects(loc2);
 					}

@@ -41,7 +41,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 public class TranslationTask extends AsyncTask {
 	private TranslationTaskData data;
 	
-	private static final Location STANDARD_SPAWN = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
+	public static final Location STANDARD_SPAWN = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
 	public TranslationTask(Craft c, TranslationTaskData data) {
 		super(c);
 		this.data = data;

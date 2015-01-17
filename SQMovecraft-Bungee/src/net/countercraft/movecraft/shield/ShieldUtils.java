@@ -82,7 +82,7 @@ public class ShieldUtils {
 			pendingActivations.add(a);
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
 				public void run() {
-					a.activate(pendingActivations.contains(a));
+					a.activate(pendingActivations.contains(a) && (a.sign.getType() == Material.WALL_SIGN || a.sign.getType() == Material.SIGN_POST));
 					pendingActivations.remove(a);
 				}
 			}, SHIELD_DELAY_TICKS);
