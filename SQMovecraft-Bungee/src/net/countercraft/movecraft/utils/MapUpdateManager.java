@@ -115,17 +115,20 @@ public class MapUpdateManager extends BukkitRunnable {
 	            }
 	            
 	        	//don't blank out block if it's already air, or if blocktype will not be changed
-	            if((origType!=0)&&(origType!=newTypeID)) {
+	            /*if((origType!=0)&&(origType!=newTypeID)) {
 	                    c.a( x & 15, y, z & 15, AIR_ID, 0 );
 	            	    //w.getBlockAt( x, y, z ).setTypeIdAndData( 0, (byte) 0, false );
-	            }
-	            boolean success = c.a( x & 15, y, z & 15, CraftMagicNumbers.getBlock(newTypeID), data );
-	            //w.getBlockAt( x, y, z ).setTypeIdAndData( newTypeID, data, false );
-	            if ( !success ) {
-	                    b.setTypeIdAndData( newTypeID, data, false );
-	            }
-	            if ( !chunks.contains( c ) ) {
-	                chunks.add( c );
+	            }*/
+	            if(origType != newTypeID || data != b.getData()){
+	            	//we should NOT have to update the block if it's already the right thing, right?
+	            	boolean success = c.a( x & 15, y, z & 15, CraftMagicNumbers.getBlock(newTypeID), data );
+		            //w.getBlockAt( x, y, z ).setTypeIdAndData( newTypeID, data, false );
+		            if ( !success ) {
+		                    b.setTypeIdAndData( newTypeID, data, false );
+		            }
+		            if ( !chunks.contains( c ) ) {
+		                chunks.add( c );
+		            }
 	            }
 	         
 

@@ -180,7 +180,13 @@ public class ShieldUtils {
 	public static void setupShieldSign(SignChangeEvent s) {
 		s.setLine(0, SIGN_LINE_0);
 		String[] lines = s.getLines();
-		for (int i = 1; i < lines.length; i++) {
+		int start = 1;
+		if(s.getLine(1) == null || s.getLine(1) == ""){
+			s.setLine(1, Compression.uuidToStr15(s.getPlayer().getUniqueId()));
+			s.getPlayer().sendMessage("Player " + s.getPlayer().getName() + " added to this shield.");
+			start++;
+		}
+		for (int i = start; i < lines.length; i++) {
 			String signName = lines[i];
 			if (signName == null || signName.equals(""))
 				continue;

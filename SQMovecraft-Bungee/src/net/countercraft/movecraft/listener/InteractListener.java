@@ -63,14 +63,14 @@ public class InteractListener implements Listener {
 		if(event.getAction() == Action.RIGHT_CLICK_AIR){
 			if(event.getPlayer().isOp()){
 				if(event.getPlayer().getItemInHand().getType() == Material.DIAMOND_SWORD){
-					LaserBolt.createExplosion(event.getPlayer().getTargetBlock(null, 200).getLocation(), event.getPlayer(), 2.0F);
+					LaserBolt.createExplosion(event.getPlayer().getTargetBlock(null, 200), event.getPlayer(), 2.0F);
 				}
 			}
 		}
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if(event.getPlayer().isOp()){
 				if(event.getPlayer().getItemInHand().getType() == Material.DIAMOND_SWORD){
-					LaserBolt.createExplosion(event.getPlayer().getTargetBlock(null, 200).getLocation(), event.getPlayer(), 2.0F);
+					LaserBolt.createExplosion(event.getPlayer().getTargetBlock(null, 200), event.getPlayer(), 2.0F);
 				}
 			}
 			Material m = event.getClickedBlock().getType();
@@ -341,7 +341,7 @@ public class InteractListener implements Listener {
 			if (sb.getRelative(direction).getType() == Material.SPONGE) {
 				Block b = sb.getRelative(direction);
 				if (b.getRelative(BlockFace.DOWN).getType() == Material.SPONGE) {
-					BomberUtils.fireCarpet(event.getPlayer(), b.getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN).getLocation());
+					BomberUtils.fireCarpet(event.getPlayer(), b.getRelative(BlockFace.DOWN, 3).getLocation());
 					return;
 				}
 			}

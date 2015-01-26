@@ -126,6 +126,7 @@ public class BlockListener implements Listener {
 			Sign s = ((Sign) e.getBlock().getState());
 			if(s.getLine(0).equals(CryoSpawn.KEY_LINE)){
 				if(!e.isCancelled() || CryoSpawn.signTrim(e.getPlayer().getName()).equals(s.getLine(1))){
+					e.setCancelled(false);
 					CryoSpawn.removePodSpawn(s);
 					e.getPlayer().sendMessage("CryoPod spawn removed.");
 				}
@@ -159,23 +160,16 @@ public class BlockListener implements Listener {
 	
 	@EventHandler
 	public void onPistonPush(BlockPistonExtendEvent event){
-		System.out.println("piston event called.");
 		for(Block b : event.getBlocks()){
-			System.out.println("Checking block of type " + b.getType());
 			Block[] edges = BlockUtils.getEdges(b, false, false);
 			for(Block b2 : edges){
-				System.out.println("checking edge: " + b2.getType());
 				if(b2.getType() == Material.WALL_SIGN || b2.getType() == Material.SIGN_POST){
-					System.out.println("Found sign!");
 					Sign bs = (Sign) b2.getState();
 					if(InteractListener.getCraftTypeFromString(bs.getLine(0)) != null){
-						System.out.println("found craft sign!");
 						org.bukkit.material.Sign s = (org.bukkit.material.Sign) b2.getState().getData();
 						Block attachedBlock = b2.getRelative(s.getAttachedFace());
 						if(attachedBlock.equals(b)){
-							System.out.println("sign is attached to block!");
 							event.setCancelled(true);
-							System.out.println("Cancelled push due to ship sign!");
 							return;
 						}
 					}

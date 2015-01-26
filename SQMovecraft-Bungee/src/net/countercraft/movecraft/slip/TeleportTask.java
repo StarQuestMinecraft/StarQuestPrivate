@@ -181,6 +181,7 @@ public class TeleportTask {
 			Block targ = newLoc.getBlock();
 			InventoryHolder th = ((InventoryHolder) targ.getState());
 			th.getInventory().setContents(inv.getContents());
+			inv.clear();
 		}
 		b.setTypeIdAndData(0, (byte) 0, false);
 	

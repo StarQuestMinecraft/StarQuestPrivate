@@ -68,7 +68,7 @@ public class WarpUtils {
 		}
 	}
 	public static void translate(Craft c, int x, int y, int z){
-		if(LocationUtils.isBeingJammed(getNormal(c.getW()), c.getMinX(), c.getMinZ())){
+		if(LocationUtils.isBeingJammed(getNormal(c.getW()), c.warpCoordsX, c.warpCoordsZ)){
 			leaveWarp(c.pilot, c, true);
 			c.pilot.sendMessage("Your warp field was disrupted by a jamming device!");
 			return;
@@ -112,15 +112,31 @@ public class WarpUtils {
 		Inventory i = hpr1.getInventory();
 		Inventory i2 = hpr2.getInventory();
 		
-		if(i.contains(Material.EYE_OF_ENDER, amount)) {
-			i.removeItem(new ItemStack(Material.EYE_OF_ENDER, amount));
-			return true;
-			
-		} else if(i2.contains(Material.EYE_OF_ENDER, amount)){
-			i.removeItem(new ItemStack(Material.EYE_OF_ENDER, amount));
-			return true;
-		} else {
-			return false;
+		for(int n = 0; n < i.getSize(); n++){
+			ItemStack item = i.getItem(n);
+			if(item.getType() == Material.EYE_OF_ENDER){
+				if(item.getAmount() >= 1){
+					item.setAmount(item.getAmount() - 1);
+					return true;
+				} else {
+					i.setItem(n, new ItemStack(Material.AIR, 1));
+					return true;
+				}
+			}
 		}
+		
+		for(int n = 0; n < i2.getSize(); n++){
+			ItemStack item = i2.getItem(n);
+			if(item.getType() == Material.EYE_OF_ENDER){
+				if(item.getAmount() >= 1){
+					item.setAmount(item.getAmount() - 1);
+					return true;
+				} else {
+					i2.setItem(n, new ItemStack(Material.AIR, 1));
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

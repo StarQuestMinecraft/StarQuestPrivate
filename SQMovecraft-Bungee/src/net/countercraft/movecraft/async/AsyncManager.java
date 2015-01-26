@@ -311,13 +311,6 @@ public class AsyncManager extends BukkitRunnable {
 
 						if ( !failed ) {
 							
-							for(MovecraftLocation l : task.getSignLocations()){
-								Sign s = (Sign) c.getW().getBlockAt(l.getX(), l.getY(), l.getZ()).getState();
-								if (s.getLine(0).equals(ChatColor.GREEN + "Moving Part")){
-									MovingPartUtils.rotateSchematic(s, p, task.getRotation());
-								}
-							}
-							
 							c.setBlockList( task.getBlockList() );
 
 							Location originPoint = new Location( c.getW(), task.getOriginPoint().getX(), task.getOriginPoint().getY(), task.getOriginPoint().getZ() );

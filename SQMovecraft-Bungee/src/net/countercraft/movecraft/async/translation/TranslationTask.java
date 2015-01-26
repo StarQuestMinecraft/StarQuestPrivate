@@ -79,11 +79,6 @@ public class TranslationTask extends AsyncTask {
 			HashSet<MovecraftLocation> existingBlockSet = new HashSet<MovecraftLocation>(Arrays.asList(blocksList));
 			HashSet<EntityUpdateCommand> entityUpdateSet = new HashSet<EntityUpdateCommand>();
 			Set<MapUpdateCommand> updateSet = new HashSet<MapUpdateCommand>();
-
-			CraftAsyncTranslateEvent event = new CraftAsyncTranslateEvent(getCraft(), data);
-			if (!event.call()) {
-				fail(event.getMessage());
-			}
 			
 			if(!checkChunks(getCraft().getW(), getCraft().getMinX(), getCraft().getMinZ(), getCraft().getHitBox(), data.getDx(), data.getDz())){
 				fail("You're going a bit fast and the chunks can't render fast enough.");

@@ -49,7 +49,7 @@ public class LaserBolt extends Projectile{
 		myBlock.setType(Material.AIR);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 			public void run(){
-				createExplosion(myBlock.getLocation(), shooter, 2.0F);
+				createExplosion(myBlock, shooter, 1.75F);
 			}
 		}, 1L);
 	}
@@ -59,7 +59,9 @@ public class LaserBolt extends Projectile{
 		blocks.remove(myBlock);
 	}
 	
-	public static void createExplosion(Location l, Player shooter, float power){
+	public static void createExplosion(Block b, Player shooter, float power){
+		Location l = b.getLocation();
+		l.add(l.getX() > 0 ? 0.5 : -0.5, 0.5, l.getZ() > 0 ? 0.5 : -0.5);
 		recentExplosions.add(new LocationHit(l, shooter));
 		l.getWorld().createExplosion(l, power);
 		recentExplosions.remove(l);
