@@ -24,6 +24,7 @@ import net.countercraft.movecraft.utils.MapUpdateCommand;
 import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
+import net.countercraft.movecraft.utils.StargateJumpHolder;
 
 import org.apache.commons.collections.ListUtils;
 import org.bukkit.Bukkit;
@@ -206,8 +207,7 @@ public class TranslationTask extends AsyncTask {
 					double angle = LocationUtils.getAngleFromGivenPointTo(LocationUtils.locationOfPlanet(s), p.getLocation());
 					Location target = LocationUtils.getSpawnLocationFromAngle(angle, STANDARD_SPAWN, 1500);
 					c.setProcessingTeleport(true);
-					RepeatTryServerJumpTask task2 = new RepeatTryServerJumpTask(p, c, s, target.getBlockX(), 205, target.getBlockY());
-					task2.runTaskTimer(Movecraft.getInstance(), 0, 1);
+					RepeatTryServerJumpTask.createServerJumpTask(p, c, s, target.getBlockX(), 205, target.getBlockY());
 					/*
 					 * } else { p.sendMessage(
 					 * "This planet's server is offline at the moment, you cannot enter."
@@ -222,8 +222,7 @@ public class TranslationTask extends AsyncTask {
 						p.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + " Leaving the atmosphere!");
 						Location loc = LocationUtils.getWarpLocation(p.getWorld().getName(), p.getLocation());
 						c.setProcessingTeleport(true);
-						RepeatTryServerJumpTask task2 = new RepeatTryServerJumpTask(p, c, LocationUtils.getSystem(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-						task2.runTaskTimer(Movecraft.getInstance(), 0, 1);
+						RepeatTryServerJumpTask.createServerJumpTask(p, c, LocationUtils.getSystem(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 						return;
 						/*
 						 * } else { p.sendMessage(
@@ -234,14 +233,14 @@ public class TranslationTask extends AsyncTask {
 				}
 
 				// if they are near a stargate initialize solar system jump
-				RepeatTryServerJumpTask task2 = LocationUtils.checkStargateJump(p, c);
-				if (task2 != null) {
+				StargateJumpHolder jump = LocationUtils.checkStargateJump(p, c);
+				if (jump != null) {
 					for(UUID u : c.playersRidingShip){
 						Player plr = Movecraft.getPlayer(u);
 						plr.playSound(plr.getLocation(), Sound.PORTAL_TRAVEL, 2.0F, 1.0F);
 					}
 					c.setProcessingTeleport(true);
-					task2.runTaskTimer(Movecraft.getInstance(), 0, 1);
+					RepeatTryServerJumpTask.createServerJumpTask(jump.p, jump.c, jump.server, jump.x, jump.y, jump.z);
 				}
 			}
 		} catch (IllegalStateException e) {

@@ -18,7 +18,6 @@
 package net.countercraft.movecraft.listener;
 
 //import net.countercraft.movecraft.Movecraft;
-import java.util.HashSet;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
@@ -30,7 +29,6 @@ import net.countercraft.movecraft.craft.CraftType;
 
 
 import net.countercraft.movecraft.cryo.CryoSpawn;
-import net.countercraft.movecraft.shield.DockUtils;
 import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.utils.BlockUtils;
 import net.countercraft.movecraft.utils.KillUtils;
@@ -66,6 +64,17 @@ public class BlockListener implements Listener {
 	public void onSignChange(SignChangeEvent event){
 		for (CraftType t : CraftManager.getInstance().getCraftTypes()) {
 			if (event.getLine(0).equalsIgnoreCase(t.getCraftName())) {
+				if (event.getLine(1) == null || event.getLine(1).equals("")){
+					String str = event.getPlayer().getName();
+					if(str.length() > 15){
+						event.setLine(1, str.substring(0, 15));
+					} else {
+						event.setLine(1, str);
+					}
+				}
+				return;
+			} else if (event.getLine(0).equalsIgnoreCase(t.getAltName())){
+				event.setLine(0, t.getCraftName());
 				if (event.getLine(1) == null || event.getLine(1).equals("")){
 					String str = event.getPlayer().getName();
 					if(str.length() > 15){

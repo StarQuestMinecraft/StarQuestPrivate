@@ -17,11 +17,8 @@
 
 package net.countercraft.movecraft;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,9 +39,7 @@ import net.countercraft.movecraft.listener.BlockListener;
 import net.countercraft.movecraft.listener.CommandListener;
 import net.countercraft.movecraft.listener.EntityListener;
 import net.countercraft.movecraft.listener.InteractListener;
-import net.countercraft.movecraft.listener.PartListener;
 import net.countercraft.movecraft.localisation.I18nSupport;
-import net.countercraft.movecraft.metrics.MovecraftMetrics;
 import net.countercraft.movecraft.shield.DockUtils;
 import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.task.AutopilotRunTask;
@@ -61,7 +56,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
 
@@ -81,19 +79,12 @@ public class Movecraft extends JavaPlugin {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("removehome") && sender instanceof Player){
 			Bedspawn.deleteBedspawn(sender.getName());
-		} else if(cmd.getName().equalsIgnoreCase("UUID")){
-			String name = args[0];
-			ByteArrayOutputStream b = new ByteArrayOutputStream();
-			DataOutputStream out = new DataOutputStream(b);
-			try {
-				out.writeUTF("UUIDOther");
-				out.writeUTF(name);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		} else if(cmd.getName().equalsIgnoreCase("handlers")){
+			HandlerList list = StructureGrowEvent.getHandlerList();
+			RegisteredListener[] rlist = list.getRegisteredListeners();
+			for(RegisteredListener l : rlist){
+				sender.sendMessage(l.getPlugin() + " listening at " + l.getPriority());
 			}
-			Player p = Bukkit.getOnlinePlayers()[0];
-			p.sendPluginMessage(Movecraft.getInstance(), "BungeeCord", b.toByteArray());
 			return true;
 		} else if(cmd.getName().equalsIgnoreCase("serverjump") && sender.isOp()){
 			String serverName = args[0];
@@ -174,7 +165,6 @@ public class Movecraft extends JavaPlugin {
 			pm.registerEvents( new CommandListener(), this );
 			pm.registerEvents( new BlockListener(), this );
 			pm.registerEvents( new EntityListener(), this );
-			pm.registerEvents( new PartListener(), this );
 			
 			Messenger m = this.getServer().getMessenger();
 			m.registerOutgoingPluginChannel(this, "BungeeCord");
@@ -185,7 +175,6 @@ public class Movecraft extends JavaPlugin {
 			//StorageChestItem.readFromDisk();
 			//StorageChestItem.addRecipie();
 
-			new MovecraftMetrics( CraftManager.getInstance().getCraftTypes().length );   
 			//bungee server/minecraft server/plugins/movecraft
 			
 			new AutopilotRunTask();

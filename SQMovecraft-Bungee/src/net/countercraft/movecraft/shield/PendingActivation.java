@@ -55,10 +55,10 @@ public class PendingActivation {
 		} else {
 			ProtectedRegion reg = new ProtectedCuboidRegion(name, min, max);
 			RegionManager rm = ShieldUtils.wg.getRegionManager(w);
-			ProtectedRegion remove = rm.getRegionExact(name);
+			ProtectedRegion remove = rm.getRegion(name);
 			if (remove != null) {
 				rm.removeRegion(name);
-				if (p.isOnline()) {
+				if (p != null && p.isOnline()) {
 					p.sendMessage(ChatColor.RED + "An existing starship shield was removed; you cannot have two shields in the same world.");
 				}
 			}

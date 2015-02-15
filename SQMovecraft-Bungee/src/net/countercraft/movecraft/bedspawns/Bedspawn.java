@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import org.bukkit.Bukkit;
+import com.dibujaron.globalsql.CInfo;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.utils.MovecraftLocation;
@@ -20,11 +20,11 @@ public class Bedspawn {
 	public String world;
 	public int x, y, z;
 	public static String driver = "com.mysql.jdbc.Driver";
-	public static String hostname = "play.starquestminecraft.com";
-	public static String port = "3306";
-	public static String db_name = "minecraft";
-	public static String username = "minecraft";
-	public static String password = "R3b!rth!ng";
+	public static String hostname = (CInfo.get().getHostname() != null) ? CInfo.get().getHostname() : "play.starquestminecraft.com";
+	public static String port = (CInfo.get().getPort() != null) ? CInfo.get().getPort() : "3306";
+	public static String db_name = (CInfo.get().getDBName() != null) ? CInfo.get().getDBName() : "minecraft";
+	public static String username = (CInfo.get().getUsername() != null) ? CInfo.get().getUsername() : "minecraft";
+	public static String password = (CInfo.get().getPassword() != null) ? CInfo.get().getPassword() : "R3b!rth!ng";
 	public static Connection cntx = null;
 	public static String dsn = ("jdbc:mysql://" + hostname + ":" + port + "/" + db_name);
 	public final static Bedspawn DEFAULT = Movecraft.getInstance().getDefaultBedspawn();

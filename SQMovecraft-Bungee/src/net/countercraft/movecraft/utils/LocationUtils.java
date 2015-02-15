@@ -163,13 +163,13 @@ public class LocationUtils {
 		return new Location(origin.getWorld(), x, 100, z);
 	}
 
-	public static RepeatTryServerJumpTask checkStargateJump(Player p, Craft c) {
+	public static StargateJumpHolder checkStargateJump(Player p, Craft c) {
 		Location loc = p.getLocation();
 		for (String s : stargates.keySet()) {
 			StargateData d = stargates.get(s);
 			if (stargateCheck(d, loc)) {
 				p.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + "Entering slipgate to " + s + "!");
-				return new RepeatTryServerJumpTask(p, c, s, d.targetLocation.getBlockX(), d.targetLocation.getBlockY(), d.targetLocation.getBlockZ());
+				return new StargateJumpHolder(p, c, s, d.targetLocation.getBlockX(), d.targetLocation.getBlockY(), d.targetLocation.getBlockZ());
 			}
 		}
 		return null;
@@ -203,10 +203,10 @@ public class LocationUtils {
 		// positive x is east. Positive z is south.
 		if (SYSTEM.equals("Regalis")) {
 			// Defalos is to the south of Regalis
-			if (warpZ > 5000)
+			if (warpZ > 3500)
 				return "Defalos";
 			// Digitalis is to the east of Regalis
-			if (warpX > 5000)
+			if (warpX > 3500)
 				return "Digitalia";
 		} else if (SYSTEM.equals("Digitalia")) {
 			// Regalis is to the west of Digitalia
@@ -217,10 +217,10 @@ public class LocationUtils {
 				return "Defalos";
 		} else if (SYSTEM.equals("Defalos")) {
 			// Regalis is to the north of Defalos
-			if (warpZ < -5000)
+			if (warpZ < -4500)
 				return "Regalis";
 			// Digitalis is to the east of Defalos
-			if (warpX > 5000)
+			if (warpX > 4500)
 				return "Defalos";
 		}
 		return null;

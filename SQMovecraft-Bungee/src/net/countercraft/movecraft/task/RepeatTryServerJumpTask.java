@@ -2,6 +2,7 @@ package net.countercraft.movecraft.task;
 
 import java.io.IOException;
 
+import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bungee.BungeeCraftSender;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.slip.WarpUtils;
@@ -18,6 +19,23 @@ public class RepeatTryServerJumpTask extends BukkitRunnable{
 	int y;
 	int z;
 	Player p;
+	
+	public static void createServerJumpTask(final Player p, final Craft c, final String server, final int x, final int y, final int z){
+		Bukkit.getServer().getScheduler().runTask(Movecraft.getInstance(), new Runnable(){
+			public void run(){
+				RepeatTryServerJumpTask t = new RepeatTryServerJumpTask(p, c, server, x, y, z);
+				t.runTaskTimer(Movecraft.getInstance(), 0, 1);
+			}
+		});
+	}
+	public static void createServerJumpTask(final Player p, final Craft c, final String server, final String world, final int x, final int y, final int z){
+		Bukkit.getServer().getScheduler().runTask(Movecraft.getInstance(), new Runnable(){
+			public void run(){
+				RepeatTryServerJumpTask t = new RepeatTryServerJumpTask(p, c, server, world, x, y, z);
+				t.runTaskTimer(Movecraft.getInstance(), 0, 1);
+			}
+		});
+	}
 	
 	public RepeatTryServerJumpTask(Player p, Craft c, String server, int x, int y, int z){
 		this.c = c;

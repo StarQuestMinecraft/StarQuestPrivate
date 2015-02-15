@@ -46,6 +46,7 @@ public class CraftType {
 	private double speed;
 	private HashMap<Integer, ArrayList<Double>> flyBlocks = new HashMap<Integer, ArrayList<Double>>();
 	private int allowedCannons;
+	private String altName;
 
 	public CraftType(File f) {
 		try {
@@ -148,6 +149,11 @@ public class CraftType {
 		} else {
 			isFlagship = false;
 		}
+		if (data.containsKey("altName")) {
+			altName = (String) data.get("altName");
+		} else {
+			altName = null;
+		}
 	}
 
 	public String getCraftName() {
@@ -244,5 +250,9 @@ public class CraftType {
 
 	public boolean isFlagship() {
 		return isFlagship;
+	}
+	
+	public String getAltName(){
+		return altName;
 	}
 }

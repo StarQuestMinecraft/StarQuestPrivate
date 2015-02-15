@@ -35,7 +35,7 @@ public class MapUpdateCommand {
 	private boolean finalBlockFragile;
 	private boolean initialBlockFragile;
 	Block block;
-	private net.minecraft.server.v1_7_R4.Chunk chunk = null;
+	private net.minecraft.server.v1_8_R1.Chunk chunk = null;
 
 	public MapUpdateCommand( MovecraftLocation blockLocation, MovecraftLocation newBlockLocation, int newTypeID, Rotation rotation, Craft c) {
 		this.blockLocation = blockLocation;
@@ -113,10 +113,10 @@ public class MapUpdateCommand {
 		initialBlockFragile = fragile;
 	}
 	
-	public void setChunk(net.minecraft.server.v1_7_R4.Chunk chunk){
+	public void setChunk(net.minecraft.server.v1_8_R1.Chunk chunk){
 		this.chunk = chunk;
 	}
-	public net.minecraft.server.v1_7_R4.Chunk getChunk(){
+	public net.minecraft.server.v1_8_R1.Chunk getChunk(){
 		return chunk;
 	}
 	public Block getBlock(){

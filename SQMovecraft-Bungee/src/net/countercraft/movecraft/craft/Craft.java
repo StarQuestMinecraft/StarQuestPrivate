@@ -31,7 +31,6 @@ import net.countercraft.movecraft.async.detection.RedetectTask;
 import net.countercraft.movecraft.async.rotation.RotationTask;
 import net.countercraft.movecraft.async.translation.TranslationTask;
 import net.countercraft.movecraft.async.translation.TranslationTaskData;
-import net.countercraft.movecraft.event.CraftPilotEvent;
 import net.countercraft.movecraft.event.CraftSyncTranslateEvent;
 import net.countercraft.movecraft.projectile.LaserBolt;
 import net.countercraft.movecraft.slip.WarpUtils;
@@ -288,9 +287,10 @@ public class Craft {
 								f.setIsIncendiary(true);
 								f.setYield(2.5F);
 								f.setBounce(false);*/
-								new LaserBolt(twoinfront, playerFacing, this.pilot);
-								twoinfront.getWorld().playSound(twoinfront.getLocation(), Sound.SHOOT_ARROW, 2.0F, 1.0F);
-								
+								if(twoinfront.getType() == Material.AIR){
+									new LaserBolt(twoinfront, playerFacing, this.pilot);
+									twoinfront.getWorld().playSound(twoinfront.getLocation(), Sound.SHOOT_ARROW, 2.0F, 1.0F);
+								}
 								Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
 	
 									@Override

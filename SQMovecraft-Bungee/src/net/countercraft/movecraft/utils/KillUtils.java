@@ -1,5 +1,6 @@
 package net.countercraft.movecraft.utils;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
@@ -12,96 +13,79 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.PlayerDeathEvent;
 
+import com.greatmancode.craftconomy3.Cause;
+import com.regalphoenixmc.SQRankup.CC3Wrapper;
 import com.regalphoenixmc.SQRankup.Database;
-import com.regalphoenixmc.SQRankup.RankupPlayer;
 import com.regalphoenixmc.SQRankup.SQRankup;
+import com.regalphoenixmc.SQRankup.CC3Wrapper.CC3Currency;
 
 public class KillUtils {
-	
+
 	static long MAX_COOLDOWN = 1000 * 60 * 5;
-	public static void onBreakShipSign(Sign s, Player breaker){
+
+	public static void onBreakShipSign(Sign s, Player breaker) {
 		UUID u = getPlayerLastFlew(s.getLocation());
-		if(u == null || u.equals(breaker.getUniqueId())){
+		if (u == null || u.equals(breaker.getUniqueId())) {
 			breaker.sendMessage("No kills were credited for this sign break.");
 			return;
 		} else {
 			long lastFlew = Movecraft.getInstance().getStarshipDatabase().getFileLastModified(s.getLocation());
-			if(lastFlew < 0) return;
+			if (lastFlew < 0)
+				return;
 			long timeGap = System.currentTimeMillis() - lastFlew;
-			if(timeGap > MAX_COOLDOWN){
+			if (timeGap > MAX_COOLDOWN) {
 				breaker.sendMessage("This ship has been parked for more than 5 minutes, so this kill did not count.");
 				return;
 			}
 			OfflinePlayer pilot = Bukkit.getOfflinePlayer(u);
 			boolean success = creditKill(breaker, pilot);
-			if(success) Bukkit.broadcastMessage(ChatColor.RED + breaker.getName() + " destroyed a ship last flown by " + pilot.getName() + "!");
+			if (success)
+				Bukkit.broadcastMessage(ChatColor.RED + breaker.getName() + " destroyed a ship last flown by " + pilot.getName() + "!");
 		}
 	}
+
 	public static boolean creditKill(Player killer, OfflinePlayer killed) {
-		RankupPlayer entry;
-		if (!Database.hasKey(killer.getName())) {
-			entry = new RankupPlayer(killer.getName(), 0L, "", 0);
-			entry.saveNew();
-		} else {
-			entry = Database.getEntry(killer.getName());
-			String lastKill = entry.getLastKillName();
-			if ((lastKill != null) && (lastKill.equals(killed.getName()) && (System.currentTimeMillis() - entry.getLastKillTime() < 1800000))) {
-				killer.sendMessage("This kill did not count because you killed that player within the last half hour.");
+		// if it's a suicide
+		if (killer == killed)
+			return false;
+
+		if (killer instanceof Player) {
+			boolean cooldown = Database.isInCooldown(killer, killed);
+			System.out.println(cooldown);
+			if (!cooldown) {
+				int infamy = rankToKills(killed);
+				CC3Wrapper.deposit(infamy, killer.getName(), CC3Currency.INFAMY, Cause.PLUGIN, "Rankup Kill");
+				killer.sendMessage(ChatColor.RED + "You were awarded " + infamy + " infamy for that kill. You now have " + CC3Wrapper.getBalance(killer.getName(), CC3Currency.INFAMY) + " infamy");
+				Database.addKill(killer, killed);
+				return true;
+			} else {
+				killer.sendMessage(ChatColor.RED + "You already killed that player in the last 20 minutes! Lay off for a bit...");
 				return false;
 			}
 		}
-		int kills = rankToKills(killed.getName());
-		entry.setAsyncKills(kills);
-		entry.setLastKillName(killed.getName());
-		entry.setLastKillTime(System.currentTimeMillis());
-		entry.saveData();
-		return true;
-	}
-	
-	private static UUID getPlayerLastFlew(Location sign){
-		StarshipData d = Movecraft.getInstance().getStarshipDatabase().getStarshipByLocation(sign);
-		if(d == null) return null;
-		return d.getCaptain();
+		return false;
 	}
 
-	private static int rankToKills(String name) {
+	private static int rankToKills(OfflinePlayer killed) {
 
-		int i = 1;
-		
-		OfflinePlayer plr = Bukkit.getOfflinePlayer(name);
-		if(plr == null) return 1;
-		String[] groups = SQRankup.permission.getPlayerGroups(null, plr);
+		int i = 0;
+		String[] groups = SQRankup.permission.getPlayerGroups(null, Bukkit.getOfflinePlayer(killed.getUniqueId()));
+		System.out.println(Arrays.toString(groups));
 		for (String p : groups) {
-			switch (p.toLowerCase()) {
-			case "refugee":
-				i = -3;
-				break;
-			case "settler":
-				i = 1;
-				break;
-			case "colonist":
-			case "pirate":
-				i = 2;
-				break;
-			case "corsair":
-			case "citizen":
-				i = 3;
-				break;
-			case "buccaneer":
-			case "affluent":
-				i = 4;
-				break;
-			case "warlord":
-			case "tycoon":
-				i = 4;
-				break;
-			default:
-				break;
-
+			if (SQRankup.infamyGainMap.containsKey(p.toLowerCase())) {
+				i = SQRankup.infamyGainMap.get(p.toLowerCase());
 			}
 		}
+		int cost = i < 0 ? i : i * SQRankup.MULTIPLIER;
+		return cost;
+	}
 
-		return i;
+	private static UUID getPlayerLastFlew(Location sign) {
+		StarshipData d = Movecraft.getInstance().getStarshipDatabase().getStarshipByLocation(sign);
+		if (d == null)
+			return null;
+		return d.getCaptain();
 	}
 }

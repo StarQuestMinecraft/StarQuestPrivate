@@ -144,6 +144,7 @@ public class CommandListener implements Listener {
 			e.printStackTrace();
 			return true;
 		}
+		if(sel == null) return true;
 		int[] cmin = DockUtils.getChunkCoordinates(p.getWorld(), sel.getMinimumPoint().getBlockX(), sel.getMinimumPoint().getBlockZ());
 		int[] cmax = DockUtils.getChunkCoordinates(p.getWorld(), sel.getMaximumPoint().getBlockX(), sel.getMaximumPoint().getBlockZ());
 

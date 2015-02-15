@@ -27,6 +27,8 @@ public class Torpedo extends Projectile{
 			Dispenser d = (Dispenser) dispenser.getState();
 			Inventory di = d.getInventory();
 			di.setMaxStackSize(1);
+			Block placeLoc = dispenser.getRelative(direction);
+			if(placeLoc.getType() != Material.AIR) return;
 			if(di.contains(Material.FIREWORK)){
 				if(!LocationUtils.spaceCheck(p)){
 					p.sendMessage("You can't fire TNT torpedoes on a planet.");
@@ -34,12 +36,12 @@ public class Torpedo extends Projectile{
 				}
 				ItemStack m = new ItemStack(Material.FIREWORK, 1);
 				di.removeItem(m);
-				new Torpedo(dispenser.getRelative(direction), direction);
+				new Torpedo(placeLoc, direction);
 				return;
 			} else if(di.contains(Material.REDSTONE)){
 				ItemStack m = new ItemStack(Material.REDSTONE, 1);
 				di.removeItem(m);
-				new InterdictionTorpedo(dispenser.getRelative(direction), direction);
+				new InterdictionTorpedo(placeLoc, direction);
 				return;
 			}
 			p.sendMessage("No ammo!");

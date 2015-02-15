@@ -16,7 +16,7 @@ commands:
    serverjump:
       description: lolnope
       usage: lolnope
-   uuid:
+   handlers:
       description: sdfsdf
       usage: sdfsdf
    loadship:

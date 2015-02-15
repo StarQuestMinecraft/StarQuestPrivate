@@ -3,24 +3,27 @@ package net.countercraft.movecraft.bungee;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import net.countercraft.movecraft.cryo.CryoSpawn;
 
-public class DeathTeleport implements PlayerTeleport{
-	
+public class DeathTeleport implements PlayerTeleport {
+
 	UUID uuid;
-	
-	public DeathTeleport(UUID u){
+
+	public DeathTeleport(UUID u) {
 		this.uuid = u;
 	}
-	
-	
-	public void execute(){
-		CryoSpawn.respawnPlayer(null, Bukkit.getPlayer(uuid));
-		BungeePlayerHandler.teleportQueue.remove(this);
+
+	public void execute() {
+		Player p = Bukkit.getPlayer(uuid);
+		if (p != null) {
+			CryoSpawn.respawnPlayer(null, p);
+			BungeePlayerHandler.teleportQueue.remove(this);
+		}
 	}
-	
-	public UUID getUUID(){
+
+	public UUID getUUID() {
 		return uuid;
 	}
 }

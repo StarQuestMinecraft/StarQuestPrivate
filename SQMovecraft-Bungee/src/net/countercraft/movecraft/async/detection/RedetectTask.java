@@ -7,6 +7,7 @@ import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.database.StarshipData;
+import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.utils.BoundingBoxUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
@@ -53,6 +54,9 @@ public class RedetectTask extends DetectionTask{
 						+ " has id " + Material.getMaterial(id).toString().toLowerCase() + ", expected ID " + Material.getMaterial(b.type).toString().toLowerCase() + ". If this is intentional, Redetect your ship by left-clicking this sign with a ship controller.");
 				}
 				return;
+			}
+			if (isForbiddenBlock(id, getCraft(), b.x, b.y, b.z)) {
+				fail(String.format(I18nSupport.getInternationalisedString("Detection - Forbidden block found")));
 			}
 			MovecraftLocation loc = b.toMovecraftLocation();
 			blockList[i] = loc;

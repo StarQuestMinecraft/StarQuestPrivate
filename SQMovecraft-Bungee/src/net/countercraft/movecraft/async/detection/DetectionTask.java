@@ -22,18 +22,23 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Stack;
 
+import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.AsyncTask;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.craft.Craft;
+import net.countercraft.movecraft.craft.CraftType;
+import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.utils.BoundingBoxUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
 public class DetectionTask extends AsyncTask {
@@ -50,6 +55,11 @@ public class DetectionTask extends AsyncTask {
 	protected final HashMap<Integer, Integer> blockTypeCount = new HashMap<Integer, Integer>();
 	protected final ArrayList<MovecraftLocation> signLocations = new ArrayList<MovecraftLocation>();
 	protected final DetectionTaskData data;
+	
+	Sign mainSign;
+	
+	private static CraftType CARRIER = InteractListener.getCraftTypeFromString("Carrier");
+	private static CraftType FLAGSHIP = InteractListener.getCraftTypeFromString("Flagship");
 
 	public DetectionTask(Craft c, MovecraftLocation startLocation, int minSize, int maxSize, Integer[] allowedBlocks, Integer[] forbiddenBlocks, String player, World w) {
 		super(c);
@@ -111,7 +121,7 @@ public class DetectionTask extends AsyncTask {
 
 			int testID = data.getWorld().getBlockTypeIdAt(x, y, z);
 
-			if (isForbiddenBlock(testID)) {
+			if (isForbiddenBlock(testID, getCraft(), x,y,z)) {
 
 				fail(String.format(I18nSupport.getInternationalisedString("Detection - Forbidden block found")));
 
@@ -162,15 +172,60 @@ public class DetectionTask extends AsyncTask {
 		return false;
 	}
 
-	private boolean isForbiddenBlock(int test) {
+	protected boolean isForbiddenBlock(int test, Craft c, int x, int y, int z) {
 
 		for (int i : data.getForbiddenBlocks()) {
 			if (i == test) {
 				return true;
 			}
 		}
+		if(test == 63 || test == 68){
+			boolean foundDisallowedSign = checkSignForDisallowed(c, x, y, z);
+			if(foundDisallowedSign) return true;
+		}
 
 		return false;
+	}
+
+	private boolean checkSignForDisallowed(Craft c, int x, int y, int z) {
+		Block b = c.getW().getBlockAt(x,y,z);
+		if(b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN_POST){
+			Sign s = (Sign) b.getState();
+			//check for [private] signs
+			if (s.getLine(0).equalsIgnoreCase("[private]") || s.getLine(0).equalsIgnoreCase("Private")){
+				if (!Movecraft.signContainsPlayername(s, data.getPlayername())){
+					return true;
+				}
+			}
+			//check each sign to see if it's a craft sign
+			boolean isCraftType = (!s.getLine(0).equals("Pod")) && (InteractListener.getCraftTypeFromString(s.getLine(0)) != null);
+			if (isCraftType){
+				//special rules for carriers!
+				if (c.getType().equals(CARRIER) || c.getType().equals(FLAGSHIP)){
+					if (!Movecraft.signContainsPlayername(s, data.getPlayername())){
+						return true;
+					}
+					
+				//other ships
+				} else {
+					
+					//don't count the main sign as a different ship.
+					if(data.getMainSign() == null){
+						if(c.getType().equals(InteractListener.getCraftTypeFromString(s.getLine(0)))){
+							if (Movecraft.signContainsPlayername(s, data.getPlayername())){
+								data.setMainSign(s);
+							}
+						}
+					}else{
+						return true;
+					}
+				}
+			}
+			return false;
+		} else {
+			System.out.println("MOVECRAFT ERROR: sign check called on non sign!");
+			return false;
+		}
 	}
 
 	public DetectionTaskData getData() {

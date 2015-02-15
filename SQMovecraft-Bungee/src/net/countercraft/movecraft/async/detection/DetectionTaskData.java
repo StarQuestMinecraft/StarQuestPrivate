@@ -23,6 +23,7 @@ import net.countercraft.movecraft.utils.MovecraftLocation;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Sign;
 
 public class DetectionTaskData {
 	private World w;
@@ -35,6 +36,7 @@ public class DetectionTaskData {
 	private Integer[] allowedBlocks, forbiddenBlocks;
 	private ArrayList<MovecraftLocation> signLocations;
 	private MovecraftLocation startLocation;
+	private Sign mainSign;
 
 	public DetectionTaskData( World w, String playerName, Integer[] allowedBlocks, Integer[] forbiddenBlocks, MovecraftLocation startLocation ) {
 		this.w = w;
@@ -127,5 +129,11 @@ public class DetectionTaskData {
 
 	public MovecraftLocation getStartLocation() {
 		return startLocation;
+	}
+	public void setMainSign(Sign s){
+		this.mainSign = s;
+	}
+	public Sign getMainSign(){
+		return mainSign;
 	}
 }

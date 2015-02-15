@@ -24,7 +24,6 @@ import net.countercraft.movecraft.utils.MovecraftLocation;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
-import com.sk89q.worldguard.protection.databases.ProtectionDatabaseException;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -36,7 +35,7 @@ public class ShieldUtils {
 	public static ArrayList<PendingActivation> pendingActivations = new ArrayList<PendingActivation>();
 
 	public static WorldGuardPlugin wg = getWorldGuard();
-	private static long SHIELD_DELAY_TICKS = 5 * 60 * 20;
+	private static long SHIELD_DELAY_TICKS = 5 * 20 * 60;
 
 	private static String SIGN_LINE_0 = ChatColor.BLUE + "Ship Shield";
 	private static String SIGN2_LINE_0 = ChatColor.BLUE + "More Access";
@@ -258,7 +257,7 @@ public class ShieldUtils {
 	public static void saveRM(RegionManager rm) {
 		try {
 			rm.save();
-		} catch (ProtectionDatabaseException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -45,7 +45,6 @@ import net.countercraft.movecraft.utils.MapUpdateCommand;
 import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
-import net.countercraft.movecraft.utils.MovingPartUtils;
 import net.countercraft.movecraft.utils.Rotation;
 
 import org.bukkit.Bukkit;
@@ -107,7 +106,6 @@ public class AsyncManager extends BukkitRunnable {
 
 				Player p = Movecraft.getInstance().getServer().getPlayer( data.getPlayername() );
 				Craft pCraft = CraftManager.getInstance().getCraftByPlayer( p );
-				Sign mainSign = null;
 
 				if ( pCraft != null ) {
 					//Player is already controlling a craft
@@ -141,46 +139,6 @@ public class AsyncManager extends BukkitRunnable {
 							}
 						} else {
 							//detect ship signs
-							boolean foundMainSign = false;
-							for (MovecraftLocation l : data.getSignLocations()){
-								Location loc = new Location(c.getW(), l.getX(), l.getY(), l.getZ());
-								Sign s = (Sign) loc.getBlock().getState();
-								//check for [private] signs
-								if (s.getLine(0).equalsIgnoreCase("[private]")){
-									if (!Movecraft.signContainsPlayername(s, data.getPlayername())){
-										failed = true;
-										p.sendMessage(ChatColor.RED + "You are attatched to a door that is locked to someone besides you.");
-									}
-								}
-								//check each sign to see if it's a craft sign
-								boolean isCraftType = (!s.getLine(0).equals("Pod")) && (InteractListener.getCraftTypeFromString(s.getLine(0)) != null);
-								if (isCraftType){
-									//special rules for carriers!
-									if (c.getType().equals(CARRIER) || c.getType().equals(FLAGSHIP)){
-										if (!Movecraft.signContainsPlayername(s, data.getPlayername())){
-											failed = true;
-											p.sendMessage(ChatColor.RED + "Your ship seems to be attatched to another ship that isn't yours.");
-										}
-										
-									//other ships
-									} else {
-										
-										//don't count the main sign as a different ship.
-										if(!foundMainSign){
-											if(c.getType().equals(InteractListener.getCraftTypeFromString(s.getLine(0)))){
-												if (Movecraft.signContainsPlayername(s, data.getPlayername())){
-													foundMainSign = true;
-													mainSign = s;
-												}
-											}
-										}else{
-											failed = true;
-											p.sendMessage(ChatColor.RED + "Your ship seems to have more than one ship sign, or is attatched to another ship.");
-											break;
-										}
-									}
-								}
-							}
 						}
 						if ( !failed ) {
 							
@@ -209,8 +167,8 @@ public class AsyncManager extends BukkitRunnable {
 							c.retractLandingGear();
 							Movecraft.getInstance().getLogger().log( Level.INFO, String.format( I18nSupport.getInternationalisedString( "Detection - Success - Log Output" ), p.getName(), c.getType().getCraftName(), c.getBlockList().length, c.getMinX(), c.getMinZ() ) );
 							CraftManager.getInstance().addCraft( c, p );
-							if(mainSign != null){
-								Movecraft.getInstance().getStarshipDatabase().removeStarshipAtLocation(mainSign.getLocation());
+							if(data.getMainSign() != null){
+								Movecraft.getInstance().getStarshipDatabase().removeStarshipAtLocation(data.getMainSign().getLocation());
 							}
 							if(poll instanceof RedetectTask){
 								p.sendMessage("Succesfully piloted existing starship!");
