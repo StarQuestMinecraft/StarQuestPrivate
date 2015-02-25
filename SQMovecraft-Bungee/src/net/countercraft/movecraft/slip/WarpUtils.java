@@ -92,6 +92,10 @@ public class WarpUtils {
 		return Bukkit.getWorld(normal.getName() + "_the_End");
 	}
 	public static World getNormal(World end){
+		if(end.getName().length() <= 8){
+			System.out.println("ERROR attempted to get normal world of end world shorter than eight?");
+			return end;
+		}
 		return Bukkit.getWorld(end.getName().substring(0, end.getName().length() - 8));
 	}
 	

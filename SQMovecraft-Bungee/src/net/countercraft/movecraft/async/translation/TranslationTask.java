@@ -25,6 +25,7 @@ import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.StargateJumpHolder;
+import net.countercraft.movecraft.vapor.VaporUtils;
 
 import org.apache.commons.collections.ListUtils;
 import org.bukkit.Bukkit;
@@ -121,7 +122,8 @@ public class TranslationTask extends AsyncTask {
 						int testID = getCraft().getW().getBlockTypeIdAt(newLoc.getX(), newLoc.getY(), newLoc.getZ());
 						int oldID = getCraft().getW().getBlockTypeIdAt(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ());
 						boolean drillable = canDrillBlock(getCraft(), oldID, testID, getCraft().getW(), newLoc);
-						if (testID != 0 && testID != 36 && !existingBlockSet.contains(newLoc) && !drillable) {
+
+						if (testID != 0 && testID != 36 && testID != 30 && testID != 31 && testID != 78 && !existingBlockSet.contains(newLoc) && !drillable) {
 							// New block is not air and is not part of the existing
 							// ship
 	
@@ -129,6 +131,7 @@ public class TranslationTask extends AsyncTask {
 									+ newLoc.getX() + " , " + newLoc.getY() + " , " + newLoc.getZ());
 							break;
 						}
+						
 	
 						updateSet.add(new MapUpdateCommand(blocksList[i], newBlockList[i], oldID, getCraft(), drillable));
 					} catch (Exception e){
@@ -152,7 +155,7 @@ public class TranslationTask extends AsyncTask {
 								Location newPLoc=new Location(getCraft().getW(), tempLoc.getX(), tempLoc.getY(), tempLoc.getZ());
 								newPLoc.setPitch(pTest.getLocation().getPitch());
 								newPLoc.setYaw(pTest.getLocation().getYaw());
-								pTest.teleport(newPLoc);
+								//pTest.teleport(newPLoc);
 								EntityUpdateCommand eUp=new EntityUpdateCommand(pTest.getLocation().clone(),newPLoc,pTest, pTest.getVelocity(), getCraft());
 								entityUpdateSet.add(eUp);
 								continue;
@@ -171,6 +174,10 @@ public class TranslationTask extends AsyncTask {
 
 				for (MovecraftLocation l1 : airLocation) {
 					updateSet.add(new MapUpdateCommand(l1, 0, getCraft(), false));
+					if(getCraft().getW().getBlockTypeIdAt(l1.getX(), l1.getY(), l1.getZ()) == 89){
+						Location source = new Location(getCraft().getW(), l1.getX(), l1.getY(), l1.getZ());
+						VaporUtils.testAndCreateTrail(source, getCraft().getMinX(), getCraft().pilot.getLocation().getBlockY() - 10, getCraft().getMinZ(), getCraft().getMinX() + getCraft().getHitBox().length,  getCraft().pilot.getLocation().getBlockY() + 10, getCraft().getMinZ() + getCraft().getHitBox()[0].length, data.getDx(), data.getDy(), data.getDz());
+					}
 				}
 
 				MapUpdateCommand[] temp = updateSet.toArray(new MapUpdateCommand[1]);
@@ -281,8 +288,9 @@ public class TranslationTask extends AsyncTask {
 		return true;
 	}
 	
-	private boolean canDrillBlock(Craft c,int oldID, int newID, World w, MovecraftLocation l){
+	private boolean canDrillBlock(Craft c, int oldID, int newID, World w, MovecraftLocation l){
 		try{
+			//oldID is the block at the old location, newID is the block at the new location (not updated yet)
 			if(c.getType().getDrillHeadID() == oldID && c.getType().getDrilledBlocks().contains(newID)){
 				BlockBreakEvent event = new BlockBreakEvent(w.getBlockAt(l.getX(), l.getY(), l.getZ()), c.pilot);
 				Bukkit.getServer().getPluginManager().callEvent(event);

@@ -33,10 +33,7 @@ import net.countercraft.movecraft.async.translation.TranslationTask;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
-import net.countercraft.movecraft.craft.CraftType;
-import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.localisation.I18nSupport;
-import net.countercraft.movecraft.shield.PendingActivation;
 import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.task.AutopilotRunTask;
 import net.countercraft.movecraft.utils.BlockUtils;
@@ -54,7 +51,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -63,8 +59,6 @@ public class AsyncManager extends BukkitRunnable {
 	private final HashMap<AsyncTask, Craft> ownershipMap = new HashMap<AsyncTask, Craft>();
 	private final BlockingQueue<AsyncTask> finishedAlgorithms = new LinkedBlockingQueue<AsyncTask>();
 	private final HashSet<Craft> clearanceSet = new HashSet<Craft>();
-	private static CraftType CARRIER = InteractListener.getCraftTypeFromString("Carrier");
-	private static CraftType FLAGSHIP = InteractListener.getCraftTypeFromString("Flagship");
 
 	public static AsyncManager getInstance() {
 		return instance;

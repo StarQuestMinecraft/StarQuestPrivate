@@ -33,6 +33,7 @@ import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.utils.BlockUtils;
 import net.countercraft.movecraft.utils.KillUtils;
 import net.countercraft.movecraft.utils.MathUtils;
+import net.countercraft.movecraft.vapor.VaporRunnable;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -164,6 +165,8 @@ public class BlockListener implements Listener {
 				}
 				Movecraft.getInstance().getStarshipDatabase().removeStarshipAtLocation(e.getBlock().getLocation());
 			}
+		} else if (VaporRunnable.isVaporBlock(e.getBlock())){
+			e.setCancelled(true);
 		}
 	}
 	

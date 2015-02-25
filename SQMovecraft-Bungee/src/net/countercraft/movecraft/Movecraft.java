@@ -47,6 +47,7 @@ import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.ShipNuker;
+import net.countercraft.movecraft.vapor.VaporRunnable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -74,6 +75,7 @@ public class Movecraft extends JavaPlugin {
 		//StorageChestItem.saveToDisk();
 		shuttingDown = true;
 		PingUtils.done = true;
+		VaporRunnable.onDisable();
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

@@ -321,6 +321,10 @@ public class InteractListener implements Listener {
 			JammerUtils.toggleJammer(sign, event.getPlayer());
 		} else if (sign.getLine(2).equals(ChatColor.GREEN + "Disabled.")) {
 			Craft c = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());
+			if(c == null){
+				event.getPlayer().sendMessage("You must be flying a ship to start the slipdrive.");
+				return;
+			}
 			if(LocationUtils.isBeingJammed(c.getW(), c.getMinX(), c.getMinZ())){
 				c.pilot.sendMessage("Your slipdrive is being jammed and cannot start.");
 				return;

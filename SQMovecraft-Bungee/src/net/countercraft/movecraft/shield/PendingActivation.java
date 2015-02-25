@@ -68,10 +68,7 @@ public class PendingActivation {
 			 * if(isShieldSign(s)){ s.setLine(1, ENABLED); s.setLine(2,
 			 * CryoSpawn.signTrim(pilot)); s.update(); } }
 			 */
-			ApplicableRegionSet set = rm.getApplicableRegions(reg);
-			for (ProtectedRegion r : set) {
-				// TODO check for all dock regions
-			}
+
 			rm.addRegion(reg);
 			DefaultDomain members = new DefaultDomain();
 			ShieldUtils.fill(members, this.members);

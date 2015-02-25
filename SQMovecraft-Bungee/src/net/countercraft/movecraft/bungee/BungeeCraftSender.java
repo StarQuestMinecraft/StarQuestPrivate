@@ -21,7 +21,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 public class BungeeCraftSender {
-	private static int[] inventoryIDs = {23,54,61,62,146,158};
 	
 	public static void sendCraft(Player p, String targetserver, String world, int X, int Y, int Z, Craft c) throws IOException{
 		byte[] craftData = serialize(p, targetserver, world, X, Y, Z, c);

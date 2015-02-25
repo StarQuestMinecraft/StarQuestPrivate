@@ -13,12 +13,15 @@ public class BungeeFileHandler {
 	
 	public static void saveCraftBytes(byte[] craftdata, String pilot){
 		File target = new File(folder + "/" + pilot + ".starship");
-		if(target.exists()){
-			target.delete();
+		if(!target.exists()){
+			try{
+				target.createNewFile();
+			} catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 		try{
-			target.createNewFile();
-			FileOutputStream out = new FileOutputStream(target);
+			FileOutputStream out = new FileOutputStream(target, false);
 			out.write(craftdata);
 			out.close();
 		} catch (Exception e){
