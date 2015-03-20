@@ -29,7 +29,6 @@ import net.countercraft.movecraft.bungee.BungeeCraftReciever;
 import net.countercraft.movecraft.bungee.BungeeCraftSender;
 import net.countercraft.movecraft.bungee.BungeeFileHandler;
 import net.countercraft.movecraft.bungee.BungeeListener;
-import net.countercraft.movecraft.bungee.PingUtils;
 import net.countercraft.movecraft.config.Settings;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.cryo.CryoSpawn;
@@ -41,7 +40,6 @@ import net.countercraft.movecraft.listener.EntityListener;
 import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.shield.DockUtils;
-import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.task.AutopilotRunTask;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
@@ -75,7 +73,6 @@ public class Movecraft extends JavaPlugin {
 		// Process the storage crates to disk
 		//StorageChestItem.saveToDisk();
 		shuttingDown = true;
-		PingUtils.done = true;
 		VaporRunnable.onDisable();
 	}
 	

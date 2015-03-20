@@ -3,7 +3,6 @@ package net.countercraft.movecraft.bungee;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
@@ -11,7 +10,6 @@ import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
@@ -23,20 +21,32 @@ import org.bukkit.inventory.InventoryHolder;
 public class BungeeCraftSender {
 	
 	public static void sendCraft(Player p, String targetserver, String world, int X, int Y, int Z, Craft c) throws IOException{
+		try{
+		c.playersRidingLock.acquire();
+		Player[] players = new Player[c.playersRidingShip.size()];
+		for(int i = 0; i < c.playersRidingShip.size(); i++){
+			Player plr = Movecraft.getPlayer(c.playersRidingShip.get(i));
+			if(plr != null){
+			players[i] = plr;
+			} else {
+				if(p != null)
+				p.sendMessage("One of your passengers is not currently online, repilot to proceed without him!");
+				c.playersRidingLock.release();
+				return;
+			}
+		}
+		c.playersRidingLock.release();
+		
 		byte[] craftData = serialize(p, targetserver, world, X, Y, Z, c);
 		CraftManager.getInstance().removeCraft(c, false);
 		BungeeFileHandler.saveCraftBytes(craftData, p.getName());
 		System.out.println("Saved craft.");
 		sendCraftSpawnPacket(p, targetserver);
-		try{
-		c.playersRidingLock.acquire();
-		for(int i = 0; i < c.playersRidingShip.size(); i++){
-			UUID s = c.playersRidingShip.get(i);
-			Player player = Movecraft.getPlayer(s);
+
+		for(Player player : players){
 			if(player != null)
 			BungeePlayerHandler.sendPlayer(player, targetserver);
 		}
-		c.playersRidingLock.release();
 		} catch(Exception e){
 			e.printStackTrace();
 		}

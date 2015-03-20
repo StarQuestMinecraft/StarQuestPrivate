@@ -1,0 +1,7 @@
+username: minecraft
+password: R3b!rth!ng
+hostname: play.starquestminecraft.com
+mainDBName: minecraft
+port: 3306
+pluginDBs:
+	towny: towny
