@@ -42,8 +42,8 @@ public class FileDatabase implements StarshipDatabase {
 		StarshipData d;
 		try {
 			d = unserialize( cbytes);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println("Ship load exception: " + e.getMessage());
 			d = null;
 		}
 		return d;

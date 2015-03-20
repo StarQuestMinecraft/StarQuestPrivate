@@ -139,13 +139,14 @@ public class CryoSpawn {
 		}
 		PreparedStatement s = null;
 		try {
-			s = Bedspawn.cntx.prepareStatement("INSERT INTO CRYOSPAWNS (name, server, world, x, y, z) values (?,?,?,?,?,?)");
+			s = Bedspawn.cntx.prepareStatement("INSERT INTO CRYOSPAWNS (name, server, world, x, y, z, active) values (?,?,?,?,?,?,?)");
 			s.setString(1, playerName);
 			s.setString(2, playerServer);
 			s.setString(3, playerWorld);
 			s.setInt(4, playerX);
 			s.setInt(5, playerY);
 			s.setInt(6, playerZ);
+			s.setBoolean(7, false);
 			s.execute();
 			s.close();
 		} catch (SQLException e) {

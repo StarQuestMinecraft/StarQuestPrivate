@@ -64,7 +64,7 @@ public class Torpedo extends Projectile{
 		myBlock.setType(Material.AIR);
 		TNTPrimed tnt = myBlock.getWorld().spawn(myBlock.getLocation(), TNTPrimed.class);
 		tnt.setFuseTicks(1);
-		tnt.setIsIncendiary(true);
+		tnt.setIsIncendiary(false);
 	}
 	@SuppressWarnings("deprecation")
 	public static BlockFace getFacingBlockFace(Sign s){

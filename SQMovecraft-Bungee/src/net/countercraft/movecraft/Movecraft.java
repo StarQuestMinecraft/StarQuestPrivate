@@ -58,6 +58,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredListener;
@@ -82,7 +83,7 @@ public class Movecraft extends JavaPlugin {
 		if (cmd.getName().equalsIgnoreCase("removehome") && sender instanceof Player){
 			Bedspawn.deleteBedspawn(sender.getName());
 		} else if(cmd.getName().equalsIgnoreCase("handlers")){
-			HandlerList list = StructureGrowEvent.getHandlerList();
+			HandlerList list = EntityExplodeEvent.getHandlerList();
 			RegisteredListener[] rlist = list.getRegisteredListeners();
 			for(RegisteredListener l : rlist){
 				sender.sendMessage(l.getPlugin() + " listening at " + l.getPriority());

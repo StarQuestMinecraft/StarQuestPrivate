@@ -17,6 +17,8 @@
 
 package net.countercraft.movecraft.async.translation;
 
+import java.util.List;
+
 import net.countercraft.movecraft.utils.EntityUpdateCommand;
 import net.countercraft.movecraft.utils.MapUpdateCommand;
 import net.countercraft.movecraft.utils.MovecraftLocation;
@@ -30,6 +32,7 @@ public class TranslationTaskData {
 	private MovecraftLocation[] blockList;
 	private MapUpdateCommand[] updates;
 	private EntityUpdateCommand[] entityUpdates;
+	private List<MovecraftLocation> airLocations;
 	private int[][][] hitbox;
 	private int minX, minZ;
 	private int maxHeight, minHeight;
@@ -139,5 +142,13 @@ public class TranslationTaskData {
 	
 	public void setChunksFail(boolean val){
 		chunksFail = val;
+	}
+
+	public List<MovecraftLocation> getAirLocations() {
+		return airLocations;
+	}
+
+	public void setAirLocations(List<MovecraftLocation> airLocations) {
+		this.airLocations = airLocations;
 	}
 }

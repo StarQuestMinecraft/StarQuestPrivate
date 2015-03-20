@@ -43,6 +43,7 @@ import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.Rotation;
+import net.countercraft.movecraft.vapor.VaporUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -226,6 +227,12 @@ public class AsyncManager extends BukkitRunnable {
 								}
 
 							}*/
+							for(MovecraftLocation l1 : task.getData().getAirLocations()){
+								if(c.getW().getBlockTypeIdAt(l1.getX(), l1.getY(), l1.getZ()) == 89){
+									Location source = new Location(c.getW(), l1.getX(), l1.getY(), l1.getZ());
+									VaporUtils.testAndCreateTrail(source, c.getMinX(), c.pilot.getLocation().getBlockY() - 10, c.getMinZ(), c.getMinX() + c.getHitBox().length,  c.pilot.getLocation().getBlockY() + 10, c.getMinZ() + c.getHitBox()[0].length, task.getData().getDx(), task.getData().getDy(), task.getData().getDz());
+								}
+							}
 							c.setMinX( task.getData().getMinX() );
 							c.setMinZ( task.getData().getMinZ() );
 							c.setHitBox( task.getData().getHitbox() );

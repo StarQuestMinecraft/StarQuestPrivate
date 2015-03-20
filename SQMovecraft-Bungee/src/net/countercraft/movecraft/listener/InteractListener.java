@@ -319,7 +319,7 @@ public class InteractListener implements Listener {
 			JammerUtils.setupJammerSign(sign, event.getPlayer());
 		} else if(JammerUtils.isJammerSign(sign)){
 			JammerUtils.toggleJammer(sign, event.getPlayer());
-		} else if (sign.getLine(2).equals(ChatColor.GREEN + "Disabled.")) {
+		}/* else if (sign.getLine(2).equals(ChatColor.GREEN + "Disabled.")) {
 			Craft c = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());
 			if(c == null){
 				event.getPlayer().sendMessage("You must be flying a ship to start the slipdrive.");
@@ -330,7 +330,7 @@ public class InteractListener implements Listener {
 				return;
 			}
 			new WarpStartTask(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer(), sign);
-		} else if (sign.getLine(2).equals(ChatColor.BLUE + "Stable Slip.")) {
+		}*/ else if (sign.getLine(2).equals(ChatColor.BLUE + "Stable Slip.")) {
 			WarpUtils.leaveWarp(event.getPlayer(), CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), true, false);
 			sign.setLine(2, ChatColor.GREEN + "Disabled.");
 			sign.update();

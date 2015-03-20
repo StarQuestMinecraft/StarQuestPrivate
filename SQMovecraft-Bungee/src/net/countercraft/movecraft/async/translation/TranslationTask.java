@@ -155,7 +155,7 @@ public class TranslationTask extends AsyncTask {
 								Location newPLoc=new Location(getCraft().getW(), tempLoc.getX(), tempLoc.getY(), tempLoc.getZ());
 								newPLoc.setPitch(pTest.getLocation().getPitch());
 								newPLoc.setYaw(pTest.getLocation().getYaw());
-								//pTest.teleport(newPLoc);
+								pTest.teleport(newPLoc);
 								EntityUpdateCommand eUp=new EntityUpdateCommand(pTest.getLocation().clone(),newPLoc,pTest, pTest.getVelocity(), getCraft());
 								entityUpdateSet.add(eUp);
 								continue;
@@ -172,12 +172,9 @@ public class TranslationTask extends AsyncTask {
 				// Set blocks that are no longer craft to air
 				List<MovecraftLocation> airLocation = ListUtils.subtract(Arrays.asList(blocksList), Arrays.asList(newBlockList));
 
+				data.setAirLocations(airLocation);
 				for (MovecraftLocation l1 : airLocation) {
 					updateSet.add(new MapUpdateCommand(l1, 0, getCraft(), false));
-					if(getCraft().getW().getBlockTypeIdAt(l1.getX(), l1.getY(), l1.getZ()) == 89){
-						Location source = new Location(getCraft().getW(), l1.getX(), l1.getY(), l1.getZ());
-						VaporUtils.testAndCreateTrail(source, getCraft().getMinX(), getCraft().pilot.getLocation().getBlockY() - 10, getCraft().getMinZ(), getCraft().getMinX() + getCraft().getHitBox().length,  getCraft().pilot.getLocation().getBlockY() + 10, getCraft().getMinZ() + getCraft().getHitBox()[0].length, data.getDx(), data.getDy(), data.getDz());
-					}
 				}
 
 				MapUpdateCommand[] temp = updateSet.toArray(new MapUpdateCommand[1]);
