@@ -42,7 +42,7 @@ public class CryoSpawn {
 	public static CryoSpawn DEFAULT;
 
 	public CryoSpawn(String player, String server, String world, int x, int y, int z, boolean isActive) {
-		this.player = player;
+		this.player = signTrim(player);
 		this.server = server;
 		this.world = world;
 		this.x = x;
@@ -94,7 +94,7 @@ public class CryoSpawn {
 	}
 
 	public static void updatePodSpawn(Sign s) {
-		String player = s.getLine(1);
+		String player = s.getLine(1).trim();
 		Block point = s.getBlock().getRelative(0, -1, 0);
 		CryoSpawn spawn = new CryoSpawn(player, Bukkit.getServerName(), s.getBlock().getWorld().getName(), point.getX(), point.getY(), point.getZ(), isActive(s));
 		updatePodSpawn(player, spawn);
@@ -165,7 +165,6 @@ public class CryoSpawn {
 			p.sendMessage("Your cryopod spawn location was updated.");
 		}
 		name = signTrim(name);
-		String playerName = b.player;
 		String playerWorld = b.world;
 		String playerServer = b.server;
 		int playerX = b.x;
@@ -184,7 +183,7 @@ public class CryoSpawn {
 			s.setInt(3, playerX);
 			s.setInt(4, playerY);
 			s.setInt(5, playerZ);
-			s.setString(6, playerName);
+			s.setString(6, name);
 			s.execute();
 			s.close();
 		} catch (SQLException e) {

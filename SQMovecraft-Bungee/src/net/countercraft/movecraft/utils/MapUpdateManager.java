@@ -37,8 +37,8 @@ import net.countercraft.movecraft.utils.datastructures.InventoryTransferHolder;
 import net.countercraft.movecraft.utils.datastructures.SignTransferHolder;
 import net.countercraft.movecraft.utils.datastructures.StorageCrateTransferHolder;
 import net.countercraft.movecraft.utils.datastructures.TransferData;
-import net.minecraft.server.v1_8_R2.BlockPosition;
-import net.minecraft.server.v1_8_R2.ChunkCoordIntPair;
+import net.minecraft.server.v1_8_R1.BlockPosition;
+import net.minecraft.server.v1_8_R1.ChunkCoordIntPair;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -47,9 +47,9 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.v1_8_R2.CraftChunk;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_8_R2.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.v1_8_R1.CraftChunk;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R1.util.CraftMagicNumbers;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -64,7 +64,7 @@ public class MapUpdateManager extends BukkitRunnable {
         private final HashMap<World, ArrayList<EntityUpdateCommand>> entityUpdates = new HashMap<World, ArrayList<EntityUpdateCommand>>();
         public final int[] fragileBlocks = new int[]{ 29, 33, /*34,*/ 50, 52, 55, 63, 65, 68, 69, 70, 71, 72, 75, 76, 77, 93, 94, 96, 131, 132, 143, 147, 148, 149, 150, 151, 171, 323, 324, 330, 331, 356, 404 };
         public final int[] tileEntities = new int[]{63, 68, 176, 177, 54, 130, 146, 23, 61, 62, 117, 154, 158, 138, 52, 25, 34, 29, 33, 84, 116, 114, 137, 151, 140, 149, 150};
-        final net.minecraft.server.v1_8_R2.Block AIR_ID;
+        final net.minecraft.server.v1_8_R1.Block AIR_ID;
         final byte ZERO = 0;
         
         private MapUpdateManager() {
@@ -81,11 +81,11 @@ public class MapUpdateManager extends BukkitRunnable {
                 private static final MapUpdateManager INSTANCE = new MapUpdateManager();
         }
         
-        private static net.minecraft.server.v1_8_R2.Block getBlockFromId(int id){
+        private static net.minecraft.server.v1_8_R1.Block getBlockFromId(int id){
         	return CraftMagicNumbers.getBlock(id);
         }
         
-        private void updateBlock(MapUpdateCommand m, ArrayList<Chunk> chunkList, World w, Map<MovecraftLocation, TransferData> dataMap, Set<net.minecraft.server.v1_8_R2.Chunk> chunks) {
+        private void updateBlock(MapUpdateCommand m, ArrayList<Chunk> chunkList, World w, Map<MovecraftLocation, TransferData> dataMap, Set<net.minecraft.server.v1_8_R1.Chunk> chunks) {
                 MovecraftLocation workingL = m.getNewBlockLocation();
         
                 // Calculate chunk if necessary, check list of chunks already loaded first
@@ -99,7 +99,7 @@ public class MapUpdateManager extends BukkitRunnable {
                 }
 
                 //get the inner-chunk index of the block to change
-                net.minecraft.server.v1_8_R2.Chunk c = m.getChunk();
+                net.minecraft.server.v1_8_R1.Chunk c = m.getChunk();
                 if(c == null) c = calculateChunk(chunkList, x, y, z, b);
                 //modify the block in the chunk
             
@@ -157,14 +157,14 @@ public class MapUpdateManager extends BukkitRunnable {
 					AsyncManager.getInstance().clear(m.getCraft());
 				}  
         }
-        private void removeBlock(MapUpdateCommand m, ArrayList<Chunk> chunkList, World w, Set<net.minecraft.server.v1_8_R2.Chunk> chunks){
+        private void removeBlock(MapUpdateCommand m, ArrayList<Chunk> chunkList, World w, Set<net.minecraft.server.v1_8_R1.Chunk> chunks){
         	MovecraftLocation workingL = m.getNewBlockLocation();
         	int x = workingL.getX();
             int y = workingL.getY();
             int z = workingL.getZ();
             Block b = w.getBlockAt(x,y,z);
             m.setBlock(b);
-            net.minecraft.server.v1_8_R2.Chunk c = calculateChunk(chunkList, x, y, z, b);
+            net.minecraft.server.v1_8_R1.Chunk c = calculateChunk(chunkList, x, y, z, b);
             
             int origType=b.getTypeId();
             
@@ -184,7 +184,7 @@ public class MapUpdateManager extends BukkitRunnable {
             
         }
         
-        public net.minecraft.server.v1_8_R2.Chunk calculateChunk(ArrayList<Chunk> chunkList, int x, int y, int z, Block b){
+        public net.minecraft.server.v1_8_R1.Chunk calculateChunk(ArrayList<Chunk> chunkList, int x, int y, int z, Block b){
         	
             Chunk chunk=null;
             
@@ -204,7 +204,7 @@ public class MapUpdateManager extends BukkitRunnable {
                     	chunk.load();
                     }
             }
-            net.minecraft.server.v1_8_R2.Chunk c = ( ( CraftChunk ) chunk ).getHandle();
+            net.minecraft.server.v1_8_R1.Chunk c = ( ( CraftChunk ) chunk ).getHandle();
             return c;
         }
 
@@ -217,7 +217,7 @@ public class MapUpdateManager extends BukkitRunnable {
                                 List<EntityUpdateCommand> entityUpdatesInWorld = entityUpdates.get( w );
                                 Map<MovecraftLocation, List<EntityUpdateCommand>> entityMap = new HashMap<MovecraftLocation, List<EntityUpdateCommand>>();
                                 Map<MovecraftLocation, TransferData> dataMap = new HashMap<MovecraftLocation, TransferData>();
-                                Set<net.minecraft.server.v1_8_R2.Chunk> chunks = new HashSet<net.minecraft.server.v1_8_R2.Chunk>();
+                                Set<net.minecraft.server.v1_8_R1.Chunk> chunks = new HashSet<net.minecraft.server.v1_8_R1.Chunk>();
 
                                 // Preprocessing
                                 for ( MapUpdateCommand c : updatesInWorld ) {
@@ -341,7 +341,7 @@ public class MapUpdateManager extends BukkitRunnable {
                                         }
 
                                 }
-                                for ( net.minecraft.server.v1_8_R2.Chunk c : chunks ) {
+                                for ( net.minecraft.server.v1_8_R1.Chunk c : chunks ) {
                                         c.initLighting();
                                         ChunkCoordIntPair ccip = new ChunkCoordIntPair( c.locX, c.locZ );
 
