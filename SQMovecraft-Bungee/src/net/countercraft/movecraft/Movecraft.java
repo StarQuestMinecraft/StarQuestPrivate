@@ -78,7 +78,16 @@ public class Movecraft extends JavaPlugin {
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("removehome") && sender instanceof Player){
-			Bedspawn.deleteBedspawn(sender.getName());
+			if(args.length > 0){
+				String player = args[0];
+				if(sender.hasPermission("Cryospawn.remove")){
+					CryoSpawn.removePodSpawn(player);
+					sender.sendMessage("Removing pod, be sure you typed the name exactly right!");
+					return true;
+				}
+			}
+			CryoSpawn.removePodSpawn(sender.getName());
+			return true;
 		} else if(cmd.getName().equalsIgnoreCase("handlers")){
 			HandlerList list = EntityExplodeEvent.getHandlerList();
 			RegisteredListener[] rlist = list.getRegisteredListeners();

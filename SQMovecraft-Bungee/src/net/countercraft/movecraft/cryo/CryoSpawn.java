@@ -24,6 +24,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -196,7 +197,10 @@ public class CryoSpawn {
 		}
 	}
 
-	public static void removePodSpawn(String playerUntrimmed) {
+	public static void removePodSpawn(String playerUntrimmed){
+		removePodSpawn(playerUntrimmed, null);
+	}
+	public static void removePodSpawn(String playerUntrimmed, CommandSender notify) {
 		String player = signTrim(playerUntrimmed);
 		PreparedStatement s = null;
 		try {
@@ -212,6 +216,9 @@ public class CryoSpawn {
 		Player p = Bukkit.getPlayer(playerUntrimmed);
 		if (p != null) {
 			p.sendMessage(ChatColor.RED + "Your CryoSpawn was broken!");
+		}
+		if(notify != null){
+			notify.sendMessage("Succesfully removed spawn.");
 		}
 	}
 
@@ -262,6 +269,7 @@ public class CryoSpawn {
 	}
 
 	public static String signTrim(String s) {
+		if(s == null) return null;
 		if (s.length() <= 15)
 			return s;
 		else
