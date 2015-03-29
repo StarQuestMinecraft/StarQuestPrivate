@@ -6,6 +6,7 @@ import java.util.UUID;
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.database.FileDatabase;
 import net.countercraft.movecraft.database.StarshipData;
+import net.countercraft.movecraft.event.CraftSignBreakEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,23 +27,36 @@ public class KillUtils {
 	static long MAX_COOLDOWN = 1000 * 60 * 5;
 
 	public static void onBreakShipSign(Sign s, Player breaker) {
-		UUID u = getPlayerLastFlew(s.getLocation());
-		if (u == null || u.equals(breaker.getUniqueId())) {
-			breaker.sendMessage("No kills were credited for this sign break.");
-			return;
-		} else {
-			long lastFlew = Movecraft.getInstance().getStarshipDatabase().getFileLastModified(s.getLocation());
-			if (lastFlew < 0)
-				return;
-			long timeGap = System.currentTimeMillis() - lastFlew;
-			if (timeGap > MAX_COOLDOWN) {
-				breaker.sendMessage("This ship has been parked for more than 5 minutes, so this kill did not count.");
-				return;
+
+		StarshipData d = Movecraft.getInstance().getStarshipDatabase().getStarshipByLocation(s.getLocation());
+		if (d != null){
+			boolean breakerOwner;
+			boolean cooledDown;
+			if (d.getCaptain().equals(breaker.getUniqueId())) {
+				breaker.sendMessage("No kills were credited for this sign break.");
+				breakerOwner = true;
+				cooledDown = true;
+			} else {
+				breakerOwner = false;
+				long lastFlew = Movecraft.getInstance().getStarshipDatabase().getFileLastModified(s.getLocation());
+				if (lastFlew < 0){
+					cooledDown = true;
+				} else {	
+					long timeGap = System.currentTimeMillis() - lastFlew;
+					if (timeGap > MAX_COOLDOWN) {
+						breaker.sendMessage("This ship has been parked for more than 5 minutes, so this kill did not count.");
+						cooledDown = false;
+					} else {
+						cooledDown = true;
+					}
+				}
+				OfflinePlayer pilot = Bukkit.getOfflinePlayer(d.getCaptain());
+				boolean success = creditKill(breaker, pilot);
+				if (success)
+					Bukkit.broadcastMessage(ChatColor.RED + breaker.getName() + " destroyed a ship last flown by " + pilot.getName() + "!");
 			}
-			OfflinePlayer pilot = Bukkit.getOfflinePlayer(u);
-			boolean success = creditKill(breaker, pilot);
-			if (success)
-				Bukkit.broadcastMessage(ChatColor.RED + breaker.getName() + " destroyed a ship last flown by " + pilot.getName() + "!");
+			CraftSignBreakEvent event = new CraftSignBreakEvent(d, breakerOwner, cooledDown, breaker);
+			event.call();
 		}
 	}
 
@@ -82,10 +96,4 @@ public class KillUtils {
 		return cost;
 	}
 
-	private static UUID getPlayerLastFlew(Location sign) {
-		StarshipData d = Movecraft.getInstance().getStarshipDatabase().getStarshipByLocation(sign);
-		if (d == null)
-			return null;
-		return d.getCaptain();
-	}
 }

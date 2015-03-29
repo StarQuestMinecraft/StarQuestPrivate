@@ -7,6 +7,8 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
 public class BoardingRampUtils {
+	
+	static final int[] VALID_TYPES = {35,53,67,108,109,114,128,134,135,136,156,163,164,180};
 	@SuppressWarnings("deprecation")
 	public static void openRamp(Sign s){
 		BlockFace facingdirection = getFacingBlockFace(s);
@@ -16,18 +18,24 @@ public class BoardingRampUtils {
 		Block movingstepsup = changeblock.getRelative(facingdirection);
 		Block movingstepsdown = movingstepsup.getRelative(BlockFace.DOWN);
 		
-		
-		//stop exploit with boarding ramps removing blocks
-		if(movingstepsdown.getType() == Material.AIR){
-			s.setLine(2, changeblock.getTypeId() + "");
-			s.setLine(3, changeblock.getData() + "");
-			s.update();
-			
-			movingstepsdown.setTypeIdAndData(movingstepsup.getTypeId(), movingstepsup.getData(), true);
-			movingstepsup.setType(Material.AIR);
-			
-			changeblock.setTypeIdAndData(0, (byte) 0, false);
+		int id = changeblock.getTypeId();
+		for(int i : VALID_TYPES){
+			if(i == id){
+				//stop exploit with boarding ramps removing blocks
+				if(movingstepsdown.getType() == Material.AIR){
+					s.setLine(2, changeblock.getTypeId() + "");
+					s.setLine(3, changeblock.getData() + "");
+					s.update();
+					
+					movingstepsdown.setTypeIdAndData(movingstepsup.getTypeId(), movingstepsup.getData(), true);
+					movingstepsup.setType(Material.AIR);
+					
+					changeblock.setTypeIdAndData(0, (byte) 0, false);
+				}
+				return;
+			}
 		}
+		
 	}
 	@SuppressWarnings("deprecation")
 	public static boolean closeRamp(Sign s, Player interactor){

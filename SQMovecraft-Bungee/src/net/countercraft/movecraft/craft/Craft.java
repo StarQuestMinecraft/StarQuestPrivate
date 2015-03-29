@@ -254,8 +254,8 @@ public class Craft {
 
 		BlockFace playerFacing = GunUtils.yawToFace(p.getLocation().getYaw());
 		int datavalue = GunUtils.getIntegerDirection(playerFacing);
-
-		if (!this.processing.get() && p.getEyeLocation().getBlock().getType() != Material.GLASS) {
+		Material type = p.getEyeLocation().getBlock().getType();
+		if (!this.processing.get() && type != Material.GLASS && type != Material.STAINED_GLASS) {
 			this.processing.set(true);
 			int cannonCount = 0;
 			int allowed = this.getType().getAllowedCannons();

@@ -164,6 +164,7 @@ public class BlockListener implements Listener {
 					}
 				}
 				Movecraft.getInstance().getStarshipDatabase().removeStarshipAtLocation(e.getBlock().getLocation());
+				
 			}
 		} else if (VaporRunnable.isVaporBlock(e.getBlock())){
 			e.setCancelled(true);
