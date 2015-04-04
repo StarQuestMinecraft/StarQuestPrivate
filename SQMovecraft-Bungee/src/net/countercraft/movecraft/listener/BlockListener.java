@@ -24,10 +24,6 @@ import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
 
-
-
-
-
 import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.utils.BlockUtils;
@@ -60,25 +56,56 @@ import org.bukkit.event.block.SignChangeEvent;
 //import org.bukkit.scheduler.BukkitRunnable;
 
 public class BlockListener implements Listener {
-	
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onSignChangeEarly(SignChangeEvent event) {
+		for (String s : event.getLines()) {
+			for (int i = 0; i < s.length(); i++) {
+				char c = s.charAt(i);
+				if (c == '§') {
+					event.getPlayer().sendMessage("Colored chat signs are disabled.");
+					event.setCancelled(true);
+					return;
+				}
+				if (c == '&') {
+					if (i + 1 >= s.length())
+						continue;
+					char next = s.charAt(i + 1);
+					if (next != ' ') {
+						event.getPlayer().sendMessage("Colored chat signs are disabled.");
+						event.setCancelled(true);
+						return;
+					}
+				}
+			}
+			if (s.contains("§")) {
+				event.getPlayer().sendMessage("Colored chat signs are disabled.");
+				event.setCancelled(true);
+			}
+			if (s.contains("&")) {
+
+			}
+		}
+	}
+
 	@EventHandler
-	public void onSignChange(SignChangeEvent event){
+	public void onSignChange(SignChangeEvent event) {
 		for (CraftType t : CraftManager.getInstance().getCraftTypes()) {
 			if (event.getLine(0).equalsIgnoreCase(t.getCraftName())) {
-				if (event.getLine(1) == null || event.getLine(1).equals("")){
+				if (event.getLine(1) == null || event.getLine(1).equals("")) {
 					String str = event.getPlayer().getName();
-					if(str.length() > 15){
+					if (str.length() > 15) {
 						event.setLine(1, str.substring(0, 15));
 					} else {
 						event.setLine(1, str);
 					}
 				}
 				return;
-			} else if (event.getLine(0).equalsIgnoreCase(t.getAltName())){
+			} else if (event.getLine(0).equalsIgnoreCase(t.getAltName())) {
 				event.setLine(0, t.getCraftName());
-				if (event.getLine(1) == null || event.getLine(1).equals("")){
+				if (event.getLine(1) == null || event.getLine(1).equals("")) {
 					String str = event.getPlayer().getName();
-					if(str.length() > 15){
+					if (str.length() > 15) {
 						event.setLine(1, str.substring(0, 15));
 					} else {
 						event.setLine(1, str);
@@ -87,101 +114,108 @@ public class BlockListener implements Listener {
 				return;
 			}
 		}
-		if(event.getLine(0).equalsIgnoreCase("[shield]")){
+		if (event.getLine(0).equalsIgnoreCase("[shield]")) {
 			ShieldUtils.setupShieldSign(event);
-		} else if(event.getLine(0).equalsIgnoreCase("[shieldmore]")){
+		} else if (event.getLine(0).equalsIgnoreCase("[shieldmore]")) {
 			ShieldUtils.setupMoreShieldSign(event);
 		}
 	}
-	
-	/*@EventHandler
-	public void onBlockPlace( final BlockPlaceEvent e ) {
-		if ( e.getBlockAgainst().getTypeId() == 33 && e.getBlockAgainst().getData() == ( ( byte ) 6 ) ) {
-			e.setCancelled( true );
-		} else if ( e.getItemInHand().getItemMeta() != null && e.getItemInHand().getItemMeta().getDisplayName() != null && e.getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase( String.format( I18nSupport.getInternationalisedString( "Item - Storage Crate name" ) ) ) ) {
-			e.getBlockPlaced().setTypeId( 33 );
-			Location l = e.getBlockPlaced().getLocation();
-			MovecraftLocation l1 = new MovecraftLocation( l.getBlockX(), l.getBlockY(), l.getBlockZ() );
-			StorageChestItem.createNewInventory( l1, e.getBlockPlaced().getWorld() );
-			new BukkitRunnable() {
 
-				@Override
-				public void run() {
-					e.getBlockPlaced().setData( ( byte ) 6 );
-				}
+	/*
+	 * @EventHandler public void onBlockPlace( final BlockPlaceEvent e ) { if (
+	 * e.getBlockAgainst().getTypeId() == 33 && e.getBlockAgainst().getData() ==
+	 * ( ( byte ) 6 ) ) { e.setCancelled( true ); } else if (
+	 * e.getItemInHand().getItemMeta() != null &&
+	 * e.getItemInHand().getItemMeta().getDisplayName() != null &&
+	 * e.getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase(
+	 * String.format( I18nSupport.getInternationalisedString(
+	 * "Item - Storage Crate name" ) ) ) ) { e.getBlockPlaced().setTypeId( 33 );
+	 * Location l = e.getBlockPlaced().getLocation(); MovecraftLocation l1 = new
+	 * MovecraftLocation( l.getBlockX(), l.getBlockY(), l.getBlockZ() );
+	 * StorageChestItem.createNewInventory( l1, e.getBlockPlaced().getWorld() );
+	 * new BukkitRunnable() {
+	 * 
+	 * @Override public void run() { e.getBlockPlaced().setData( ( byte ) 6 ); }
+	 * 
+	 * }.runTask( Movecraft.getInstance() ); } }
+	 */
 
-			}.runTask( Movecraft.getInstance() );
-		}
-	}*/
-
-	/*@EventHandler
-	public void onPlayerInteract( PlayerInteractEvent event ) {
-
-		if ( event.getAction() == Action.RIGHT_CLICK_BLOCK ) {
-			if ( event.getClickedBlock().getTypeId() == 33 && event.getClickedBlock().getData() == ( ( byte ) 6 ) ) {
-				Location l = event.getClickedBlock().getLocation();
-				MovecraftLocation l1 = new MovecraftLocation( l.getBlockX(), l.getBlockY(), l.getBlockZ() );
-				Inventory i = StorageChestItem.getInventoryOfCrateAtLocation( l1, event.getPlayer().getWorld() );
-
-				if ( i != null ) {
-					event.getPlayer().openInventory( i );
-				}
-			}
-		}
-	}*/
-	//#CRYO
+	/*
+	 * @EventHandler public void onPlayerInteract( PlayerInteractEvent event ) {
+	 * 
+	 * if ( event.getAction() == Action.RIGHT_CLICK_BLOCK ) { if (
+	 * event.getClickedBlock().getTypeId() == 33 &&
+	 * event.getClickedBlock().getData() == ( ( byte ) 6 ) ) { Location l =
+	 * event.getClickedBlock().getLocation(); MovecraftLocation l1 = new
+	 * MovecraftLocation( l.getBlockX(), l.getBlockY(), l.getBlockZ() );
+	 * Inventory i = StorageChestItem.getInventoryOfCrateAtLocation( l1,
+	 * event.getPlayer().getWorld() );
+	 * 
+	 * if ( i != null ) { event.getPlayer().openInventory( i ); } } } }
+	 */
+	// #CRYO
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onBlockBreak( final BlockBreakEvent e ) {
-		if(e.getBlock().getType() == Material.WALL_SIGN){
+	public void onBlockBreak(final BlockBreakEvent e) {
+		if (e.getBlock().getType() == Material.WALL_SIGN) {
 			Sign s = ((Sign) e.getBlock().getState());
-			if(s.getLine(0).equals(CryoSpawn.KEY_LINE)){
-				if(!e.isCancelled() || CryoSpawn.signTrim(e.getPlayer().getName()).equals(s.getLine(1))){
+			if (s.getLine(0).equals(CryoSpawn.KEY_LINE)) {
+				if (!e.isCancelled() || CryoSpawn.signTrim(e.getPlayer().getName()).equals(s.getLine(1))) {
 					e.setCancelled(false);
 					CryoSpawn.removePodSpawn(s);
 					e.getPlayer().sendMessage("CryoPod spawn removed.");
 				}
-			}/* else if (ShieldUtils.isShieldSign(s)){
-				if(s.getLine(1).equals(ShieldUtils.ENABLED)){
-					ShieldUtils.removeShield(s);
-					e.getPlayer().sendMessage("Removed shield!");
-				}
-			}*/
-			
-			else if(!e.isCancelled() && (InteractListener.getCraftTypeFromString(s.getLine(0)) != null || s.getLine(0).equals(ChatColor.RED + "EMP shorted"))){
+			}/*
+			 * else if (ShieldUtils.isShieldSign(s)){
+			 * if(s.getLine(1).equals(ShieldUtils.ENABLED)){
+			 * ShieldUtils.removeShield(s);
+			 * e.getPlayer().sendMessage("Removed shield!"); } }
+			 */
+
+			else if (!e.isCancelled() && (InteractListener.getCraftTypeFromString(s.getLine(0)) != null || s.getLine(0).equals(ChatColor.RED + "EMP shorted"))) {
 				KillUtils.onBreakShipSign(s, e.getPlayer());
-				
+
 				Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(e.getBlock().getWorld());
 				Craft cFound = null;
-				if(crafts != null){
-					for(Craft c : crafts){
+				if (crafts != null) {
+					for (Craft c : crafts) {
 						if (MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(e.getBlock().getLocation()))) {
 							cFound = c;
 							break;
 						}
 					}
-					if(cFound != null){
+					if (cFound != null) {
 						CraftManager.getInstance().removeCraft(cFound);
 					}
 				}
 				Movecraft.getInstance().getStarshipDatabase().removeStarshipAtLocation(e.getBlock().getLocation());
-				
+
 			}
-		} else if (VaporRunnable.isVaporBlock(e.getBlock())){
+		} else if (VaporRunnable.isVaporBlock(e.getBlock())) {
 			e.setCancelled(true);
+		} else {
+			for (Block b : BlockUtils.getEdges(e.getBlock(), false, false)) {
+				if (b.getType() == Material.WALL_SIGN) {
+					Sign s = ((Sign) b.getState());
+					if (s.getLine(0).equals(CryoSpawn.KEY_LINE)) {
+						CryoSpawn.removePodSpawn(s);
+						e.getPlayer().sendMessage("CryoPod spawn removed.");
+					}
+				}
+			}
 		}
 	}
-	
+
 	@EventHandler
-	public void onPistonPush(BlockPistonExtendEvent event){
-		for(Block b : event.getBlocks()){
+	public void onPistonPush(BlockPistonExtendEvent event) {
+		for (Block b : event.getBlocks()) {
 			Block[] edges = BlockUtils.getEdges(b, false, false);
-			for(Block b2 : edges){
-				if(b2.getType() == Material.WALL_SIGN || b2.getType() == Material.SIGN_POST){
+			for (Block b2 : edges) {
+				if (b2.getType() == Material.WALL_SIGN || b2.getType() == Material.SIGN_POST) {
 					Sign bs = (Sign) b2.getState();
-					if(InteractListener.getCraftTypeFromString(bs.getLine(0)) != null){
+					if (InteractListener.getCraftTypeFromString(bs.getLine(0)) != null) {
 						org.bukkit.material.Sign s = (org.bukkit.material.Sign) b2.getState().getData();
 						Block attachedBlock = b2.getRelative(s.getAttachedFace());
-						if(attachedBlock.equals(b)){
+						if (attachedBlock.equals(b)) {
 							event.setCancelled(true);
 							return;
 						}

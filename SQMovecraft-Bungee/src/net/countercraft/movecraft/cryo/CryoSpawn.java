@@ -378,7 +378,6 @@ public class CryoSpawn {
 	public static void toggleActive(Sign sign, Player player2) {
 		boolean isActive = isActive(sign);
 		if (signTrim(player2.getName()).equals(signTrim(sign.getLine(1)))) {
-			setActive(player2.getName(), !isActive);
 			if (isActive) {
 				sign.setLine(2, "");
 				sign.setLine(3, "");
@@ -390,6 +389,7 @@ public class CryoSpawn {
 			}
 		}
 		sign.update();
+		updatePodSpawn(sign);
 	}
 
 	public static boolean isActive(Sign s) {

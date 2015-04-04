@@ -31,31 +31,33 @@ public class KillUtils {
 		StarshipData d = Movecraft.getInstance().getStarshipDatabase().getStarshipByLocation(s.getLocation());
 		if (d != null){
 			boolean breakerOwner;
-			boolean cooledDown;
+			boolean withinKillTimer;
 			if (d.getCaptain().equals(breaker.getUniqueId())) {
 				breaker.sendMessage("No kills were credited for this sign break.");
 				breakerOwner = true;
-				cooledDown = true;
+				withinKillTimer = true;
 			} else {
 				breakerOwner = false;
 				long lastFlew = Movecraft.getInstance().getStarshipDatabase().getFileLastModified(s.getLocation());
 				if (lastFlew < 0){
-					cooledDown = true;
+					withinKillTimer = true;
 				} else {	
 					long timeGap = System.currentTimeMillis() - lastFlew;
 					if (timeGap > MAX_COOLDOWN) {
 						breaker.sendMessage("This ship has been parked for more than 5 minutes, so this kill did not count.");
-						cooledDown = false;
+						withinKillTimer = false;
 					} else {
-						cooledDown = true;
+						withinKillTimer = true;
 					}
 				}
-				OfflinePlayer pilot = Bukkit.getOfflinePlayer(d.getCaptain());
-				boolean success = creditKill(breaker, pilot);
-				if (success)
-					Bukkit.broadcastMessage(ChatColor.RED + breaker.getName() + " destroyed a ship last flown by " + pilot.getName() + "!");
+				if(withinKillTimer){
+					OfflinePlayer pilot = Bukkit.getOfflinePlayer(d.getCaptain());
+					boolean success = creditKill(breaker, pilot);
+					if (success)
+						Bukkit.broadcastMessage(ChatColor.RED + breaker.getName() + " destroyed a ship last flown by " + pilot.getName() + "!");
+				}
 			}
-			CraftSignBreakEvent event = new CraftSignBreakEvent(d, breakerOwner, cooledDown, breaker);
+			CraftSignBreakEvent event = new CraftSignBreakEvent(d, breakerOwner, withinKillTimer, breaker);
 			event.call();
 		}
 	}
