@@ -1,5 +1,5 @@
 
-package net.countercraft.movecraft.cardboardbox.Utils;
+package net.countercraft.movecraft.cardboardbox.utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;

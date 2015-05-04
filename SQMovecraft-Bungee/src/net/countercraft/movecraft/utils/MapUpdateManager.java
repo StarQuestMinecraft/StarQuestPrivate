@@ -39,6 +39,7 @@ import net.countercraft.movecraft.utils.datastructures.StorageCrateTransferHolde
 import net.countercraft.movecraft.utils.datastructures.TransferData;
 import net.minecraft.server.v1_8_R1.BlockPosition;
 import net.minecraft.server.v1_8_R1.ChunkCoordIntPair;
+import net.minecraft.server.v1_8_R1.IBlockData;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -139,7 +140,8 @@ public class MapUpdateManager extends BukkitRunnable {
 	            if(origType != newTypeID || data != b.getData()){
 	            	BlockPosition position = new BlockPosition(x, y, z);
 	            	if(Arrays.binarySearch(tileEntities, origType) >= 0){
-	            		c.a(position, AIR_ID.fromLegacyData(0));
+	            		//c.a(position, AIR_ID.fromLegacyData(0));
+	            		b.setTypeIdAndData(0, (byte) 0, false);
 	            	}
 	            	//we should NOT have to update the block if it's already the right thing, right?
 	            	boolean success = c.a( position, getBlockFromId(newTypeID).fromLegacyData(data) ) != null;

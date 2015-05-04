@@ -1,11 +1,11 @@
 
-package net.countercraft.movecraft.cardboardbox.Meta;
+package net.countercraft.movecraft.cardboardbox.meta;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.countercraft.movecraft.cardboardbox.Utils.CardboardFireworkEffect;
+import net.countercraft.movecraft.cardboardbox.utils.CardboardFireworkEffect;
 
 import org.bukkit.FireworkEffect;
 import org.bukkit.inventory.ItemStack;

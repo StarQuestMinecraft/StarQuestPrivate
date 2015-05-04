@@ -55,6 +55,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.plugin.PluginManager;
@@ -62,7 +63,12 @@ import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
 
+/**
+ * @author AJCStriker, Dibujaron
+ * Movecraft main class, contains most of the bukkit plugin "stuff" and some plugin-wide utility methods
+ */
 public class Movecraft extends JavaPlugin {
+	
 	private static Movecraft instance;
 	private Logger logger;
 	private boolean shuttingDown;
@@ -88,10 +94,18 @@ public class Movecraft extends JavaPlugin {
 			CryoSpawn.removePodSpawn(sender.getName());
 			return true;
 		} else if(cmd.getName().equalsIgnoreCase("handlers")){
-			HandlerList list = SignChangeEvent.getHandlerList();
-			RegisteredListener[] rlist = list.getRegisteredListeners();
-			for(RegisteredListener l : rlist){
-				sender.sendMessage(l.getPlugin() + " listening at " + l.getPriority());
+			String name = args[0];
+			String base = "org.bukkit.event.";
+			String qualname = base + name;
+			try {
+				Class<Event> cls = (Class<Event>) Class.forName(qualname);
+				HandlerList list = (HandlerList) cls.getDeclaredMethod("getHandlerList", null).invoke(null, null);
+				RegisteredListener[] rlist = list.getRegisteredListeners();
+				for(RegisteredListener l : rlist){
+					sender.sendMessage(l.getPlugin() + " listening at " + l.getPriority());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			return true;
 		} else if(cmd.getName().equalsIgnoreCase("serverjump") && sender.isOp()){
@@ -225,26 +239,6 @@ public class Movecraft extends JavaPlugin {
 	
 	public static String locToString(Location loc) {
 		return loc.getWorld().getName() + ":" + loc.getX() + ":" + loc.getY() + ":" + loc.getZ();
-	}
-
-	public static Location stringToLoc(String string) {
-		if (string == null) return null;
-		String[] split = string.split(":");
-		World world = Bukkit.getServer().getWorld(split[0]);
-		double X = Double.parseDouble(split[1]);
-		double Y = Double.parseDouble(split[2]);
-		double Z = Double.parseDouble(split[3]);
-		return new Location(world, X, Y, Z);
-	}
-	
-	public static MovecraftLocation stringToMovecraftLoc(String string) {
-		if (string == null) return null;
-		String[] split = string.split(":");
-		//World world = Bukkit.getServer().getWorld(split[0]);
-		int X = (int) Double.parseDouble(split[1]);
-		int Y = (int) Double.parseDouble(split[2]);
-		int Z = (int) Double.parseDouble(split[3]);
-		return new MovecraftLocation(X, Y, Z);
 	}
 	
 	public static boolean signContainsPlayername(Sign sign, String name){

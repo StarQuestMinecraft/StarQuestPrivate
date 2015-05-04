@@ -6,6 +6,10 @@ import net.countercraft.movecraft.utils.MovecraftLocation;
 
 import org.bukkit.World;
 
+/**
+ * @author Dibujaron
+ * A subclass of DetectionTask specifically for detecting Pod class ships (which behave differently)
+ */
 public class PodDetectionTask extends DetectionTask {
 
 	public PodDetectionTask(Craft c, MovecraftLocation startLocation, int minSize, int maxSize, Integer[] allowedBlocks, Integer[] forbiddenBlocks, String player, World w) {

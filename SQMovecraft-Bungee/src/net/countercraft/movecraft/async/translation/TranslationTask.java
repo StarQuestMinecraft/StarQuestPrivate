@@ -24,6 +24,7 @@ import net.countercraft.movecraft.utils.MapUpdateCommand;
 import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
+import net.countercraft.movecraft.utils.PlayerFlightUtil;
 import net.countercraft.movecraft.utils.StargateJumpHolder;
 import net.countercraft.movecraft.vapor.VaporUtils;
 
@@ -40,6 +41,11 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 
+/**
+ * @author AJCStriker, Dibujaron
+ * The main "heavy lifting" class of movecraft; this task calculates the craft movements.
+ * @see TranslationTaskData
+ */
 public class TranslationTask extends AsyncTask {
 	private TranslationTaskData data;
 	

@@ -21,10 +21,13 @@ import java.util.ArrayList;
 
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Sign;
 
+/**
+ * @author AJCStriker, Dibujaron
+ * Holds relevant data for the DetectionTask
+ */
 public class DetectionTaskData {
 	private World w;
 	private boolean failed;

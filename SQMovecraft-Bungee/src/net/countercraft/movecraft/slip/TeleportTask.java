@@ -189,13 +189,13 @@ public class TeleportTask {
 
 	// helping method for updating bedspawns
 	private static void updateBedspawns(ArrayList<String> list, Location locto, int dX, int dY, int dZ) {
-		for (String s : list) {
+		/*for (String s : list) {
 			Bedspawn b = Bedspawn.getBedspawn(s);
 			b.world = locto.getWorld().getName();
 			b.x = b.x + dX;
 			b.y = b.y + dY;
 			b.z = b.z + dZ;
-		}
+		}*/
 	}
 
 	// helping method to check for destination obstruction

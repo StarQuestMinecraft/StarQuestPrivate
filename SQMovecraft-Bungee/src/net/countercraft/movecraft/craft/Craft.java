@@ -36,6 +36,7 @@ import net.countercraft.movecraft.projectile.LaserBolt;
 import net.countercraft.movecraft.slip.WarpUtils;
 import net.countercraft.movecraft.utils.GunUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
+import net.countercraft.movecraft.utils.PlayerFlightUtil;
 import net.countercraft.movecraft.utils.Rotation;
 
 import org.bukkit.Bukkit;
@@ -150,6 +151,12 @@ public class Craft {
 			pilot.sendMessage("Flagships cannot move through realspace.");
 			return;
 		} else {
+			for(UUID u : this.playersRidingShip){
+				if(!PlayerFlightUtil.isShipFlying(u)){
+					PlayerFlightUtil.beginShipFlying(Movecraft.getPlayer(u));
+				}
+			}
+			playersRidingLock.release();
 			TranslationTaskData data = new TranslationTaskData(dx, dz, dy, getBlockList(), getHitBox(), minZ, minX, type.getMaxHeightLimit(), type.getMinHeightLimit());
 			CraftSyncTranslateEvent event = new CraftSyncTranslateEvent(this, data);
 			if (event.call()) {

@@ -17,6 +17,7 @@ import net.countercraft.movecraft.utils.MovecraftLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -93,7 +94,7 @@ public class CryoSpawn {
 			Bukkit.getPlayer(playerUntrimmed).sendMessage("Not a valid cryopod!");
 		}
 	}
-
+	
 	public static void updatePodSpawn(Sign s) {
 		String player = s.getLine(1).trim();
 		Block point = s.getBlock().getRelative(0, -1, 0);
@@ -108,12 +109,6 @@ public class CryoSpawn {
 			if (isCryoTube(s) && s.getLine(0).equals(KEY_LINE)) {
 				updatePodSpawn(s);
 			}
-		}
-	}
-
-	public void onSignBreak(Sign s) {
-		if (s.getLine(0).equals(KEY_LINE)) {
-			removePodSpawn(s.getLine(1));
 		}
 	}
 
@@ -165,12 +160,14 @@ public class CryoSpawn {
 		if (p != null && p.isOnline()) {
 			p.sendMessage("Your cryopod spawn location was updated.");
 		}
+		System.out.println("Updating cryospawn!");
 		name = signTrim(name);
 		String playerWorld = b.world;
 		String playerServer = b.server;
 		int playerX = b.x;
 		int playerY = b.y;
 		int playerZ = b.z;
+		boolean active = b.isActive;
 
 		if (!getContext()) {
 			System.out.println("something is wrong!");
@@ -178,13 +175,14 @@ public class CryoSpawn {
 		}
 		PreparedStatement s = null;
 		try {
-			s = Bedspawn.cntx.prepareStatement("UPDATE CRYOSPAWNS SET server = ?, world = ?, x = ?, y = ?, z = ? WHERE NAME = ?");
+			s = Bedspawn.cntx.prepareStatement("UPDATE CRYOSPAWNS SET server = ?, world = ?, x = ?, y = ?, z = ?, active = ? WHERE NAME = ?");
 			s.setString(1, playerWorld);
 			s.setString(2, playerServer);
 			s.setInt(3, playerX);
 			s.setInt(4, playerY);
 			s.setInt(5, playerZ);
-			s.setString(6, name);
+			s.setBoolean(6, active);
+			s.setString(7, name);
 			s.execute();
 			s.close();
 		} catch (SQLException e) {
@@ -201,6 +199,7 @@ public class CryoSpawn {
 		removePodSpawn(playerUntrimmed, null);
 	}
 	public static void removePodSpawn(String playerUntrimmed, CommandSender notify) {
+		System.out.println("REMOVING POD SPAWN!");
 		String player = signTrim(playerUntrimmed);
 		PreparedStatement s = null;
 		try {
@@ -248,7 +247,9 @@ public class CryoSpawn {
 				playerZ = rs.getInt("z");
 				active = rs.getBoolean("active");
 				retval = new CryoSpawn(playerName, playerServer, playerWorld, playerX, playerY, playerZ, active);
+				System.out.println("Got a retval!");
 			} else {
+				System.out.println("Retval is null!");
 				return null;
 			}
 		} catch (Exception e) {
@@ -320,8 +321,11 @@ public class CryoSpawn {
 	}
 
 	public static boolean respawnPlayer(PlayerRespawnEvent event, final Player p) {
+		System.out.println("CRYO RESPAWN: " + p.getName());
 		CryoSpawn spawn = CryoSpawn.getSpawn(p.getName());
 		if (spawn == null) {
+			System.out.println("CRYO RESPAWN: " + p.getName());
+			System.out.println("Spawn is null for player " + p.getName());
 			// spawn = CryoSpawn.DEFAULT;
 			// use the bedspawn system
 			return false;
@@ -329,22 +333,34 @@ public class CryoSpawn {
 
 		final CryoSpawn s = spawn;
 		if (!s.server.equalsIgnoreCase(Bukkit.getServerName())) {
+			System.out.println("Server is not the same as target server, sending death to " + s.server);
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
 				public void run() {
 					BungeePlayerHandler.sendDeath(p, s.server);
 				}
 			}, 3L);
 		} else {
+			System.out.println("Server is the same as the target server, respawning.");
 			final Location loc2 = new Location(Bukkit.getWorld(s.world), s.x + 0.5, s.y, s.z + 0.5);
+			System.out.println("Target location is " + loc2);
 			//if (checkForNotAir(loc2)) {
 			if (event != null) {
+				System.out.println("Event not null, setting respawn location.");
 				event.setRespawnLocation(loc2);
 			} else {
+				System.out.println("Teleporting player delayed.");
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
 					public void run() {
+						System.out.println("Delayed teleport activating.");
 						CryoUtils.removeBlockAtCryoSpawn(loc2);
+						p.setFallDistance(0);
 						p.teleport(loc2);
+						if(p.getGameMode() == GameMode.SURVIVAL){
+							p.setFlying(false);
+							p.setAllowFlight(false);
+						}
 						CryoSpawn.checkAndPlayEffects(loc2);
+						System.out.println("Done spawning.");
 					}
 				}, 3L);
 			}
@@ -387,9 +403,9 @@ public class CryoSpawn {
 				sign.setLine(3, ACTIVE_L2);
 				player2.sendMessage("Your CryoPod is now in active mode. You will be warped to it whenever you log in.");
 			}
+			sign.update();
+			updatePodSpawn(sign);
 		}
-		sign.update();
-		updatePodSpawn(sign);
 	}
 
 	public static boolean isActive(Sign s) {

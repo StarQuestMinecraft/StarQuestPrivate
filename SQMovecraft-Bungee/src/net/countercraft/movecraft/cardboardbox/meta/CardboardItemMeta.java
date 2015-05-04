@@ -1,5 +1,5 @@
 
-package net.countercraft.movecraft.cardboardbox.Meta;
+package net.countercraft.movecraft.cardboardbox.meta;
 
 import org.bukkit.inventory.meta.ItemMeta;
 

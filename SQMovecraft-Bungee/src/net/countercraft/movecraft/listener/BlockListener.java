@@ -23,10 +23,10 @@ import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
-
 import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.utils.BlockUtils;
+import net.countercraft.movecraft.utils.BoardingRampUtils;
 import net.countercraft.movecraft.utils.KillUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.vapor.VaporRunnable;
@@ -34,6 +34,7 @@ import net.countercraft.movecraft.vapor.VaporRunnable;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 //import net.countercraft.movecraft.items.StorageChestItem;
 //import net.countercraft.movecraft.localisation.I18nSupport;
@@ -156,7 +157,7 @@ public class BlockListener implements Listener {
 	// #CRYO
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockBreak(final BlockBreakEvent e) {
-		if (e.getBlock().getType() == Material.WALL_SIGN) {
+		if (e.getBlock().getType() == Material.WALL_SIGN || e.getBlock().getType() == Material.SIGN_POST) {
 			Sign s = ((Sign) e.getBlock().getState());
 			if (s.getLine(0).equals(CryoSpawn.KEY_LINE)) {
 				if (!e.isCancelled() || CryoSpawn.signTrim(e.getPlayer().getName()).equals(s.getLine(1))) {
@@ -164,45 +165,59 @@ public class BlockListener implements Listener {
 					CryoSpawn.removePodSpawn(s);
 					e.getPlayer().sendMessage("CryoPod spawn removed.");
 				}
-			}/*
-			 * else if (ShieldUtils.isShieldSign(s)){
-			 * if(s.getLine(1).equals(ShieldUtils.ENABLED)){
-			 * ShieldUtils.removeShield(s);
-			 * e.getPlayer().sendMessage("Removed shield!"); } }
-			 */
+			}
 
 			else if (!e.isCancelled() && (InteractListener.getCraftTypeFromString(s.getLine(0)) != null || s.getLine(0).equals(ChatColor.RED + "EMP shorted"))) {
-				KillUtils.onBreakShipSign(s, e.getPlayer());
-
-				Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(e.getBlock().getWorld());
-				Craft cFound = null;
-				if (crafts != null) {
-					for (Craft c : crafts) {
-						if (MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(e.getBlock().getLocation()))) {
-							cFound = c;
-							break;
-						}
-					}
-					if (cFound != null) {
-						CraftManager.getInstance().removeCraft(cFound);
-					}
-				}
-				Movecraft.getInstance().getStarshipDatabase().removeStarshipAtLocation(e.getBlock().getLocation());
-
+				onShipSignBreak(s, e);
 			}
 		} else if (VaporRunnable.isVaporBlock(e.getBlock())) {
 			e.setCancelled(true);
 		} else {
-			for (Block b : BlockUtils.getEdges(e.getBlock(), false, false)) {
-				if (b.getType() == Material.WALL_SIGN) {
-					Sign s = ((Sign) b.getState());
-					if (s.getLine(0).equals(CryoSpawn.KEY_LINE)) {
-						CryoSpawn.removePodSpawn(s);
-						e.getPlayer().sendMessage("CryoPod spawn removed.");
+			if (!e.isCancelled()) {
+				for (Block b : BlockUtils.getEdges(e.getBlock(), false, false)) {
+					if (b.getType() == Material.WALL_SIGN) {
+						Sign s = ((Sign) b.getState());
+						BlockFace face = e.getBlock().getFace(s.getBlock());
+						if (face == BoardingRampUtils.getFacingBlockFace(s)) {
+							if (s.getLine(0).equals(CryoSpawn.KEY_LINE)) {
+								CryoSpawn.removePodSpawn(s);
+								e.getPlayer().sendMessage("CryoPod spawn removed.");
+							} else if ((InteractListener.getCraftTypeFromString(s.getLine(0)) != null || s.getLine(0).equals(ChatColor.RED + "EMP shorted"))) {
+								onShipSignBreak(s, e);
+							}
+						}
 					}
 				}
 			}
 		}
+	}
+
+	private void onShipSignBreak(Sign s, BlockBreakEvent e) {
+		boolean cancel = KillUtils.onBreakShipSign(s, e.getPlayer());
+		System.out.println("Ship sign break cancel = " + cancel);
+		if (cancel) {
+			if (!e.getPlayer().hasPermission("movecraft.override")) {
+				e.getPlayer().sendMessage("You cannot break your own ship sign within 5 minutes of piloting the craft.");
+				e.setCancelled(true);
+				return;
+			} else {
+				e.getPlayer().sendMessage("You were allowed to break your ship sign within cooldown because of your override perms.");
+			}
+		}
+		Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(e.getBlock().getWorld());
+		Craft cFound = null;
+		if (crafts != null) {
+			for (Craft c : crafts) {
+				if (MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(e.getBlock().getLocation()))) {
+					cFound = c;
+					break;
+				}
+			}
+			if (cFound != null) {
+				CraftManager.getInstance().removeCraft(cFound);
+			}
+		}
+		Movecraft.getInstance().getStarshipDatabase().removeStarshipAtLocation(e.getBlock().getLocation());
 	}
 
 	@EventHandler

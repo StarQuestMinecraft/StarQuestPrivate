@@ -43,6 +43,11 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+/**
+ * @author AJCStriker, Dibujaron
+ * A task for Rotating a craft
+ * For some reason, Striker did not see fit to create a Data object for this one; the data is stored in the class
+ */
 public class RotationTask extends AsyncTask {
 		private ArrayList<MovecraftLocation> signLocations;
         private final MovecraftLocation originPoint;

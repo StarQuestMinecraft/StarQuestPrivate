@@ -26,40 +26,51 @@ public class KillUtils {
 
 	static long MAX_COOLDOWN = 1000 * 60 * 5;
 
-	public static void onBreakShipSign(Sign s, Player breaker) {
+	public static boolean onBreakShipSign(Sign s, Player breaker) {
 
+		boolean cancel = false;
+		
 		StarshipData d = Movecraft.getInstance().getStarshipDatabase().getStarshipByLocation(s.getLocation());
+		
 		if (d != null){
-			boolean breakerOwner;
-			boolean withinKillTimer;
+			long lastFlew = Movecraft.getInstance().getStarshipDatabase().getFileLastModified(s.getLocation());
+			long timeGap = System.currentTimeMillis() - lastFlew;
+			boolean breakerIsOwner;
+			boolean withinKillCooldown;
+			OfflinePlayer pilot = Bukkit.getOfflinePlayer(d.getCaptain());
 			if (d.getCaptain().equals(breaker.getUniqueId())) {
 				breaker.sendMessage("No kills were credited for this sign break.");
-				breakerOwner = true;
-				withinKillTimer = true;
+				breakerIsOwner = true;
+				withinKillCooldown = true;
+				if(timeGap < MAX_COOLDOWN){
+					System.out.println("Cancel!");
+					cancel = true;
+				}
 			} else {
-				breakerOwner = false;
-				long lastFlew = Movecraft.getInstance().getStarshipDatabase().getFileLastModified(s.getLocation());
+				breakerIsOwner = false;
 				if (lastFlew < 0){
-					withinKillTimer = true;
-				} else {	
-					long timeGap = System.currentTimeMillis() - lastFlew;
+					withinKillCooldown = false;
+				} else {		
 					if (timeGap > MAX_COOLDOWN) {
 						breaker.sendMessage("This ship has been parked for more than 5 minutes, so this kill did not count.");
-						withinKillTimer = false;
+						withinKillCooldown = false;
 					} else {
-						withinKillTimer = true;
+						withinKillCooldown = true;
 					}
 				}
-				if(withinKillTimer){
-					OfflinePlayer pilot = Bukkit.getOfflinePlayer(d.getCaptain());
+				if(withinKillCooldown){
 					boolean success = creditKill(breaker, pilot);
 					if (success)
 						Bukkit.broadcastMessage(ChatColor.RED + breaker.getName() + " destroyed a ship last flown by " + pilot.getName() + "!");
 				}
 			}
-			CraftSignBreakEvent event = new CraftSignBreakEvent(d, breakerOwner, withinKillTimer, breaker);
-			event.call();
+			if(KillUtils.rankToKills(pilot) > 0){
+				CraftSignBreakEvent event = new CraftSignBreakEvent(d, breakerIsOwner, withinKillCooldown, breaker);
+				event.call();
+			}
 		}
+		
+		return cancel;
 	}
 
 	public static boolean creditKill(Player killer, OfflinePlayer killed) {
@@ -68,23 +79,23 @@ public class KillUtils {
 			return false;
 
 		if (killer instanceof Player) {
-			boolean cooldown = Database.isInCooldown(killer, killed);
+			/*boolean cooldown = Database.isInCooldown(killer, killed);
 			System.out.println(cooldown);
-			if (!cooldown) {
+			if (!cooldown) {*/
 				int infamy = rankToKills(killed);
 				CC3Wrapper.deposit(infamy, killer.getName(), CC3Currency.INFAMY, Cause.PLUGIN, "Rankup Kill");
 				killer.sendMessage(ChatColor.RED + "You were awarded " + infamy + " infamy for that kill. You now have " + CC3Wrapper.getBalance(killer.getName(), CC3Currency.INFAMY) + " infamy");
 				Database.addKill(killer, killed);
 				return true;
-			} else {
+			/*} else {
 				killer.sendMessage(ChatColor.RED + "You already killed that player in the last 20 minutes! Lay off for a bit...");
 				return false;
-			}
+			}*/
 		}
 		return false;
 	}
 
-	private static int rankToKills(OfflinePlayer killed) {
+	public static int rankToKills(OfflinePlayer killed) {
 
 		int i = 0;
 		String[] groups = SQRankup.permission.getPlayerGroups(null, Bukkit.getOfflinePlayer(killed.getUniqueId()));

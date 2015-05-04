@@ -26,13 +26,21 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
+/**
+ * @author Dibujaron
+ * BUNGEECORD: TURN BACK NOW FAINT OF HEART
+ * This class is for handing players in a Bungee sense
+ */
 public class BungeePlayerHandler {
 
-//@formatting:off
 	public static ArrayList<PlayerTeleport> teleportQueue = new ArrayList<PlayerTeleport>();
 	static HashMap<UUID, Craft> pilotQueue = new HashMap<UUID, Craft>();
 	static Location spawnLocation;
 	
+	/**
+	 * @param p the Player involved
+	 * @return if it was succesful
+	 */
 	public static boolean onLogin(final Player p){
 		if(!p.hasPlayedBefore() && Bukkit.getServer().getServerName().equals("Regalis")){
 			System.out.println("New player on Regalis!");
@@ -98,7 +106,9 @@ public class BungeePlayerHandler {
 	}
 	
 	public static void sendDeath(Player p, String targetserver) {
+		System.out.println("Sending death.");
 		sendPlayerDeathData(p, targetserver);
+		System.out.println("Sending player.");
 		sendPlayer(p, targetserver);
 	}
 	
@@ -120,6 +130,7 @@ public class BungeePlayerHandler {
 			out.writeShort(outbytes.length);
 			out.write(outbytes);
 			p.sendPluginMessage(Movecraft.getInstance(), "BungeeCord", b.toByteArray());
+			System.out.println("Death data sent.");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -204,6 +215,7 @@ public class BungeePlayerHandler {
 	}
 	
 	public static void recievePlayerDeath(DataInputStream in) {
+		System.out.println("Recieving player death!");
 		try {
 			short len = in.readShort();
 			byte[] msgbytes = new byte[len];
@@ -212,7 +224,7 @@ public class BungeePlayerHandler {
 			DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(msgbytes));
 
 			DeathTeleport t = new DeathTeleport(UUID.fromString(msgin.readUTF()));
-			
+			System.out.println("Death Teleport constructed.");
 			if(t != null){
 				if (Movecraft.getPlayer(t.getUUID()) != null) {
 					t.execute();

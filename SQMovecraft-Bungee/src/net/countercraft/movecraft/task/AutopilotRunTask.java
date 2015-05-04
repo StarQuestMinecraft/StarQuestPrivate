@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
-import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -20,18 +21,99 @@ public class AutopilotRunTask extends BukkitRunnable{
 	final static int SQRT_2 = (int) Math.round(Math.sqrt(2));
 	
 	public AutopilotRunTask() {
-		
 		runTaskTimer(Movecraft.getInstance(), 40, 40);
-		
 	}
 	
 	public void run(){
 		for (Craft c : autopilotingCrafts){
 			if (!c.isProcessing() && !c.isProcessingTeleport() && c.pilot != null && c.pilot.isOnline()){
-				c.translate(c.vX, 0, c.vZ);
+				Location l = c.pilot.getLocation();
+				//if(testShipBlocks(c.getW(), c.getType().getAllowedBlocks(), l, c.vX, c.vZ )){
+					c.translate(c.vX, 0, c.vZ);
+				/*} else {
+					c.pilot.sendMessage("Path is obstructed!");
+				}*/
 			}
 		}
 	}
+	
+	private boolean testShipBlocks(World w, Integer[] allowedBlocks, Location l, int vX, int vZ) {
+		int x = l.getBlockX();
+		int z = l.getBlockZ();
+		final int y = l.getBlockY();
+		
+		//get whether they're positive or negative
+		int xUnit = sign(vX);
+		int zUnit = sign(vZ);
+		
+		while(x != vX && z != vZ){
+			x += xUnit;
+			z += zUnit;
+		
+			int type = l.getWorld().getBlockTypeIdAt(x,y,z);
+			if(type == 0){
+				l.getWorld().getBlockAt(x,y,z).setType(Material.LAPIS_BLOCK);
+				continue; 
+			}
+			boolean found = false;
+			for(Integer i : allowedBlocks){
+				if(i == type){
+					found = true;
+					break;
+				}
+			}
+			if(!found){
+				return false;
+			}
+		}
+		return true;
+		
+		/*Vector oneDist = tv.clone().subtract(pv);
+		System.out.println("Dist length: " + oneDist.length());
+		oneDist.normalize();
+		System.out.println("pv: " + pv);
+		System.out.println("tv: " + tv);
+		System.out.println("oneDist: " + oneDist);
+		Vector loc = pv;
+		ArrayList<Block> tested = new ArrayList<Block>();
+		while(!vectorEquals(loc, tv)){
+			loc.add(oneDist);
+			Block b = v2B(w, loc);
+			if(TESTING){
+				tested.add(b);
+			}
+			int type = b.getTypeId();
+			System.out.println("testing: " + loc + ", type: " + type);
+			if(type == 0){
+				continue; 
+			}
+			boolean found = false;
+			for(Integer i : allowedBlocks){
+				if(i == type){
+					found = true;
+					break;
+				}
+			}
+			if(!found){
+				return false;
+			}
+		}
+		if(TESTING){
+			for(Block b : tested){
+				if(b.getType() == Material.AIR){
+					b.setType(Material.LAPIS_BLOCK);
+				}
+			}
+		}
+		return true;*/
+	}
+	
+	private int sign(int num){
+		if(num == 0) return 0;
+		if(num < 0) return -1;
+		else return 1;
+	}
+
 	public static void startAutopiloting(Sign clicked, Craft c, Player p){
 		int speed = speedFromSign(clicked, c);
 		double craftMax = c.getType().getSpeed();
@@ -44,6 +126,7 @@ public class AutopilotRunTask extends BukkitRunnable{
 		autopilotingCrafts.add(c);
 		p.sendMessage(ChatColor.RED + "Autopilot Engaged.");
 	}
+	
 	public static void stopAutopiloting(Craft c, Player p, ArrayList<MovecraftLocation> signLocations){
 		if (autopilotingCrafts.contains(c)){
 			autopilotingCrafts.remove(c);

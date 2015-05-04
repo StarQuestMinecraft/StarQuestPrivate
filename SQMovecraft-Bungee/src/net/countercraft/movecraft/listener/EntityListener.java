@@ -41,6 +41,7 @@ import net.countercraft.movecraft.utils.JammerUtils;
 import net.countercraft.movecraft.utils.KillUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.OfflinePilotUtils;
+import net.countercraft.movecraft.utils.PlayerFlightUtil;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -93,7 +94,7 @@ public class EntityListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void onEntityExplode(EntityExplodeEvent event) {
-		if (event.isCancelled())
+		if (event.isCancelled() || plugin == null)
 			return;
 		List<Block> affectedBlocks = event.blockList();
 		Collections.sort(affectedBlocks, ArraySort.getInstance());
@@ -246,6 +247,9 @@ public class EntityListener implements Listener {
 		if (event instanceof PlayerTeleportEvent) {
 			return;
 		} else {
+			if(PlayerFlightUtil.isShipFlying(event.getPlayer())){
+				PlayerFlightUtil.endShipFlying(event.getPlayer());
+			}
 			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
 			if (crafts == null)
 				return;
@@ -338,6 +342,7 @@ public class EntityListener implements Listener {
 		if (CryoSpawn.respawnPlayer(event, event.getPlayer())) {
 			return;
 		} else {
+			System.out.println("Defaulting back to bedspawn, CryoSpawn failed.");
 			Bedspawn b = Bedspawn.getBedspawn(event.getPlayer().getName());
 			if (b == null) {
 				b = Bedspawn.DEFAULT;
@@ -399,7 +404,7 @@ public class EntityListener implements Listener {
 							if (plr.getHealth() - event.getDamage() <= 0) {
 								boolean success = KillUtils.creditKill(shooter, plr);
 								if (success)
-									Bukkit.broadcastMessage(ChatColor.RED + "" + shooter + " killed " + plr + " with starship cannons!");
+									Bukkit.broadcastMessage(ChatColor.RED + "" + shooter.getName() + " killed " + plr.getName() + " with starship cannons!");
 							}
 						}
 						return;

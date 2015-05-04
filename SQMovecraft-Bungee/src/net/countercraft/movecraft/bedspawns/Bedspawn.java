@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
+/**
+ * @author Dibujaron
+ * This class is the old Bedspawn class from when Bedspawns were used. Nowadays it's used mostly for SQL handling for Cryopod.
+ */
 public class Bedspawn {
 	public String player;
 	public String server;
@@ -72,11 +76,11 @@ public class Bedspawn {
 		return loadBedspawn(player);
 	}
 
-	public static ArrayList<Bedspawn> getAllBedspawns() {
+	/*public static ArrayList<Bedspawn> getAllBedspawns() {
 		return loadBedspawnList();
-	}
+	}*/
 	
-	public static ArrayList<Bedspawn> loadBedspawnList(MovecraftLocation location, String world) {
+	/*public static ArrayList<Bedspawn> loadBedspawnList(MovecraftLocation location, String world) {
 		
 		if(!SAVE_BEDSPAWNS) return new ArrayList<Bedspawn>();
 		//TODO This method needs to be redone for a smaller radius!
@@ -123,7 +127,7 @@ public class Bedspawn {
 			close(s);
 		}
 		return bedspawnList;
-	}
+	}*/
 
 
 
@@ -181,7 +185,7 @@ public class Bedspawn {
 		return false;
 	}
 
-	public static ArrayList<Bedspawn> loadBedspawnList() {
+	/*public static ArrayList<Bedspawn> loadBedspawnList() {
 		
 		if(!SAVE_BEDSPAWNS) return new ArrayList<Bedspawn>();
 		
@@ -221,7 +225,7 @@ public class Bedspawn {
 			close(s);
 		}
 		return bedspawnList;
-	}
+	}*/
 
 	public static Bedspawn loadBedspawn(String player) {
 		

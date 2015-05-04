@@ -18,6 +18,7 @@ public class DeathTeleport implements PlayerTeleport {
 	public void execute() {
 		Player p = Bukkit.getPlayer(uuid);
 		if (p != null) {
+			System.out.println("Executing death teleport!");
 			CryoSpawn.respawnPlayer(null, p);
 			BungeePlayerHandler.teleportQueue.remove(this);
 		}

@@ -6,15 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.countercraft.movecraft.cardboardbox.Meta.CardboardItemMeta;
-import net.countercraft.movecraft.cardboardbox.Meta.CardboardMetaBook;
-import net.countercraft.movecraft.cardboardbox.Meta.CardboardMetaEnchantment;
-import net.countercraft.movecraft.cardboardbox.Meta.CardboardMetaFirework;
-import net.countercraft.movecraft.cardboardbox.Meta.CardboardMetaFireworkEffect;
-import net.countercraft.movecraft.cardboardbox.Meta.CardboardMetaLeatherArmor;
-import net.countercraft.movecraft.cardboardbox.Meta.CardboardMetaMap;
-import net.countercraft.movecraft.cardboardbox.Meta.CardboardMetaSkull;
-import net.countercraft.movecraft.cardboardbox.Utils.CardboardEnchantment;
+import net.countercraft.movecraft.cardboardbox.meta.CardboardItemMeta;
+import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaBook;
+import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaEnchantment;
+import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaFirework;
+import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaFireworkEffect;
+import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaLeatherArmor;
+import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaMap;
+import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaSkull;
+import net.countercraft.movecraft.cardboardbox.utils.CardboardEnchantment;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

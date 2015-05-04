@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.countercraft.movecraft.cardboardbox.Utils.CardboardPotionEffect;
+import net.countercraft.movecraft.cardboardbox.utils.CardboardPotionEffect;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -51,6 +51,6 @@ public class Knapsack implements Serializable {
 		inv.setChestplate(armor[2]);
 		inv.setLeggings(armor[1]);
 		inv.setBoots(armor[0]);
-
+		p.updateInventory();
 	}
 }

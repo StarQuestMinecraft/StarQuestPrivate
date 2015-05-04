@@ -20,6 +20,10 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
+/**
+ * @author Dibujaron
+ * A subclass of DetectionTask that redetects a ship from file and checks to make sure the craft hasn't changed.
+ */
 public class RedetectTask extends DetectionTask{
 	
 	public RedetectTask(Craft c, MovecraftLocation startLocation, int minSize, int maxSize, Integer[] allowedBlocks, Integer[] forbiddenBlocks, String player, World w) {
@@ -78,9 +82,8 @@ public class RedetectTask extends DetectionTask{
 
 			data.setHitBox(BoundingBoxUtils.formBoundingBox(data.getBlockList(), data.getMinX(), maxX, data.getMinZ(), maxZ));
 
-			Craft c = getCraft();
 			// detect bedspawns, may be an expensive operation?
-			try{
+			/*try{
 				c.bedspawnsLock.acquire();
 				for (Bedspawn b : Bedspawn.loadBedspawnList(new MovecraftLocation(c.getMinX(), 0, c.getMinZ()), c.getW().getName())) {
 					MovecraftLocation loc = new MovecraftLocation(b.x, b.y, b.z);
@@ -91,7 +94,7 @@ public class RedetectTask extends DetectionTask{
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-			c.bedspawnsLock.release();
+			c.bedspawnsLock.release();*/
 		}
 	}
 

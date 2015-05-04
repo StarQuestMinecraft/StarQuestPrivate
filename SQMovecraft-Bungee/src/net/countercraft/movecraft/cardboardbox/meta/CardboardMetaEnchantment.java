@@ -1,11 +1,11 @@
 
-package net.countercraft.movecraft.cardboardbox.Meta;
+package net.countercraft.movecraft.cardboardbox.meta;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.countercraft.movecraft.cardboardbox.Utils.CardboardEnchantment;
+import net.countercraft.movecraft.cardboardbox.utils.CardboardEnchantment;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

@@ -132,6 +132,9 @@ public class CommandListener implements Listener {
 				}
 			}
 			p.sendMessage("You aren't on a craft, you have nothing to stop riding.");
+		} else if (e.getMessage().toLowerCase().startsWith("/announce say")){
+			e.setCancelled(true);
+			e.getPlayer().sendMessage("This command is disabled. Nice try.");
 		}
 	}
 

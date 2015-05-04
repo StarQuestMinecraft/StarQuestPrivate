@@ -158,13 +158,13 @@ public class CraftManager {
 	}
 	
 	public void updateBedspawns(Craft c){
-		for (String s : c.playersWithBedspawnsOnShip){
+		/*for (String s : c.playersWithBedspawnsOnShip){
 			Bedspawn b = Bedspawn.getBedspawn(s);
 			b.x = b.x + c.xDist;
 			b.y = b.y + c.yDist;
 			b.z = b.z + c.zDist;
 			Bedspawn.saveBedspawn(b);
-		}
+		}*/
 	}
 
 	public Craft[] getCraftsInWorld( World w ) {

@@ -11,6 +11,13 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
+/**
+ * @author Dibujaron
+ * A serializable Block used in starship redetection
+ * NOTE: this class does NOT save all block data and cannot be used to fully rebuild a craft
+ * it just saves enough data to compare to an existing ship for redetection
+ * e.g. chest data is not saved
+ */
 public class SaveableBlock implements Serializable{
 	
 	private static final long serialVersionUID = 1L;

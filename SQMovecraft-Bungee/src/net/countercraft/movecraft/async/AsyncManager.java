@@ -55,6 +55,12 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+/**
+ * @author AJCStriker, Dibujaron
+ * the Async Manager class for Movecraft
+ * When an AsyncTask is finished, it comes here to have its results processed
+ * This is where the "sync" part of a Translation, Rotation, or Detection happens
+ */
 public class AsyncManager extends BukkitRunnable {
 	private static final AsyncManager instance = new AsyncManager();
 	private final HashMap<AsyncTask, Craft> ownershipMap = new HashMap<AsyncTask, Craft>();
@@ -68,6 +74,12 @@ public class AsyncManager extends BukkitRunnable {
 	private AsyncManager() {
 	}
 
+	/**
+	 * @param task the task to submit
+	 * @param c the craft associated with the task
+	 * 
+	 * Submits an AsyncTask for to be run asynchrononously and processed.
+	 */
 	public void submitTask( AsyncTask task, Craft c ) {
 		if (task instanceof DetectionTask){
 			ownershipMap.put( task, c );
@@ -79,10 +91,17 @@ public class AsyncManager extends BukkitRunnable {
 		}
 	}
 
+	/**
+	 * @param task the task that has been completed
+	 * registers a task as having been completed; this method is called async after the task finishes executing.
+	 */
 	public void submitCompletedTask( AsyncTask task ) {
 		finishedAlgorithms.add( task );
 	}
 
+	/**
+	 * This method is called every tick and processes the results of all of the tasks that have occured since the last run.
+	 */
 	void processAlgorithmQueue() {
 		int runLength = 10;
 		int queueLength = finishedAlgorithms.size();
@@ -274,7 +293,7 @@ public class AsyncManager extends BukkitRunnable {
 
 							Location originPoint = new Location( c.getW(), task.getOriginPoint().getX(), task.getOriginPoint().getY(), task.getOriginPoint().getZ() );
 							// Move entities
-							for (String s : c.playersWithBedspawnsOnShip){
+							/*for (String s : c.playersWithBedspawnsOnShip){
 								Bedspawn b = Bedspawn.getBedspawn(s);
 								MovecraftLocation oldLoc = new MovecraftLocation(b.x, b.y, b.z);
 								Location l = new Location(c.getW(), oldLoc.getX() + c.xDist, oldLoc.getY() + c.yDist, oldLoc.getZ() + c.zDist);
@@ -296,7 +315,7 @@ public class AsyncManager extends BukkitRunnable {
 									b.z = (int) z;
 								}
 								Bedspawn.saveBedspawn(b);
-							}
+							}*/
 														
 							c.xDist = 0;
 							c.yDist = 0;
@@ -326,10 +345,17 @@ public class AsyncManager extends BukkitRunnable {
 		processAlgorithmQueue();
 	}
 
+	/**
+	 * @param c the craft to clear
+	 * This method clears a craft to move again on the next tick.
+	 */
 	public void clear( Craft c ) {
 		clearanceSet.add( c );
 	}
 
+	/**
+	 * This method is called once a tick and unlocks every ship that has been queued for clearance.
+	 */
 	private void clearAll() {
 		for ( Craft c : clearanceSet ) {
 			c.setProcessing(false);
@@ -338,6 +364,12 @@ public class AsyncManager extends BukkitRunnable {
 		clearanceSet.clear();
 	}
 	
+	/**
+	 * @param blocklist ship's block list
+	 * @param w the world
+	 * @return the number of cannons on the ship
+	 * A utility method for getting the number of cannons on the ship
+	 */
 	private int numcannons(MovecraftLocation[] blocklist, World w){
 		int numcannons = 0;
 		for (MovecraftLocation l: blocklist){

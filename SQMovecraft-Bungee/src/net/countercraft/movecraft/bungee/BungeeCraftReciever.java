@@ -15,6 +15,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
+/**
+ * @author Dibujaron
+ * BUNGEECORD: TURN BACK NOW FAINT OF HEART
+ * This class recieves data from BungeeListener, loads files, and processes the data stream. It then calls BungeeCraftConstructor to build the ship in the world.
+ */
 public class BungeeCraftReciever {
 	private static int[] inventoryIDs = {23,54,61,62,146,158};
 	public static void recieveCraft(DataInputStream in){

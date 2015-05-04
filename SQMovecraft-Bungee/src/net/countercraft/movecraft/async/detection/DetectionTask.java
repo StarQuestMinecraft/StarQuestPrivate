@@ -24,7 +24,6 @@ import java.util.Stack;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.AsyncTask;
-import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.listener.InteractListener;
@@ -33,14 +32,18 @@ import net.countercraft.movecraft.utils.BoundingBoxUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
 
+/**
+ * @author AJCStriker, Dibujaron
+ * A class representing a ship's detection task
+ * this task is called when a ship is "left click" detected
+ * it calculates the ship's boundaries, block list, and passengers
+ */
 public class DetectionTask extends AsyncTask {
 	protected final MovecraftLocation startLocation;
 	protected final Integer minSize;

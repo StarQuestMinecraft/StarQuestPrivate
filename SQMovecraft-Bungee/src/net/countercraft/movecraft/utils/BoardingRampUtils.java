@@ -58,7 +58,9 @@ public class BoardingRampUtils {
 			return false;
 		}
 		
-		changeblock.setTypeIdAndData(id, data, true);
+		if(changeblock.getType() == Material.AIR){
+			changeblock.setTypeIdAndData(id, data, true);
+		}
 		if(movingstepsup.getType() == Material.AIR){
 			movingstepsup.setTypeIdAndData(movingstepsdown.getTypeId(), movingstepsdown.getData(), true);
 			movingstepsdown.setType(Material.AIR);

@@ -7,14 +7,14 @@ import net.countercraft.movecraft.database.StarshipData;
 public class CraftSignBreakEvent extends CraftEvent{
 
 	boolean breakerOwner;
-	boolean cooledDown;
+	boolean withinCooldown;
 	StarshipData data;
 	Player player;
-	public CraftSignBreakEvent(StarshipData data, boolean breakerOwner, boolean cooledDown, Player breaker) {
+	public CraftSignBreakEvent(StarshipData data, boolean breakerOwner, boolean isWithinKillCooldown, Player breaker) {
 		super(null);
 		this.data = data;
 		this.breakerOwner = breakerOwner;
-		this.cooledDown = cooledDown;
+		this.withinCooldown = isWithinKillCooldown;
 		player = breaker;
 		// TODO Auto-generated constructor stub
 	}
@@ -23,8 +23,8 @@ public class CraftSignBreakEvent extends CraftEvent{
 		return breakerOwner;
 	}
 	
-	public boolean isCooledDown(){
-		return cooledDown;
+	public boolean isWithinKillCooldown(){
+		return withinCooldown;
 	}
 	
 	public StarshipData getData(){

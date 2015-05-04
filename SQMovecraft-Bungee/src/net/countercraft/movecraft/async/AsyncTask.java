@@ -25,6 +25,11 @@ import net.countercraft.movecraft.localisation.I18nSupport;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
+/**
+ * @author AJCStriker
+ * An abstract class representing a movecraft async task.
+ * @see TranslationTask, RotationTask, DetectionTask, RedetectTask
+ */
 public abstract class AsyncTask extends BukkitRunnable {
 	private final Craft craft;
 

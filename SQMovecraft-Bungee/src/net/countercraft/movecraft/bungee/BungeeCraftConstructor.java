@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.utils.BlockUtils;
@@ -22,6 +21,12 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 
+/**
+ * @author Dibujaron
+ * BUNGEECORD: TURN BACK NOW FAINT OF HEART
+ * This class takes a craft's data and attempts to use that data to construct the craft within the world after a serverjump.
+ * @see BungeeCraftReciever
+ */
 public class BungeeCraftConstructor {
 	
 	//calculate for destination obstructions and then build the craft
@@ -107,7 +112,7 @@ public class BungeeCraftConstructor {
 		ArrayList<LocAndBlock> fragiles = new ArrayList<LocAndBlock>();
 		
 		//update bedspawns
-		for(String s : names){
+		/*for(String s : names){
 			Bedspawn b = Bedspawn.getBedspawn(s);
 			b.server = Bukkit.getServerName();
 			b.x = b.x + dX;
@@ -115,7 +120,7 @@ public class BungeeCraftConstructor {
 			b.z = b.z + dZ;
 			b.world = w.getName();
 			Bedspawn.saveBedspawn(b);
-		}
+		}*/
 		//place blocks
 		for(LocAndBlock b : bll){
 			//do fragiles later
