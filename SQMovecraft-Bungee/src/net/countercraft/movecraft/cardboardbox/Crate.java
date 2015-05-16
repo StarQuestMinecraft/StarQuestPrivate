@@ -41,7 +41,6 @@ public class Crate implements Serializable {
 			if (is == null) {
 				storage.add(new CardboardBox(new ItemStack(0)));
 			} else {
-
 				storage.add(new CardboardBox(is));
 			}
 		}

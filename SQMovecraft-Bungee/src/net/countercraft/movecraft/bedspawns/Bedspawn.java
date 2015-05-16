@@ -71,10 +71,10 @@ public class Bedspawn {
 
 	}
 
-	public static Bedspawn getBedspawn(String player) {
+	/*public static Bedspawn getBedspawn(String player) {
 		if(!SAVE_BEDSPAWNS) return getDefault(player);
 		return loadBedspawn(player);
-	}
+	}*/
 
 	/*public static ArrayList<Bedspawn> getAllBedspawns() {
 		return loadBedspawnList();
@@ -131,7 +131,7 @@ public class Bedspawn {
 
 
 
-	public Bedspawn clone() {
+	/*public Bedspawn clone() {
 		return new Bedspawn(player, server, world, x, y, z);
 	}
 
@@ -155,7 +155,7 @@ public class Bedspawn {
 		} finally {
 			close(s);
 		}
-	}
+	}*/
 
 	public static boolean getContext() {
 
@@ -227,7 +227,7 @@ public class Bedspawn {
 		return bedspawnList;
 	}*/
 
-	public static Bedspawn loadBedspawn(String player) {
+	/*public static Bedspawn loadBedspawn(String player) {
 		
 		if(!SAVE_BEDSPAWNS) return getDefault(player);
 		String playerName;
@@ -369,7 +369,7 @@ public class Bedspawn {
 			close(s);
 		}
 		return false;
-	}
+	}*/
 	
 	private static void close(Statement s){
 		if(s == null) return;

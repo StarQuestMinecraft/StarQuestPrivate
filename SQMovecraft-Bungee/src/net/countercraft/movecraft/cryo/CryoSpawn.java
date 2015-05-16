@@ -334,11 +334,12 @@ public class CryoSpawn {
 		final CryoSpawn s = spawn;
 		if (!s.server.equalsIgnoreCase(Bukkit.getServerName())) {
 			System.out.println("Server is not the same as target server, sending death to " + s.server);
+			p.sendMessage(ChatColor.RED + "Teleporting in one second.");
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
 				public void run() {
-					BungeePlayerHandler.sendDeath(p, s.server);
+					BungeePlayerHandler.sendPlayer(p, s.server, s.world, s.x, s.y, s.z);
 				}
-			}, 3L);
+			}, 20L);
 		} else {
 			System.out.println("Server is the same as the target server, respawning.");
 			final Location loc2 = new Location(Bukkit.getWorld(s.world), s.x + 0.5, s.y, s.z + 0.5);

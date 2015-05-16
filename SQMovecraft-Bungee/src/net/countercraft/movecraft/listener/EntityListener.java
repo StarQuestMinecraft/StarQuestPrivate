@@ -343,17 +343,15 @@ public class EntityListener implements Listener {
 			return;
 		} else {
 			System.out.println("Defaulting back to bedspawn, CryoSpawn failed.");
-			Bedspawn b = Bedspawn.getBedspawn(event.getPlayer().getName());
+			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+				public void run() {
+					BungeePlayerHandler.sendPlayer(event.getPlayer(), Bedspawn.DEFAULT.server, Bedspawn.DEFAULT.world, Bedspawn.DEFAULT.x, Bedspawn.DEFAULT.y, Bedspawn.DEFAULT.z);
+				}
+			}, 20L);
+			/*Bedspawn b = Bedspawn.getBedspawn(event.getPlayer().getName());
 			if (b == null) {
 				b = Bedspawn.DEFAULT;
 			}
-			/*
-			 * else { event.getPlayer().sendMessage(ChatColor.RED +
-			 * "Bedspawns are DEPRECATED, they will be removed soon!");
-			 * event.getPlayer().sendMessage(ChatColor.RED +
-			 * "Please use a cryopod instead! " + ChatColor.GOLD +
-			 * " http://tinyurl.com/sqcryo"); }
-			 */
 			System.out.println("Player Current Server: " + Bukkit.getServerName());
 			if (!b.server.equals(Bukkit.getServerName())) {
 				final Bedspawn b2 = b;
@@ -374,7 +372,7 @@ public class EntityListener implements Listener {
 					}, 20L);
 					Bedspawn.deleteBedspawn(event.getPlayer().getName());
 				}
-			}
+			}*/
 		}
 	}
 

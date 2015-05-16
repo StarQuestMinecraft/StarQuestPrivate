@@ -1,10 +1,8 @@
 package net.countercraft.movecraft.cryo;
 
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bungee.BungeePlayerHandler;
@@ -60,7 +58,6 @@ public class ActiveCryoHandler {
 			String name = in.readUTF();
 			onMessageRecieved(name);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}	

@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import net.countercraft.movecraft.cryo.CryoSpawn;
 
-public class DeathTeleport implements PlayerTeleport {
+public class DeathTeleport/* implements PlayerTeleport */{
 
 	UUID uuid;
 

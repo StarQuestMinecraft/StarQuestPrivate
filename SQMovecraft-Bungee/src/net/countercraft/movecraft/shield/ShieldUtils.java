@@ -54,6 +54,12 @@ public class ShieldUtils {
 			}
 		}
 	}
+	
+	public static void activateAllRemaining(){
+		for(PendingActivation a : pendingActivations){
+			a.activate((a.sign.getType() == Material.WALL_SIGN || a.sign.getType() == Material.SIGN_POST));
+		}
+	}
 
 	public static void deployShield(Craft ship, Block sign, Sign[] signs, Player p) {
 		int minY = Integer.MAX_VALUE;

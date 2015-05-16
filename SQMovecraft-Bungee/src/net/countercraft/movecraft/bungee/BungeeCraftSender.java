@@ -43,7 +43,7 @@ public class BungeeCraftSender {
 				UUID s = c.playersRidingShip.get(i);
 				Player player = Movecraft.getPlayer(s);
 				if (player != null)
-					BungeePlayerHandler.sendPlayer(player, targetserver);
+					BungeePlayerHandler.connectPlayer(player, targetserver);
 			}
 			c.playersRidingLock.release();
 		} catch (Exception e) {

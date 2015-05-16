@@ -31,16 +31,12 @@ public class ServerjumpTeleport implements PlayerTeleport{
 	float pitch;
 	GameMode gamemode;
 	public Knapsack knapsack;
-	boolean isBedspawn;
 
 	public ServerjumpTeleport(UUID uuid, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack knap, GameMode gamemode){
-		init(uuid, worldname, x, y, z, yaw, pitch, knap, gamemode, false);
-	}
-	public ServerjumpTeleport(UUID uuid, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack knap, GameMode gamemode, boolean isBedspawn) {
-		init(uuid, worldname, x, y, z, yaw, pitch, knap, gamemode, isBedspawn);
+		init(uuid, worldname, x, y, z, yaw, pitch, knap, gamemode);
 	}
 	
-	private void init(UUID uuid, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack knap, GameMode gamemode, boolean isBedspawn){
+	private void init(UUID uuid, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack knap, GameMode gamemode){
 		this.uuid = uuid;
 		this.worldname = worldname;
 
@@ -55,7 +51,6 @@ public class ServerjumpTeleport implements PlayerTeleport{
 		this.pitch = (float) pitch;
 		this.gamemode = gamemode;
 		this.knapsack = knap;
-		isBedspawn = false;
 	}
 
 	public void execute() {
@@ -85,11 +80,11 @@ public class ServerjumpTeleport implements PlayerTeleport{
 		p.setFallDistance(0);
 		BungeePlayerHandler.teleportQueue.remove(this);
 		
-		if(!isBedspawn){
+		/*if(!isRespawn){*/
 			p.teleport(l);
 			//CryoSpawn.addToAnyShips(l,p );
 			//CryoSpawn.checkAndPlayEffects(l);
-		} else {
+		/*} else {
 			if (EntityListener.checkForNotAir(l)){
 				p.teleport(l);
 			} else {
@@ -100,7 +95,7 @@ public class ServerjumpTeleport implements PlayerTeleport{
 				}, 20L);
 				Bedspawn.deleteBedspawn(p.getName());
 			}
-		}
+		}*/
 	}
 	
 	public UUID getUUID(){

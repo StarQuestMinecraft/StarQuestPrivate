@@ -88,10 +88,10 @@ public class BungeePlayerHandler {
 	public static void sendPlayer(Player p, String targetserver, String world, int X, int Y, int Z, boolean isBedspawn) {
 
 		sendPlayerCoordinateData(p, targetserver, world, X, Y, Z, isBedspawn);
-		sendPlayer(p, targetserver);
+		connectPlayer(p, targetserver);
 	}
 
-	public static void sendPlayer(Player p, String targetserver) {
+	public static void connectPlayer(Player p, String targetserver) {
 
 		ByteArrayOutputStream b = new ByteArrayOutputStream();
 		DataOutputStream out = new DataOutputStream(b);
@@ -105,12 +105,12 @@ public class BungeePlayerHandler {
 		p.sendPluginMessage(Movecraft.getInstance(), "BungeeCord", b.toByteArray());
 	}
 	
-	public static void sendDeath(Player p, String targetserver) {
+	/*public static void sendDeath(Player p, String targetserver) {
 		System.out.println("Sending death.");
 		sendPlayerDeathData(p, targetserver);
 		System.out.println("Sending player.");
-		sendPlayer(p, targetserver);
-	}
+		connectPlayer(p, targetserver);
+	}*/
 	
 	private static void sendPlayerDeathData(Player p, String targetserver){
 		ByteArrayOutputStream b = new ByteArrayOutputStream();
@@ -214,7 +214,7 @@ public class BungeePlayerHandler {
 		}
 	}
 	
-	public static void recievePlayerDeath(DataInputStream in) {
+	/*public static void recievePlayerDeath(DataInputStream in) {
 		System.out.println("Recieving player death!");
 		try {
 			short len = in.readShort();
@@ -236,7 +236,7 @@ public class BungeePlayerHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	public static ServerjumpTeleport recievePlayerTeleport(DataInputStream msgin) throws IOException {
 		try{
@@ -250,6 +250,7 @@ public class BungeePlayerHandler {
 			Knapsack playerKnap = InventoryUtils.readPlayer(msgin);
 			GameMode gamemode = intToGameMode(msgin.readInt());
 			boolean isBedspawn = msgin.readBoolean();
+			//I should remove this sometime.
 	
 			if (coordY > 256) {
 				Location loc = Bukkit.getServer().getWorld(worldname).getSpawnLocation();
@@ -257,7 +258,7 @@ public class BungeePlayerHandler {
 				coordY = loc.getBlockY();
 				coordZ = loc.getBlockZ();
 			}
-			ServerjumpTeleport t = new ServerjumpTeleport(uuid, worldname, coordX, coordY, coordZ, yaw, pitch, playerKnap, gamemode, isBedspawn);
+			ServerjumpTeleport t = new ServerjumpTeleport(uuid, worldname, coordX, coordY, coordZ, yaw, pitch, playerKnap, gamemode);
 			return t;
 		} catch (EOFException e){
 			System.out.println("EOFException in movecraft: told to recieve player teleport but none found!");

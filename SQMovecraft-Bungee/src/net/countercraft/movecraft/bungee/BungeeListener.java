@@ -23,9 +23,9 @@ public class BungeeListener implements PluginMessageListener {
 					BungeeCraftReciever.recieveCraft(in);
 				} else if (subchannel.equals("movecraftPlayer")) {
 					BungeePlayerHandler.recievePlayer(in);
-				} else if (subchannel.equals("movecraftDeath")) {
+				}/* else if (subchannel.equals("movecraftDeath")) {
 					BungeePlayerHandler.recievePlayerDeath(in);
-				}
+				}*/
 			} catch (Exception e) {
 				e.printStackTrace();
 				return;

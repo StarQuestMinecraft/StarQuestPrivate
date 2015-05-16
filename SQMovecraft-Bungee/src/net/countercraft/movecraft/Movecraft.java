@@ -40,6 +40,7 @@ import net.countercraft.movecraft.listener.EntityListener;
 import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.shield.DockUtils;
+import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.task.AutopilotRunTask;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
@@ -79,6 +80,7 @@ public class Movecraft extends JavaPlugin {
 		//StorageChestItem.saveToDisk();
 		shuttingDown = true;
 		VaporRunnable.onDisable();
+		ShieldUtils.activateAllRemaining();
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
