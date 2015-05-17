@@ -9,12 +9,17 @@ package net.countercraft.movecraft.cardboardbox;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class Crate implements Serializable {
 
-	private static final long serialVersionUID = 3171408210789986887L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8545927136852555239L;
+	
 	public ArrayList<CardboardBox> storage = new ArrayList<CardboardBox>();
 
 	public Crate(Iterable<CardboardBox> itr) {
@@ -35,7 +40,7 @@ public class Crate implements Serializable {
 		}
 	}
 
-	public Crate(Inventory i) {
+	public Crate(Player notify, Inventory i) {
 
 		for (ItemStack is : i) {
 			if (is == null) {

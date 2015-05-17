@@ -32,11 +32,11 @@ public class ServerjumpTeleport implements PlayerTeleport{
 	GameMode gamemode;
 	public Knapsack knapsack;
 
-	public ServerjumpTeleport(UUID uuid, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack knap, GameMode gamemode){
-		init(uuid, worldname, x, y, z, yaw, pitch, knap, gamemode);
+	public ServerjumpTeleport(UUID uuid, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack playerKnap, GameMode gamemode){
+		init(uuid, worldname, x, y, z, yaw, pitch, playerKnap, gamemode);
 	}
 	
-	private void init(UUID uuid, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack knap, GameMode gamemode){
+	private void init(UUID uuid, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack playerKnap, GameMode gamemode){
 		this.uuid = uuid;
 		this.worldname = worldname;
 
@@ -50,7 +50,7 @@ public class ServerjumpTeleport implements PlayerTeleport{
 		this.yaw = (float) yaw;
 		this.pitch = (float) pitch;
 		this.gamemode = gamemode;
-		this.knapsack = knap;
+		this.knapsack = playerKnap;
 	}
 
 	public void execute() {

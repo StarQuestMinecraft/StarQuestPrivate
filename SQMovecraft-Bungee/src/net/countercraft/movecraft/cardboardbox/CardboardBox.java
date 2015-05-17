@@ -8,6 +8,7 @@ import java.util.Map;
 
 import net.countercraft.movecraft.cardboardbox.meta.CardboardItemMeta;
 import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaBook;
+import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaBook2;
 import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaEnchantment;
 import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaFirework;
 import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaFireworkEffect;
@@ -45,9 +46,8 @@ public class CardboardBox implements Serializable {
 		this.damage = item.getDurability();
 
 		if (item.hasItemMeta()) {
-
 			ItemMeta m = item.getItemMeta();
-
+			System.out.println("has item meta: " + item.getType());
 			if (m.hasDisplayName()) {
 				this.name = m.getDisplayName();
 			}
@@ -75,7 +75,8 @@ public class CardboardBox implements Serializable {
 		switch (item.getTypeId()) {
 			case 386: // Book and quill
 			case 387: // Written Book
-				this.meta = (new CardboardMetaBook(item));
+				System.out.println("Creating new cardboard meta book.");
+				this.meta = (new CardboardMetaBook2(item));
 				break;
 			case 403: // Enchanted Book
 				this.meta = (new CardboardMetaEnchantment(item));

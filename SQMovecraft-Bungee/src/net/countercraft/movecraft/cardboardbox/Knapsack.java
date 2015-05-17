@@ -32,7 +32,7 @@ public class Knapsack implements Serializable {
 		this.xp = p.getExp();
 		this.xpLevel = p.getLevel();
 		this.potions = CardboardPotionEffect.boxPotions(p.getActivePotionEffects());
-		this.inventory = new Crate(p.getInventory());
+		this.inventory = new Crate(p, p.getInventory());
 		this.armor = new Crate(p.getInventory().getArmorContents());
 
 	}
