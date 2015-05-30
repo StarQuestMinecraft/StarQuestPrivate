@@ -1,11 +1,9 @@
 
-package net.countercraft.movecraft.cardboardbox.meta;
+package com.dibujaron.cardboardbox.meta;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.countercraft.movecraft.cardboardbox.utils.CardboardEnchantment;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,6 +12,8 @@ import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import com.dibujaron.cardboardbox.utils.CardboardEnchantment;
 
 /*
  * This class deals with items that hold enchantment data as storage. This applies

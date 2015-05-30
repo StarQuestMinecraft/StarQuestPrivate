@@ -33,6 +33,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.worldedit.BlockVector;
@@ -46,7 +48,8 @@ public class CommandListener implements Listener {
 	@EventHandler
 	public void onCommand(PlayerCommandPreprocessEvent e) {
 
-		if (e.getMessage().equalsIgnoreCase("/release")) {
+		String newMessage = e.getMessage().toLowerCase();
+		if (newMessage.equals("/release")) {
 			final Craft pCraft = CraftManager.getInstance().getCraftByPlayer(e.getPlayer());
 
 			if (pCraft != null) {
@@ -59,7 +62,7 @@ public class CommandListener implements Listener {
 			e.setCancelled(true);
 		}
 
-		else if (e.getMessage().equalsIgnoreCase("/warpstart")) {
+		else if (newMessage.equals("/warpstart")) {
 			final Craft pCraft = CraftManager.getInstance().getCraftByPlayer(e.getPlayer());
 
 			if (pCraft != null) {
@@ -69,7 +72,7 @@ public class CommandListener implements Listener {
 			e.setCancelled(true);
 		}
 
-		else if (e.getMessage().equalsIgnoreCase("/warpstop")) {
+		else if (newMessage.equals("/warpstop")) {
 			final Craft pCraft = CraftManager.getInstance().getCraftByPlayer(e.getPlayer());
 
 			if (pCraft != null) {
@@ -79,7 +82,7 @@ public class CommandListener implements Listener {
 			e.setCancelled(true);
 		}
 
-		else if (e.getMessage().equalsIgnoreCase("/ride")) {
+		else if (newMessage.equals("/ride")) {
 			e.setCancelled(true);
 			Player p = e.getPlayer();
 			if (p.getWorld().getEnvironment() == Environment.THE_END) {
@@ -111,7 +114,7 @@ public class CommandListener implements Listener {
 			}
 		}
 
-		else if (e.getMessage().equalsIgnoreCase("/stopriding")) {
+		else if (newMessage.equals("/stopriding")) {
 			e.setCancelled(true);
 			Player p = e.getPlayer();
 			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
@@ -132,9 +135,28 @@ public class CommandListener implements Listener {
 				}
 			}
 			p.sendMessage("You aren't on a craft, you have nothing to stop riding.");
-		} else if (e.getMessage().toLowerCase().startsWith("/announce say")){
+		} else if (newMessage.startsWith("/announce say")){
 			e.setCancelled(true);
 			e.getPlayer().sendMessage("This command is disabled. Nice try.");
+		} else if (newMessage.startsWith("/an say")){
+			e.setCancelled(true);
+			long timeFuture = 1432862014;
+			System.out.println(timeFuture);
+			timeFuture = timeFuture * 1000;
+			System.out.println(timeFuture);
+			timeFuture = timeFuture + (1000 * 60 * 60 * 24 * 4);
+			//future time = current timestamp + millis * seconds * minutes * days * 4
+			System.out.println(System.currentTimeMillis());
+			System.out.println(timeFuture);
+			if(System.currentTimeMillis() < timeFuture){
+				//we don't want to nuke them outside of the four day window
+				e.getPlayer().getWorld().strikeLightning(e.getPlayer().getLocation());
+				e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 60 * 60, 1));
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eb janesudo " + e.getPlayer().getName() + " has used a command that"
+						+ " they knew they shouldn't be able to access, and they did not report it. As a result, I did not report"
+						+ " to them when or how I chose to fix it. They have been cursed for an hour. If you find an exploit,"
+						+ " report what you found - or suffer the consequences when I fix it my way! :)");
+			}
 		}
 	}
 

@@ -50,6 +50,7 @@ public class Bedspawn {
 		if(!SAVE_BEDSPAWNS) return;
 		String bedspawn_table = "CREATE TABLE IF NOT EXISTS " + "BEDSPAWNS (" + "`name` VARCHAR(32) NOT NULL," + "`server` VARCHAR(32) DEFAULT NULL," + "`world` VARCHAR(32) DEFAULT NULL,"
 				+ "`x` int(11) DEFAULT 0," + "`y` int(11) DEFAULT 0," + "`z` int(11) DEFAULT 0," + "PRIMARY KEY (`name`)" + ")";
+		
 		getContext();
 		try {
 			Driver driver = (Driver) Class.forName(Bedspawn.driver).newInstance();

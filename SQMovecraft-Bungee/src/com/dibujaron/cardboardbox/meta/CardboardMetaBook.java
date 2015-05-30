@@ -1,5 +1,5 @@
 
-package net.countercraft.movecraft.cardboardbox.meta;
+package com.dibujaron.cardboardbox.meta;
 
 import java.io.Serializable;
 import java.util.List;

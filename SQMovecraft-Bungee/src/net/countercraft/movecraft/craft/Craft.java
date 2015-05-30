@@ -31,6 +31,7 @@ import net.countercraft.movecraft.async.detection.RedetectTask;
 import net.countercraft.movecraft.async.rotation.RotationTask;
 import net.countercraft.movecraft.async.translation.TranslationTask;
 import net.countercraft.movecraft.async.translation.TranslationTaskData;
+import net.countercraft.movecraft.event.CraftShootEvent;
 import net.countercraft.movecraft.event.CraftSyncTranslateEvent;
 import net.countercraft.movecraft.projectile.LaserBolt;
 import net.countercraft.movecraft.slip.WarpUtils;
@@ -295,14 +296,21 @@ public class Craft {
 								f.setYield(2.5F);
 								f.setBounce(false);*/
 								if(twoinfront.getType() == Material.AIR){
-									new LaserBolt(twoinfront, playerFacing, this.pilot);
-									twoinfront.getWorld().playSound(twoinfront.getLocation(), Sound.SHOOT_ARROW, 2.0F, 1.0F);
+									CraftShootEvent event = new CraftShootEvent(this);
+									System.out.println("calling event.");
+									event.call();
+									if(!event.isCancelled()){
+										new LaserBolt(twoinfront, playerFacing, this.pilot);
+										twoinfront.getWorld().playSound(twoinfront.getLocation(), Sound.SHOOT_ARROW, 2.0F, 1.0F);
+									}
 								}
 								Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
 	
 									@Override
 									public void run() {
-										behind.setType(Material.SPONGE);
+										if(behind.getType() == Material.REDSTONE_BLOCK){
+											behind.setType(Material.SPONGE);
+										}
 									}
 								}, 5L);
 							}

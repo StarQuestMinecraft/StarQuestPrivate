@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
-import net.countercraft.movecraft.cardboardbox.Knapsack;
 import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.cryo.CryoUtils;
 import net.countercraft.movecraft.listener.EntityListener;
@@ -19,6 +18,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+
+import com.dibujaron.cardboardbox.Knapsack;
 
 public class ServerjumpTeleport implements PlayerTeleport{
 

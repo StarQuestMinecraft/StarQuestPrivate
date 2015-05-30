@@ -1,21 +1,10 @@
 
-package net.countercraft.movecraft.cardboardbox;
+package com.dibujaron.cardboardbox;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import net.countercraft.movecraft.cardboardbox.meta.CardboardItemMeta;
-import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaBook;
-import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaBook2;
-import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaEnchantment;
-import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaFirework;
-import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaFireworkEffect;
-import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaLeatherArmor;
-import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaMap;
-import net.countercraft.movecraft.cardboardbox.meta.CardboardMetaSkull;
-import net.countercraft.movecraft.cardboardbox.utils.CardboardEnchantment;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -23,6 +12,17 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import com.dibujaron.cardboardbox.meta.CardboardItemMeta;
+import com.dibujaron.cardboardbox.meta.CardboardMetaBook;
+import com.dibujaron.cardboardbox.meta.CardboardMetaBook2;
+import com.dibujaron.cardboardbox.meta.CardboardMetaEnchantment;
+import com.dibujaron.cardboardbox.meta.CardboardMetaFirework;
+import com.dibujaron.cardboardbox.meta.CardboardMetaFireworkEffect;
+import com.dibujaron.cardboardbox.meta.CardboardMetaLeatherArmor;
+import com.dibujaron.cardboardbox.meta.CardboardMetaMap;
+import com.dibujaron.cardboardbox.meta.CardboardMetaSkull;
+import com.dibujaron.cardboardbox.utils.CardboardEnchantment;
 
 /**
  * A serializable ItemStack

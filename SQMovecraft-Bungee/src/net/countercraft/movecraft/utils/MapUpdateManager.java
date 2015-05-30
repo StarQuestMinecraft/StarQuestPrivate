@@ -278,13 +278,11 @@ public class MapUpdateManager extends BukkitRunnable {
                 							List<EntityUpdateCommand> mapUpdateList=entityMap.get(m.getNewBlockLocation());
                 							for(EntityUpdateCommand entityUpdate : mapUpdateList) {
                 								Entity entity=entityUpdate.getEntity();
-                								Vector pVel=new Vector(entity.getVelocity().getX(),0.0,entity.getVelocity().getZ());
                 							/*	Location newLoc=entity.getLocation();
                 								newLoc.setX(entityUpdate.getNewLocation().getX());
                 								newLoc.setY(entityUpdate.getNewLocation().getY());
                 								newLoc.setZ(entityUpdate.getNewLocation().getZ());*/
                 								entity.teleport(entityUpdate.getNewLocation());
-                								entity.setVelocity(pVel);
                 							}
                 							entityMap.remove(m.getNewBlockLocation());
                 						}

@@ -1,16 +1,16 @@
 
-package net.countercraft.movecraft.cardboardbox.meta;
+package com.dibujaron.cardboardbox.meta;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.countercraft.movecraft.cardboardbox.utils.CardboardFireworkEffect;
-
 import org.bukkit.FireworkEffect;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import com.dibujaron.cardboardbox.utils.CardboardFireworkEffect;
 
 public class CardboardMetaFirework implements CardboardItemMeta, Serializable {
 

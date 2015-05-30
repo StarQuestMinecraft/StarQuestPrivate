@@ -39,6 +39,7 @@ import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.Rotation;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -147,9 +148,9 @@ public class InteractListener implements Listener {
 		}
 	}
 
-	private void onSignRightClick(PlayerInteractEvent event) {
+	private void onSignRightClick(final PlayerInteractEvent event) {
 
-		Sign sign = (Sign) event.getClickedBlock().getState();
+		final Sign sign = (Sign) event.getClickedBlock().getState();
 		String signText = sign.getLine(0);
 
 		if (signText == null) {
@@ -245,9 +246,19 @@ public class InteractListener implements Listener {
 				AutopilotRunTask.stopAutopiloting(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer(), sign);
 			}
 		} else if (sign.getLine(0).equalsIgnoreCase("[cryopod]")){
-			CryoSpawn.setUpCryoTube(sign, event.getPlayer().getName());
+			Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable(){
+				public void run(){
+					CryoSpawn.setUpCryoTubeAsync(sign, event.getPlayer().getName());
+				}
+			});
+			return;
 		} else if (sign.getLine(0).equalsIgnoreCase(CryoSpawn.KEY_LINE)){
-			CryoSpawn.toggleActive(sign, event.getPlayer());
+			Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable(){
+				public void run(){
+					CryoSpawn.toggleActiveAsync(sign, event.getPlayer());
+				}
+			});
+			return;
 		} else if (sign.getLine(0).equalsIgnoreCase("[boardingramp]")) {
 			sign.setLine(0, ChatColor.RED + "Boarding Ramp");
 			sign.setLine(1, "{" + ChatColor.GREEN + "SHUT" + ChatColor.BLACK + "}");

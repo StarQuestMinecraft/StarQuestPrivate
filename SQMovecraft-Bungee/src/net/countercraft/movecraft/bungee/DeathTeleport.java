@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.cryo.CryoSpawn;
 
 public class DeathTeleport/* implements PlayerTeleport */{
@@ -16,10 +17,14 @@ public class DeathTeleport/* implements PlayerTeleport */{
 	}
 
 	public void execute() {
-		Player p = Bukkit.getPlayer(uuid);
+		final Player p = Bukkit.getPlayer(uuid);
 		if (p != null) {
 			System.out.println("Executing death teleport!");
-			CryoSpawn.respawnPlayer(null, p);
+			Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable() {
+				public void run() {
+					CryoSpawn.respawnPlayerAsync( p);
+				}
+			});
 			BungeePlayerHandler.teleportQueue.remove(this);
 		}
 	}

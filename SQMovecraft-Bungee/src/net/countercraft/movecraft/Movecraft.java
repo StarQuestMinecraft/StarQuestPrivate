@@ -44,7 +44,6 @@ import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.task.AutopilotRunTask;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
-import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.ShipNuker;
 import net.countercraft.movecraft.vapor.VaporRunnable;
 

@@ -17,7 +17,7 @@ public class ActiveCryoHandler {
 	private static void onMessageRecieved(String player){
 		Player p = Bukkit.getPlayer(player);
 		if(p != null){
-			checkAndRespawn(p);
+			doChecksAndSendPlayer(p);
 		} else {
 			unacceptedLogins.add(player);
 		}
@@ -26,19 +26,18 @@ public class ActiveCryoHandler {
 	public static boolean onPlayerLogin(Player player){
 		if(unacceptedLogins.contains(player.getName())){
 			unacceptedLogins.remove(player.getName());
-			return checkAndRespawn(player);
+			return doChecksAndSendPlayer(player);
 		}
 		return false;
 	}
 	
 	
-	private static boolean checkAndRespawn(final Player p){
-		final CryoSpawn s = CryoSpawn.getSpawn(p.getName());
+	private static boolean doChecksAndSendPlayer(final Player p){
+		final CryoSpawn s = CryoSpawn.getSpawnIfNeedsActiveRespawn(p.getName());
 		if(s == null || !s.isActive) return false;
-		
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 			public void run(){
-				
+				CryoSpawn.unsetUpdatedSinceLastLogin(p.getName());
 				if(!s.server.equals(Bukkit.getServerName())){
 					BungeePlayerHandler.sendPlayer(p, s.server, s.world, s.x, s.y, s.z);
 				} else {

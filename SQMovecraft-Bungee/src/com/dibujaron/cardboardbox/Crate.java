@@ -1,5 +1,5 @@
 
-package net.countercraft.movecraft.cardboardbox;
+package com.dibujaron.cardboardbox;
 
 /*
  * This class is a Crate that can hold as many cardboard boxes as needed.

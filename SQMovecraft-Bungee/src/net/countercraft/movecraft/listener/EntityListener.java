@@ -339,41 +339,45 @@ public class EntityListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerRespawn(final PlayerRespawnEvent event) {
-		if (CryoSpawn.respawnPlayer(event, event.getPlayer())) {
-			return;
-		} else {
-			System.out.println("Defaulting back to bedspawn, CryoSpawn failed.");
-			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
-				public void run() {
-					BungeePlayerHandler.sendPlayer(event.getPlayer(), Bedspawn.DEFAULT.server, Bedspawn.DEFAULT.world, Bedspawn.DEFAULT.x, Bedspawn.DEFAULT.y, Bedspawn.DEFAULT.z);
-				}
-			}, 20L);
-			/*Bedspawn b = Bedspawn.getBedspawn(event.getPlayer().getName());
-			if (b == null) {
-				b = Bedspawn.DEFAULT;
-			}
-			System.out.println("Player Current Server: " + Bukkit.getServerName());
-			if (!b.server.equals(Bukkit.getServerName())) {
-				final Bedspawn b2 = b;
-				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
-					public void run() {
-						BungeePlayerHandler.sendPlayer(event.getPlayer(), b2.server, b2.world, b2.x, b2.y, b2.z);
-					}
-				}, 3L);
-			} else {
-				Location loc2 = new Location(Bukkit.getWorld(b.world), b.x, b.y, b.z);
-				if (checkForNotAir(loc2)) {
-					event.setRespawnLocation(loc2);
+		Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable() {
+			public void run() {
+				if (CryoSpawn.respawnPlayerAsync(event.getPlayer())) {
+					return;
 				} else {
+					System.out.println("Defaulting back to bedspawn, CryoSpawn failed.");
 					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
 						public void run() {
 							BungeePlayerHandler.sendPlayer(event.getPlayer(), Bedspawn.DEFAULT.server, Bedspawn.DEFAULT.world, Bedspawn.DEFAULT.x, Bedspawn.DEFAULT.y, Bedspawn.DEFAULT.z);
 						}
 					}, 20L);
-					Bedspawn.deleteBedspawn(event.getPlayer().getName());
+					/*Bedspawn b = Bedspawn.getBedspawn(event.getPlayer().getName());
+					if (b == null) {
+						b = Bedspawn.DEFAULT;
+					}
+					System.out.println("Player Current Server: " + Bukkit.getServerName());
+					if (!b.server.equals(Bukkit.getServerName())) {
+						final Bedspawn b2 = b;
+						Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+							public void run() {
+								BungeePlayerHandler.sendPlayer(event.getPlayer(), b2.server, b2.world, b2.x, b2.y, b2.z);
+							}
+						}, 3L);
+					} else {
+						Location loc2 = new Location(Bukkit.getWorld(b.world), b.x, b.y, b.z);
+						if (checkForNotAir(loc2)) {
+							event.setRespawnLocation(loc2);
+						} else {
+							Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+								public void run() {
+									BungeePlayerHandler.sendPlayer(event.getPlayer(), Bedspawn.DEFAULT.server, Bedspawn.DEFAULT.world, Bedspawn.DEFAULT.x, Bedspawn.DEFAULT.y, Bedspawn.DEFAULT.z);
+								}
+							}, 20L);
+							Bedspawn.deleteBedspawn(event.getPlayer().getName());
+						}
+					}*/
 				}
-			}*/
-		}
+			}
+		});
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -398,6 +402,7 @@ public class EntityListener implements Listener {
 					if (l != null && l.distanceSquared(event.getEntity().getLocation()) < 49) {
 						event.setDamage(4D);
 						Player shooter = l.getPlayer();
+						
 						if (shooter != null && shooter != plr) {
 							if (plr.getHealth() - event.getDamage() <= 0) {
 								boolean success = KillUtils.creditKill(shooter, plr);

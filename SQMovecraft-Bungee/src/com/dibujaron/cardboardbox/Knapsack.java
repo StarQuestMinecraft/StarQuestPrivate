@@ -1,15 +1,15 @@
 
-package net.countercraft.movecraft.cardboardbox;
+package com.dibujaron.cardboardbox;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.countercraft.movecraft.cardboardbox.utils.CardboardPotionEffect;
-
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+
+import com.dibujaron.cardboardbox.utils.CardboardPotionEffect;
 
 public class Knapsack implements Serializable {
 
