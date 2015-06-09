@@ -76,7 +76,10 @@ public class BungeeCraftSender {
 		}
 	}
 
-	private static byte[] serialize(Player p, String targetserver, String world, int X, int Y, int Z, Craft c) throws IOException {
+	public static byte[] serialize(Player p, String targetserver, String world, int X, int Y, int Z, Craft c) throws IOException {
+		return serialize(p, targetserver, world, X, Y, Z, c, true);
+	}
+	public static byte[] serialize(Player p, String targetserver, String world, int X, int Y, int Z, Craft c, boolean wipeInventories) throws IOException {
 		ByteArrayOutputStream msgbytes = new ByteArrayOutputStream();
 		DataOutputStream msgout = new DataOutputStream(msgbytes);
 
@@ -133,7 +136,9 @@ public class BungeeCraftSender {
 				 * msgout.writeInt(s.getAmount()); msgout.writeInt(index); } }
 				 */
 				InventoryUtils.writeInventory(msgout, i);
-				i.clear();
+				if(wipeInventories){
+					i.clear();
+				}
 			} else {
 				msgout.writeBoolean(false);
 			}
@@ -157,7 +162,9 @@ public class BungeeCraftSender {
 				if (plr != null) {
 					Location l = plr.getLocation();
 					BungeePlayerHandler.writePlayerData(msgout, plr, targetserver, world, l.getBlockX(), l.getBlockY(), l.getBlockZ());
-					BungeePlayerHandler.wipePlayerInventory(plr);
+					if(wipeInventories){
+						BungeePlayerHandler.wipePlayerInventory(plr);
+					}
 				}
 			}
 			c.playersRidingLock.release();

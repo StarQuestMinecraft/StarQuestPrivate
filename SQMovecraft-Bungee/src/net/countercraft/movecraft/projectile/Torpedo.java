@@ -1,6 +1,7 @@
 package net.countercraft.movecraft.projectile;
 
 import net.countercraft.movecraft.Movecraft;
+import net.countercraft.movecraft.event.CraftProjectileDetonateEvent;
 import net.countercraft.movecraft.utils.LocationUtils;
 
 import org.bukkit.Bukkit;
@@ -17,6 +18,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class Torpedo extends Projectile{
+	
+	Player plr;
 	
 	public static void testAndLaunch(Sign sign, Player p){
 		BlockFace direction = getFacingBlockFace(sign);
@@ -36,12 +39,12 @@ public class Torpedo extends Projectile{
 				}
 				ItemStack m = new ItemStack(Material.FIREWORK, 1);
 				di.removeItem(m);
-				new Torpedo(placeLoc, direction);
+				new Torpedo(placeLoc, direction, p);
 				return;
 			} else if(di.contains(Material.REDSTONE)){
 				ItemStack m = new ItemStack(Material.REDSTONE, 1);
 				di.removeItem(m);
-				new InterdictionTorpedo(placeLoc, direction);
+				new InterdictionTorpedo(placeLoc, direction, p);
 				return;
 			}
 			p.sendMessage("No ammo!");
@@ -49,9 +52,10 @@ public class Torpedo extends Projectile{
 		}
 		p.sendMessage("Improperly built torpedo tube.");
 	}
-	public Torpedo(Block block, BlockFace direction){
+	public Torpedo(Block block, BlockFace direction, Player plr){
 		super(block, direction);
 		myTask.runTaskTimer(Movecraft.getInstance(), 3, 3);
+		this.plr = plr;
 	}
 	
 	public void move(Block target){
@@ -61,10 +65,14 @@ public class Torpedo extends Projectile{
 	}
 	
 	public void detonate(){
-		myBlock.setType(Material.AIR);
-		TNTPrimed tnt = myBlock.getWorld().spawn(myBlock.getLocation(), TNTPrimed.class);
-		tnt.setFuseTicks(1);
-		tnt.setIsIncendiary(false);
+		CraftProjectileDetonateEvent event = new CraftProjectileDetonateEvent(plr, myBlock);
+		event.call();
+		if(!event.isCancelled()){
+			myBlock.setType(Material.AIR);
+			TNTPrimed tnt = myBlock.getWorld().spawn(myBlock.getLocation(), TNTPrimed.class);
+			tnt.setFuseTicks(1);
+			tnt.setIsIncendiary(false);
+		}
 	}
 	@SuppressWarnings("deprecation")
 	public static BlockFace getFacingBlockFace(Sign s){

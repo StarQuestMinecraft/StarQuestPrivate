@@ -31,6 +31,8 @@ import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.cryo.CryoSpawn;
+import net.countercraft.movecraft.event.CraftGunsHitEvent;
+import net.countercraft.movecraft.event.CraftShootEvent;
 import net.countercraft.movecraft.projectile.LaserBolt;
 import net.countercraft.movecraft.projectile.LaserBolt.LocationHit;
 import net.countercraft.movecraft.slip.WarpUtils;
@@ -400,9 +402,13 @@ public class EntityListener implements Listener {
 				if (event.getCause() == DamageCause.BLOCK_EXPLOSION) {
 					LocationHit l = LaserBolt.getClosestExplosion(event.getEntity().getLocation());
 					if (l != null && l.distanceSquared(event.getEntity().getLocation()) < 49) {
-						event.setDamage(4D);
 						Player shooter = l.getPlayer();
-						
+						CraftGunsHitEvent event2 = new CraftGunsHitEvent(null, shooter, plr);
+						System.out.println("calling event.");
+						event2.call();
+						if(!event2.isCancelled()){
+							event.setDamage(4D);
+						}
 						if (shooter != null && shooter != plr) {
 							if (plr.getHealth() - event.getDamage() <= 0) {
 								boolean success = KillUtils.creditKill(shooter, plr);

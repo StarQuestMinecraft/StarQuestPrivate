@@ -117,7 +117,7 @@ public class CryoSpawn {
 	}
 
 	public static void removePodSpawn(Sign s) {
-		removePodSpawn(s.getLine(1));
+		removePodSpawn(s.getLine(1), s.getLocation());
 	}
 
 	// ==========================================================
@@ -230,32 +230,42 @@ public class CryoSpawn {
 
 	}
 
-	public static void removePodSpawn(String playerUntrimmed) {
-		removePodSpawn(playerUntrimmed, null);
+	public static void removePodSpawn(String playerUntrimmed, Location l) {
+		removePodSpawn(playerUntrimmed, null, l);
 	}
 
-	public static void removePodSpawn(final String playerUntrimmed, final CommandSender notify) {
+	public static void removePodSpawn(final String playerUntrimmed, final CommandSender notify, final Location l) {
 		Runnable r = new Runnable() {
 			public void run() {
 				System.out.println("REMOVING POD SPAWN!");
 				String player = signTrim(playerUntrimmed);
-				PreparedStatement s = null;
-				try {
-					s = Bedspawn.cntx.prepareStatement("DELETE FROM CRYOSPAWNS WHERE `name` = ?");
-					s.setString(1, player);
-					s.execute();
-					s.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					close(s);
-				}
+				CryoSpawn spawn = getSpawnAsync(player);
 				Player p = Bukkit.getPlayer(playerUntrimmed);
-				if (p != null) {
-					p.sendMessage(ChatColor.RED + "Your CryoSpawn was broken!");
-				}
-				if (notify != null) {
-					notify.sendMessage("Succesfully removed spawn.");
+				if(l == null || (spawn.x == l.getBlockX() && (spawn.y == l.getBlockY() || spawn.y == l.getBlockY() - 1) && spawn.z == l.getBlockZ() && spawn.world.equalsIgnoreCase(l.getWorld().getName()))){
+					PreparedStatement s = null;
+					try {
+						s = Bedspawn.cntx.prepareStatement("DELETE FROM CRYOSPAWNS WHERE `name` = ?");
+						s.setString(1, player);
+						s.execute();
+						s.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					} finally {
+						close(s);
+					}
+					if (p != null) {
+						p.sendMessage(ChatColor.RED + "Your CryoSpawn was broken!");
+					}
+					if (notify != null) {
+						notify.sendMessage("Succesfully removed spawn.");
+					}
+				} else {
+					if (p != null) {
+						p.sendMessage(ChatColor.RED + "This was not your currently enabled cryopod, so your spawn was not updated.");
+					}
+					if (notify != null) {
+						notify.sendMessage("Spawn not removed; this was not their enabled cryopod.");
+					}
 				}
 			}
 		};

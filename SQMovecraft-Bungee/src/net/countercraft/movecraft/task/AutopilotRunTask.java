@@ -116,7 +116,7 @@ public class AutopilotRunTask extends BukkitRunnable{
 
 	public static void startAutopiloting(Sign clicked, Craft c, Player p){
 		int speed = speedFromSign(clicked, c);
-		double craftMax = c.getType().getSpeed();
+		double craftMax = c.getType().getSpeed(p);
 		if(craftMax < speed){
 			int craftSpeed = (int) craftMax;
 			speedToSign(clicked, craftSpeed);
@@ -201,7 +201,7 @@ public class AutopilotRunTask extends BukkitRunnable{
 	
 	public static void incrementSpeed(Sign s, Craft c){
 		int speed = speedFromSign(s, c);
-		int max = (int) c.getType().getSpeed();
+		int max = (int) c.getType().getSpeed(c.pilot);
 		if(speed < max){
 			speed++;
 		} else {
@@ -235,7 +235,7 @@ public class AutopilotRunTask extends BukkitRunnable{
 	private static int speedFromSign(Sign s, Craft c){
 		String line = s.getLine(2);
 		if(line == null || line.equals("")){
-			int speed = (int) c.getType().getSpeed();
+			int speed = (int) c.getType().getSpeed(c.pilot);
 			speedToSign(s, speed);
 			return speed;
 		}

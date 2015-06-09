@@ -76,7 +76,8 @@ public class RedetectTask extends DetectionTask{
 		data.setSignLocations(signLocations);
 		
 		@SuppressWarnings("unchecked")
-		HashMap<Integer, ArrayList<Double>> flyBlocks = (HashMap<Integer, ArrayList<Double>>) getCraft().getType().getFlyBlocks().clone();
+		Player p = Bukkit.getPlayer(data.getPlayername());
+		HashMap<Integer, ArrayList<Double>> flyBlocks = (HashMap<Integer, ArrayList<Double>>) getCraft().getType().getFlyBlocks(p).clone();
 
 		if (confirmStructureRequirements(flyBlocks, blockTypeCount)) {
 

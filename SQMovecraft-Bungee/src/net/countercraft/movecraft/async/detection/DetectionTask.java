@@ -30,13 +30,16 @@ import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.utils.BoundingBoxUtils;
 import net.countercraft.movecraft.utils.MathUtils;
+import net.countercraft.movecraft.utils.BlastUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 
 /**
  * @author AJCStriker, Dibujaron
@@ -58,6 +61,8 @@ public class DetectionTask extends AsyncTask {
 	protected final HashMap<Integer, Integer> blockTypeCount = new HashMap<Integer, Integer>();
 	protected final ArrayList<MovecraftLocation> signLocations = new ArrayList<MovecraftLocation>();
 	protected final DetectionTaskData data;
+	protected int numArmor = 0;
+	protected int armorResistance;
 	
 	Sign mainSign;
 	
@@ -70,6 +75,7 @@ public class DetectionTask extends AsyncTask {
 		this.minSize = minSize;
 		this.maxSize = maxSize;
 		data = new DetectionTaskData(w, player, allowedBlocks, forbiddenBlocks, startLocation);
+		armorResistance = c.getType().getArmorResistance();
 	}
 
 	@Override
@@ -89,14 +95,13 @@ public class DetectionTask extends AsyncTask {
 
 			data.setBlockList(finaliseBlockList(blockList, minY, maxY));
 			data.setSignLocations(signLocations);
+			Player p = Bukkit.getPlayer(data.getPlayername());
 			@SuppressWarnings("unchecked")
-			HashMap<Integer, ArrayList<Double>> flyBlocks = (HashMap<Integer, ArrayList<Double>>) getCraft().getType().getFlyBlocks().clone();
+			HashMap<Integer, ArrayList<Double>> flyBlocks = (HashMap<Integer, ArrayList<Double>>) getCraft().getType().getFlyBlocks(p).clone();
 
-			if (confirmStructureRequirements(flyBlocks, blockTypeCount)) {
+			if (confirmStructureRequirements(flyBlocks, blockTypeCount) && confirmArmorPercentages(blockList.size(), numArmor, p)) {
 
 				data.setHitBox(BoundingBoxUtils.formBoundingBox(data.getBlockList(), data.getMinX(), maxX, data.getMinZ(), maxZ));
-
-				Craft c = getCraft();
 				// detect bedspawns, may be an expensive operation?
 				/*try{
 				c.bedspawnsLock.acquire();
@@ -132,7 +137,9 @@ public class DetectionTask extends AsyncTask {
 
 				addToBlockList(workingLocation);
 				addToBlockCount(testID);
-
+				if(BlastUtils.getBlastResistance(testID) >= armorResistance){
+					numArmor++;
+				}
 				if (isWithinLimit(blockList.size(), 0, maxSize)) {
 					//piston head block
 					if (testID != 34)
@@ -371,6 +378,22 @@ public class DetectionTask extends AsyncTask {
 			}
 		}
 
+		return true;
+	}
+	
+	protected boolean confirmArmorPercentages(double numBlocks, double numArmor, Player p){
+		System.out.println("numArmor: " + numArmor + ", numBlocks: " + numBlocks);
+		double fraction = numArmor / numBlocks;
+		System.out.println("fraction: " + fraction);
+		System.out.println("percentage: " + (fraction * 100));
+		int armorMax = getCraft().getType().getArmorMax(p);
+		System.out.println("Armor max: " + armorMax);
+		if(armorMax < 0) return true;
+		if(fraction * 100 > armorMax){
+			int maxResist = getCraft().getType().getArmorResistance();
+			fail("Your ship has too many armor blocks (blocks of blast resistance greater than " + (maxResist - 1) + ")");
+			return false;
+		}
 		return true;
 	}
 

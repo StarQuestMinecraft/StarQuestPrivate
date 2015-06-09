@@ -12,8 +12,10 @@ import net.countercraft.movecraft.utils.BorderUtils;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MathUtils;
+import net.countercraft.movecraft.utils.MovecraftLocation;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -30,13 +32,25 @@ import org.bukkit.inventory.InventoryHolder;
 public class BungeeCraftConstructor {
 	
 	//calculate for destination obstructions and then build the craft
-	public static void calculateLocationAndBuild(boolean slip, String world, int tX, int tY, int tZ, String oldworld, int oldX, int oldY, int oldZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> bedSpawnPlayersOnShip, final ArrayList<ServerjumpTeleport> playersOnShip){
-		World w = Movecraft.getInstance().getServer().getWorld(world);
+	public static void calcluateLocationAndBuild(boolean slip, String world, int tX, int tY, int tZ, String oldworld, int oldX, int oldY, int oldZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> bedSpawnPlayersOnShip, final ArrayList<ServerjumpTeleport> playersOnShip){
+		calculateLocationAndBuild(slip, world, tX, tY, tZ, oldworld, oldX, oldY, oldZ, type, pilot, pilotUUID, bll, bedSpawnPlayersOnShip, playersOnShip, false);
+	}
+	public static void calculateLocationAndBuild(boolean slip, String world, int tX, int tY, int tZ, String oldworld, int oldX, int oldY, int oldZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> bedSpawnPlayersOnShip, final ArrayList<ServerjumpTeleport> playersOnShip, boolean isFake){
+		System.out.println("tX: " + tX);
+		System.out.println("tY: " + tY);
+		System.out.println("tZ: " + tZ);
+		World w;
+		if(world.equals("transfer")){
+			w = Bukkit.getPlayer(pilotUUID).getWorld();
+		} else {
+			w = Movecraft.getInstance().getServer().getWorld(world);
+		}
 		Location targetLoc = new Location(w, tX, tY, tZ);
 		Location oldLoc = new Location(w, oldX, oldY, oldZ);
-		int dX = getdX(oldLoc, targetLoc);
-		int dY = getdY(oldLoc, targetLoc);
-		int dZ = getdZ(oldLoc, targetLoc);
+		int dX, dY, dZ;
+		dX = getdX(oldLoc, targetLoc);
+		dY = getdY(oldLoc, targetLoc);
+		dZ = getdZ(oldLoc, targetLoc);
 		
 		boolean isSpaceWorld = LocationUtils.spaceCheck(world);
 		System.out.println("This serverjump came from: " + oldworld);
@@ -79,17 +93,22 @@ public class BungeeCraftConstructor {
 			}
 		}
 		
+		System.out.println("tX: " + tX);
+		System.out.println("tY: " + tY);
+		System.out.println("tZ: " + tZ);
+		
 		//create a list of string playernames on ship from player teleports
 		ArrayList<UUID> playersOnShipString = new ArrayList<UUID>();
 		
 		//modify the players' locations for collision detection and also add them to the string list
 		for(ServerjumpTeleport t : playersOnShip){
+			System.out.println("modifying teleport: " + dX + "," + dY + "," + dZ);
 			t.x = t.x + dX;
 			t.y = t.y + dY;
 			t.z = t.z + dZ;
 			playersOnShipString.add(t.uuid);
 		}
-		buildCraft(slip, w, tX, tY, tZ, dX, dY, dZ, type, pilot, pilotUUID, bll, bedSpawnPlayersOnShip, playersOnShipString);
+		buildCraft(slip, w, tX, tY, tZ, dX, dY, dZ, type, pilot, pilotUUID, bll, bedSpawnPlayersOnShip, playersOnShipString, isFake);
 		warpPlayers(playersOnShip);
 	}
 	
@@ -101,13 +120,14 @@ public class BungeeCraftConstructor {
 		for(final ServerjumpTeleport t : playersOnShip){
 			Player p = Movecraft.getPlayer(t.uuid);
 			if (p != null && p.isOnline()) {
+				System.out.println("executing teleport.");
 				t.execute();
 			} else {
 				BungeePlayerHandler.teleportQueue.add(t);
 			}
 		}
 	}
-	public static void buildCraft(boolean slip, final World w, int X, int Y, int Z, int dX, int dY, int dZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> names, ArrayList<UUID> namesOnShip){
+	public static void buildCraft(boolean slip, final World w, int X, int Y, int Z, int dX, int dY, int dZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> names, ArrayList<UUID> namesOnShip, boolean isFake){
 		int[] fragileBlocks = MapUpdateManager.getInstance().fragileBlocks;
 		ArrayList<LocAndBlock> fragiles = new ArrayList<LocAndBlock>();
 		
@@ -130,13 +150,13 @@ public class BungeeCraftConstructor {
 				//do dX and dY and dZ stuff
 				Location l = new Location(w, b.X + dX, b.Y + dY, b.Z + dZ);
 				l.getBlock().setTypeIdAndData(b.id, (byte) b.data, false);
-				restoreInv(l.getBlock(), b);
+				restoreInv(l.getBlock(), b, pilot, isFake);
 			}
 		}
 		for(LocAndBlock b : fragiles){
 			Location l = new Location(w, b.X + dX, b.Y + dY, b.Z + dZ);
 			l.getBlock().setTypeIdAndData(b.id, (byte) b.data, false);
-			restoreInv(l.getBlock(), b);
+			restoreInv(l.getBlock(), b, pilot, isFake);
 		}
 		//final int XDIFF = xDiff;
 		Craft c = new Craft(InteractListener.getCraftTypeFromString( type ), w);
@@ -157,15 +177,23 @@ public class BungeeCraftConstructor {
 		delayStarshipMoving(c);
 	}
 	
-	private static void restoreInv(Block b, LocAndBlock lb){
+	private static void restoreInv(Block b, LocAndBlock lb, String pilot, boolean isFake){
 		if(b.getTypeId() == 63 || b.getTypeId() == 68){
 			
 			Sign s = (Sign) b.getState();
-			s.setLine(0, lb.line1);
-			s.setLine(1, lb.line2);
-			s.setLine(2, lb.line3);
-			s.setLine(3, lb.line4);
-			s.update();
+			
+			if(isFake && InteractListener.getCraftTypeFromString(lb.line1) != null){
+					s.setLine(1, pilot);
+					s.setLine(2, ChatColor.RED + "LEGACY");
+					s.setLine(3, ChatColor.RED + "SHIP");
+					s.update();
+			} else {
+				s.setLine(0, lb.line1);
+				s.setLine(1, lb.line2);
+				s.setLine(2, lb.line3);
+				s.setLine(3, lb.line4);
+				s.update();
+			}
 		}
 		if(lb.i == null) return;
 		if(!(b.getState() instanceof InventoryHolder)) return;
@@ -228,11 +256,25 @@ public class BungeeCraftConstructor {
 				Player p = Bukkit.getServer().getPlayer(pilot);
 				if(p != null){
 					c.detect(p,  MathUtils.bukkit2MovecraftLoc(p.getLocation()));
+					
 				} else {
 					//player is not logged in yet, but has a playerteleport set to execute when they do log in (hopefully)
 					BungeePlayerHandler.pilotQueue.put(uid, c);
 				}
 			}
+
+
 		}, 5L);
+	}
+	
+	private static void createLegacySign(Sign s, String playername) {
+		if (playername.length() > 15) {
+			s.setLine(1, playername.substring(0, 15));
+		} else {
+			s.setLine(1, playername);
+		}
+		s.setLine(2, ChatColor.RED + "LEGACY");
+		s.setLine(3, ChatColor.RED + "SHIP");
+		s.update();
 	}
 }

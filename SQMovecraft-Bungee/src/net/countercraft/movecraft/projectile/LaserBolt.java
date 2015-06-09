@@ -3,6 +3,7 @@ package net.countercraft.movecraft.projectile;
 import java.util.HashSet;
 
 import net.countercraft.movecraft.Movecraft;
+import net.countercraft.movecraft.event.CraftProjectileDetonateEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -47,11 +48,15 @@ public class LaserBolt extends Projectile{
 	@Override
 	public void detonate(){
 		myBlock.setType(Material.AIR);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
-			public void run(){
-				createExplosion(myBlock, shooter, 1.75F);
-			}
-		}, 1L);
+		CraftProjectileDetonateEvent event = new CraftProjectileDetonateEvent(shooter, myBlock);
+		event.call();
+		if(!event.isCancelled()){
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+				public void run(){
+					createExplosion(myBlock, shooter, 1.75F);
+				}
+			}, 1L);
+		}
 	}
 	
 	@Override

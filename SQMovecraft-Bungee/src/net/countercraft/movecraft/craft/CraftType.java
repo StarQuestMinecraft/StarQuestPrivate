@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.localisation.I18nSupport;
 
+import org.bukkit.entity.Player;
 import org.yaml.snakeyaml.Yaml;
 
 public class CraftType {
@@ -36,16 +37,15 @@ public class CraftType {
 	private int maxSize, minSize, minHeightLimit, maxHeightLimit, drillHeadID;
 	private Integer[] allowedBlocks, forbiddenBlocks;
 	private ArrayList<Integer> drilledBlocks;
-	private boolean canFly, tryNudge, canCruise, canTeleport, canStaticMove, isGroundVehicle, isDrill;
+	private boolean canFly, tryNudge, canCruise, canTeleport, canStaticMove, isGroundVehicle, isPod, isFlagship, isCarrier;
 	private int cruiseSkipBlocks;
 	private double fuelBurnRate;
 	private double sinkPercent;
 	private float collisionExplosion;
 	private int tickCooldown;
-	private boolean isFlagship;
 	private double speed;
 	private HashMap<Integer, ArrayList<Double>> flyBlocks = new HashMap<Integer, ArrayList<Double>>();
-	private int allowedCannons;
+	private int allowedCannons, allowedPassengers, armorMax, armorResistance;
 	private String altName;
 
 	public CraftType(File f) {
@@ -144,10 +144,40 @@ public class CraftType {
 		} else {
 			allowedCannons = 0;
 		}
+		if (data.containsKey("allowedCannons")) {
+			allowedCannons = (Integer) data.get("allowedCannons");
+		} else {
+			allowedCannons = 0;
+		}
 		if (data.containsKey("flagship")) {
 			isFlagship = (Boolean) data.get("flagship");
 		} else {
 			isFlagship = false;
+		}
+		if (data.containsKey("pod")) {
+			isPod = (Boolean) data.get("pod");
+		} else {
+			isPod = false;
+		}
+		if (data.containsKey("carrier")) {
+			isCarrier = (Boolean) data.get("carrier");
+		} else {
+			isCarrier = false;
+		}
+		if (data.containsKey("allowedPassengers")) {
+			allowedPassengers = (Integer) data.get("allowedPassengers");
+		} else {
+			allowedPassengers = -1;
+		}
+		if (data.containsKey("armorMaxPercent")) {
+			armorMax = (Integer) data.get("armorMaxPercent");
+		} else {
+			armorMax = -1;
+		}
+		if (data.containsKey("armorResistance")) {
+			armorResistance = (Integer) data.get("armorResistance");
+		} else {
+			armorResistance = 20;
 		}
 		if (data.containsKey("altName")) {
 			altName = (String) data.get("altName");
@@ -168,8 +198,16 @@ public class CraftType {
 		return minSize;
 	}
 
-	public int getAllowedCannons() {
-		return allowedCannons;
+	public int getAllowedCannons(Player p) {
+		int c = allowedCannons;
+		if(p.hasPermission("movecraft." + craftName + ".guns.1")){
+			c = c + 1;
+		} else if(p.hasPermission("movecraft." + craftName + ".guns.2")){
+			c = c + 2;
+		} else if(p.hasPermission("movecraft." + craftName + ".guns.3")){
+			c = c + 3;
+		}
+		return c;
 	}
 
 	public Integer[] getAllowedBlocks() {
@@ -232,13 +270,44 @@ public class CraftType {
 		return tryNudge;
 	}
 
-	public double getSpeed() {
-		return speed;
+	public double getSpeed(Player p) {
+		double s = speed;
+		if(p.hasPermission("movecraft." + craftName + ".speed.1")){
+			s = s + 5;
+		} else if(p.hasPermission("movecraft." + craftName + ".speed.2")){
+			s = s + 10;
+		} else if(p.hasPermission("movecraft." + craftName + ".speed.3")){
+			s = s + 15;
+		}
+		return s;
 	}
 
-	public HashMap<Integer, ArrayList<Double>> getFlyBlocks() {
-		return flyBlocks;
-	}
+	public HashMap<Integer, ArrayList<Double>> getFlyBlocks(Player p) {
+		HashMap<Integer, ArrayList<Double>> retval = new HashMap<Integer, ArrayList<Double>>();
+			for(Integer i : flyBlocks.keySet()){ 
+				ArrayList<Double> values = flyBlocks.get(i);
+				ArrayList<Double> newValues = new ArrayList<Double>();
+				if(i != 158){
+					for(Double d : values){
+						newValues.add(d);
+					}
+				} else {
+					double oldMax = values.get(values.size() - 1);
+					newValues.add((double) 0);
+					if(p.hasPermission("movecraft." + craftName + ".capacity.1")){
+						newValues.add(oldMax + 2);
+					} else if(p.hasPermission("movecraft." + craftName + ".capacity.2")){
+						newValues.add(oldMax + 4);
+					} else if(p.hasPermission("movecraft." + craftName + ".capacity.3")){
+						newValues.add(oldMax + 6);
+					} else {
+						newValues.add(oldMax);
+					}
+				}
+				retval.put(i, newValues);
+			}
+			return retval;
+		}
 
 	public int getMaxHeightLimit() {
 		return maxHeightLimit;
@@ -254,5 +323,33 @@ public class CraftType {
 	
 	public String getAltName(){
 		return altName;
+	}
+	
+	public boolean isCarrier(){
+		return isCarrier;
+	}
+	
+	public boolean isPod(){
+		return isPod;
+	}
+	
+	public int getArmorMax(Player p){
+		int armor = armorMax;
+		if(p.hasPermission("movecraft." + craftName + ".armor.1")){
+			armor = armor + 5;
+		} else if(p.hasPermission("movecraft." + craftName + ".armor.2")){
+			armor = armor + 10;
+		} else if(p.hasPermission("movecraft." + craftName + ".armor.3")){
+			armor = armor + 15;
+		}
+		return armor;
+	}
+	
+	public int getArmorResistance(){
+		return armorResistance;
+	}
+	
+	public int getMaxPassengeres(){
+		return allowedPassengers;
 	}
 }

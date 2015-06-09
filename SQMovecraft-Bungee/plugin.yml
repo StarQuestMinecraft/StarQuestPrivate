@@ -22,6 +22,9 @@ commands:
    loadship:
       description: sdfsdf
       usage: sdfsdf
+   saveship:
+      description: save a starship to the database.
+      usage: /saveship (while piloting the ship to save)
    nukeship:
       description: ssdfsdf
       usage: sdfsdf

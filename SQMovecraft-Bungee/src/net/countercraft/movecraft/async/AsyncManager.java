@@ -131,11 +131,10 @@ public class AsyncManager extends BukkitRunnable {
 						Craft[] craftsInWorld = CraftManager.getInstance().getCraftsInWorld( c.getW() );
 						boolean failed = false;
 						
-						if (numcannons(data.getBlockList(), c.getW()) > c.getType().getAllowedCannons()){
+						if (numcannons(data.getBlockList(), c.getW()) > c.getType().getAllowedCannons(p)){
 							p.sendMessage(ChatColor.RED + "Your ship has too many cannons!");
 							failed = true;
-						}
-						if ( craftsInWorld != null ) {
+						} else if ( craftsInWorld != null ) {
 							for ( Craft craft : craftsInWorld ) {
 
 								if ( BlockUtils.arrayContainsOverlap( craft.getBlockList(), data.getBlockList() ) ) {
@@ -151,11 +150,8 @@ public class AsyncManager extends BukkitRunnable {
 								}
 
 							}
-						} else {
-							//detect ship signs
 						}
 						if ( !failed ) {
-							
 							// add any players to the ship that should be on it
 							try{
 								c.playersRidingLock.acquire();
@@ -172,6 +168,18 @@ public class AsyncManager extends BukkitRunnable {
 							}catch(Exception e){
 								e.printStackTrace();
 							}
+							
+							int pass = c.getType().getMaxPassengeres();
+							if(pass > 0){
+								int size = c.playersRidingShip.size();
+								if(size > pass){
+									p.sendMessage(ChatColor.RED + "Your ship is over its passenger capacity.");
+									failed = true;
+								}
+							}
+						}
+						
+						if(!failed){
 							c.playersRidingLock.release();
 							c.setBlockList( data.getBlockList() );
 							c.setHitBox( data.getHitBox() );

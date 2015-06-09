@@ -30,6 +30,7 @@ import net.countercraft.movecraft.bungee.BungeeCraftSender;
 import net.countercraft.movecraft.bungee.BungeeFileHandler;
 import net.countercraft.movecraft.bungee.BungeeListener;
 import net.countercraft.movecraft.config.Settings;
+import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.database.FileDatabase;
@@ -82,17 +83,17 @@ public class Movecraft extends JavaPlugin {
 		ShieldUtils.activateAllRemaining();
 	}
 	
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public boolean onCommand(final CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("removehome") && sender instanceof Player){
 			if(args.length > 0){
 				String player = args[0];
 				if(sender.hasPermission("Cryospawn.remove")){
-					CryoSpawn.removePodSpawn(player);
+					CryoSpawn.removePodSpawn(player, null);
 					sender.sendMessage("Removing pod, be sure you typed the name exactly right!");
 					return true;
 				}
 			}
-			CryoSpawn.removePodSpawn(sender.getName());
+			CryoSpawn.removePodSpawn(sender.getName(), null);
 			return true;
 		} else if(cmd.getName().equalsIgnoreCase("handlers")){
 			String name = args[0];
@@ -126,13 +127,63 @@ public class Movecraft extends JavaPlugin {
 					BungeeCraftReciever.readCraftAndBuild(craftData, false);
 					sender.sendMessage("loaded ship.");
 					return true;
+				} else if(args.length == 4){
+					final Player p = Bukkit.getPlayer(args[0]);
+					if(p == null){
+						sender.sendMessage("player not found.");
+						return false;
+					}
+					int x, y, z;
+					try{
+						x = Integer.parseInt(args[1]);
+						y = Integer.parseInt(args[2]);
+						z = Integer.parseInt(args[3]);
+					} catch (Exception e){
+						sender.sendMessage("Incorrect coordinates.");
+						return false;
+					}
+					try{
+						byte[] craftData = BungeeFileHandler.readCraftBytes(p.getName(), BungeeFileHandler.transferFolder);
+						p.teleport(new Location(p.getWorld(), x, y, z));
+						BungeeCraftReciever.readCraftAndBuild(craftData, false);
+					} catch (Exception e){
+						e.printStackTrace();
+						p.sendMessage("Failed to load ship: error. Did you have a ship saved?");
+					}
+					sender.sendMessage("loaded ship.");
+					return true;
 				}
 				sender.sendMessage("incorrect arguments.");
 				return true;
 			}
 			sender.sendMessage("you don't have permission.");
 			return true;
-		} else if(cmd.getName().equalsIgnoreCase("nukeship")){
+		} else if(cmd.getName().equalsIgnoreCase("saveship")){
+			if(!(sender instanceof Player)) return false;
+			Player p = (Player) sender;
+			Craft craft = CraftManager.getInstance().getCraftByPlayer(p);
+			if(craft == null){
+				p.sendMessage("You must be flying a ship to use this command.");
+				return true;
+			}
+			
+			boolean passed = BungeeFileHandler.transferScanForIllegal(craft);
+			if(!passed){
+				p.sendMessage("your ship contains an illegal block for transfer. Please remove it and try again.");
+				return false;
+			}
+			try {
+				byte[] craftData = BungeeCraftSender.serialize(p, "transfer", "transfer", 0, 0, 0, craft, false);
+				BungeeFileHandler.saveCraftBytes(craftData, p.getName(), BungeeFileHandler.transferFolder);
+				p.sendMessage("Starship saved. On the other side you will be able to load this save. You may overwrite this save at any time.");
+				return true;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				p.sendMessage("Error saving ship, please report this to the developers!");
+			}
+		}			
+		else if(cmd.getName().equalsIgnoreCase("nukeship")){
 			if(sender.hasPermission("movecraft.loadship")){
 				ShipNuker.nuke((Player) sender);
 				sender.sendMessage("Ship nuked!");

@@ -118,8 +118,14 @@ public class BungeeCraftReciever {
 	        			playersOnShip.add(t);
 	        		}
 	        	}
+        	} else {
+        		Player p = Movecraft.getPlayer(pUUID);
+        		Location l = p.getLocation();
+        		ServerjumpTeleport t = new ServerjumpTeleport(pUUID, l.getWorld().getName(), oldX, oldY, oldZ, l.getYaw(), l.getPitch(), null, p.getGameMode());
+        		System.out.println("created fake teleport.");
+        		playersOnShip.add(t);
         	}
-        	BungeeCraftConstructor.calculateLocationAndBuild(slip, targetworld,Xcoord,Ycoord,Zcoord, oldworld, oldX, oldY, oldZ, cName, pName, pUUID, blockloclist, bedspawnNames, playersOnShip);
+        	BungeeCraftConstructor.calculateLocationAndBuild(slip, targetworld,Xcoord,Ycoord,Zcoord, oldworld, oldX, oldY, oldZ, cName, pName, pUUID, blockloclist, bedspawnNames, playersOnShip, !affectPlayers);
         }
         catch(IOException e){
         	e.printStackTrace();

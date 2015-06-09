@@ -1,5 +1,6 @@
 package net.countercraft.movecraft.async.translation;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -49,6 +50,35 @@ import org.bukkit.event.block.BlockBreakEvent;
 public class TranslationTask extends AsyncTask {
 	private TranslationTaskData data;
 	
+	private static final int[] ACCEPTABLE_PLAYER_BLOCKS = new int[]{
+		0,
+		6,
+		30,
+		31,
+		32,
+		37,
+		38,
+		39,
+		40,
+		50,
+		55,
+		59,
+		63,
+		66,
+		68,
+		69,
+		70,
+		71,
+		72,
+		75,
+		76,
+		77,
+		78,
+		83,
+		141,
+		142,
+		143,
+	};
 	public static final Location STANDARD_SPAWN = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
 	public TranslationTask(Craft c, TranslationTaskData data) {
 		super(c);
@@ -152,7 +182,7 @@ public class TranslationTask extends AsyncTask {
 				data.setBlockList(newBlockList);
 
 				// Move entities within the craft
-				
+				boolean isAutopiloting = AutopilotRunTask.autopilotingCrafts.contains(getCraft());
 				try{
 					for(int i = 0; i < getCraft().playersRidingShip.size(); i++) {
 						Player pTest = Movecraft.getPlayer(getCraft().playersRidingShip.get(i));
@@ -163,7 +193,7 @@ public class TranslationTask extends AsyncTask {
 								Location newPLoc=new Location(getCraft().getW(), tempLoc.getX(), tempLoc.getY(), tempLoc.getZ());
 								newPLoc.setPitch(pTest.getLocation().getPitch());
 								newPLoc.setYaw(pTest.getLocation().getYaw());
-								if(data.getDy() < 0){
+								if(data.getDy() < 0 || isAutopiloting || isStandingInBlock(pTest)){
 									pTest.teleport(newPLoc);
 								}
 								EntityUpdateCommand eUp=new EntityUpdateCommand(pTest.getLocation().clone(),newPLoc,pTest, pTest.getVelocity(), getCraft());
@@ -263,6 +293,18 @@ public class TranslationTask extends AsyncTask {
 		}
 	}
 	
+	private boolean isStandingInBlock(Player pTest) {
+		int feet = pTest.getWorld().getBlockTypeIdAt(pTest.getLocation());
+		int head = pTest.getWorld().getBlockTypeIdAt(pTest.getEyeLocation());
+		if(head != 0 && Arrays.binarySearch(ACCEPTABLE_PLAYER_BLOCKS, head) <= 0){
+			return true;
+		}
+		if(feet != 0 && Arrays.binarySearch(ACCEPTABLE_PLAYER_BLOCKS, feet) <= 0){
+			return true;
+		}
+		return false;
+	}
+
 	private void fail(String message) {
 		data.setFailed(true);
 		data.setFailMessage(message);

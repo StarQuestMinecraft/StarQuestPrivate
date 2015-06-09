@@ -266,7 +266,7 @@ public class Craft {
 		if (!this.processing.get() && type != Material.GLASS && type != Material.STAINED_GLASS) {
 			this.processing.set(true);
 			int cannonCount = 0;
-			int allowed = this.getType().getAllowedCannons();
+			int allowed = this.getType().getAllowedCannons(p);
 			for (MovecraftLocation l : getBlockList()) {
 
 				Block b = w.getBlockAt(l.getX(), l.getY(), l.getZ());
