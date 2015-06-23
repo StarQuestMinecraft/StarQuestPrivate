@@ -1,11 +1,13 @@
 package net.countercraft.movecraft.task;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bungee.BungeeCraftSender;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.slip.WarpUtils;
+import net.countercraft.movecraft.utils.PlayerFlightUtil;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -45,9 +47,10 @@ public class RepeatTryServerJumpTask extends BukkitRunnable{
 		this.y = y;
 		this.z = z;
 		this.p = p;
-			p.setAllowFlight(true);
-			p.setFlySpeed(0F);
-			p.setFlying(true);
+		for(UUID u : c.playersRidingShip){
+			Player plr = Movecraft.getPlayer(u);
+			PlayerFlightUtil.beginTeleportFlying(plr);
+		}
 	}
 	
 	public RepeatTryServerJumpTask(Player p, Craft c, String server, String world, int x, int y, int z){
@@ -58,9 +61,10 @@ public class RepeatTryServerJumpTask extends BukkitRunnable{
 		this.y = y;
 		this.z = z;
 		this.p = p;
-			p.setAllowFlight(true);
-			p.setFlySpeed(0F);
-			p.setFlying(true);
+		for(UUID u : c.playersRidingShip){
+			Player plr = Movecraft.getPlayer(u);
+			PlayerFlightUtil.beginTeleportFlying(plr);
+		}
 	}
 	
 	@Override 

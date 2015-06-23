@@ -13,6 +13,7 @@ import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
+import net.countercraft.movecraft.utils.NewShipClassConverter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -150,13 +151,13 @@ public class BungeeCraftConstructor {
 				//do dX and dY and dZ stuff
 				Location l = new Location(w, b.X + dX, b.Y + dY, b.Z + dZ);
 				l.getBlock().setTypeIdAndData(b.id, (byte) b.data, false);
-				restoreInv(l.getBlock(), b, pilot, isFake);
+				restoreInv(l.getBlock(), b, pilot, isFake, bll.length);
 			}
 		}
 		for(LocAndBlock b : fragiles){
 			Location l = new Location(w, b.X + dX, b.Y + dY, b.Z + dZ);
 			l.getBlock().setTypeIdAndData(b.id, (byte) b.data, false);
-			restoreInv(l.getBlock(), b, pilot, isFake);
+			restoreInv(l.getBlock(), b, pilot, isFake, bll.length);
 		}
 		//final int XDIFF = xDiff;
 		Craft c = new Craft(InteractListener.getCraftTypeFromString( type ), w);
@@ -177,16 +178,13 @@ public class BungeeCraftConstructor {
 		delayStarshipMoving(c);
 	}
 	
-	private static void restoreInv(Block b, LocAndBlock lb, String pilot, boolean isFake){
+	private static void restoreInv(Block b, LocAndBlock lb, String pilot, boolean isFake, int size){
 		if(b.getTypeId() == 63 || b.getTypeId() == 68){
 			
 			Sign s = (Sign) b.getState();
 			
 			if(isFake && InteractListener.getCraftTypeFromString(lb.line1) != null){
-					s.setLine(1, pilot);
-					s.setLine(2, ChatColor.RED + "LEGACY");
-					s.setLine(3, ChatColor.RED + "SHIP");
-					s.update();
+					createLegacySign(s, pilot, size);
 			} else {
 				s.setLine(0, lb.line1);
 				s.setLine(1, lb.line2);
@@ -267,7 +265,8 @@ public class BungeeCraftConstructor {
 		}, 5L);
 	}
 	
-	private static void createLegacySign(Sign s, String playername) {
+	private static void createLegacySign(Sign s, String playername, int n) {
+		s.setLine(0, NewShipClassConverter.convert(s.getLine(0), n));
 		if (playername.length() > 15) {
 			s.setLine(1, playername.substring(0, 15));
 		} else {

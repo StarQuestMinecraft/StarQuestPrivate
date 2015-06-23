@@ -8,8 +8,12 @@ import java.util.UUID;
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
+import net.countercraft.movecraft.utils.EntityUpdateCommand;
+import net.countercraft.movecraft.utils.MapUpdateCommand;
+import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
@@ -175,12 +179,21 @@ public class BungeeCraftSender {
 		return msgbytes.toByteArray();
 	}
 
-	private static void removeCraftBlocks(Craft c) {
-		World w = c.getW();
-		byte zero = (byte) 0;
-		for (MovecraftLocation l : c.getBlockList()) {
-			w.getBlockAt(l.getX(), l.getY(), l.getZ()).setTypeIdAndData(0, zero, false);
+	private static void removeCraftBlocks(final Craft c) {
+		//World w = c.getW();
+		//byte zero = (byte) 0;
+		MovecraftLocation[] blocks = c.getBlockList();
+		final MapUpdateCommand[] updates = new MapUpdateCommand[blocks.length];
+		for (int i = 0; i < blocks.length; i++) {
+			//w.getBlockAt(l.getX(), l.getY(), l.getZ()).setTypeIdAndData(0, zero, false);
+			//updateSet.add(new MapUpdateCommand(l, 0, c, false));
+			updates[i] = new MapUpdateCommand(blocks[i], 0, c, false);
 		}
+		Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+			public void run(){
+				MapUpdateManager.getInstance().addWorldUpdate(c.getW(), updates, new EntityUpdateCommand[0]);
+			}
+		});
 	}
 
 	public static void debug(String s) {

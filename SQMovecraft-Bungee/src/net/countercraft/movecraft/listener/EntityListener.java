@@ -47,6 +47,7 @@ import net.countercraft.movecraft.utils.PlayerFlightUtil;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
@@ -177,6 +178,9 @@ public class EntityListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player p = event.getPlayer();
+		if(p.getGameMode() == GameMode.SURVIVAL){
+			PlayerFlightUtil.removeFlightUnlessAllowed(p);
+		}
 		boolean teleported = BungeePlayerHandler.onLogin(p);
 		if (!teleported)
 			teleported = OfflinePilotUtils.onPlayerLogin(p);
@@ -194,7 +198,6 @@ public class EntityListener implements Listener {
 		 * 
 		 * if(!isTeleported){ if(p.getGameMode() == GameMode.SURVIVAL){
 		 * if(shouldTempFly(p)){ giveTempFly(p); } else {
-		 * p.setAllowFlight(false); p.setFlySpeed(0F); p.setFlying(false); } } }
 		 */
 	}
 
@@ -218,7 +221,9 @@ public class EntityListener implements Listener {
 			CraftManager.getInstance().removeCraft(c);
 			OfflinePilotUtils.registerOfflinePilot(p, c);
 		}
-
+		if(PlayerFlightUtil.isTeleportFlying(p)){
+			PlayerFlightUtil.endTeleportFlying(p);
+		}
 	}
 
 	@EventHandler
