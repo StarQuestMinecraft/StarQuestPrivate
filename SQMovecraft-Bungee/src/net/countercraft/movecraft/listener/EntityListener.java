@@ -75,6 +75,13 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.palmergames.bukkit.towny.Towny;
+import com.palmergames.bukkit.towny.TownySettings;
+import com.palmergames.bukkit.towny.regen.TownyRegenAPI;
+import com.palmergames.bukkit.towny.regen.block.BlockLocation;
+import com.palmergames.bukkit.towny.tasks.ProtectionRegenTask;
+import com.palmergames.bukkit.util.ArraySort;
+
 public class EntityListener implements Listener {
 	private final HashMap<Player, BukkitTask> releaseEvents = new HashMap<Player, BukkitTask>();
 	private static int[] NON_EXPLODABLES = { 1, 4, 7, 14, 15, 16, 21, 22, 24, 41, 42, 45, 48, 49, 56, 57, 64, 71, 73, 74, 98, 133, 155, 159 };
@@ -86,12 +93,14 @@ public class EntityListener implements Listener {
 	 * CraftManager.getInstance().getCraftByPlayer( p ) ); } }
 	 */
 
+	private final static Towny plugin = (Towny) Bukkit.getServer().getPluginManager().getPlugin("Towny");
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void onEntityExplode(EntityExplodeEvent event) {
-		if (event.isCancelled())
+		if (event.isCancelled() || plugin == null)
 			return;
 		List<Block> affectedBlocks = event.blockList();
+		Collections.sort(affectedBlocks, ArraySort.getInstance());
 		int count = 0;
 		for (int i = affectedBlocks.size() - 1; i >= 0; i--) {
 			count++;
@@ -140,6 +149,17 @@ public class EntityListener implements Listener {
 			boolean yes = JammerUtils.checkForAndDisableJammer(b);
 			if (yes)
 				break;
+		}
+		if (event.getEntity() == null) {
+			for (Block b : affectedBlocks) {
+				if ((!TownyRegenAPI.hasProtectionRegenTask(new BlockLocation(b.getLocation()))) && (b.getType() != Material.TNT)) {
+					ProtectionRegenTask task = new ProtectionRegenTask(plugin, b, false);
+					task.setTaskId(Movecraft.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, ((TownySettings.getPlotManagementWildRegenDelay() + count) * 20)));
+					TownyRegenAPI.addProtectionRegenTask(task);
+					event.setYield((float) 0.0);
+					b.getDrops().clear();
+				}
+			}
 		}
 	}
 
