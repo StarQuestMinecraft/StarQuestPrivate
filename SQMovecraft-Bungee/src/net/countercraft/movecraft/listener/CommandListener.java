@@ -179,8 +179,7 @@ public class CommandListener implements Listener {
 
 				// create a block to test
 				Block b = p.getWorld().getBlockAt(x, 100, z);
-				boolean success = DockUtils.checkTownyBuild(b, p);
-				if(success) success = DockUtils.checkFactionsBuild(b, p);
+				Boolean success = DockUtils.checkFactionsBuild(b, p);
 				if (!success){
 					return false;
 				}

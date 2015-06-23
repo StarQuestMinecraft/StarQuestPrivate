@@ -24,39 +24,40 @@ public class LocationUtils {
 		SYSTEM = cfg.getString("System");
 		if (SYSTEM == null) {
 			Bukkit.getLogger().log(Level.SEVERE, "No System setting found in config! Severe!");
-		} else if (SYSTEM.equals("Regalis")) {
-			planets.put("Boskevine", locationFromConfig(cfg, "Boskevine"));
-			planets.put("Quavara", locationFromConfig(cfg, "Quavara"));
-			planets.put("Kelakaria", locationFromConfig(cfg, "Kelakaria"));
-			planets.put("Boletarian", locationFromConfig(cfg, "Boletarian"));
+		} else if (SYSTEM.equals("Trinitos_Alpha")) {
+			planets.put("Cetallion", locationFromConfig(cfg, "Cetallion"));
+			planets.put("Grun", locationFromConfig(cfg, "Grun"));
+			planets.put("Rakuria", locationFromConfig(cfg, "Rakuria"));
+			planets.put("Loyavas", locationFromConfig(cfg, "Loyavas"));
 
-			stargates.put("Defalos", stargateFromConfig(cfg, "Defalos"));
-			stargates.put("Digitalia", stargateFromConfig(cfg, "Digitalia"));
+			stargates.put("Trinitos_Gamma", stargateFromConfig(cfg, "Trinitos_Gamma"));
+			stargates.put("Trinitos_Beta", stargateFromConfig(cfg, "Trinitos_Beta"));
 
-		} else if (SYSTEM.equals("Defalos")) {
-			planets.put("Krystallos", locationFromConfig(cfg, "Krystallos"));
-			planets.put("Emera", locationFromConfig(cfg, "Emera"));
-			// planets.put("Drakos", locationFromConfig(cfg, "Drakos"));
-			planets.put("Acualis", locationFromConfig(cfg, "Acualis"));
+		} else if (SYSTEM.equals("Trinitos_Gamma")) {
+			planets.put("Avaquo", locationFromConfig(cfg, "Avaquo"));
+			planets.put("Nalavor", locationFromConfig(cfg, "Nalavor"));
+			planets.put("Xylos", locationFromConfig(cfg, "Xylos"));
+			planets.put("Tallimar", locationFromConfig(cfg, "Tallimar"));
 
-			stargates.put("Regalis", stargateFromConfig(cfg, "Regalis"));
-			stargates.put("Digitalia", stargateFromConfig(cfg, "Digitalia"));
+			stargates.put("Trinitos_Alpha", stargateFromConfig(cfg, "Trinitos_Alpha"));
+			stargates.put("Trinitos_Beta", stargateFromConfig(cfg, "Trinitos_Beta"));
 
-		} else if (SYSTEM.equals("Digitalia")) {
+		} else if (SYSTEM.equals("Trinitos_Beta")) {
 			// planets.put("Inaris", locationFromConfig(cfg, "Inaris"));
 			// planets.put("AsteroidBelt", locationFromConfig(cfg,
 			// "AsteroidBelt"));
-			planets.put("Valadro", locationFromConfig(cfg, "Valadro"));
-			planets.put("Iffrizar", locationFromConfig(cfg, "Iffrizar"));
-			planets.put("Ceharram", locationFromConfig(cfg, "Ceharram"));
+			planets.put("Otavo", locationFromConfig(cfg, "Otavo"));
+			planets.put("Eratoss", locationFromConfig(cfg, "Eratoss"));
+			planets.put("Uru", locationFromConfig(cfg, "Uru"));
+			planets.put("Sampetra", locationFromConfig(cfg, "Sampetra"));
 
-			stargates.put("Defalos", stargateFromConfig(cfg, "Defalos"));
-			stargates.put("Regalis", stargateFromConfig(cfg, "Regalis"));
+			stargates.put("Trinitos_Gamma", stargateFromConfig(cfg, "Trinitos_Gamma"));
+			stargates.put("Trinitos_Alpha", stargateFromConfig(cfg, "Trinitos_Alpha"));
 		}
 	}
 
 	public static boolean spaceCheck(String worldname) {
-		return (worldname.equals("Regalis") || worldname.equals("Defalos") || worldname.equals("Digitalia"));
+		return (worldname.startsWith("Trinitos_"));
 	}
 
 	public static boolean spaceCheck(World w) {
@@ -201,46 +202,46 @@ public class LocationUtils {
 
 	public static String slipWarpCheck(int warpX, int warpZ) {
 		// positive x is east. Positive z is south.
-		if (SYSTEM.equals("Regalis")) {
-			// Defalos is to the south of Regalis
+		if (SYSTEM.equals("Trinitos_Alpha")) {
+			// Trinitos_Gamma is to the south of Trinitos_Alpha
 			if (warpZ > 3500)
-				return "Defalos";
-			// Digitalis is to the east of Regalis
+				return "Trinitos_Gamma";
+			// Digitalis is to the east of Trinitos_Alpha
 			if (warpX > 3500)
-				return "Digitalia";
-		} else if (SYSTEM.equals("Digitalia")) {
-			// Regalis is to the west of Digitalia
+				return "Trinitos_Beta";
+		} else if (SYSTEM.equals("Trinitos_Beta")) {
+			// Trinitos_Alpha is to the west of Trinitos_Beta
 			if (warpX < -5000)
-				return "Regalis";
-			// Defalos is to the south of Digitalia
+				return "Trinitos_Alpha";
+			// Trinitos_Gamma is to the south of Trinitos_Beta
 			if (warpZ > 5000)
-				return "Defalos";
-		} else if (SYSTEM.equals("Defalos")) {
-			// Regalis is to the north of Defalos
+				return "Trinitos_Gamma";
+		} else if (SYSTEM.equals("Trinitos_Gamma")) {
+			// Trinitos_Alpha is to the north of Trinitos_Gamma
 			if (warpZ < -4500)
-				return "Regalis";
-			// Digitalis is to the east of Defalos
+				return "Trinitos_Alpha";
+			// Digitalis is to the east of Trinitos_Gamma
 			if (warpX > 4500)
-				return "Defalos";
+				return "Trinitos_Gamma";
 		}
 		return null;
 	}
 
 	public static int getSlipCoordX(String systarget, int coordX) {
-		if (SYSTEM.equals("Regalis")) {
-			if (systarget.equals("Defalos")) {
+		if (SYSTEM.equals("Trinitos_Alpha")) {
+			if (systarget.equals("Trinitos_Gamma")) {
 				return coordX;
 			} else {
 				return -4000;
 			}
-		} else if (SYSTEM.equals("Defalos")) {
-			if (systarget.equals("Regalis")) {
+		} else if (SYSTEM.equals("Trinitos_Gamma")) {
+			if (systarget.equals("Trinitos_Alpha")) {
 				return coordX;
 			} else {
 				return 4000;
 			}
 		} else {
-			if (systarget.equals("Regalis")) {
+			if (systarget.equals("Trinitos_Alpha")) {
 				return 3500;
 			} else {
 				return coordX;
@@ -249,20 +250,20 @@ public class LocationUtils {
 	}
 
 	public static int getSlipCoordZ(String systarget, int coordZ) {
-		if (SYSTEM.equals("Regalis")) {
-			if (systarget.equals("Defalos")) {
+		if (SYSTEM.equals("Trinitos_Alpha")) {
+			if (systarget.equals("Trinitos_Gamma")) {
 				return coordZ;
 			} else {
 				return -4000;
 			}
-		} else if (SYSTEM.equals("Defalos")) {
-			if (systarget.equals("Regalis")) {
+		} else if (SYSTEM.equals("Trinitos_Gamma")) {
+			if (systarget.equals("Trinitos_Alpha")) {
 				return coordZ;
 			} else {
 				return 4500;
 			}
 		} else {
-			if (systarget.equals("Regalis")) {
+			if (systarget.equals("Trinitos_Alpha")) {
 				return 3500;
 			} else {
 				return coordZ;

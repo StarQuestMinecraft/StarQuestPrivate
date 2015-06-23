@@ -11,12 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 
 import com.massivecraft.factions.entity.MPlayer;
-import com.palmergames.bukkit.towny.object.Coord;
-import com.palmergames.bukkit.towny.object.TownyPermission;
-import com.palmergames.bukkit.towny.object.TownyUniverse;
-import com.palmergames.bukkit.towny.object.TownyWorld;
-import com.palmergames.bukkit.towny.object.WorldCoord;
-import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.Vector;
@@ -43,8 +37,7 @@ public class DockUtils {
 				CALLING_EVENT = true;
 				Bukkit.getServer().getPluginManager().callEvent(event);
 				CALLING_EVENT = false;*/
-				boolean success = checkTownyBuild(b, p);
-				if(success) success = checkFactionsBuild(b, p);
+				boolean success = checkFactionsBuild(b, p);
 				if (!success){
 					//check for dock region at location
 					boolean foundDock = false;
@@ -72,16 +65,6 @@ public class DockUtils {
 		return (EngineMain.canPlayerBuildAt(p.getUniqueId(), PS.valueOf(b), false));
 	}
 
-	public static boolean checkTownyBuild(Block b, Player p) {
-		//TownyWorld world = TownyUniverse.getDataSource().getWorld(b.getWorld().getName());
-        //WorldCoord coord = new WorldCoord(world.getName(), Coord.parseCoord(b));
-
-        //Get build permissions (updates if none exist)
-        return PlayerCacheUtil.getCachePermission(p, b.getLocation(), b.getTypeId(), b.getData(), TownyPermission.ActionType.BUILD);
-
-        // Allow build if we are permitted
-	}
-
 	private static boolean isDockRegion(ProtectedRegion pr) {
 		return pr.getId().startsWith("@dock_");
 	}
@@ -97,8 +80,7 @@ public class DockUtils {
 
 				// create a block to test
 				Block b = p.getWorld().getBlockAt(x, 100, z);
-				boolean success = checkTownyBuild(b, p);
-				if(success) success = checkFactionsBuild(b, p);
+				boolean success = checkFactionsBuild(b, p);
 				if (!success){
 					return 0;
 				}	

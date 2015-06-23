@@ -7,7 +7,6 @@ import org.bukkit.World;
 public class CarUtils {
 	public static int getNewdY(Craft c, int dX, int dZ){
 		int minY=65535;
-		int maxY=-65535;
 		int [][][] hb = c.getHitBox();
 		for (int [][] i1 : hb) {
 			for (int [] i2 : i1) {
@@ -15,13 +14,10 @@ public class CarUtils {
 					if(i2[0]<minY) {
 						minY=i2[0];
 					}
-					if(i2[1]>maxY) {
-						maxY=i2[1];
-					}
 				}
 			}
 		}
-		int groundLevel = getGroundLevel(c, dX, dZ, minY, maxY, hb);
+		int groundLevel = getGroundLevel(c, dX, dZ, minY, hb);
 		if (groundLevel < minY - 2){
 			return -1;
 		}
@@ -31,7 +27,7 @@ public class CarUtils {
 			return 0;
 		}
 	}
-	public static int getGroundLevel(Craft c, int dX, int dZ, int minY, int maxY, int [] [] [] hb){
+	public static int getGroundLevel(Craft c, int dX, int dZ, int minY, int [] [] [] hb){
 		
 		// start by finding the minimum and maximum y coord
 		
