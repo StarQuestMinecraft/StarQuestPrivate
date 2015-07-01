@@ -12,7 +12,9 @@ public class PlayerFlightUtil {
 	private static HashSet<UUID> teleportFlyingPlayers = new HashSet<UUID>();
 	
 	public static void beginShipFlying(Player p){
-		shipFlyingPlayers.add(p.getUniqueId());
+		if(!shipFlyingPlayers.contains(p.getUniqueId())){
+			shipFlyingPlayers.add(p.getUniqueId());
+		}
 		p.setAllowFlight(true);
 		p.setFlying(true);
 	}

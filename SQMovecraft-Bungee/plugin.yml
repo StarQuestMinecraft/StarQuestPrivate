@@ -37,6 +37,9 @@ commands:
    removedock:
       description: remove docks where you are standing.
       usage: /removedock (standing in a dock region)
+   shipclass:
+      description: Get the shipclass that someone is flying currently.
+      usage: /shipclass <player>
 depend:
    - WorldEdit
    - WorldGuard

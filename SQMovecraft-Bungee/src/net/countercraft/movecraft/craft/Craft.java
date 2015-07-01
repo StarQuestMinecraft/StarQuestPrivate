@@ -152,12 +152,16 @@ public class Craft {
 			pilot.sendMessage("Flagships cannot move through realspace.");
 			return;
 		} else {
-			for(UUID u : this.playersRidingShip){
-				if(!PlayerFlightUtil.isShipFlying(u)){
+			try {
+				playersRidingLock.acquire();
+				for(UUID u : this.playersRidingShip){
 					PlayerFlightUtil.beginShipFlying(Movecraft.getPlayer(u));
 				}
+				playersRidingLock.release();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			playersRidingLock.release();
 			TranslationTaskData data = new TranslationTaskData(dx, dz, dy, getBlockList(), getHitBox(), minZ, minX, type.getMaxHeightLimit(), type.getMinHeightLimit());
 			CraftSyncTranslateEvent event = new CraftSyncTranslateEvent(this, data);
 			if (event.call()) {

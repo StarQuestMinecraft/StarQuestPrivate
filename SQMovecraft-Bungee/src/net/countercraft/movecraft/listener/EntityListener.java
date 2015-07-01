@@ -204,6 +204,9 @@ public class EntityListener implements Listener {
 		if(PlayerFlightUtil.isTeleportFlying(p)){
 			PlayerFlightUtil.endTeleportFlying(p);
 		}
+		if(PlayerFlightUtil.isShipFlying(p)){
+			PlayerFlightUtil.endShipFlying(p);
+		}
 	}
 
 	@EventHandler
@@ -213,11 +216,9 @@ public class EntityListener implements Listener {
 			;
 			if (event.isSneaking()) {
 				if (event.getPlayer().getItemInHand().getType() == Material.WATCH) {
-					if (event.getPlayer().hasPermission("movecraft." + c.getType().getCraftName() + ".move") || event.getPlayer().hasPermission("movecraft.override")) {
-						SneakMoveTask task = new SneakMoveTask(c, event.getPlayer());
-						task.runTaskTimer(Movecraft.getInstance(), 1, 1);
-						c.setMoveTaskId(task.getTaskId());
-					}
+					SneakMoveTask task = new SneakMoveTask(c, event.getPlayer());
+					task.runTaskTimer(Movecraft.getInstance(), 1, 1);
+					c.setMoveTaskId(task.getTaskId());
 				}
 			} else {
 				if (c.getMoveTaskId() != -1) {
@@ -234,7 +235,7 @@ public class EntityListener implements Listener {
 		if (event instanceof PlayerTeleportEvent) {
 			return;
 		} else {
-			if(PlayerFlightUtil.isShipFlying(event.getPlayer())){
+			if(PlayerFlightUtil.isShipFlying(event.getPlayer()) && !isFalling(event)){
 				PlayerFlightUtil.endShipFlying(event.getPlayer());
 			}
 			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
@@ -280,6 +281,19 @@ public class EntityListener implements Listener {
 				releaseEvents.remove(p);
 			}
 		}
+	}
+
+	private boolean isFalling(PlayerMoveEvent event) {
+		//first check if dy < 0;
+		if(event.getTo().getY() < event.getFrom().getY()){
+			//check if x and z change are small
+			double dx = Math.abs(event.getTo().getX() - event.getFrom().getX());
+			double dz = Math.abs(event.getTo().getZ() - event.getFrom().getZ());
+			if(dx < 1 && dz < 1){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/*
@@ -393,13 +407,6 @@ public class EntityListener implements Listener {
 						event2.call();
 						if(!event2.isCancelled()){
 							event.setDamage(4D);
-						}
-						if (shooter != null && shooter != plr) {
-							if (plr.getHealth() - event.getDamage() <= 0) {
-								boolean success = KillUtils.creditKill(shooter, plr);
-								if (success)
-									Bukkit.broadcastMessage(ChatColor.RED + "" + shooter.getName() + " killed " + plr.getName() + " with starship cannons!");
-							}
 						}
 						return;
 					}

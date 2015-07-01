@@ -164,7 +164,7 @@ public class InteractListener implements Listener {
 		if ( getCraftTypeFromString( sign.getLine( 0 ) ) != null ) {
 			if (Movecraft.signContainsPlayername(sign, event.getPlayer().getName()) || event.getPlayer().hasPermission("movecraft.override")) {
 				// Valid sign prompt for ship command.
-				if ( event.getPlayer().hasPermission( "movecraft." + sign.getLine( 0 ) + ".pilot" ) || event.getPlayer().hasPermission("movecraft.override") ) {
+				if ( event.getPlayer().hasPermission( "movecraft." + sign.getLine( 0 ) + ".pilot" ) || event.getPlayer().hasPermission("movecraft.override") || isLegacySign(sign, event.getPlayer().getName())) {
 					// Attempt to run detection
 					Location loc = event.getClickedBlock().getLocation();
 					MovecraftLocation startPoint = new MovecraftLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
@@ -199,25 +199,23 @@ public class InteractListener implements Listener {
 		} else if ( sign.getLine( 0 ).equals( "\\  ||  /" ) && sign.getLine( 1 ).equals( "==      ==" ) && sign.getLine( 2 ).equals( "/  ||  \\" ) ) {
 			Craft craft = CraftManager.getInstance().getCraftByPlayer( event.getPlayer() );
 			if ( craft != null ) {
-				if ( event.getPlayer().hasPermission( "movecraft." + craft.getType().getCraftName() + ".rotate" )  || event.getPlayer().hasPermission("movecraft.override")) {
-					Long time = timeMap.get( event.getPlayer() );
-					if ( time != null ) {
-						long ticksElapsed = ( System.currentTimeMillis() - time ) / 50;
-						if ( Math.abs( ticksElapsed ) < craft.getType().getTickCooldown() ) {
-							event.setCancelled( true );
-							return;
-						}
+				Long time = timeMap.get( event.getPlayer() );
+				if ( time != null ) {
+					long ticksElapsed = ( System.currentTimeMillis() - time ) / 50;
+					if ( Math.abs( ticksElapsed ) < craft.getType().getTickCooldown() ) {
+						event.setCancelled( true );
+						return;
 					}
+				}
 
-					if (MathUtils.playerIsWithinBoundingPolygon(craft.getHitBox(), craft.getMinX(), craft.getMinZ(),
-							MathUtils.bukkit2MovecraftLoc(event.getPlayer().getLocation()))) {
-						if (!craft.isProcessingTeleport()) {
-							CraftManager.getInstance().getCraftByPlayer(event.getPlayer())
-									.rotate(Rotation.CLOCKWISE, MathUtils.bukkit2MovecraftLoc(sign.getLocation()));
+				if (MathUtils.playerIsWithinBoundingPolygon(craft.getHitBox(), craft.getMinX(), craft.getMinZ(),
+						MathUtils.bukkit2MovecraftLoc(event.getPlayer().getLocation()))) {
+					if (!craft.isProcessingTeleport()) {
+						CraftManager.getInstance().getCraftByPlayer(event.getPlayer())
+								.rotate(Rotation.CLOCKWISE, MathUtils.bukkit2MovecraftLoc(sign.getLocation()));
 
-							timeMap.put(event.getPlayer(), System.currentTimeMillis());
-							event.setCancelled(true);
-						}
+						timeMap.put(event.getPlayer(), System.currentTimeMillis());
+						event.setCancelled(true);
 					}
 				}
 			}

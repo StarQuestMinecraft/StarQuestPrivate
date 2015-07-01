@@ -17,10 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import com.greatmancode.craftconomy3.Cause;
-import com.regalphoenixmc.SQRankup.CC3Wrapper;
-import com.regalphoenixmc.SQRankup.Database;
-import com.regalphoenixmc.SQRankup.SQRankup;
-import com.regalphoenixmc.SQRankup.CC3Wrapper.CC3Currency;
 
 public class KillUtils {
 
@@ -37,7 +33,6 @@ public class KillUtils {
 			long timeGap = System.currentTimeMillis() - lastFlew;
 			boolean breakerIsOwner;
 			boolean withinKillCooldown;
-			OfflinePlayer pilot = Bukkit.getOfflinePlayer(d.getCaptain());
 			if (d.getCaptain().equals(breaker.getUniqueId())) {
 				breaker.sendMessage("No kills were credited for this sign break.");
 				breakerIsOwner = true;
@@ -58,55 +53,12 @@ public class KillUtils {
 						withinKillCooldown = true;
 					}
 				}
-				if(withinKillCooldown){
-					boolean success = creditKill(breaker, pilot);
-					if (success)
-						Bukkit.broadcastMessage(ChatColor.RED + breaker.getName() + " destroyed a ship last flown by " + pilot.getName() + "!");
-				}
 			}
-			if(KillUtils.rankToKills(pilot) > 0){
-				CraftSignBreakEvent event = new CraftSignBreakEvent(d, breakerIsOwner, withinKillCooldown, breaker);
-				event.call();
-			}
+			CraftSignBreakEvent event = new CraftSignBreakEvent(d, breakerIsOwner, withinKillCooldown, breaker);
+			event.call();
 		}
 		
 		return cancel;
-	}
-
-	public static boolean creditKill(Player killer, OfflinePlayer killed) {
-		// if it's a suicide
-		if (killer == killed)
-			return false;
-
-		if (killer instanceof Player) {
-			/*boolean cooldown = Database.isInCooldown(killer, killed);
-			System.out.println(cooldown);
-			if (!cooldown) {*/
-				int infamy = rankToKills(killed);
-				CC3Wrapper.deposit(infamy, killer.getName(), CC3Currency.INFAMY, Cause.PLUGIN, "Rankup Kill");
-				killer.sendMessage(ChatColor.RED + "You were awarded " + infamy + " infamy for that kill. You now have " + CC3Wrapper.getBalance(killer.getName(), CC3Currency.INFAMY) + " infamy");
-				Database.addKill(killer, killed);
-				return true;
-			/*} else {
-				killer.sendMessage(ChatColor.RED + "You already killed that player in the last 20 minutes! Lay off for a bit...");
-				return false;
-			}*/
-		}
-		return false;
-	}
-
-	public static int rankToKills(OfflinePlayer killed) {
-
-		int i = 0;
-		String[] groups = SQRankup.permission.getPlayerGroups(null, Bukkit.getOfflinePlayer(killed.getUniqueId()));
-		System.out.println(Arrays.toString(groups));
-		for (String p : groups) {
-			if (SQRankup.infamyGainMap.containsKey(p.toLowerCase())) {
-				i = SQRankup.infamyGainMap.get(p.toLowerCase());
-			}
-		}
-		int cost = i < 0 ? i : i * SQRankup.MULTIPLIER;
-		return cost;
 	}
 
 }

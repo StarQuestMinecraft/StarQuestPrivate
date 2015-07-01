@@ -160,7 +160,12 @@ public class BungeeCraftConstructor {
 			restoreInv(l.getBlock(), b, pilot, isFake, bll.length);
 		}
 		//final int XDIFF = xDiff;
-		Craft c = new Craft(InteractListener.getCraftTypeFromString( type ), w);
+		Craft c;
+		if(!isFake){
+			c = new Craft(InteractListener.getCraftTypeFromString( type ), w);
+		} else {
+			c = new Craft(InteractListener.getCraftTypeFromString(NewShipClassConverter.convert(type, bll.length)), w);
+		}
 		c.originalPilotLoc = new Location(w, X, Y, Z);
 		c.warpCoordsX = X;
 		c.warpCoordsZ = Z;
@@ -183,8 +188,8 @@ public class BungeeCraftConstructor {
 			
 			Sign s = (Sign) b.getState();
 			
-			if(isFake && InteractListener.getCraftTypeFromString(lb.line1) != null){
-					createLegacySign(s, pilot, size);
+			if(isFake && isCraftSign(lb.line1)){
+					createLegacySign(lb.line1, s, pilot, size);
 			} else {
 				s.setLine(0, lb.line1);
 				s.setLine(1, lb.line2);
@@ -194,6 +199,7 @@ public class BungeeCraftConstructor {
 			}
 		}
 		if(lb.i == null) return;
+		if(isFake) return;
 		if(!(b.getState() instanceof InventoryHolder)) return;
 		InventoryHolder i = (InventoryHolder) b.getState();
 		i.getInventory().setContents(lb.i.getContents());
@@ -265,8 +271,8 @@ public class BungeeCraftConstructor {
 		}, 5L);
 	}
 	
-	private static void createLegacySign(Sign s, String playername, int n) {
-		s.setLine(0, NewShipClassConverter.convert(s.getLine(0), n));
+	private static void createLegacySign(String firstline, Sign s, String playername, int n) {
+		s.setLine(0, NewShipClassConverter.convert(firstline, n));
 		if (playername.length() > 15) {
 			s.setLine(1, playername.substring(0, 15));
 		} else {
@@ -275,5 +281,14 @@ public class BungeeCraftConstructor {
 		s.setLine(2, ChatColor.RED + "LEGACY");
 		s.setLine(3, ChatColor.RED + "SHIP");
 		s.update();
+	}
+	
+	private static boolean isCraftSign(String line){
+		if(InteractListener.getCraftTypeFromString(line) != null) return true;
+		if(line.equalsIgnoreCase("Blockade Runner")) return true;
+		if(line.equalsIgnoreCase("Starfighter")) return true;
+		if(line.equalsIgnoreCase("Carrier")) return true;
+		if(line.equalsIgnoreCase("Ironclad")) return true;
+		return false;
 	}
 }

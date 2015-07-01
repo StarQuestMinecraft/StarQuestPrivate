@@ -146,6 +146,7 @@ public class Movecraft extends JavaPlugin {
 						byte[] craftData = BungeeFileHandler.readCraftBytes(p.getName(), BungeeFileHandler.transferFolder);
 						p.teleport(new Location(p.getWorld(), x, y, z));
 						BungeeCraftReciever.readCraftAndBuild(craftData, false);
+						BungeeFileHandler.deleteTransferFile(p.getName());
 					} catch (Exception e){
 						e.printStackTrace();
 						p.sendMessage("Failed to load ship: error. Did you have a ship saved?");
@@ -160,7 +161,7 @@ public class Movecraft extends JavaPlugin {
 			return true;
 		} else if(cmd.getName().equalsIgnoreCase("saveship")){
 			if(!(sender instanceof Player)) return false;
-			Player p = (Player) sender;
+			/*Player p = (Player) sender;
 			Craft craft = CraftManager.getInstance().getCraftByPlayer(p);
 			if(craft == null){
 				p.sendMessage("You must be flying a ship to use this command.");
@@ -181,8 +182,23 @@ public class Movecraft extends JavaPlugin {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				p.sendMessage("Error saving ship, please report this to the developers!");
+			}*/
+		} else if(cmd.getName().equalsIgnoreCase("shipclass")){
+			if(args.length < 1) return false;
+			String player = args[0];
+			Player p = Bukkit.getPlayer(player);
+			if(p == null){
+				sender.sendMessage("This player is not currently online.");
+				return true;
 			}
-		}			
+			Craft c = CraftManager.getInstance().getCraftByPlayer(p);
+			if(c == null){
+				sender.sendMessage(p.getName() + " is not currently flying a ship.");
+				return true;
+			}
+			sender.sendMessage(p.getName() + " is currently piloting a craft of type " + c.getType().getCraftName());
+			return true;
+		}
 		else if(cmd.getName().equalsIgnoreCase("nukeship")){
 			if(sender.hasPermission("movecraft.loadship")){
 				ShipNuker.nuke((Player) sender);

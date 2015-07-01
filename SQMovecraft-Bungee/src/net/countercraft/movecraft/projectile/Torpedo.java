@@ -37,11 +37,19 @@ public class Torpedo extends Projectile{
 					p.sendMessage("You can't fire TNT torpedoes on a planet.");
 					return;
 				}
+				if(!p.hasPermission("movecraft.torpedo")){
+					p.sendMessage("You don't have permission for this.");
+					return;
+				}
 				ItemStack m = new ItemStack(Material.FIREWORK, 1);
 				di.removeItem(m);
 				new Torpedo(placeLoc, direction, p);
 				return;
 			} else if(di.contains(Material.REDSTONE)){
+				if(!p.hasPermission("movecraft.emptorpedo")){
+					p.sendMessage("You don't have permission for this.");
+					return;
+				}
 				ItemStack m = new ItemStack(Material.REDSTONE, 1);
 				di.removeItem(m);
 				new InterdictionTorpedo(placeLoc, direction, p);

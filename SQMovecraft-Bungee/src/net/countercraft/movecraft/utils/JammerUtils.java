@@ -104,6 +104,11 @@ public class JammerUtils {
 	}
 
 	public static void enableJammer(Block b, Craft c) {
+		//740c67f3
+		if(!c.pilot.hasPermission("movecraft.jammer")){
+			c.pilot.sendMessage("Cannot enable jammer; no prdermissions.");
+			return;
+		}
 		c.isJamming = true;
 		Sign s = (Sign) b.getState();
 		s.setLine(0, ChatColor.AQUA + "JAMMING");

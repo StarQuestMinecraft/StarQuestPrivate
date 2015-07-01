@@ -43,7 +43,7 @@ public class BungeePlayerHandler {
 	 * @return if it was succesful
 	 */
 	public static boolean onLogin(final Player p){
-		if(!p.hasPlayedBefore() && Bukkit.getServer().getServerName().equals("Regalis")){
+		if(!p.hasPlayedBefore() && Bukkit.getServer().getServerName().equals("Trinitos_Alpha")){
 			System.out.println("New player on Regalis!");
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 				public void run(){
