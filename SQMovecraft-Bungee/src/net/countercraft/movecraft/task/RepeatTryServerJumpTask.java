@@ -7,6 +7,7 @@ import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bungee.BungeeCraftSender;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.slip.WarpUtils;
+import net.countercraft.movecraft.utils.FakeBlockUtils;
 import net.countercraft.movecraft.utils.PlayerFlightUtil;
 
 import org.bukkit.Bukkit;
@@ -49,7 +50,7 @@ public class RepeatTryServerJumpTask extends BukkitRunnable{
 		this.p = p;
 		for(UUID u : c.playersRidingShip){
 			Player plr = Movecraft.getPlayer(u);
-			PlayerFlightUtil.beginTeleportFlying(plr);
+			FakeBlockUtils.sendFakeBlocks(plr, plr.getLocation());
 		}
 	}
 	
@@ -63,7 +64,7 @@ public class RepeatTryServerJumpTask extends BukkitRunnable{
 		this.p = p;
 		for(UUID u : c.playersRidingShip){
 			Player plr = Movecraft.getPlayer(u);
-			PlayerFlightUtil.beginTeleportFlying(plr);
+			FakeBlockUtils.sendFakeBlocks(plr, plr.getLocation());
 		}
 	}
 	

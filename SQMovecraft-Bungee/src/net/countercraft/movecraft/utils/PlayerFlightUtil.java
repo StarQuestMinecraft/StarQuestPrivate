@@ -8,10 +8,10 @@ import org.bukkit.entity.Player;
 
 public class PlayerFlightUtil {
 	
-	private static HashSet<UUID> shipFlyingPlayers = new HashSet<UUID>();
+	//private static HashSet<UUID> shipFlyingPlayers = new HashSet<UUID>();
 	private static HashSet<UUID> teleportFlyingPlayers = new HashSet<UUID>();
 	
-	public static void beginShipFlying(Player p){
+	/*public static void beginShipFlying(Player p){
 		if(p == null) return;
 		//System.out.println("Ship flying: " + p.getName());
 		if(!shipFlyingPlayers.contains(p.getUniqueId())){
@@ -20,11 +20,12 @@ public class PlayerFlightUtil {
 		}
 		if(!p.getAllowFlight()){
 			p.setAllowFlight(true);
+			p.setFlySpeed(0.0f);
 		}
 		if(!p.isFlying()){
 			p.setFlying(true);
 		}
-	}
+	}*/
 	
 	public static void beginTeleportFlying(Player p){
 		if(p == null) return;
@@ -35,31 +36,34 @@ public class PlayerFlightUtil {
 		//System.out.println("shipFlyingPlayers: " + shipFlyingPlayers.size());
 		p.setAllowFlight(true);
 		p.setFlying(true);
+		p.setFlySpeed(0.0f);
 	}
 	
-	public static void endShipFlying(Player p){
+	/*public static void endShipFlying(Player p){
 		if(p == null) return;
 		System.out.println("End ship flying!");
 		shipFlyingPlayers.remove(p.getUniqueId());
 		if(!teleportFlyingPlayers.contains(p.getUniqueId())){
 			if(p.getGameMode() == GameMode.SURVIVAL){
 				p.setAllowFlight(false);
+				p.setFlySpeed(1.0f);
 			}
 			p.setFlying(false);
 		}
-	}
+	}*/
 	
 	public static void endTeleportFlying(Player p){
 		if(p == null) return;
 		//System.out.println("TeleportFlyingPlayers (end): " + teleportFlyingPlayers.size());
 		//System.out.println("shipFlyingPlayers: " + shipFlyingPlayers.size());
 		teleportFlyingPlayers.remove(p.getUniqueId());
-		if(!shipFlyingPlayers.contains(p.getUniqueId())){
+		//if(!shipFlyingPlayers.contains(p.getUniqueId())){
 			if(p.getGameMode() == GameMode.SURVIVAL){
 				p.setAllowFlight(false);
+				p.setFlySpeed(1.0f);
 			}
 			p.setFlying(false);
-		}
+		//}
 	}
 	
 	public static void removeFlightUnlessAllowed(Player p){
@@ -71,7 +75,7 @@ public class PlayerFlightUtil {
 	}
 	
 	public static boolean isShipFlying(UUID u){
-		return shipFlyingPlayers.contains(u);
+		return /*shipFlyingPlayers.contains(u);*/ false;
 	}
 	
 	public static boolean isShipFlying(Player p){

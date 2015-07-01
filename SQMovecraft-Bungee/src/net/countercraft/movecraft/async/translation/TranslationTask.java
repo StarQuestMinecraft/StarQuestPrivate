@@ -193,9 +193,11 @@ public class TranslationTask extends AsyncTask {
 								Location newPLoc=new Location(getCraft().getW(), tempLoc.getX(), tempLoc.getY(), tempLoc.getZ());
 								newPLoc.setPitch(pTest.getLocation().getPitch());
 								newPLoc.setYaw(pTest.getLocation().getYaw());
-								if(data.getDy() < 0 || isAutopiloting || isStandingInBlock(pTest)){
+								/*if(data.getDy() < 0 || isAutopiloting || isStandingInBlock(pTest)){
+									System.out.println("Extra teleport!");
 									pTest.teleport(newPLoc);
-								}
+									//PlayerFlightUtil.beginShipFlying(pTest);
+								}*/
 								EntityUpdateCommand eUp=new EntityUpdateCommand(pTest.getLocation().clone(),newPLoc,pTest, pTest.getVelocity(), getCraft());
 								entityUpdateSet.add(eUp);
 								continue;

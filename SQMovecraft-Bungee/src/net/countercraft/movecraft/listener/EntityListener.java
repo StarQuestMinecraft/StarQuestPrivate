@@ -204,9 +204,9 @@ public class EntityListener implements Listener {
 		if(PlayerFlightUtil.isTeleportFlying(p)){
 			PlayerFlightUtil.endTeleportFlying(p);
 		}
-		if(PlayerFlightUtil.isShipFlying(p)){
+		/*if(PlayerFlightUtil.isShipFlying(p)){
 			PlayerFlightUtil.endShipFlying(p);
-		}
+		}*/
 	}
 
 	@EventHandler
@@ -245,14 +245,17 @@ public class EntityListener implements Listener {
 			}
 		}
 		//if they are ship flying and they move, end ship flying.
-		if(PlayerFlightUtil.isShipFlying(event.getPlayer())){
+		/*if(PlayerFlightUtil.isShipFlying(event.getPlayer())){
 			//but cancel if their ship is moving because this is unpredictable.
 			if(pCraft != null && !pCraft.isProcessing()){
+				System.out.println("Ending ship flying! Player movement from:");
+				System.out.println(event.getFrom());
+				System.out.println(event.getTo());
 				PlayerFlightUtil.endShipFlying(event.getPlayer());
 			}
-		}
+		}*/
 		if(pCraft == null) return;
-		if (!MathUtils.playerIsWithinBoundingPolygon(pCraft.getHitBox(), pCraft.getMinX(), pCraft.getMinZ(), MathUtils.bukkit2MovecraftLoc(event.getTo()))) {
+		if (!event.isCancelled() && !pCraft.isProcessing() && !isSameBlock(event.getFrom(), event.getTo()) && !MathUtils.playerIsWithinBoundingPolygon(pCraft.getHitBox(), pCraft.getMinX(), pCraft.getMinZ(), MathUtils.bukkit2MovecraftLoc(event.getTo()))) {
 			if (!pCraft.isProcessingTeleport()) {
 				p.setFallDistance(0.0F);
 				p.teleport(pCraft.originalPilotLoc);
@@ -316,6 +319,10 @@ public class EntityListener implements Listener {
 				releaseEvents.remove(p);
 			}
 		}*/
+	}
+
+	private boolean isSameBlock(Location from, Location to) {
+		return from.getBlock() == to.getBlock();
 	}
 
 	private boolean isFalling(PlayerMoveEvent event) {
