@@ -232,35 +232,72 @@ public class EntityListener implements Listener {
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player p = event.getPlayer();
+		if(event instanceof PlayerTeleportEvent) return;
+		
+		//get the craft the player is on
+		Craft pCraft = null;
+		Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
+		if (crafts != null){
+			for (Craft c : crafts) {
+				if (c.playersRidingShip.contains(p.getUniqueId())) {
+					pCraft = c;
+				}
+			}
+		}
+		//if they are ship flying and they move, end ship flying.
+		if(PlayerFlightUtil.isShipFlying(event.getPlayer())){
+			//but cancel if their ship is moving because this is unpredictable.
+			if(pCraft != null && pCraft.isProcessing()){
+				event.setCancelled(true);
+				return;
+			}
+			PlayerFlightUtil.endShipFlying(event.getPlayer());
+		}
+		if(pCraft == null) return;
+		if (!MathUtils.playerIsWithinBoundingPolygon(pCraft.getHitBox(), pCraft.getMinX(), pCraft.getMinZ(), MathUtils.bukkit2MovecraftLoc(event.getTo()))) {
+			if (!pCraft.isProcessingTeleport()) {
+				p.setFallDistance(0.0F);
+				p.teleport(pCraft.originalPilotLoc);
+				p.sendMessage("You attempted to leave the craft. If you want to leave the ship, type /stopriding.");
+				return;
+			}
+		}
+		/*Player p = event.getPlayer();
 		if (event instanceof PlayerTeleportEvent) {
 			return;
 		} else {
-			if(PlayerFlightUtil.isShipFlying(event.getPlayer()) && !isFalling(event)){
-				PlayerFlightUtil.endShipFlying(event.getPlayer());
-			}
+			Craft pCraft = null;
 			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
-			if (crafts == null)
-				return;
-			for (Craft c : crafts) {
-				if (c.playersRidingShip.contains(p.getUniqueId())) {
-					if (!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(event.getTo()))) {
-						if (!c.isProcessingTeleport()) {
-							p.setFallDistance(0.0F);
-							p.teleport(c.originalPilotLoc);
-							p.sendMessage("You attempted to leave the craft. If you want to leave the ship, type /stopriding.");
+			if (crafts != null){
+				for (Craft c : crafts) {
+					if (c.playersRidingShip.contains(p.getUniqueId())) {
+						pCraft = c;
+						if (!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(event.getTo()))) {
+							if (!c.isProcessingTeleport()) {
+								p.setFallDistance(0.0F);
+								p.teleport(c.originalPilotLoc);
+								p.sendMessage("You attempted to leave the craft. If you want to leave the ship, type /stopriding.");
+							}
 						}
 					}
 				}
+			}
+			if(PlayerFlightUtil.isShipFlying(event.getPlayer()) && !isFalling(event)){
+				if(pCraft != null && pCraft.isProcessing()){
+					event.setCancelled(true);
+					return;
+				}
+				PlayerFlightUtil.endShipFlying(event.getPlayer());
 			}
 		}
 		final Craft c = CraftManager.getInstance().getCraftByPlayer(p);
 		if (c != null) {
 			if (!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))) {
-				/*
-				 * if(p.getWorld().getEnvironment() == Environment.THE_END){
-				 * event.setCancelled(true); WarpUtils.leaveWarp(p, c, true);
-				 * return; }
-				 */
+				
+				 // if(p.getWorld().getEnvironment() == Environment.THE_END){
+				 // event.setCancelled(true); WarpUtils.leaveWarp(p, c, true);
+				 // return; }
+				 
 				if (!releaseEvents.containsKey(p)) {
 					p.sendMessage("You have left the craft, you have 15 seconds to return to the craft before it auto releases.");
 
@@ -280,7 +317,7 @@ public class EntityListener implements Listener {
 				releaseEvents.get(p).cancel();
 				releaseEvents.remove(p);
 			}
-		}
+		}*/
 	}
 
 	private boolean isFalling(PlayerMoveEvent event) {

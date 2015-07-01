@@ -12,22 +12,34 @@ public class PlayerFlightUtil {
 	private static HashSet<UUID> teleportFlyingPlayers = new HashSet<UUID>();
 	
 	public static void beginShipFlying(Player p){
+		if(p == null) return;
+		//System.out.println("Ship flying: " + p.getName());
 		if(!shipFlyingPlayers.contains(p.getUniqueId())){
+			System.out.println("added!");
 			shipFlyingPlayers.add(p.getUniqueId());
 		}
-		p.setAllowFlight(true);
-		p.setFlying(true);
+		if(!p.getAllowFlight()){
+			p.setAllowFlight(true);
+		}
+		if(!p.isFlying()){
+			p.setFlying(true);
+		}
 	}
 	
 	public static void beginTeleportFlying(Player p){
-		teleportFlyingPlayers.add(p.getUniqueId());
-		System.out.println("TeleportFlyingPlayers (begin): " + teleportFlyingPlayers.size());
-		System.out.println("shipFlyingPlayers: " + shipFlyingPlayers.size());
+		if(p == null) return;
+		if(!teleportFlyingPlayers.contains(p.getUniqueId())){
+			teleportFlyingPlayers.add(p.getUniqueId());
+		}
+		//System.out.println("TeleportFlyingPlayers (begin): " + teleportFlyingPlayers.size());
+		//System.out.println("shipFlyingPlayers: " + shipFlyingPlayers.size());
 		p.setAllowFlight(true);
 		p.setFlying(true);
 	}
 	
 	public static void endShipFlying(Player p){
+		if(p == null) return;
+		//System.out.println("End ship flying!");
 		shipFlyingPlayers.remove(p.getUniqueId());
 		if(!teleportFlyingPlayers.contains(p.getUniqueId())){
 			if(p.getGameMode() == GameMode.SURVIVAL){
@@ -38,8 +50,9 @@ public class PlayerFlightUtil {
 	}
 	
 	public static void endTeleportFlying(Player p){
-		System.out.println("TeleportFlyingPlayers (end): " + teleportFlyingPlayers.size());
-		System.out.println("shipFlyingPlayers: " + shipFlyingPlayers.size());
+		if(p == null) return;
+		//System.out.println("TeleportFlyingPlayers (end): " + teleportFlyingPlayers.size());
+		//System.out.println("shipFlyingPlayers: " + shipFlyingPlayers.size());
 		teleportFlyingPlayers.remove(p.getUniqueId());
 		if(!shipFlyingPlayers.contains(p.getUniqueId())){
 			if(p.getGameMode() == GameMode.SURVIVAL){
