@@ -35,6 +35,7 @@ import net.countercraft.movecraft.event.CraftShootEvent;
 import net.countercraft.movecraft.event.CraftSyncTranslateEvent;
 import net.countercraft.movecraft.projectile.LaserBolt;
 import net.countercraft.movecraft.slip.WarpUtils;
+import net.countercraft.movecraft.utils.FakeBlockUtils;
 import net.countercraft.movecraft.utils.GunUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.PlayerFlightUtil;
@@ -74,7 +75,8 @@ public class Craft {
 	public Player pilot;
 	private boolean released = false;
 	public boolean isJamming = false;
-
+	public long lastMoveTime = 0;
+	
 	public Craft(CraftType type, World world) {
 		this.type = type;
 		this.w = world;
@@ -152,19 +154,21 @@ public class Craft {
 			pilot.sendMessage("Flagships cannot move through realspace.");
 			return;
 		} else {
-			/*try {
+			try {
 				playersRidingLock.acquire();
 				for(UUID u : this.playersRidingShip){
-					PlayerFlightUtil.beginShipFlying(Movecraft.getPlayer(u));
+					Player p = Movecraft.getPlayer(u);
+					FakeBlockUtils.sendFakeBlocks(p, p.getLocation());
 				}
 				playersRidingLock.release();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}*/
+			}
 			TranslationTaskData data = new TranslationTaskData(dx, dz, dy, getBlockList(), getHitBox(), minZ, minX, type.getMaxHeightLimit(), type.getMinHeightLimit());
 			CraftSyncTranslateEvent event = new CraftSyncTranslateEvent(this, data);
 			if (event.call()) {
+				lastMoveTime = System.currentTimeMillis();
 				AsyncManager.getInstance().submitTask(new TranslationTask(this, data), this);
 			}
 		}

@@ -217,7 +217,7 @@ public class MapUpdateManager extends BukkitRunnable {
                         if ( w != null ) {
                                 List<MapUpdateCommand> updatesInWorld = updates.get( w );
                                 List<EntityUpdateCommand> entityUpdatesInWorld = entityUpdates.get( w );
-                                Map<MovecraftLocation, List<EntityUpdateCommand>> entityMap = new HashMap<MovecraftLocation, List<EntityUpdateCommand>>();
+                                //Map<MovecraftLocation, List<EntityUpdateCommand>> entityMap = new HashMap<MovecraftLocation, List<EntityUpdateCommand>>();
                                 Map<MovecraftLocation, TransferData> dataMap = new HashMap<MovecraftLocation, TransferData>();
                                 Set<net.minecraft.server.v1_8_R1.Chunk> chunks = new HashSet<net.minecraft.server.v1_8_R1.Chunk>();
 
@@ -245,7 +245,9 @@ public class MapUpdateManager extends BukkitRunnable {
                                 if(entityUpdatesInWorld!=null) {
                                         for( EntityUpdateCommand i : entityUpdatesInWorld) {
                                                 if(i!=null) {
-                                                        MovecraftLocation entityLoc=new MovecraftLocation(i.getNewLocation().getBlockX(), i.getNewLocation().getBlockY()-1, i.getNewLocation().getBlockZ());
+                                                		FakeBlockUtils.sendFakeBlocks((Player) i.getEntity(), i.getNewLocation());
+                                                		i.getEntity().teleport(i.getNewLocation());
+                                                        /*MovecraftLocation entityLoc=new MovecraftLocation(i.getNewLocation().getBlockX(), i.getNewLocation().getBlockY()-1, i.getNewLocation().getBlockZ());
                                                         if(!entityMap.containsKey(entityLoc)) {
                                                                 List<EntityUpdateCommand> entUpdateList=new ArrayList<EntityUpdateCommand>();
                                                                 entUpdateList.add(i);
@@ -254,7 +256,7 @@ public class MapUpdateManager extends BukkitRunnable {
                                                         } else {
                                                                 List<EntityUpdateCommand> entUpdateList=entityMap.get(entityLoc);
                                                                 entUpdateList.add(i);
-                                                        }
+                                                        }*/
                                                 }
                                         }
                                 }
@@ -275,20 +277,17 @@ public class MapUpdateManager extends BukkitRunnable {
                                         }
                                         
                                         // if the block you just updated had any entities on it, move them. If they are moving, add in their motion to the craft motion
-                                        if( entityMap.containsKey(m.getNewBlockLocation()) ) {
+                                        /*if( entityMap.containsKey(m.getNewBlockLocation()) ) {
                 							List<EntityUpdateCommand> mapUpdateList=entityMap.get(m.getNewBlockLocation());
                 							for(EntityUpdateCommand entityUpdate : mapUpdateList) {
                 								Entity entity=entityUpdate.getEntity();
-                							/*	Location newLoc=entity.getLocation();
-                								newLoc.setX(entityUpdate.getNewLocation().getX());
-                								newLoc.setY(entityUpdate.getNewLocation().getY());
-                								newLoc.setZ(entityUpdate.getNewLocation().getZ());*/
+              
                 								//System.out.println("Late teleport! Player is flying: " + ((Player) entity).isFlying());
                 								entity.teleport(entityUpdate.getNewLocation());
                 								//PlayerFlightUtil.beginShipFlying((Player) entity);
                 							}
                 							entityMap.remove(m.getNewBlockLocation());
-                						}
+                						}*/
                                         if(m.isLastUpdate()){
                                         	AsyncManager.getInstance().clear(m.getCraft());
                                         }
