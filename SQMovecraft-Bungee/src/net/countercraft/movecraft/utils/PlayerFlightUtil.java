@@ -39,7 +39,7 @@ public class PlayerFlightUtil {
 	
 	public static void endShipFlying(Player p){
 		if(p == null) return;
-		System.out.println("End ship flying!");
+		//System.out.println("End ship flying!");
 		shipFlyingPlayers.remove(p.getUniqueId());
 		if(!teleportFlyingPlayers.contains(p.getUniqueId())){
 			if(p.getGameMode() == GameMode.SURVIVAL){
