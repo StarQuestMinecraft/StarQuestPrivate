@@ -247,11 +247,9 @@ public class EntityListener implements Listener {
 		//if they are ship flying and they move, end ship flying.
 		if(PlayerFlightUtil.isShipFlying(event.getPlayer())){
 			//but cancel if their ship is moving because this is unpredictable.
-			if(pCraft != null && pCraft.isProcessing()){
-				event.setCancelled(true);
-				return;
+			if(pCraft != null && !pCraft.isProcessing()){
+				PlayerFlightUtil.endShipFlying(event.getPlayer());
 			}
-			PlayerFlightUtil.endShipFlying(event.getPlayer());
 		}
 		if(pCraft == null) return;
 		if (!MathUtils.playerIsWithinBoundingPolygon(pCraft.getHitBox(), pCraft.getMinX(), pCraft.getMinZ(), MathUtils.bukkit2MovecraftLoc(event.getTo()))) {
