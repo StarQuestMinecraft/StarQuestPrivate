@@ -250,7 +250,6 @@ public class MapUpdateManager extends BukkitRunnable {
                                                                 List<EntityUpdateCommand> entUpdateList=new ArrayList<EntityUpdateCommand>();
                                                                 entUpdateList.add(i);
                                                                 entityMap.put(entityLoc, entUpdateList);
-                                                                FakeBlockUtils.sendFakeBlocks((Player) i.getEntity(), i.getNewLocation());
                                                         } else {
                                                                 List<EntityUpdateCommand> entUpdateList=entityMap.get(entityLoc);
                                                                 entUpdateList.add(i);
@@ -283,9 +282,7 @@ public class MapUpdateManager extends BukkitRunnable {
                 								newLoc.setX(entityUpdate.getNewLocation().getX());
                 								newLoc.setY(entityUpdate.getNewLocation().getY());
                 								newLoc.setZ(entityUpdate.getNewLocation().getZ());*/
-                								//System.out.println("Late teleport! Player is flying: " + ((Player) entity).isFlying());
                 								entity.teleport(entityUpdate.getNewLocation());
-                								//PlayerFlightUtil.beginShipFlying((Player) entity);
                 							}
                 							entityMap.remove(m.getNewBlockLocation());
                 						}
