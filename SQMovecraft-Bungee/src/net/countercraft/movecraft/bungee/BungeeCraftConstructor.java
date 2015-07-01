@@ -201,7 +201,6 @@ public class BungeeCraftConstructor {
 		if(lb.i == null) return;
 		if(isFake) return;
 		if(!(b.getState() instanceof InventoryHolder)) return;
-		if(isFake) return;
 		InventoryHolder i = (InventoryHolder) b.getState();
 		i.getInventory().setContents(lb.i.getContents());
 	}
