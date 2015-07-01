@@ -255,7 +255,7 @@ public class EntityListener implements Listener {
 			}
 		}*/
 		if(pCraft == null) return;
-		if (!event.isCancelled() && !craftMovedWithinLastSecond(pCraft) && !isSameBlock(event.getFrom(), event.getTo()) && !MathUtils.playerIsWithinBoundingPolygon(pCraft.getHitBox(), pCraft.getMinX(), pCraft.getMinZ(), MathUtils.bukkit2MovecraftLoc(event.getTo()))) {
+		if (!event.isCancelled() && !pCraft.isProcessing() && !isSameBlock(event.getFrom(), event.getTo()) && !MathUtils.playerIsWithinBoundingPolygon(pCraft.getHitBox(), pCraft.getMinX(), pCraft.getMinZ(), MathUtils.bukkit2MovecraftLoc(event.getTo()))) {
 			if (!pCraft.isProcessingTeleport()) {
 				p.setFallDistance(0.0F);
 				p.teleport(pCraft.originalPilotLoc);
@@ -319,10 +319,6 @@ public class EntityListener implements Listener {
 				releaseEvents.remove(p);
 			}
 		}*/
-	}
-
-	private boolean craftMovedWithinLastSecond(Craft pCraft) {
-		return System.currentTimeMillis() - pCraft.lastMoveTime <= 1000;
 	}
 
 	private boolean isSameBlock(Location from, Location to) {

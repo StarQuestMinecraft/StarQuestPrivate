@@ -71,19 +71,13 @@ public class RepeatTryServerJumpTask extends BukkitRunnable{
 	@Override 
 	public void run(){
 		if (!c.isProcessing() ){
-			cancel();
-			if(c.pilot != null) c.pilot.sendMessage("Preparing serverjump...");
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
-				public void run(){
-					try {
-						BungeeCraftSender.sendCraft(p, server, world, x, y, z, c);
-						cancel();
-					} catch (IOException e) {
-						e.printStackTrace();
-						cancel();
-					}
-				}
-			}, 20L);
+			try {
+				BungeeCraftSender.sendCraft(p, server, world, x, y, z, c);
+				cancel();
+			} catch (IOException e) {
+				e.printStackTrace();
+				cancel();
+			}
 		}
 	}
 }

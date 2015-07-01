@@ -43,7 +43,6 @@ import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.shield.DockUtils;
 import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.task.AutopilotRunTask;
-import net.countercraft.movecraft.utils.BlastUtils;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.ShipNuker;
@@ -238,7 +237,6 @@ public class Movecraft extends JavaPlugin {
 			this.saveResource( "localisation/movecraftlang_en.properties", false );
 		}
 		I18nSupport.init();
-		BlastUtils.setUp();
 		if ( shuttingDown && Settings.IGNORE_RESET ) {
 			logger.log( Level.SEVERE, String.format( I18nSupport.getInternationalisedString( "Startup - Error - Reload error" ) ) );
 			logger.log( Level.INFO, String.format( I18nSupport.getInternationalisedString( "Startup - Error - Disable warning for reload" ) ) );

@@ -8,18 +8,6 @@ public class BlastUtils {
 	
 	private static HashMap<Material, Double> resistances;
 	
-	public static void setUp(){
-		resistances = new HashMap<Material, Double>();
-		for(int i = 0; i < 255; i++){
-			Material m2 = Material.getMaterial(i);
-			if(m2 != null){
-				double resistance = getBlastResistanceSwitch(m2);
-				System.out.println("Loaded resistance " + resistance + " for material " + m2);
-				resistances.put(m2, getBlastResistanceSwitch(m2));
-			}
-		}
-	}
-	
 	public static double getBlastResistance(int id){
 		Material m = Material.getMaterial(id);
 		if(m == null){

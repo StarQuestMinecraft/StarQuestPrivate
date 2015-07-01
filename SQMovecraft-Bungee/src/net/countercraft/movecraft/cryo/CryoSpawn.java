@@ -104,21 +104,16 @@ public class CryoSpawn {
 		updatePodSpawnAsync(player, spawn, checkAsActiveUpdate);
 	}
 
-	public static void updatePodSpawnsAsync(final World w, final ArrayList<MovecraftLocation> signLocations) {
-		Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
-			public void run(){
-				for (MovecraftLocation l : signLocations) {
-					Block b = w.getBlockAt(l.getX(), l.getY(), l.getZ());
-					if(b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN_POST){
-						Sign s = (Sign) b.getState();
-						if (isCryoTube(s) && s.getLine(0).equals(KEY_LINE)) {
-							updatePodSpawnAsync(s, true);
-						}
-					}
+	public static void updatePodSpawnsAsync(World w, ArrayList<MovecraftLocation> signLocations) {
+		for (MovecraftLocation l : signLocations) {
+			Block b = w.getBlockAt(l.getX(), l.getY(), l.getZ());
+			if(b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN_POST){
+				Sign s = (Sign) b.getState();
+				if (isCryoTube(s) && s.getLine(0).equals(KEY_LINE)) {
+					updatePodSpawnAsync(s, true);
 				}
 			}
-		}, 0L);
-		
+		}
 	}
 
 	public static void removePodSpawn(Sign s) {
