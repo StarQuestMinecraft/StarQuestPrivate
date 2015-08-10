@@ -68,8 +68,6 @@ public class CryoSpawn {
 			System.out.println("[SQBedSpawn] Table check/creation sucessful");
 		} catch (SQLException ee) {
 			System.out.println("[SQBedSpawn] Table Creation Error");
-		} finally {
-			close(s);
 		}
 
 		Bedspawn bd = Bedspawn.DEFAULT;
@@ -104,13 +102,18 @@ public class CryoSpawn {
 		updatePodSpawnAsync(player, spawn, checkAsActiveUpdate);
 	}
 
-	public static void updatePodSpawnsAsync(World w, ArrayList<MovecraftLocation> signLocations) {
+	public static void updatePodSpawnsAsync(final World w, final ArrayList<MovecraftLocation> signLocations) {
 		for (MovecraftLocation l : signLocations) {
 			Block b = w.getBlockAt(l.getX(), l.getY(), l.getZ());
 			if(b.getType() == Material.WALL_SIGN || b.getType() == Material.SIGN_POST){
-				Sign s = (Sign) b.getState();
+				final Sign s = (Sign) b.getState();
 				if (isCryoTube(s) && s.getLine(0).equals(KEY_LINE)) {
-					updatePodSpawnAsync(s, true);
+					Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable(){
+						public void run(){
+							updatePodSpawnAsync(s, true);
+						}
+					});
+					
 				}
 			}
 		}
@@ -157,8 +160,6 @@ public class CryoSpawn {
 				} catch (Exception e) {
 					System.out.print("[SQBedSpawn] SQL Error (new pod spawn)");
 					e.printStackTrace();
-				} finally {
-					close(s);
 				}
 			}
 		};
@@ -168,12 +169,7 @@ public class CryoSpawn {
 	public static void updatePodSpawnAsync(final String nameold, final CryoSpawn b, final boolean checkAsActiveUpdate) {
 		Runnable r = new Runnable() {
 			public void run() {
-				Player p = Bukkit.getPlayer(nameold);
-				if (p != null && p.isOnline()) {
-					p.sendMessage("Your cryopod spawn location was updated.");
-				} else {
 
-				}
 				System.out.println("Updating cryospawn!");
 				String name = signTrim(nameold);
 				String playerWorld = b.world;
@@ -182,7 +178,7 @@ public class CryoSpawn {
 				int playerY = b.y;
 				int playerZ = b.z;
 				boolean active = b.isActive;
-
+				Player p = Bukkit.getPlayer(nameold);
 				if (!getContext()) {
 					System.out.println("something is wrong!");
 					return;
@@ -216,13 +212,17 @@ public class CryoSpawn {
 					}
 					s.execute();
 					s.close();
-				} catch (SQLException e) {
-					System.out.print("[SQBedSpawn] SQL Error (Update cryospawn)" + e.getMessage());
+					
+					if (p != null && p.isOnline()) {
+						p.sendMessage("Your cryopod spawn location was updated.");
+					}
 				} catch (Exception e) {
-					System.out.print("[SQBedSpawn] SQL Error (update cryospawn)");
+					String error = "[SQBedSpawn] SQL Error (Update cryospawn)" + e.getMessage();
+					System.out.print(error);
+					if (p != null && p.isOnline()) {
+						p.sendMessage("Your cryopod spawn location failed to update, please post to github: " + error);
+					}
 					e.printStackTrace();
-				} finally {
-					close(s);
 				}
 			}
 		};
@@ -250,8 +250,6 @@ public class CryoSpawn {
 						s.close();
 					} catch (Exception e) {
 						e.printStackTrace();
-					} finally {
-						close(s);
 					}
 					if (p != null) {
 						p.sendMessage(ChatColor.RED + "Your CryoSpawn was broken!");
@@ -306,8 +304,6 @@ public class CryoSpawn {
 		} catch (Exception e) {
 			System.out.print("[SQBedSpawn] SQL Error (getSpawnAsync)");
 			e.printStackTrace();
-		} finally {
-			close(s);
 		}
 		return retval;
 	}
@@ -356,20 +352,8 @@ public class CryoSpawn {
 		} catch (Exception e) {
 			System.out.print("[SQBedSpawn] SQL Error (hasKey)");
 			e.printStackTrace();
-		} finally {
-			close(s);
 		}
 		return false;
-	}
-
-	private static void close(Statement s) {
-		if (s == null)
-			return;
-		try {
-			s.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	public static boolean respawnPlayerAsync(final Player p) {
@@ -528,8 +512,6 @@ public class CryoSpawn {
 		} catch (Exception e) {
 			System.out.print("[SQBedSpawn] SQL Error (getSpawnIfNeedsActive)");
 			e.printStackTrace();
-		} finally {
-			close(s);
 		}
 		return null;
 	}
@@ -557,16 +539,12 @@ public class CryoSpawn {
 		if (crafts != null) {
 			for (Craft c : crafts) {
 				if (MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))) {
-					try {
-						c.playersRidingLock.acquire();
+						//c.playersRidingLock.acquire();
 						if (!c.playersRidingShip.contains(p.getUniqueId())) {
 							c.playersRidingShip.add(p.getUniqueId());
 							p.sendMessage("You board a craft of type " + c.getType().getCraftName() + " under the command of captain " + c.pilot.getName() + ".");
 						}
-						c.playersRidingLock.release();
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
+						//c.playersRidingLock.release();
 					return;
 				}
 			}
@@ -593,8 +571,6 @@ public class CryoSpawn {
 				} catch (Exception e) {
 					System.out.print("[SQBedSpawn] SQL Error (Unknown)(unsetUpdated)");
 					e.printStackTrace();
-				} finally {
-					close(s);
 				}
 			}
 		};

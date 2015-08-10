@@ -128,11 +128,7 @@ public class CraftManager {
 			long timestamp2 = System.currentTimeMillis();
 
 		}
-		Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable() {
-			public void run() {
-				CryoSpawn.updatePodSpawnsAsync(c.getW(), signLocations);
-			}
-		});
+		CryoSpawn.updatePodSpawnsAsync(c.getW(), signLocations);
 		try {
 			if (!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))) {
 				p.teleport(c.originalPilotLoc);
@@ -212,13 +208,13 @@ public class CraftManager {
 		if (crafts != null) {
 			for (Craft c : crafts) {
 				if (MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))) {
-					try {
-						c.playersRidingLock.acquire();
+					//try {
+					//	c.playersRidingLock.acquire();
 						c.playersRidingShip.add(p.getUniqueId());
-						c.playersRidingLock.release();
+					/*	c.playersRidingLock.release();
 					} catch (Exception ex) {
 						ex.printStackTrace();
-					}
+					}*/
 					p.sendMessage("You board a craft of type " + c.getType().getCraftName() + " under the command of captain " + c.pilot.getName() + ".");
 					return;
 				}

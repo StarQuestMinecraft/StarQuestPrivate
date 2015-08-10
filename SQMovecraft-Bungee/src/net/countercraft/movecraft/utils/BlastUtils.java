@@ -67,6 +67,7 @@ public class BlastUtils {
 		case IRON_BLOCK:
 		case REDSTONE_BLOCK:
 		case CLAY_BRICK:
+		case STAINED_CLAY:
 		case BRICK_STAIRS:
 		case HARD_CLAY:
 		case STONE:

@@ -90,13 +90,13 @@ public class CommandListener implements Listener {
 				if (crafts != null) {
 					for (Craft c : crafts) {
 						if (MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))) {
-							try {
-								c.playersRidingLock.acquire();
+							/*try {
+								c.playersRidingLock.acquire();*/
 								c.playersRidingShip.add(p.getUniqueId());
-								c.playersRidingLock.release();
+								/*c.playersRidingLock.release();
 							} catch (Exception ex) {
 								ex.printStackTrace();
-							}
+							}*/
 							p.sendMessage("You board a craft of type " + c.getType().getCraftName() + " under the command of captain " + c.pilot.getName() + ".");
 							return;
 						}
@@ -121,18 +121,18 @@ public class CommandListener implements Listener {
 			if (crafts == null)
 				return;
 			for (Craft c : crafts) {
-				try {
-					c.playersRidingLock.acquire();
+				/*try {
+					c.playersRidingLock.acquire();*/
 					if (c.playersRidingShip.contains(p.getUniqueId())) {
 						c.playersRidingShip.remove(p.getUniqueId());
-						c.playersRidingLock.release();
+						//c.playersRidingLock.release();
 						p.sendMessage("You get off the craft.");
 						return;
 					}
-					c.playersRidingLock.release();
+					/*c.playersRidingLock.release();
 				} catch (Exception ex) {
 					ex.printStackTrace();
-				}
+				}*/
 			}
 			p.sendMessage("You aren't on a craft, you have nothing to stop riding.");
 		} else if (newMessage.startsWith("/announce say")){

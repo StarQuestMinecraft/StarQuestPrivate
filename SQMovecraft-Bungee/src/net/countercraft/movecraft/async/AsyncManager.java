@@ -152,9 +152,9 @@ public class AsyncManager extends BukkitRunnable {
 							}
 						}
 						if ( !failed ) {
-							// add any players to the ship that should be on it
-							try{
-								c.playersRidingLock.acquire();
+							 //add any players to the ship that should be on it
+							//try{
+								//c.playersRidingLock.acquire();
 								for (Player plr : data.getWorld().getPlayers()) {
 									if (MathUtils.playerIsWithinBoundingPolygon(data.getHitBox(), data.getMinX(), data.getMinZ(), MathUtils.bukkit2MovecraftLoc(plr.getLocation()))) {
 										if (!c.playersRidingShip.contains(plr.getUniqueId())) {
@@ -165,9 +165,9 @@ public class AsyncManager extends BukkitRunnable {
 										}
 									}
 								}
-							}catch(Exception e){
+							/*}catch(Exception e){
 								e.printStackTrace();
-							}
+							}*/
 							
 							int pass = c.getType().getMaxPassengeres();
 							if(pass > 0){
@@ -180,7 +180,7 @@ public class AsyncManager extends BukkitRunnable {
 						}
 						
 						if(!failed){
-							c.playersRidingLock.release();
+							//c.playersRidingLock.release();
 							c.setBlockList( data.getBlockList() );
 							c.setHitBox( data.getHitBox() );
 							c.setMinX( data.getMinX() );

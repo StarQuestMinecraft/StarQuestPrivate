@@ -169,16 +169,16 @@ public class BungeeCraftConstructor {
 		c.originalPilotLoc = new Location(w, X, Y, Z);
 		c.warpCoordsX = X;
 		c.warpCoordsZ = Z;
-		try{
-			c.playersRidingLock.acquire();
+		/*try{
+			c.playersRidingLock.acquire();*/
 			for(UUID s : namesOnShip){
 				if(!c.playersRidingShip.contains(s))
 				c.playersRidingShip.add(s);
 			}
-			c.playersRidingLock.release();
+			/*c.playersRidingLock.release();
 		} catch (Exception e){
 			e.printStackTrace();
-		}
+		}*/
 		attemptPilot(0, c, pilot, pilotUUID, type, w);
 		delayStarshipMoving(c);
 	}

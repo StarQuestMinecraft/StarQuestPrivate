@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/MassiveCore.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/craftconomy3.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/spigot.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/dynmap-1.9.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

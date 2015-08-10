@@ -254,6 +254,7 @@ public class MapUpdateManager extends BukkitRunnable {
                                                                 List<EntityUpdateCommand> entUpdateList=entityMap.get(entityLoc);
                                                                 entUpdateList.add(i);
                                                         }
+                                                        FakeBlockUtils.sendFakeBlocks((Player) i.getEntity(), i.getNewLocation());
                                                 }
                                         }
                                 }

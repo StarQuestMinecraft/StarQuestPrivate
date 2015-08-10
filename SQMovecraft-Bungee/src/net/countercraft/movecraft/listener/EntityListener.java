@@ -204,9 +204,9 @@ public class EntityListener implements Listener {
 		if(PlayerFlightUtil.isTeleportFlying(p)){
 			PlayerFlightUtil.endTeleportFlying(p);
 		}
-		if(PlayerFlightUtil.isShipFlying(p)){
+		/*if(PlayerFlightUtil.isShipFlying(p)){
 			PlayerFlightUtil.endShipFlying(p);
-		}
+		}*/
 	}
 
 	@EventHandler
@@ -235,19 +235,21 @@ public class EntityListener implements Listener {
 		if (event instanceof PlayerTeleportEvent) {
 			return;
 		} else {
-			if(PlayerFlightUtil.isShipFlying(event.getPlayer()) && !isFalling(event)){
+			/*if(PlayerFlightUtil.isShipFlying(event.getPlayer()) && !isFalling(event)){
 				PlayerFlightUtil.endShipFlying(event.getPlayer());
-			}
+			}*/
 			Craft[] crafts = CraftManager.getInstance().getCraftsInWorld(p.getWorld());
 			if (crafts == null)
 				return;
 			for (Craft c : crafts) {
-				if (c.playersRidingShip.contains(p.getUniqueId())) {
-					if (!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(event.getTo()))) {
-						if (!c.isProcessingTeleport()) {
-							p.setFallDistance(0.0F);
-							p.teleport(c.originalPilotLoc);
-							p.sendMessage("You attempted to leave the craft. If you want to leave the ship, type /stopriding.");
+				if(!c.hasMovedInLastSecond()){
+					if (c.playersRidingShip.contains(p.getUniqueId())) {
+						if (!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(event.getTo()))) {
+							if (!c.isProcessingTeleport()) {
+								p.setFallDistance(0.0F);
+								p.teleport(c.originalPilotLoc);
+								p.sendMessage("You attempted to leave the craft. If you want to leave the ship, type /stopriding.");
+							}
 						}
 					}
 				}
@@ -255,30 +257,32 @@ public class EntityListener implements Listener {
 		}
 		final Craft c = CraftManager.getInstance().getCraftByPlayer(p);
 		if (c != null) {
-			if (!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))) {
-				/*
-				 * if(p.getWorld().getEnvironment() == Environment.THE_END){
-				 * event.setCancelled(true); WarpUtils.leaveWarp(p, c, true);
-				 * return; }
-				 */
-				if (!releaseEvents.containsKey(p)) {
-					p.sendMessage("You have left the craft, you have 15 seconds to return to the craft before it auto releases.");
-
-					BukkitTask releaseTask = new BukkitRunnable() {
-
-						@Override
-						public void run() {
-							CraftManager.getInstance().removeCraft(c);
-						}
-
-					}.runTaskLater(Movecraft.getInstance(), (20 * 15));
-
-					releaseEvents.put(p, releaseTask);
+			if(!c.hasMovedInLastSecond()){
+				if (!MathUtils.playerIsWithinBoundingPolygon(c.getHitBox(), c.getMinX(), c.getMinZ(), MathUtils.bukkit2MovecraftLoc(p.getLocation()))) {
+					/*
+					 * if(p.getWorld().getEnvironment() == Environment.THE_END){
+					 * event.setCancelled(true); WarpUtils.leaveWarp(p, c, true);
+					 * return; }
+					 */
+					if (!releaseEvents.containsKey(p)) {
+						p.sendMessage("You have left the craft, you have 15 seconds to return to the craft before it auto releases.");
+	
+						BukkitTask releaseTask = new BukkitRunnable() {
+	
+							@Override
+							public void run() {
+								CraftManager.getInstance().removeCraft(c);
+							}
+	
+						}.runTaskLater(Movecraft.getInstance(), (20 * 15));
+	
+						releaseEvents.put(p, releaseTask);
+					}
+	
+				} else if (releaseEvents.containsKey(p)) {
+					releaseEvents.get(p).cancel();
+					releaseEvents.remove(p);
 				}
-
-			} else if (releaseEvents.containsKey(p)) {
-				releaseEvents.get(p).cancel();
-				releaseEvents.remove(p);
 			}
 		}
 	}
@@ -403,7 +407,6 @@ public class EntityListener implements Listener {
 					if (l != null && l.distanceSquared(event.getEntity().getLocation()) < 49) {
 						Player shooter = l.getPlayer();
 						CraftGunsHitEvent event2 = new CraftGunsHitEvent(null, shooter, plr);
-						System.out.println("calling event.");
 						event2.call();
 						if(!event2.isCancelled()){
 							event.setDamage(4D);

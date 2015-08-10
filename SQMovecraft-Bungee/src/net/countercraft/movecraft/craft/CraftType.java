@@ -201,11 +201,13 @@ public class CraftType {
 	public int getAllowedCannons(Player p) {
 		int c = allowedCannons;
 		if(p.hasPermission("movecraft." + craftName + ".guns.1")){
-			c = c + 1;
-		} else if(p.hasPermission("movecraft." + craftName + ".guns.2")){
-			c = c + 2;
-		} else if(p.hasPermission("movecraft." + craftName + ".guns.3")){
-			c = c + 3;
+			if(p.hasPermission("movecraft." + craftName + ".guns.2")){
+				if(p.hasPermission("movecraft." + craftName + ".guns.3")){
+					return c + 3;
+				}
+				return c + 2;
+			}
+			return c + 1;
 		}
 		return c;
 	}
@@ -273,11 +275,13 @@ public class CraftType {
 	public double getSpeed(Player p) {
 		double s = speed;
 		if(p.hasPermission("movecraft." + craftName + ".speed.1")){
-			s = s + 5;
-		} else if(p.hasPermission("movecraft." + craftName + ".speed.2")){
-			s = s + 10;
-		} else if(p.hasPermission("movecraft." + craftName + ".speed.3")){
-			s = s + 15;
+			if(p.hasPermission("movecraft." + craftName + ".speed.2")){
+				if(p.hasPermission("movecraft." + craftName + ".speed.3")){
+					return s + 6;
+				}
+				return s + 4;
+			}
+			return s + 2;
 		}
 		return s;
 	}
@@ -294,15 +298,27 @@ public class CraftType {
 				} else {
 					double oldMax = values.get(values.size() - 1);
 					newValues.add((double) 0);
-					if(p.hasPermission("movecraft." + craftName + ".capacity.1")){
-						newValues.add(oldMax + 2);
+					if(p.hasPermission("movecraft." + craftName + ".capacity.3")){
+						newValues.add(oldMax + 3);
 					} else if(p.hasPermission("movecraft." + craftName + ".capacity.2")){
-						newValues.add(oldMax + 4);
-					} else if(p.hasPermission("movecraft." + craftName + ".capacity.3")){
-						newValues.add(oldMax + 6);
+						newValues.add(oldMax + 2);
+					} else if(p.hasPermission("movecraft." + craftName + ".capacity.1")){
+						newValues.add(oldMax + 1);
 					} else {
 						newValues.add(oldMax);
 					}
+					
+					if(p.hasPermission("movecraft." + craftName + ".capacity.1")){
+						if(p.hasPermission("movecraft." + craftName + ".capacity.2")){
+							if(p.hasPermission("movecraft." + craftName + ".capacity.1")){
+								newValues.add(oldMax + 3);
+							} else 
+							newValues.add(oldMax + 2);
+						} else 
+						newValues.add(oldMax + 1);
+					} else 
+					newValues.add(oldMax);
+					
 				}
 				retval.put(i, newValues);
 			}
@@ -335,12 +351,15 @@ public class CraftType {
 	
 	public int getArmorMax(Player p){
 		int armor = armorMax;
+		
 		if(p.hasPermission("movecraft." + craftName + ".armor.1")){
-			armor = armor + 5;
-		} else if(p.hasPermission("movecraft." + craftName + ".armor.2")){
-			armor = armor + 10;
-		} else if(p.hasPermission("movecraft." + craftName + ".armor.3")){
-			armor = armor + 15;
+			if(p.hasPermission("movecraft." + craftName + ".armor.2")){
+				if(p.hasPermission("movecraft." + craftName + ".armor.3")){
+					return armor + 15;
+				}
+				return armor + 10;
+			}
+			return armor + 5;
 		}
 		return armor;
 	}

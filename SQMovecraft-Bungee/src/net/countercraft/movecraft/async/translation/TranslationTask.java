@@ -20,6 +20,7 @@ import net.countercraft.movecraft.utils.BorderUtils;
 import net.countercraft.movecraft.utils.BoundingBoxUtils;
 import net.countercraft.movecraft.utils.CarUtils;
 import net.countercraft.movecraft.utils.EntityUpdateCommand;
+import net.countercraft.movecraft.utils.FakeBlockUtils;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateCommand;
 import net.countercraft.movecraft.utils.MapUpdateManager;
@@ -182,7 +183,7 @@ public class TranslationTask extends AsyncTask {
 				data.setBlockList(newBlockList);
 
 				// Move entities within the craft
-				boolean isAutopiloting = AutopilotRunTask.autopilotingCrafts.contains(getCraft());
+				//boolean isAutopiloting = AutopilotRunTask.autopilotingCrafts.contains(getCraft());
 				try{
 					for(int i = 0; i < getCraft().playersRidingShip.size(); i++) {
 						Player pTest = Movecraft.getPlayer(getCraft().playersRidingShip.get(i));
@@ -193,9 +194,10 @@ public class TranslationTask extends AsyncTask {
 								Location newPLoc=new Location(getCraft().getW(), tempLoc.getX(), tempLoc.getY(), tempLoc.getZ());
 								newPLoc.setPitch(pTest.getLocation().getPitch());
 								newPLoc.setYaw(pTest.getLocation().getYaw());
-								if(data.getDy() < 0 || isAutopiloting || isStandingInBlock(pTest)){
+								//if(data.getDy() < 0 || isAutopiloting || isStandingInBlock(pTest)){
+									FakeBlockUtils.sendFakeBlocks(pTest, newPLoc);
 									pTest.teleport(newPLoc);
-								}
+								//}
 								EntityUpdateCommand eUp=new EntityUpdateCommand(pTest.getLocation().clone(),newPLoc,pTest, pTest.getVelocity(), getCraft());
 								entityUpdateSet.add(eUp);
 								continue;

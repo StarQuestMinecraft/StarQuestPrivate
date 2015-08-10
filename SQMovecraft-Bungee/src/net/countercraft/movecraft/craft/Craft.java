@@ -35,6 +35,7 @@ import net.countercraft.movecraft.event.CraftShootEvent;
 import net.countercraft.movecraft.event.CraftSyncTranslateEvent;
 import net.countercraft.movecraft.projectile.LaserBolt;
 import net.countercraft.movecraft.slip.WarpUtils;
+import net.countercraft.movecraft.utils.FakeBlockUtils;
 import net.countercraft.movecraft.utils.GunUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.PlayerFlightUtil;
@@ -51,7 +52,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.util.Vector;
+import java.util.Vector;
 
 public class Craft {
 	private int[][][] hitBox;
@@ -66,14 +67,15 @@ public class Craft {
 	public ArrayList<String> playersWithBedspawnsOnShip = new ArrayList<String>();
 	public Semaphore bedspawnsLock = new Semaphore(1);
 	public int vX, vZ;
-	public ArrayList<UUID> playersRidingShip = new ArrayList<UUID>();
-	public Semaphore playersRidingLock = new Semaphore(1);
+	public Vector<UUID> playersRidingShip = new Vector<UUID>();
+	//public Semaphore playersRidingLock = new Semaphore(1);
 	public int warpCoordsX;
 	public int warpCoordsZ;
 	public Location originalPilotLoc = null;
 	public Player pilot;
 	private boolean released = false;
 	public boolean isJamming = false;
+	private long lastMove = 0;
 
 	public Craft(CraftType type, World world) {
 		this.type = type;
@@ -152,19 +154,17 @@ public class Craft {
 			pilot.sendMessage("Flagships cannot move through realspace.");
 			return;
 		} else {
-			try {
-				playersRidingLock.acquire();
-				for(UUID u : this.playersRidingShip){
-					PlayerFlightUtil.beginShipFlying(Movecraft.getPlayer(u));
-				}
-				playersRidingLock.release();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			//playersRidingLock.acquire();
+			for(int i = 0; i < this.playersRidingShip.size(); i++){
+				UUID u = this.playersRidingShip.get(i);
+				Player p = Movecraft.getPlayer(u);
+				FakeBlockUtils.sendFakeBlocks(p, p.getLocation());
 			}
+			//playersRidingLock.release();
 			TranslationTaskData data = new TranslationTaskData(dx, dz, dy, getBlockList(), getHitBox(), minZ, minX, type.getMaxHeightLimit(), type.getMinHeightLimit());
 			CraftSyncTranslateEvent event = new CraftSyncTranslateEvent(this, data);
 			if (event.call()) {
+				lastMove = System.currentTimeMillis();
 				AsyncManager.getInstance().submitTask(new TranslationTask(this, data), this);
 			}
 		}
@@ -301,7 +301,6 @@ public class Craft {
 								f.setBounce(false);*/
 								if(twoinfront.getType() == Material.AIR){
 									CraftShootEvent event = new CraftShootEvent(this);
-									System.out.println("calling event.");
 									event.call();
 									if(!event.isCancelled()){
 										new LaserBolt(twoinfront, playerFacing, this.pilot);
@@ -364,5 +363,9 @@ public class Craft {
 			}
 		}
 		return retval;
+	}
+	
+	public boolean hasMovedInLastSecond(){
+		return System.currentTimeMillis() - lastMove <= 1000;
 	}
 }

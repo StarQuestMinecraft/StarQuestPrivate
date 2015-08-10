@@ -53,7 +53,7 @@ public class LaserBolt extends Projectile{
 		if(!event.isCancelled()){
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 				public void run(){
-					createExplosion(myBlock, shooter, 1.75F);
+					createExplosion(myBlock, shooter, 1.80F);
 				}
 			}, 1L);
 		}

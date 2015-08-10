@@ -82,12 +82,15 @@ public class JammerUtils {
 			if (sponge.getType() != Material.SPONGE)
 				continue;
 			Block[] edges = BlockUtils.getEdges(sponge, true, false);
+			boolean success = true;
 			for (Block b : edges) {
 				Material m = b.getType();
 				if (m != Material.IRON_FENCE && m != Material.IRON_BLOCK && m != Material.QUARTZ_STAIRS) {
-					continue;
+					success = false;
+					break;
 				}
 			}
+			if(!success) continue;
 			return true;
 		}
 		return false;

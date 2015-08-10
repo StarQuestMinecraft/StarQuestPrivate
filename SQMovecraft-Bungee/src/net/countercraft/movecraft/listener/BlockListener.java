@@ -60,6 +60,7 @@ public class BlockListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onSignChangeEarly(SignChangeEvent event) {
+		if(event.getPlayer().hasPermission("movecraft.colorsigns")) return;
 		for (String s : event.getLines()) {
 			for (int i = 0; i < s.length(); i++) {
 				char c = s.charAt(i);
@@ -82,9 +83,6 @@ public class BlockListener implements Listener {
 			if (s.contains("§")) {
 				event.getPlayer().sendMessage("Colored chat signs are disabled.");
 				event.setCancelled(true);
-			}
-			if (s.contains("&")) {
-
 			}
 		}
 	}
