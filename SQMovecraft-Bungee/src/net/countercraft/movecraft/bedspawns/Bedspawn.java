@@ -22,7 +22,7 @@ public class Bedspawn {
 	public String world;
 	public int x, y, z;
 	public static String driver = "com.mysql.jdbc.Driver";
-	public static String hostname = /*(CInfo.get().getHostname() != null) ? CInfo.get().getHostname() :*/ "play.starquestminecraft.com";
+	public static String hostname = /*(CInfo.get().getHostname() != null) ? CInfo.get().getHostname() :*/ "192.99.20.8";
 	public static String port = /*(CInfo.get().getPort() != null) ? CInfo.get().getPort() :*/ "3306";
 	public static String db_name = /*(CInfo.get().getDBName() != null) ? CInfo.get().getDBName() :*/ "minecraft";
 	public static String username = /*(CInfo.get().getUsername() != null) ? CInfo.get().getUsername() :*/ "minecraft";
