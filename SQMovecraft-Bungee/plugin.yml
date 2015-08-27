@@ -13,6 +13,9 @@ commands:
    s:
       description: Shoot the cannons!
       usage: /s
+   cryocheck:
+      description: Check your cyropod status.
+      usage: /cryocheck
    serverjump:
       description: lolnope
       usage: lolnope

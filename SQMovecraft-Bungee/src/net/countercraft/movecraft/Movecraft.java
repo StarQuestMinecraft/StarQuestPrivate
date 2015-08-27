@@ -93,9 +93,25 @@ public class Movecraft extends JavaPlugin {
 					return true;
 				}
 			}
-			CryoSpawn.removePodSpawn(sender.getName(), null);
-			return true;
+		} else if(cmd.getName().equalsIgnoreCase("cryocheck")){
+			if(sender instanceof Player){
+				sender.sendMessage("Fetching cryospawn...");
+				Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable(){
+					public void run(){
+						CryoSpawn spawn = CryoSpawn.getSpawnAsync(sender.getName());
+						if(spawn == null){
+							sender.sendMessage("You don't seem to have a registered spawn. If this is unexpected, please post any details you can remember about its possible removal to GitHub immediately.");
+						} else {
+							sender.sendMessage("Your spawn is currently set to " + spawn.server + " at " + spawn.x + ", " + spawn.y + ", " + spawn.z + " with active status: " + spawn.isActive);
+						}
+					}
+				});
+				return true;
+			}
+			return false;
+				
 		} else if(cmd.getName().equalsIgnoreCase("handlers")){
+
 			String name = args[0];
 			String base = "org.bukkit.event.";
 			String qualname = base + name;

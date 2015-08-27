@@ -1,5 +1,7 @@
 package net.countercraft.movecraft.utils;
 
+import net.countercraft.movecraft.Movecraft;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,6 +20,7 @@ public class BorderUtils {
 			System.out.println("MOVECRAFT ERROR: No worldborder found!");
 		} else {
 			WORLD_RADIUS = getRadius(w.getName());
+			Movecraft.getInstance().getLogger().info("World Radius loaded for world " + w.getName() + " as " + WORLD_RADIUS);
 		}
 	}
 	public static boolean isWithinBorder(int x, int z){
