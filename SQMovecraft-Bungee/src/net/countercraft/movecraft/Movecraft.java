@@ -19,6 +19,7 @@ package net.countercraft.movecraft;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,14 +44,17 @@ import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.shield.DockUtils;
 import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.task.AutopilotRunTask;
+import net.countercraft.movecraft.utils.BlastUtils;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
+import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.ShipNuker;
 import net.countercraft.movecraft.vapor.VaporRunnable;
+import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -58,7 +62,6 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -231,6 +234,55 @@ public class Movecraft extends JavaPlugin {
 		} else if(cmd.getName().equalsIgnoreCase("removedock") && sender instanceof Player){
 			DockUtils.removeDockRegions((Player) sender);
 			return true;
+		}
+		else if (cmd.getName().equalsIgnoreCase("shipsize"))
+		{
+			if (sender instanceof Player)
+			{
+				if (CraftManager.getInstance().getCraftByPlayer((Player) sender) != null)
+				{
+					double numBlocks = 0; //double so that percentages don't truncate to 0 
+					int numArmor = 0;
+					int numDroppers = 0;
+					int numDispensers = 0;
+					int numCannons = 0;	
+					for (MovecraftLocation loc : CraftManager.getInstance().getCraftByPlayer((Player) sender).getBlockList())
+					{
+						Material block = ((Player) sender).getWorld().getBlockAt(loc.getX(), loc.getY(), loc.getZ()).getType();
+						
+						if(BlastUtils.getBlastResistance(block) >= CraftManager.getInstance().getCraftByPlayer((Player) sender).getType().getArmorResistance())
+							numArmor++;
+						
+						if (block.equals(Material.DROPPER))
+							numDroppers++;
+						else if (block.equals(Material.DISPENSER))
+							numDispensers++;
+						else if (block.equals(Material.SPONGE))
+							if (((Player) sender).getWorld().getBlockAt(loc.getX() + 1, loc.getY(), loc.getZ()).getType().equals(Material.PISTON_BASE) ||
+								((Player) sender).getWorld().getBlockAt(loc.getX() - 1, loc.getY(), loc.getZ()).getType().equals(Material.PISTON_BASE) ||
+								((Player) sender).getWorld().getBlockAt(loc.getX(), loc.getY(), loc.getZ() + 1).getType().equals(Material.PISTON_BASE) ||
+								((Player) sender).getWorld().getBlockAt(loc.getX(), loc.getY(), loc.getZ() - 1).getType().equals(Material.PISTON_BASE))
+								numCannons++;
+						
+						numBlocks++;
+					}
+					
+					DecimalFormat format = new DecimalFormat("#0.000");
+					
+					sender.sendMessage("Size: " + numBlocks + " blocks");
+					sender.sendMessage("Armor: " + numArmor + " (" + format.format(numArmor/numBlocks) + "%) blocks");
+					sender.sendMessage("Storage: " + numDroppers + " (" + format.format(numDroppers/numBlocks) + "%) blocks");
+					sender.sendMessage("Cannons: " + numCannons + " (" + format.format(numCannons/numBlocks) + "%) blocks");
+					sender.sendMessage("Dispensers: " + numDispensers + " (" + format.format(numDispensers/numBlocks) + "%) blocks");
+
+					return true;
+				}
+				else
+				{
+					sender.sendMessage(ChatColor.RED + "You must be riding a ship to use this command!");
+					return true;
+				}
+			}
 		}
 		return false;
 	}

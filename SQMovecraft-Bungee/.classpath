@@ -2,13 +2,13 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/WorldEdit.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/WorldGuard.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/Vault-1.4.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/Factions.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/MassiveCore.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/craftconomy3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/spigot.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/dynmap-1.9.2.jar"/>
+	<classpathentry kind="lib" path="/Volumes/NICKMISTE/StarQuest/movecraft dependencies/craftconomy3.jar"/>
+	<classpathentry kind="lib" path="/Volumes/NICKMISTE/StarQuest/movecraft dependencies/dynmap.jar"/>
+	<classpathentry kind="lib" path="/Volumes/NICKMISTE/StarQuest/movecraft dependencies/Factions.jar"/>
+	<classpathentry kind="lib" path="/Volumes/NICKMISTE/StarQuest/movecraft dependencies/mcore.jar"/>
+	<classpathentry kind="lib" path="/Volumes/NICKMISTE/StarQuest/movecraft dependencies/spigot.jar"/>
+	<classpathentry kind="lib" path="/Volumes/NICKMISTE/StarQuest/movecraft dependencies/Vault.jar"/>
+	<classpathentry kind="lib" path="/Volumes/NICKMISTE/StarQuest/movecraft dependencies/WorldEdit.jar"/>
+	<classpathentry kind="lib" path="/Volumes/NICKMISTE/StarQuest/movecraft dependencies/WorldGuard.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

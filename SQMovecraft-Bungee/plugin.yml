@@ -43,6 +43,9 @@ commands:
    shipclass:
       description: Get the shipclass that someone is flying currently.
       usage: /shipclass <player>
+   shipsize:
+      description: Tells you the size of your ship and other information
+      usage: /shipsize
 depend:
    - WorldEdit
    - WorldGuard
