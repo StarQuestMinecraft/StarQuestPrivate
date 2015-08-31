@@ -46,6 +46,9 @@ commands:
    shipsize:
       description: Tells you the size of your ship and other information
       usage: /shipsize
+   shipsizecolor:
+      description: Tells you the size of your ship and other information - includes extra information about wool colors
+      usage: /shipsizecolor
 depend:
    - WorldEdit
    - WorldGuard
