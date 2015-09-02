@@ -88,7 +88,7 @@ public class CryoSpawn {
 				Block point = initCryoSign.getBlock().getRelative(0, -1, 0);
 				CryoSpawn spawn = new CryoSpawn(player, Bukkit.getServerName(), point.getWorld().getName(), point.getX(), point.getY(), point.getZ(), false);
 				Bukkit.getPlayer(playerUntrimmed).sendMessage("Your spawn has been set!");
-				setNewPodSpawn(spawn);
+				setPodSpawn(spawn);
 			}
 		} else {
 			Bukkit.getPlayer(playerUntrimmed).sendMessage("Not a valid cryopod!");
@@ -127,7 +127,7 @@ public class CryoSpawn {
 	// SQL STUFF
 	// ==========================================================
 
-	public static void setNewPodSpawn(final CryoSpawn spawn) {
+	public static void setPodSpawn(final CryoSpawn spawn) {
 		Runnable r = new Runnable() {
 			public void run() {
 				System.out.println("Setting new pod spawn!");
@@ -144,7 +144,8 @@ public class CryoSpawn {
 				}
 				PreparedStatement s = null;
 				try {
-					s = Bedspawn.cntx.prepareStatement("INSERT INTO CRYOSPAWNS (name, server, world, x, y, z, active, updatedSinceLastLogin) values (?,?,?,?,?,?,?,?)");
+					s = Bedspawn.cntx.prepareStatement("INSERT INTO CRYOSPAWNS (name, server, world, x, y, z, active, updatedSinceLastLogin) values (?,?,?,?,?,?,?,?)"
+							+ " ON DUPLICATE KEY UPDATE name=?,server=?,world=?,x=?,y=?,z=?,active=?,updatedSinceLastLogin=?");
 					s.setString(1, playerName);
 					s.setString(2, playerServer);
 					s.setString(3, playerWorld);
@@ -153,6 +154,14 @@ public class CryoSpawn {
 					s.setInt(6, playerZ);
 					s.setBoolean(7, false);
 					s.setBoolean(8, false);
+					s.setString(9, playerName);
+					s.setString(10, playerServer);
+					s.setString(11, playerWorld);
+					s.setInt(12, playerX);
+					s.setInt(13, playerY);
+					s.setInt(14, playerZ);
+					s.setBoolean(15, false);
+					s.setBoolean(16, false);
 					s.execute();
 					s.close();
 				} catch (SQLException e) {
@@ -240,6 +249,7 @@ public class CryoSpawn {
 				System.out.println("REMOVING POD SPAWN!");
 				String player = signTrim(playerUntrimmed);
 				CryoSpawn spawn = getSpawnAsync(player);
+				if(spawn == null) return;
 				Player p = Bukkit.getPlayer(playerUntrimmed);
 				if(l == null || (spawn.x == l.getBlockX() && (spawn.y == l.getBlockY() || spawn.y == l.getBlockY() - 1) && spawn.z == l.getBlockZ() && spawn.world.equalsIgnoreCase(l.getWorld().getName()))){
 					PreparedStatement s = null;
