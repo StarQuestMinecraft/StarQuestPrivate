@@ -1,11 +1,14 @@
 package net.countercraft.movecraft.projectile;
 
 import net.countercraft.movecraft.Movecraft;
+import net.countercraft.movecraft.config.Settings;
 import net.countercraft.movecraft.event.CraftProjectileDetonateEvent;
+import net.countercraft.movecraft.projectile.LaserBolt.LocationHit;
 import net.countercraft.movecraft.utils.LocationUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -77,9 +80,12 @@ public class Torpedo extends Projectile{
 		event.call();
 		if(!event.isCancelled()){
 			myBlock.setType(Material.AIR);
-			TNTPrimed tnt = myBlock.getWorld().spawn(myBlock.getLocation(), TNTPrimed.class);
-			tnt.setFuseTicks(1);
-			tnt.setIsIncendiary(false);
+			final Player shooter = plr;
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+				public void run(){
+					LaserBolt.createExplosion(myBlock, shooter, Settings.torpedoPower);
+				}
+			}, 1L);
 		}
 	}
 	@SuppressWarnings("deprecation")

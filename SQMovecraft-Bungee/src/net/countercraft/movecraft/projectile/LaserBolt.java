@@ -3,6 +3,7 @@ package net.countercraft.movecraft.projectile;
 import java.util.HashSet;
 
 import net.countercraft.movecraft.Movecraft;
+import net.countercraft.movecraft.config.Settings;
 import net.countercraft.movecraft.event.CraftProjectileDetonateEvent;
 
 import org.bukkit.Bukkit;
@@ -18,7 +19,7 @@ public class LaserBolt extends Projectile{
 	
 	private static HashSet<Block> blocks = new HashSet<Block>();
 	
-	private static HashSet<LocationHit> recentExplosions = new HashSet<LocationHit>();
+	static HashSet<LocationHit> recentExplosions = new HashSet<LocationHit>();
 	Player shooter;
 	private byte myData = 0;
 	public LaserBolt(Block block, BlockFace direction, Player shooter) {
@@ -53,7 +54,7 @@ public class LaserBolt extends Projectile{
 		if(!event.isCancelled()){
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 				public void run(){
-					createExplosion(myBlock, shooter, 1.80F);
+					createExplosion(myBlock, shooter, /*1.80F*/Settings.laserPower);
 				}
 			}, 1L);
 		}
