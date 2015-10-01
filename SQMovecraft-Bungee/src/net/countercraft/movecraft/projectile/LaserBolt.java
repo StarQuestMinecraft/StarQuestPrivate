@@ -4,6 +4,8 @@ import java.util.HashSet;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.config.Settings;
+import net.countercraft.movecraft.craft.Craft;
+import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.event.CraftProjectileDetonateEvent;
 
 import org.bukkit.Bukkit;
@@ -54,7 +56,12 @@ public class LaserBolt extends Projectile{
 		if(!event.isCancelled()){
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 				public void run(){
-					createExplosion(myBlock, shooter, /*1.80F*/Settings.laserPower);
+					Craft c = CraftManager.getInstance().getCraftByPlayer(shooter);
+					if(c != null){
+						createExplosion(myBlock, shooter, c.getType().getLaserPower());
+					} else {
+						createExplosion(myBlock, shooter, 1.80f);
+					}
 				}
 			}, 1L);
 		}

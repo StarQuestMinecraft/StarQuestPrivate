@@ -39,6 +39,7 @@ public class CraftType {
 	private ArrayList<Integer> drilledBlocks;
 	private boolean canFly, tryNudge, canCruise, canTeleport, canStaticMove, isGroundVehicle, isPod, isFlagship, isCarrier;
 	private int cruiseSkipBlocks;
+	private float laserPower, torpedoPower;
 	private double fuelBurnRate;
 	private double sinkPercent;
 	private float collisionExplosion;
@@ -184,6 +185,18 @@ public class CraftType {
 		} else {
 			altName = null;
 		}
+		if (data.containsKey("laserPower")) {
+			double d = (Double) data.get("laserPower");
+			laserPower = (float) d;
+		} else {
+			laserPower = 1.80f;
+		}
+		if (data.containsKey("torpedoPower")) {
+			double d = (Double) data.get("torpedoPower");
+			torpedoPower = (float) d;
+		} else {
+			torpedoPower = 4.0f;
+		}
 	}
 
 	public String getCraftName() {
@@ -270,6 +283,14 @@ public class CraftType {
 
 	public boolean isTryNudge() {
 		return tryNudge;
+	}
+	
+	public float getTorpedoPower(){
+		return torpedoPower;
+	}
+	
+	public float getLaserPower(){
+		return laserPower;
 	}
 
 	public double getSpeed(Player p) {

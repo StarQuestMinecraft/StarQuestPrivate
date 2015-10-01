@@ -2,6 +2,8 @@ package net.countercraft.movecraft.projectile;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.config.Settings;
+import net.countercraft.movecraft.craft.Craft;
+import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.event.CraftProjectileDetonateEvent;
 import net.countercraft.movecraft.projectile.LaserBolt.LocationHit;
 import net.countercraft.movecraft.utils.LocationUtils;
@@ -83,7 +85,12 @@ public class Torpedo extends Projectile{
 			final Player shooter = plr;
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 				public void run(){
-					LaserBolt.createExplosion(myBlock, shooter, Settings.torpedoPower);
+					Craft c = CraftManager.getInstance().getCraftByPlayer(shooter);
+					if(c != null){
+						LaserBolt.createExplosion(myBlock, shooter, c.getType().getTorpedoPower());
+					} else {
+						LaserBolt.createExplosion(myBlock, shooter, 4.0f);
+					}
 				}
 			}, 1L);
 		}

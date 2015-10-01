@@ -26,6 +26,6 @@ public class Settings {
 	public static String LOCALE;
 	public static int PilotTool = 280;
 	public static boolean CompatibilityMode = false;  
-	public static float laserPower = 1.80f;
-	public static float torpedoPower = 4.0f;
+	public static float laserPowerStandard = 1.80f;
+	public static float torpedoPowerStandard = 4.0f;
 }

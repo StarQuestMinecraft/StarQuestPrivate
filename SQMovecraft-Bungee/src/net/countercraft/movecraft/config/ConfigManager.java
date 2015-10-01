@@ -37,12 +37,6 @@ class ConfigManager {
 		Settings.DATA_BLOCKS = configFile.getIntegerList( "dataBlocks" );
 		Settings.THREAD_POOL_SIZE = configFile.getInt( "ThreadPoolSize" );
 		Settings.IGNORE_RESET = configFile.getBoolean( "safeReload" );
-		if(configFile.contains("torpedoPower")){
-			Settings.torpedoPower = configFile.getFloat("torpedoPower");
-		}
-		if(configFile.contains("laserPower")){
-			Settings.laserPower = configFile.getFloat("laserPower");
-		}
 	}
 
 	private void setupDefaults() {
