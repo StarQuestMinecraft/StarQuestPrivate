@@ -247,7 +247,7 @@ public class Movecraft extends JavaPlugin {
 			logger.log( Level.INFO, "Recognized PilotTool setting of: "+getConfig().getInt("PilotTool"));
 			Settings.PilotTool=getConfig().getInt("PilotTool");
 		} else {
-			logger.log( Level.INFO, "No PilotTool setting, using default of 280");
+			logger.log( Level.INFO, "No PilotTool setting, using default");
 		}
 		// if the CompatibilityMode is specified in the config.yml file, use it. Otherwise set to false. - NOT IMPLEMENTED YET - Mark
 		Settings.CompatibilityMode=getConfig().getBoolean("CompatibilityMode", false);
