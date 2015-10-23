@@ -3,9 +3,11 @@ package net.countercraft.movecraft.utils;
 import java.util.Arrays;
 import java.util.List;
 
+import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.listener.InteractListener;
+import net.countercraft.movecraft.shield.Compression;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
@@ -14,6 +16,7 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 
 public class EMPUtils {
 	
@@ -39,6 +42,7 @@ public class EMPUtils {
 	
 	//sends an EMP charge through a ship
 	private static void emp(MovecraftLocation[] blocks, Craft c){
+		Player pilot = c.pilot;
 		// first remove the craft
 		c.pilot.sendMessage(ChatColor.RED + "Your ship has been hit by an EMP!");
 		CraftManager.getInstance().removeCraft(c);
@@ -49,7 +53,7 @@ public class EMPUtils {
 				Sign s = (Sign) b.getState();
 				String l1 = s.getLine(0);
 				if(InteractListener.getCraftTypeFromString(l1) != null){
-					nukeCraftSign(s);
+					nukeCraftSign(s, pilot);
 				} else if(EXPLODE_SIGNS.contains(l1)){
 					nukeBlock(b);
 				}
@@ -71,12 +75,12 @@ public class EMPUtils {
 		smoke(b);
 	}
 	
-	private static void nukeCraftSign(Sign s){
+	private static void nukeCraftSign(Sign s, Player pilot){
 		String[] lines = new String[]{
 			ChatColor.RED + "EMP shorted",
 			ChatColor.RED + "control",
 			ChatColor.RED + "sign",
-			ChatColor.RED + ":("
+			ChatColor.RED + Compression.uuidToStr15(pilot.getUniqueId()),
 		};
 		for(int i = 0; i < lines.length; i++){
 			s.setLine(i, lines[i]);

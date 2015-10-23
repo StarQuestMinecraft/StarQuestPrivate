@@ -6,9 +6,9 @@
 	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/dynmap-1.9.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/Factions.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/MassiveCore.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/spigot.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/Vault-1.4.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/WorldEdit.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/WorldGuard.jar"/>
+	<classpathentry kind="lib" path="C:/Users/dad/Desktop/Spigot Server/plugins/Vault-1.4.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/dad/Desktop/Spigot Server/plugins/WorldEdit.jar"/>
+	<classpathentry kind="lib" path="C:/Users/dad/Desktop/Spigot Server/plugins/WorldGuard.jar"/>
+	<classpathentry kind="lib" path="C:/Users/dad/Desktop/Spigot Server/spigot.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

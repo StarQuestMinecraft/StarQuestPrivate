@@ -7,6 +7,7 @@ import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.database.FileDatabase;
 import net.countercraft.movecraft.database.StarshipData;
 import net.countercraft.movecraft.event.CraftSignBreakEvent;
+import net.countercraft.movecraft.shield.Compression;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -56,6 +57,15 @@ public class KillUtils {
 			}
 			CraftSignBreakEvent event = new CraftSignBreakEvent(d, breakerIsOwner, withinKillCooldown, breaker);
 			event.call();
+		}
+		else {
+			if (breaker.getUniqueId() != Compression.str15ToUuid(s.getLine(3))) {
+				cancel = false;
+				CraftSignBreakEvent event = new CraftSignBreakEvent(d, false, true, breaker);
+			}
+			else {
+				cancel = true;
+			}
 		}
 		
 		return cancel;
