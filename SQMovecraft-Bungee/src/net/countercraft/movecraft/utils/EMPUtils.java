@@ -1,11 +1,14 @@
 package net.countercraft.movecraft.utils;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
-import net.countercraft.movecraft.Movecraft;
+import net.countercraft.movecraft.async.detection.SaveableBlock;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
+import net.countercraft.movecraft.database.StarshipData;
 import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.shield.Compression;
 
@@ -22,6 +25,7 @@ public class EMPUtils {
 	
 	private final static String[] explodesigns = {ChatColor.BLUE + "AUTOPILOT", "\\  ||  /"};
 	private static final List<String> EXPLODE_SIGNS = Arrays.asList(explodesigns);
+	public static HashMap<UUID, StarshipData> dataMap = new HashMap<UUID, StarshipData>();
 
 	public static boolean detonateEMP(Block hit){
 		MovecraftLocation bloc = new MovecraftLocation(hit.getX(), hit.getY(), hit.getZ());
@@ -43,6 +47,11 @@ public class EMPUtils {
 	//sends an EMP charge through a ship
 	private static void emp(MovecraftLocation[] blocks, Craft c){
 		Player pilot = c.pilot;
+		SaveableBlock[] lb = new SaveableBlock[c.getBlockList().length];
+		for(int i = 0; i < c.getBlockList().length; i++){
+			lb[i] = new SaveableBlock(c.getW(), c.getBlockList()[i]);
+		}
+		dataMap.put(pilot.getUniqueId(), new StarshipData(lb, c.getType().getCraftName(), pilot.getUniqueId()));
 		// first remove the craft
 		c.pilot.sendMessage(ChatColor.RED + "Your ship has been hit by an EMP!");
 		CraftManager.getInstance().removeCraft(c);

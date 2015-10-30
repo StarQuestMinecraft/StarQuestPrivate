@@ -2,13 +2,13 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/craftconomy3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/dynmap-1.9.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/Factions.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/MassiveCore.jar"/>
 	<classpathentry kind="lib" path="C:/Users/dad/Desktop/Spigot Server/plugins/Vault-1.4.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/dad/Desktop/Spigot Server/plugins/WorldEdit.jar"/>
 	<classpathentry kind="lib" path="C:/Users/dad/Desktop/Spigot Server/plugins/WorldGuard.jar"/>
 	<classpathentry kind="lib" path="C:/Users/dad/Desktop/Spigot Server/spigot.jar"/>
+	<classpathentry kind="lib" path="C:/Users/dad/Desktop/Spigot Server/plugins/craftconomy3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/dad/Desktop/Spigot Server/plugins/dynmap.jar"/>
+	<classpathentry kind="lib" path="C:/Users/dad/Desktop/Spigot Server/plugins/Factions.jar"/>
+	<classpathentry kind="lib" path="C:/Users/dad/Desktop/Spigot Server/plugins/mcore.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

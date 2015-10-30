@@ -1,23 +1,13 @@
 package net.countercraft.movecraft.utils;
 
-import java.util.Arrays;
-import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.database.FileDatabase;
 import net.countercraft.movecraft.database.StarshipData;
 import net.countercraft.movecraft.event.CraftSignBreakEvent;
 import net.countercraft.movecraft.shield.Compression;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.PlayerDeathEvent;
-
-import com.greatmancode.craftconomy3.Cause;
 
 public class KillUtils {
 
@@ -28,6 +18,8 @@ public class KillUtils {
 		boolean cancel = false;
 		
 		StarshipData d = Movecraft.getInstance().getStarshipDatabase().getStarshipByLocation(s.getLocation());
+		
+		System.out.print(d);
 		
 		if (d != null){
 			long lastFlew = Movecraft.getInstance().getStarshipDatabase().getFileLastModified(s.getLocation());
@@ -59,11 +51,13 @@ public class KillUtils {
 			event.call();
 		}
 		else {
-			if (breaker.getUniqueId() != Compression.str15ToUuid(s.getLine(3))) {
+			if (breaker.getUniqueId() != Compression.str15ToUuid(s.getLine(3).substring(2))) {
 				cancel = false;
-				CraftSignBreakEvent event = new CraftSignBreakEvent(d, false, true, breaker);
+				CraftSignBreakEvent event = new CraftSignBreakEvent(EMPUtils.dataMap.get(Compression.str15ToUuid(s.getLine(3).substring(2))), false, true, breaker);
+				event.call();
 			}
 			else {
+				breaker.sendMessage("No kills were credited for this sign break.");
 				cancel = true;
 			}
 		}
