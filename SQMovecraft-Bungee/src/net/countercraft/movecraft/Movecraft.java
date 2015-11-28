@@ -23,6 +23,20 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.block.Sign;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredListener;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.Messenger;
+
 import net.countercraft.movecraft.async.AsyncManager;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.bungee.BungeeCraftReciever;
@@ -39,6 +53,7 @@ import net.countercraft.movecraft.listener.BlockListener;
 import net.countercraft.movecraft.listener.CommandListener;
 import net.countercraft.movecraft.listener.EntityListener;
 import net.countercraft.movecraft.listener.InteractListener;
+import net.countercraft.movecraft.listener.InventoryListener;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.shield.DockUtils;
 import net.countercraft.movecraft.shield.ShieldUtils;
@@ -48,20 +63,6 @@ import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.ShipNuker;
 import net.countercraft.movecraft.utils.ShipSizeUtils;
 import net.countercraft.movecraft.vapor.VaporRunnable;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.block.Sign;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.RegisteredListener;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.messaging.Messenger;
 
 /**
  * @author AJCStriker, Dibujaron
@@ -234,7 +235,10 @@ public class Movecraft extends JavaPlugin {
 			return ShipSizeUtils.printPlayerShipSize((Player) sender, false);
 		} else if (cmd.getName().equalsIgnoreCase("shipsizecolor") && sender instanceof Player){
 			return ShipSizeUtils.printPlayerShipSize((Player) sender, true);
-		}
+		} 
+//		else if (cmd.getName().equalsIgnoreCase("redline") && sender instanceof Player) {
+//			return RedlineUtils.onRedlineCommand((Player) sender, args);
+//		}
 		return false;
 	}
 
@@ -274,6 +278,7 @@ public class Movecraft extends JavaPlugin {
 			pm.registerEvents( new CommandListener(), this );
 			pm.registerEvents( new BlockListener(), this );
 			pm.registerEvents( new EntityListener(), this );
+			pm.registerEvents( new InventoryListener(), this );
 			
 			Messenger m = this.getServer().getMessenger();
 			m.registerOutgoingPluginChannel(this, "BungeeCord");

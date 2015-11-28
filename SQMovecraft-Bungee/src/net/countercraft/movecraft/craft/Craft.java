@@ -143,8 +143,13 @@ public class Craft {
 		}
 		AsyncManager.getInstance().submitTask(task, this);
 	}
-
-	public void translate(int dx, int dy, int dz) {
+	
+	public void translate(int dx, int dy, int dz)
+	{
+		translate(dx, dy, dz, true);
+	}
+	
+	public void translate(int dx, int dy, int dz, boolean doAsyncTeleport) {
 		if (w.getEnvironment() == Environment.THE_END){
 			WarpUtils.translate(this, dx, dy, dz);
 		} else if(getType().isGroundVehicle() && dy != 0){
@@ -161,7 +166,7 @@ public class Craft {
 				FakeBlockUtils.sendFakeBlocks(p, p.getLocation());
 			}
 			//playersRidingLock.release();
-			TranslationTaskData data = new TranslationTaskData(dx, dz, dy, getBlockList(), getHitBox(), minZ, minX, type.getMaxHeightLimit(), type.getMinHeightLimit());
+			TranslationTaskData data = new TranslationTaskData(dx, dz, dy, getBlockList(), getHitBox(), minZ, minX, type.getMaxHeightLimit(), type.getMinHeightLimit(), doAsyncTeleport);
 			CraftSyncTranslateEvent event = new CraftSyncTranslateEvent(this, data);
 			if (event.call()) {
 				lastMove = System.currentTimeMillis();

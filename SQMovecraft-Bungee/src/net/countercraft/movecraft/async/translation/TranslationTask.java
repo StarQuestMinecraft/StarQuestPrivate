@@ -195,8 +195,11 @@ public class TranslationTask extends AsyncTask {
 								newPLoc.setPitch(pTest.getLocation().getPitch());
 								newPLoc.setYaw(pTest.getLocation().getYaw());
 								//if(data.getDy() < 0 || isAutopiloting || isStandingInBlock(pTest)){
+								if (data.getDoAsyncTeleport())
+								{
 									FakeBlockUtils.sendFakeBlocks(pTest, newPLoc);
 									pTest.teleport(newPLoc);
+								}
 								//}
 								EntityUpdateCommand eUp=new EntityUpdateCommand(pTest.getLocation().clone(),newPLoc,pTest, pTest.getVelocity(), getCraft());
 								entityUpdateSet.add(eUp);

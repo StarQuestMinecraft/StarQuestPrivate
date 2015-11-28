@@ -23,8 +23,8 @@ public class BoardingRampUtils {
 			if(i == id){
 				//stop exploit with boarding ramps removing blocks
 				if(movingstepsdown.getType() == Material.AIR){
-					s.setLine(2, changeblock.getTypeId() + "");
-					s.setLine(3, changeblock.getData() + "");
+					s.setLine(2, changeblock.getTypeId() + ":" + changeblock.getData());
+					s.setLine(3, movingstepsup.getTypeId() + ":" + movingstepsup.getData());
 					s.update();
 					
 					movingstepsdown.setTypeIdAndData(movingstepsup.getTypeId(), movingstepsup.getData(), true);
@@ -46,30 +46,35 @@ public class BoardingRampUtils {
 		Block movingstepsup = changeblock.getRelative(facingdirection);
 		Block movingstepsdown = movingstepsup.getRelative(BlockFace.DOWN);
 		
-		int id;
-		byte data;
+		int changeblockid, movingblockid;
+		byte changeblockdata, movingblockdata;
 		try{
 			
-			id = Integer.parseInt(s.getLine(2));
-			data = Byte.parseByte(s.getLine(3));
+			changeblockid = Integer.parseInt(s.getLine(2).split(":")[0]);
+			changeblockdata = Byte.parseByte(s.getLine(2).split(":")[1]);
+			movingblockid = Integer.parseInt(s.getLine(3).split(":")[0]);
+			movingblockdata = Byte.parseByte(s.getLine(3).split(":")[1]);
 			
 		} catch (Exception e){
 			interactor.sendMessage("Your boarding ramp is built wrong. Check the instructions again.");
 			return false;
 		}
 		
-		if(changeblock.getType() == Material.AIR){
-			changeblock.setTypeIdAndData(id, data, true);
+		if (movingstepsdown.getTypeId() == movingblockid && movingstepsdown.getData() == movingblockdata) {
+			if(changeblock.getType() == Material.AIR){
+				changeblock.setTypeIdAndData(changeblockid, changeblockdata, true);
+			}
+			if(movingstepsup.getType() == Material.AIR){
+				movingstepsup.setTypeIdAndData(movingstepsdown.getTypeId(), movingstepsdown.getData(), true);
+				movingstepsdown.setType(Material.AIR);
+			}
+			
+			s.setLine(2, "");
+			s.setLine(3, "");
+			s.update();
+			return true;
 		}
-		if(movingstepsup.getType() == Material.AIR){
-			movingstepsup.setTypeIdAndData(movingstepsdown.getTypeId(), movingstepsdown.getData(), true);
-			movingstepsdown.setType(Material.AIR);
-		}
-		
-		s.setLine(2, "");
-		s.setLine(3, "");
-		s.update();
-		return true;
+		return false;
 	}
 	@SuppressWarnings("deprecation")
 	public static BlockFace getFacingBlockFace(Sign s){

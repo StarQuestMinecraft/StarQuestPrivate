@@ -20,25 +20,6 @@ package net.countercraft.movecraft.listener;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.craft.Craft;
-import net.countercraft.movecraft.craft.CraftManager;
-import net.countercraft.movecraft.craft.CraftType;
-import net.countercraft.movecraft.cryo.CryoSpawn;
-import net.countercraft.movecraft.localisation.I18nSupport;
-import net.countercraft.movecraft.projectile.LaserBolt;
-import net.countercraft.movecraft.projectile.Torpedo;
-import net.countercraft.movecraft.slip.WarpStartTask;
-import net.countercraft.movecraft.slip.WarpUtils;
-import net.countercraft.movecraft.task.AutopilotRunTask;
-import net.countercraft.movecraft.utils.BoardingRampUtils;
-import net.countercraft.movecraft.utils.BomberUtils;
-import net.countercraft.movecraft.utils.JammerUtils;
-import net.countercraft.movecraft.utils.LocationUtils;
-import net.countercraft.movecraft.utils.MathUtils;
-import net.countercraft.movecraft.utils.MovecraftLocation;
-import net.countercraft.movecraft.utils.Rotation;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -52,6 +33,23 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+
+import net.countercraft.movecraft.Movecraft;
+import net.countercraft.movecraft.craft.Craft;
+import net.countercraft.movecraft.craft.CraftManager;
+import net.countercraft.movecraft.craft.CraftType;
+import net.countercraft.movecraft.cryo.CryoSpawn;
+import net.countercraft.movecraft.localisation.I18nSupport;
+import net.countercraft.movecraft.projectile.Torpedo;
+import net.countercraft.movecraft.slip.WarpUtils;
+import net.countercraft.movecraft.task.AutopilotRunTask;
+import net.countercraft.movecraft.utils.BoardingRampUtils;
+import net.countercraft.movecraft.utils.BomberUtils;
+import net.countercraft.movecraft.utils.JammerUtils;
+import net.countercraft.movecraft.utils.LocationUtils;
+import net.countercraft.movecraft.utils.MathUtils;
+import net.countercraft.movecraft.utils.MovecraftLocation;
+import net.countercraft.movecraft.utils.Rotation;
 
 public class InteractListener implements Listener {
 
@@ -351,7 +349,16 @@ public class InteractListener implements Listener {
 			}
 			event.getPlayer().sendMessage("Improperly built bombchute.");
 			return;
-		}
+		}  //else if (sign.getLine(0).equals("[redline]")) {
+//			sign.setLine(0, "");
+//			sign.setLine(1, ChatColor.RED + "" + ChatColor.UNDERLINE + "Redline");
+//			sign.setLine(2, ChatColor.BOLD + "CONSOLE");
+//			sign.setLine(3, "");
+//			sign.update();
+//		} else if (sign.getLine(1).equals(ChatColor.RED + "" + ChatColor.UNDERLINE + "Redline") && 
+//				CraftManager.getInstance().getCraftByPlayer(event.getPlayer()) != null) {
+//			RedlineUtils.openConsole(event);
+//		}
 	}
 
 	public static CraftType getCraftTypeFromString(String s) {
