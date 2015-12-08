@@ -77,7 +77,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class EntityListener implements Listener {
 	private final HashMap<Player, BukkitTask> releaseEvents = new HashMap<Player, BukkitTask>();
-	private static int[] NON_EXPLODABLES = { 1, 4, 7, 14, 15, 16, 21, 22, 24, 41, 42, 45, 48, 49, 56, 57, 64, 71, 73, 74, 98, 133, 155, 159 };
+	private static int[] NON_EXPLODABLES = { 1, 4, 7, 14, 15, 16, 21, 22, 24, 41, 42, 45, 48, 49, 56, 57, 64, 71, 73, 74, 133, 155};
 	// private static int[] TORPEDO_EXCEPTIONS = {42, 101, 167};
 	/*
 	 * public void onPlayerDamaged( EntityDamageByEntityEvent e ) { if ( e

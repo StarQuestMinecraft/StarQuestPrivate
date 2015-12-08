@@ -2,6 +2,7 @@ package net.countercraft.movecraft.utils;
 
 import java.text.DecimalFormat;
 
+import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.md_5.bungee.api.ChatColor;
 
@@ -21,12 +22,12 @@ public class ShipSizeUtils
 			int numDispensers = 0;
 			int numCannons = 0;
 			int numOther = 0;
-			
-			for (MovecraftLocation loc : CraftManager.getInstance().getCraftByPlayer(player).getBlockList())
+			Craft c = CraftManager.getInstance().getCraftByPlayer(player);
+			for (MovecraftLocation loc : c.getBlockList())
 			{
 				Material block = (player).getWorld().getBlockAt(loc.getX(), loc.getY(), loc.getZ()).getType();
 				
-				if(BlastUtils.getBlastResistance(block) >= CraftManager.getInstance().getCraftByPlayer(player).getType().getArmorResistance())
+				if(BlastUtils.getBlastResistance(block) >= c.getType().getArmorResistance())
 					numArmor++;
 				
 				if (block.equals(Material.WOOL))
@@ -43,7 +44,7 @@ public class ShipSizeUtils
 						player.getWorld().getBlockAt(loc.getX(), loc.getY(), loc.getZ() - 1).getType().equals(Material.PISTON_BASE))
 						numCannons++;
 				}
-				else if (BlastUtils.getBlastResistance(block) < CraftManager.getInstance().getCraftByPlayer(player).getType().getArmorResistance())
+				else if (BlastUtils.getBlastResistance(block) < c.getType().getArmorResistance())
 					numOther++;
 				
 				numBlocks++;
