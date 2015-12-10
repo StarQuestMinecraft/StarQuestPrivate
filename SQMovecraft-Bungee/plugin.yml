@@ -52,6 +52,9 @@ commands:
    redline:
       description: Initialize a redline jump
       usage: /redline <destination | <x> <z>>
+   movecraftreload:
+      description: reload movecraft craft files
+      usage: /movecraftreload
 depend:
    - WorldEdit
    - WorldGuard
