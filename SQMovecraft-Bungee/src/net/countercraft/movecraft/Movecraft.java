@@ -235,7 +235,11 @@ public class Movecraft extends JavaPlugin {
 			return ShipSizeUtils.printPlayerShipSize((Player) sender, false);
 		} else if (cmd.getName().equalsIgnoreCase("shipsizecolor") && sender instanceof Player){
 			return ShipSizeUtils.printPlayerShipSize((Player) sender, true);
-		} 
+		} else if (cmd.getName().equalsIgnoreCase("reloadships") && sender.hasPermission("movecraft.reload")){
+			sender.sendMessage("Reinitializing craft types...");
+			CraftManager.getInstance().initCraftTypes();
+			sender.sendMessage("Craft types reloaded.");
+		}
 //		else if (cmd.getName().equalsIgnoreCase("redline") && sender instanceof Player) {
 //			return RedlineUtils.onRedlineCommand((Player) sender, args);
 //		}

@@ -64,7 +64,7 @@ public class CraftManager {
 		return craftTypes;
 	}
 
-	void initCraftTypes() {
+	public void initCraftTypes() {
 		File craftsFile = new File(Movecraft.getInstance().getDataFolder().getAbsolutePath() + "/types");
 
 		if (!craftsFile.exists()) {
