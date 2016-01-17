@@ -16,9 +16,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class LocationUtils {
-	private static HashMap<String, Location> planets = new HashMap<String, Location>();
-	private static HashMap<String, StargateData> stargates = new HashMap<String, StargateData>();
-	private static String SYSTEM;
+	public static HashMap<String, Location> planets = new HashMap<String, Location>();
+	public static HashMap<String, StargateData> stargates = new HashMap<String, StargateData>();
+	public static String SYSTEM;
 
 	public static void setUp(FileConfiguration cfg) {
 		SYSTEM = cfg.getString("System");
