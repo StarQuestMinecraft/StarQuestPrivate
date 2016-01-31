@@ -224,26 +224,28 @@ public class InteractListener implements Listener {
 			sign.update();
 			return;
 		} else if (sign.getLine(0).equalsIgnoreCase(ChatColor.BLUE + "AUTOPILOT")) {
-			if (sign.getLine(1).equals(ChatColor.GREEN + "{DISABLED}")) {
-				Craft c = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());
-				if (c != null) {
-					if (!AutopilotRunTask.autopilotingCrafts.contains(c)) {
-						if(LocationUtils.isBeingJammed(c.getW(), c.getMinX(), c.getMinZ())){
-							c.pilot.sendMessage("Your autopilot drive is being jammed and cannot start.");
+			if(!event.isCancelled()){
+				if (sign.getLine(1).equals(ChatColor.GREEN + "{DISABLED}")) {
+					Craft c = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());
+					if (c != null) {
+						if (!AutopilotRunTask.autopilotingCrafts.contains(c)) {
+							if(LocationUtils.isBeingJammed(c.getW(), c.getMinX(), c.getMinZ())){
+								c.pilot.sendMessage("Your autopilot drive is being jammed and cannot start.");
+								return;
+							}
+							sign.setLine(1, ChatColor.RED + "{ENGAGED}");
+							sign.update();
+							AutopilotRunTask.startAutopiloting(sign, CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer());
 							return;
 						}
-						sign.setLine(1, ChatColor.RED + "{ENGAGED}");
-						sign.update();
-						AutopilotRunTask.startAutopiloting(sign, CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer());
+						event.getPlayer().sendMessage("Your craft is already autopiloting!");
 						return;
 					}
-					event.getPlayer().sendMessage("Your craft is already autopiloting!");
+					event.getPlayer().sendMessage("You are not currently piloting a craft, you cannot start the autopilot.");
 					return;
+				} else if (sign.getLine(1).equals(ChatColor.RED + "{ENGAGED}")) {
+					AutopilotRunTask.stopAutopiloting(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer(), sign);
 				}
-				event.getPlayer().sendMessage("You are not currently piloting a craft, you cannot start the autopilot.");
-				return;
-			} else if (sign.getLine(1).equals(ChatColor.RED + "{ENGAGED}")) {
-				AutopilotRunTask.stopAutopiloting(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer(), sign);
 			}
 		} else if (sign.getLine(0).equalsIgnoreCase("[cryopod]")){
 			Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable(){

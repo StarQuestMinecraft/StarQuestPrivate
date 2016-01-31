@@ -85,9 +85,7 @@ public class Movecraft extends JavaPlugin {
 	}
 	
 	public boolean onCommand(final CommandSender sender, Command cmd, String label, String[] args) {
-	if(cmd.getName().equalsIgnoreCase("resetcash")){
-		ResetCashHandler.run();
-	}else if (cmd.getName().equalsIgnoreCase("removehome") && sender instanceof Player){
+	if (cmd.getName().equalsIgnoreCase("removehome") && sender instanceof Player){
 			if(args.length > 0){
 				String player = args[0];
 				if(sender.hasPermission("Cryospawn.remove")){
