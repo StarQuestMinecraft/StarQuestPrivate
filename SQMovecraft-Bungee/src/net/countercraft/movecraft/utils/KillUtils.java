@@ -51,7 +51,7 @@ public class KillUtils {
 			event.call();
 		}
 		else {
-			if (breaker.getUniqueId() != Compression.str15ToUuid(s.getLine(3).substring(2))) {
+			if (!breaker.getUniqueId().equals(Compression.str15ToUuid(s.getLine(3).substring(2)))) {
 				cancel = false;
 				CraftSignBreakEvent event = new CraftSignBreakEvent(EMPUtils.dataMap.get(Compression.str15ToUuid(s.getLine(3).substring(2))), false, true, breaker);
 				event.call();
