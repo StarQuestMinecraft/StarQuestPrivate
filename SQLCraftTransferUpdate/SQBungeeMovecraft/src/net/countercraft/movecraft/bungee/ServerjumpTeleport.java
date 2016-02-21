@@ -36,7 +36,6 @@ public class ServerjumpTeleport implements PlayerTeleport{
 	public ServerjumpTeleport(UUID uuid, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack playerKnap, GameMode gamemode){
 		init(uuid, worldname, x, y, z, yaw, pitch, playerKnap, gamemode);
 	}
-	
 	private void init(UUID uuid, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack playerKnap, GameMode gamemode){
 		this.uuid = uuid;
 		this.worldname = worldname;

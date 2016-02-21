@@ -190,7 +190,7 @@ public class BungeePlayerHandler {
 			p.removePotionEffect(effect.getType());
 		}
 	}
-
+	@Deprecated
 	public static void recievePlayer(DataInputStream in) {
 
 		try {
@@ -238,7 +238,7 @@ public class BungeePlayerHandler {
 			e.printStackTrace();
 		}
 	}*/
-
+	@Deprecated
 	public static ServerjumpTeleport recievePlayerTeleport(DataInputStream msgin) throws IOException {
 		try{
 			String worldname = msgin.readUTF();

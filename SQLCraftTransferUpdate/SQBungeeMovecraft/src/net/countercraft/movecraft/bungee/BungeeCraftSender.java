@@ -3,6 +3,7 @@ package net.countercraft.movecraft.bungee;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
@@ -22,6 +23,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
+import com.dibujaron.cardboardbox.Knapsack;
+
 public class BungeeCraftSender {
 
 	public static void sendCraft(Player p, String targetserver, String world, int X, int Y, int Z, Craft c) throws IOException {
@@ -37,9 +40,10 @@ public class BungeeCraftSender {
 				}
 			}
 			//c.playersRidingLock.release();
-			byte[] craftData = serialize(p, targetserver, world, X, Y, Z, c);
+			Location location = new Location(p.getWorld(), (double) X, (double) Y, (double) Z);
+			TransferData data = writeData(p, targetserver, location, c);
 			CraftManager.getInstance().removeCraft(c, false);
-			BungeeFileHandler.saveCraftBytes(craftData, p.getName());
+			Movecraft.getInstance().getSQLDatabase().writeData(data);
 			System.out.println("Saved craft.");
 			sendCraftSpawnPacket(p, targetserver);
 			//c.playersRidingLock.acquire();
@@ -55,7 +59,7 @@ public class BungeeCraftSender {
 		}*/
 		removeCraftBlocks(c);
 	}
-
+	
 	private static void sendCraftSpawnPacket(Player p, String targetserver) {
 		try {
 			ByteArrayOutputStream b = new ByteArrayOutputStream();
@@ -75,108 +79,79 @@ public class BungeeCraftSender {
 			out.write(outmsg);
 
 			p.sendPluginMessage(Movecraft.getInstance(), "BungeeCord", b.toByteArray());
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static byte[] serialize(Player p, String targetserver, String world, int X, int Y, int Z, Craft c) throws IOException {
-		return serialize(p, targetserver, world, X, Y, Z, c, true);
+	public static TransferData writeData(Player p, String targetserver, Location destination, Craft c) throws IOException {
+		return writeData(p, targetserver, destination, c, true);
 	}
-	public static byte[] serialize(Player p, String targetserver, String world, int X, int Y, int Z, Craft c, boolean wipeInventories) throws IOException {
-		ByteArrayOutputStream msgbytes = new ByteArrayOutputStream();
-		DataOutputStream msgout = new DataOutputStream(msgbytes);
-
+	public static TransferData writeData(Player p, String targetserver, Location destination, Craft c, boolean wipeInventories) throws IOException {
+		TransferData transferData = new TransferData();
 		// write out if it's slipspace
 		boolean slip = c.getW().getEnvironment() == Environment.THE_END;
-		msgout.writeBoolean(slip);
-		// send the location
-		msgout.writeUTF(world);
-		msgout.writeInt(X);
-		msgout.writeInt(Y);
-		msgout.writeInt(Z);
-
-		// send the existing location
+		transferData.setSlip(slip);
+		// send the destination location
+		transferData.setDestinationLocation(destination);
+		// send the existing (old) location
 		Location lctn = p.getLocation();
-		msgout.writeUTF(lctn.getWorld().getName());
-		msgout.writeInt(lctn.getBlockX());
-		msgout.writeInt(lctn.getBlockY());
-		msgout.writeInt(lctn.getBlockZ());
-
+		transferData.setOldLocation(lctn);
 		// send the craft type
-		msgout.writeUTF(c.getType().getCraftName());
-
-		// send the pilot name
-		msgout.writeUTF(p.getName());
-		msgout.writeUTF(p.getUniqueId().toString());
-
-		// send the length of the craft's block list array
-		msgout.writeInt(c.getBlockList().length);
-
-		// send the craft's block list array
+		transferData.setCraftType(c.getType().getCraftName());
+		// send the pilot name and uuid
+		transferData.setPilotName(p.getName());
+		transferData.setPilotUUID(p.getUniqueId());
+		// send the craft's blocks
+		ArrayList<LocAndBlock> locAndBlockList = new ArrayList<LocAndBlock>();
 		for (MovecraftLocation l : c.getBlockList()) {
-			msgout.writeInt(l.getX());
-			msgout.writeInt(l.getY());
-			msgout.writeInt(l.getZ());
-			Location loc = new Location(c.getW(), l.getX(), l.getY(), l.getZ());
+			LocAndBlock locAndBlock;
+			int x = l.getX();
+			int y = l.getY();
+			int z = l.getZ();
+			Location loc = new Location(c.getW(), x, y, z);
 			int id = loc.getBlock().getTypeId();
 			int data = (int) loc.getBlock().getData();
-			msgout.writeInt(id);
-			msgout.writeInt(data);
-			// send inventory
+			// If block has inventory
 			if (loc.getBlock().getState() instanceof InventoryHolder) {
-				msgout.writeBoolean(true);
 				Inventory i = ((InventoryHolder) loc.getBlock().getState()).getInventory();
-				msgout.writeUTF(i.getType().name());
-				/*
-				 * for (int index = 0; index < i.getSize(); index++){
-				 * System.out.println("Scanning inventory slot."); ItemStack s =
-				 * i.getItem(index); if(s != null){
-				 * System.out.println("Sending itemstack");
-				 * msgout.writeUTF("continue"); System.out.println(s.getTypeId()
-				 * + "," + s.getDurability() + "," + s.getAmount()); //id data
-				 * amount index msgout.writeInt(s.getTypeId());
-				 * msgout.writeInt(s.getDurability());
-				 * msgout.writeInt(s.getAmount()); msgout.writeInt(index); } }
-				 */
-				InventoryUtils.writeInventory(msgout, i);
-				if(wipeInventories){
+				if(wipeInventories) {
 					i.clear();
 				}
-			} else {
-				msgout.writeBoolean(false);
+				locAndBlock = new LocAndBlock(x, y, z, id, data, i);
 			}
-			if (id == 63 || id == 68) {
+			//If it's a sign
+			else if (id == 63 || id == 68) {
 				Sign s = (Sign) loc.getBlock().getState();
-				msgout.writeUTF(s.getLine(0) + "");
-				msgout.writeUTF(s.getLine(1) + "");
-				msgout.writeUTF(s.getLine(2) + "");
-				msgout.writeUTF(s.getLine(3) + "");
+				locAndBlock = new LocAndBlock(x, y, z, id, data, s.getLine(0), s.getLine(1), s.getLine(2), s.getLine(3));
 			}
+			//If neither
+			else {
+				locAndBlock = new LocAndBlock(x, y, z, id, data);
+			}
+			locAndBlockList.add(locAndBlock);
 		}
-		msgout.writeInt(c.playersWithBedspawnsOnShip.size());
-		for (String s : c.playersWithBedspawnsOnShip) {
-			msgout.writeUTF(s);
-		}
-		/*try {
-			c.playersRidingLock.acquire();*/
-			msgout.writeInt(c.playersRidingShip.size());
+		transferData.setBlockList(locAndBlockList);
+		transferData.setPlayersWithBedspawnsOnShip(c.playersWithBedspawnsOnShip);
+		transferData.setPlayersRidingShip(c.playersRidingShip);
+		ArrayList<PlayerTransferData> playerTransferData = new ArrayList<PlayerTransferData>();
 			for (int i = 0; i < c.playersRidingShip.size(); i++) {
+				PlayerTransferData playerData = new PlayerTransferData();
 				Player plr = Movecraft.getPlayer(c.playersRidingShip.get(i));
 				if (plr != null) {
 					Location l = plr.getLocation();
-					BungeePlayerHandler.writePlayerData(msgout, plr, targetserver, world, l.getBlockX(), l.getBlockY(), l.getBlockZ());
+					playerData.setPlayerLocation(l);
+					Knapsack k = new Knapsack(plr);
+					playerData.setPlayerKnapsack(k);
 					if(wipeInventories){
 						BungeePlayerHandler.wipePlayerInventory(plr);
 					}
 				}
+				playerTransferData.add(playerData);
 			}
-			/*c.playersRidingLock.release();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
-
-		return msgbytes.toByteArray();
+			transferData.setPlayerData(playerTransferData);
+		return transferData;
 	}
 
 	private static void removeCraftBlocks(final Craft c) {

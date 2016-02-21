@@ -36,7 +36,7 @@ public class LocAndBlock {
 		X = x;
 		Y = y;
 		Z = z;
-		this.id = id;;
+		this.id = id;
 		data = d;
 		this.i = i;
 	}

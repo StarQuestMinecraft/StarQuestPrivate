@@ -33,10 +33,10 @@ import org.bukkit.inventory.InventoryHolder;
 public class BungeeCraftConstructor {
 	
 	//calculate for destination obstructions and then build the craft
-	public static void calcluateLocationAndBuild(boolean slip, String world, int tX, int tY, int tZ, String oldworld, int oldX, int oldY, int oldZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> bedSpawnPlayersOnShip, final ArrayList<ServerjumpTeleport> playersOnShip){
+	public static void calcluateLocationAndBuild(boolean slip, String world, int tX, int tY, int tZ, String oldworld, int oldX, int oldY, int oldZ, final String type, final String pilot, final UUID pilotUUID, ArrayList<LocAndBlock> bll, ArrayList<String> bedSpawnPlayersOnShip, final ArrayList<ServerjumpTeleport> playersOnShip){
 		calculateLocationAndBuild(slip, world, tX, tY, tZ, oldworld, oldX, oldY, oldZ, type, pilot, pilotUUID, bll, bedSpawnPlayersOnShip, playersOnShip, false);
 	}
-	public static void calculateLocationAndBuild(boolean slip, String world, int tX, int tY, int tZ, String oldworld, int oldX, int oldY, int oldZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> bedSpawnPlayersOnShip, final ArrayList<ServerjumpTeleport> playersOnShip, boolean isFake){
+	public static void calculateLocationAndBuild(boolean slip, String world, int tX, int tY, int tZ, String oldworld, int oldX, int oldY, int oldZ, final String type, final String pilot, final UUID pilotUUID, ArrayList<LocAndBlock> bll, ArrayList<String> bedSpawnPlayersOnShip, final ArrayList<ServerjumpTeleport> playersOnShip, boolean isFake){
 		System.out.println("tX: " + tX);
 		System.out.println("tY: " + tY);
 		System.out.println("tZ: " + tZ);
@@ -128,7 +128,7 @@ public class BungeeCraftConstructor {
 			}
 		}
 	}
-	public static void buildCraft(boolean slip, final World w, int X, int Y, int Z, int dX, int dY, int dZ, final String type, final String pilot, final UUID pilotUUID, LocAndBlock[] bll, ArrayList<String> names, ArrayList<UUID> namesOnShip, boolean isFake){
+	public static void buildCraft(boolean slip, final World w, int X, int Y, int Z, int dX, int dY, int dZ, final String type, final String pilot, final UUID pilotUUID, ArrayList<LocAndBlock> bll, ArrayList<String> names, ArrayList<UUID> namesOnShip, boolean isFake){
 		int[] fragileBlocks = MapUpdateManager.getInstance().fragileBlocks;
 		ArrayList<LocAndBlock> fragiles = new ArrayList<LocAndBlock>();
 		
@@ -151,20 +151,20 @@ public class BungeeCraftConstructor {
 				//do dX and dY and dZ stuff
 				Location l = new Location(w, b.X + dX, b.Y + dY, b.Z + dZ);
 				l.getBlock().setTypeIdAndData(b.id, (byte) b.data, false);
-				restoreInv(l.getBlock(), b, pilot, isFake, bll.length);
+				restoreInv(l.getBlock(), b, pilot, isFake, bll.size());
 			}
 		}
 		for(LocAndBlock b : fragiles){
 			Location l = new Location(w, b.X + dX, b.Y + dY, b.Z + dZ);
 			l.getBlock().setTypeIdAndData(b.id, (byte) b.data, false);
-			restoreInv(l.getBlock(), b, pilot, isFake, bll.length);
+			restoreInv(l.getBlock(), b, pilot, isFake, bll.size());
 		}
 		//final int XDIFF = xDiff;
 		Craft c;
 		if(!isFake){
 			c = new Craft(InteractListener.getCraftTypeFromString( type ), w);
 		} else {
-			c = new Craft(InteractListener.getCraftTypeFromString(NewShipClassConverter.convert(type, bll.length)), w);
+			c = new Craft(InteractListener.getCraftTypeFromString(NewShipClassConverter.convert(type, bll.size())), w);
 		}
 		c.originalPilotLoc = new Location(w, X, Y, Z);
 		c.warpCoordsX = X;
@@ -204,9 +204,9 @@ public class BungeeCraftConstructor {
 		InventoryHolder i = (InventoryHolder) b.getState();
 		i.getInventory().setContents(lb.i.getContents());
 	}
-	public static boolean destinationObstructed(LocAndBlock[] bll, World targ, int dX, int dY, int dZ){
-		for (int i = 0; i < bll.length; i++) {
-			Location newLoc = new Location (targ, bll[i].X + dX, bll[i].Y + dY, bll[i].Z + dZ);
+	public static boolean destinationObstructed(ArrayList<LocAndBlock> bll, World targ, int dX, int dY, int dZ){
+		for (int i = 0; i < bll.size(); i++) {
+			Location newLoc = new Location (targ, bll.get(i).X + dX, bll.get(i).Y + dY, bll.get(i).Z + dZ);
 			Block lBlock = newLoc.getBlock();
 			if(lBlock == null) return true;
 			for(Block b : BlockUtils.getEdges(lBlock, true, true)){

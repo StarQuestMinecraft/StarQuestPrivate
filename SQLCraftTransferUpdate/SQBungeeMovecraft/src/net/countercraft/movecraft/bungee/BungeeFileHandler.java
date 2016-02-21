@@ -11,6 +11,7 @@ import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
+@Deprecated
 public class BungeeFileHandler {
 	
 	private static int[] TRANSFER_ILLEGALS = new int[]{

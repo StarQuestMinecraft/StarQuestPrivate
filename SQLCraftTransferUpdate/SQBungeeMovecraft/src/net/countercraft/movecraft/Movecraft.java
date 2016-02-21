@@ -43,6 +43,8 @@ import net.countercraft.movecraft.bungee.BungeeCraftReciever;
 import net.countercraft.movecraft.bungee.BungeeCraftSender;
 import net.countercraft.movecraft.bungee.BungeeFileHandler;
 import net.countercraft.movecraft.bungee.BungeeListener;
+import net.countercraft.movecraft.bungee.SQLDatabase;
+import net.countercraft.movecraft.bungee.TransferData;
 import net.countercraft.movecraft.config.Settings;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
@@ -71,6 +73,9 @@ import net.countercraft.movecraft.vapor.VaporRunnable;
 public class Movecraft extends JavaPlugin {
 	
 	private static Movecraft instance;
+	
+	private SQLDatabase sqlDatabase;
+	
 	private Logger logger;
 	private boolean shuttingDown;
 	private StarshipDatabase database;
@@ -139,7 +144,7 @@ public class Movecraft extends JavaPlugin {
 		} else if(cmd.getName().equalsIgnoreCase("loadship")){
 			if(sender.hasPermission("movecraft.loadship")){
 				if(args.length == 1){
-					byte[] craftData = BungeeFileHandler.readCraftBytes(args[0]);
+					TransferData craftData = getInstance().getSQLDatabase().readData(args[0]);
 					BungeeCraftReciever.readCraftAndBuild(craftData, false);
 					sender.sendMessage("loaded ship.");
 					return true;
@@ -159,7 +164,7 @@ public class Movecraft extends JavaPlugin {
 						return false;
 					}
 					try{
-						byte[] craftData = BungeeFileHandler.readCraftBytes(p.getName(), BungeeFileHandler.transferFolder);
+						TransferData craftData = getInstance().getSQLDatabase().readData(p.getName());
 						p.teleport(new Location(p.getWorld(), x, y, z));
 						BungeeCraftReciever.readCraftAndBuild(craftData, false);
 						BungeeFileHandler.deleteTransferFile(p.getName());
@@ -378,5 +383,8 @@ public class Movecraft extends JavaPlugin {
 	//gets the player with given UUID. Attempts to resolve from cache, if it cannot it gets from bukkit.
 	public static Player getPlayer(UUID u){
 		return Bukkit.getPlayer(u);
+	}
+	public SQLDatabase getSQLDatabase() {
+		return sqlDatabase;
 	}
 }
