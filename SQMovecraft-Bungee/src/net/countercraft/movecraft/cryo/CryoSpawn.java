@@ -539,7 +539,7 @@ public class CryoSpawn {
 
 	public static void playEffects(Location l) {
 		World w = l.getWorld();
-		w.playSound(l, Sound.PORTAL_TRAVEL, 1.0F, 1.0F);
+		//w.playSound(l, Sound.PORTAL_TRAVEL, 1.0F, 1.0F);
 		w.playEffect(l, Effect.ENDER_SIGNAL, 0);
 		w.playEffect(l, Effect.SMOKE, 0);
 	}

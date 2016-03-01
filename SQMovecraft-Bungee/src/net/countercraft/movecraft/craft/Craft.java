@@ -309,7 +309,7 @@ public class Craft {
 									event.call();
 									if(!event.isCancelled()){
 										new LaserBolt(twoinfront, playerFacing, this.pilot);
-										twoinfront.getWorld().playSound(twoinfront.getLocation(), Sound.SHOOT_ARROW, 2.0F, 1.0F);
+										//twoinfront.getWorld().playSound(twoinfront.getLocation(), Sound.SHOOT_ARROW, 2.0F, 1.0F);
 									}
 								}
 								Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {

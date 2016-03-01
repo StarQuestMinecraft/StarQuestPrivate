@@ -44,7 +44,7 @@ public class WarpStartTask extends BukkitRunnable{
 	}
 	
 	public void run(){
-		s.getWorld().playSound(s.getLocation(), Sound.FIZZ, 1.0F, 1.0F);
+		//s.getWorld().playSound(s.getLocation(), Sound.FIZZ, 1.0F, 1.0F);
 		switch(iteration){
 		case 0:
 			if(p != null){

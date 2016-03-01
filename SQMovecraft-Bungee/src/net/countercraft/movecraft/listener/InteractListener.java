@@ -276,7 +276,7 @@ public class InteractListener implements Listener {
 					sign.setLine(1, "{" + ChatColor.RED + "OPEN" + ChatColor.BLACK + "}");
 					sign.update();
 					BoardingRampUtils.openRamp(sign);
-					sign.getBlock().getWorld().playSound(sign.getBlock().getLocation(), Sound.PISTON_EXTEND, 2.0F, 1.0F);
+					//sign.getBlock().getWorld().playSound(sign.getBlock().getLocation(), Sound.PISTON_EXTEND, 2.0F, 1.0F);
 					return;
 				}
 				event.getPlayer().sendMessage("You cannot toggle the boarding ramp from outside the ship.");
@@ -293,7 +293,7 @@ public class InteractListener implements Listener {
 					if (success) {
 						sign.setLine(1, "{" + ChatColor.GREEN + "SHUT" + ChatColor.BLACK + "}");
 						sign.update();
-						sign.getBlock().getWorld().playSound(sign.getBlock().getLocation(), Sound.PISTON_RETRACT, 2.0F, 1.0F);
+						//sign.getBlock().getWorld().playSound(sign.getBlock().getLocation(), Sound.PISTON_RETRACT, 2.0F, 1.0F);
 						return;
 					}
 					return;
