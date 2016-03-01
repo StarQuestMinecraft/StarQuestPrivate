@@ -348,7 +348,7 @@ public class MapUpdateManager extends BukkitRunnable {
 
 
                                         for ( Player p : w.getPlayers() ) {
-                                                List<ChunkCoordIntPair> chunkCoordIntPairQueue = ( List<ChunkCoordIntPair> ) ( ( CraftPlayer ) p ).getHandle().chunkCoordIntPairQueue;
+                                                List<ChunkCoordIntPair> chunkCoordIntPairQueue = ( List<ChunkCoordIntPair> ) ( ( CraftPlayer ) p ).
 
                                                 int playerChunkX=p.getLocation().getBlockX()>>4;
                     							int playerChunkZ=p.getLocation().getBlockZ()>>4;
@@ -364,6 +364,16 @@ public class MapUpdateManager extends BukkitRunnable {
                     							}
                                         }
                                 }*/
+                                List<Player> players = w.getPlayers();
+                                for ( net.minecraft.server.v1_9_R1.Chunk c : chunks ) {
+                                	c.initLighting();
+                                	/*PacketMapChunk packet = new PacketMapChunk(c);
+                                	for(final Player player : players) {
+                                		System.out.println("Sending packet to " + player.getName());
+                                        packet.send(player);
+                                    }*/
+                                	w.refreshChunk(c.bukkitChunk.getX(), c.bukkitChunk.getZ());
+                                }
 
 
                                 
