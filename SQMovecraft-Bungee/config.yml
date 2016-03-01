@@ -34,3 +34,12 @@ Boletarian:
     Xcoord:
     Ycoord:
     Zcoord:
+ 
+#Database   
+Host: localhost
+Database: minecraft
+User: minecraft
+Pass: gghax0rs
+
+
+
