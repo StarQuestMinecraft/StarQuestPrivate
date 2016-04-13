@@ -26,7 +26,7 @@ public class Bedspawn {
 	public static String port = /*(CInfo.get().getPort() != null) ? CInfo.get().getPort() :*/ "3306";
 	public static String db_name = /*(CInfo.get().getDBName() != null) ? CInfo.get().getDBName() :*/ "minecraft";
 	public static String username = /*(CInfo.get().getUsername() != null) ? CInfo.get().getUsername() :*/ "minecraft";
-	public static String password = /*(CInfo.get().getPassword() != null) ? CInfo.get().getPassword() :*/ "R3b!rth!ng";
+	public static String password = /*(CInfo.get().getPassword() != null) ? CInfo.get().getPassword() :*/ "gghax0rs";
 	public static Connection cntx = null;
 	public static String dsn = ("jdbc:mysql://" + hostname + ":" + port + "/" + db_name);
 	public final static Bedspawn DEFAULT = Movecraft.getInstance().getDefaultBedspawn();

@@ -26,7 +26,7 @@ public class Knapsack implements Serializable {
 	private final Crate armor;
 
 	public Knapsack(Player p) {
-
+		System.out.println("Knapsack created");
 		this.hunger = p.getFoodLevel();
 		this.health = p.getHealth();
 		this.xp = p.getExp();
@@ -38,7 +38,9 @@ public class Knapsack implements Serializable {
 	}
 
 	public void unpack(Player p) {
-
+		System.out.println("Knapsack unpacked");
+		System.out.println("Player: " + p);
+		System.out.println("hunger: " + this.hunger);
 		p.setFoodLevel(this.hunger);
 		p.setHealth(this.health);
 		p.setExp(this.xp);

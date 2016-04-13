@@ -18,20 +18,25 @@
 package net.countercraft.movecraft;
 
 import java.io.File;
-import java.io.IOException;
+
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+
 import org.bukkit.block.Sign;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+
 import org.bukkit.entity.Player;
+
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -39,31 +44,39 @@ import org.bukkit.plugin.messaging.Messenger;
 
 import net.countercraft.movecraft.async.AsyncManager;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
-import net.countercraft.movecraft.bungee.BungeeCraftReciever;
-import net.countercraft.movecraft.bungee.BungeeCraftSender;
-import net.countercraft.movecraft.bungee.BungeeFileHandler;
-import net.countercraft.movecraft.bungee.BungeeListener;
-import net.countercraft.movecraft.bungee.SQLDatabase;
-import net.countercraft.movecraft.bungee.TransferData;
+import net.countercraft.movecraft.crafttransfer.SerializableLocation;
+import net.countercraft.movecraft.crafttransfer.database.SQLDatabase;
+import net.countercraft.movecraft.crafttransfer.utils.bungee.BungeeHandler;
+import net.countercraft.movecraft.crafttransfer.utils.transfer.BungeeCraftReceiver;
+import net.countercraft.movecraft.crafttransfer.utils.transfer.BungeeCraftSender;
 import net.countercraft.movecraft.config.Settings;
+
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
+
 import net.countercraft.movecraft.cryo.CryoSpawn;
+
 import net.countercraft.movecraft.database.FileDatabase;
 import net.countercraft.movecraft.database.StarshipDatabase;
+
 import net.countercraft.movecraft.listener.BlockListener;
 import net.countercraft.movecraft.listener.CommandListener;
 import net.countercraft.movecraft.listener.EntityListener;
 import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.listener.InventoryListener;
+
 import net.countercraft.movecraft.localisation.I18nSupport;
+
 import net.countercraft.movecraft.shield.DockUtils;
 import net.countercraft.movecraft.shield.ShieldUtils;
+
 import net.countercraft.movecraft.task.AutopilotRunTask;
+
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.ShipNuker;
 import net.countercraft.movecraft.utils.ShipSizeUtils;
+
 import net.countercraft.movecraft.vapor.VaporRunnable;
 
 /**
@@ -73,6 +86,7 @@ import net.countercraft.movecraft.vapor.VaporRunnable;
 public class Movecraft extends JavaPlugin {
 	
 	private static Movecraft instance;
+	public static void main(String[] args) {}
 	
 	private SQLDatabase sqlDatabase;
 	
@@ -133,19 +147,13 @@ public class Movecraft extends JavaPlugin {
 			return true;
 		} else if(cmd.getName().equalsIgnoreCase("serverjump") && sender.isOp()){
 			String serverName = args[0];
-			Player p = (Player) sender;
-			try {
-				BungeeCraftSender.sendCraft(p, serverName, "world", 0, 200, 0, CraftManager.getInstance().getCraftByPlayer(p));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			SerializableLocation destinationLocation = new SerializableLocation(serverName, 0, 200, 0);
+			BungeeCraftSender.sendCraft(destinationLocation, CraftManager.getInstance().getCraftByPlayer((Player) sender));
 			return true;
 		} else if(cmd.getName().equalsIgnoreCase("loadship")){
 			if(sender.hasPermission("movecraft.loadship")){
 				if(args.length == 1){
-					TransferData craftData = getInstance().getSQLDatabase().readData(args[0]);
-					BungeeCraftReciever.readCraftAndBuild(craftData, false);
+					BungeeCraftReceiver.receiveCraft(args[0]);
 					sender.sendMessage("loaded ship.");
 					return true;
 				} else if(args.length == 4){
@@ -164,10 +172,7 @@ public class Movecraft extends JavaPlugin {
 						return false;
 					}
 					try{
-						TransferData craftData = getInstance().getSQLDatabase().readData(p.getName());
-						p.teleport(new Location(p.getWorld(), x, y, z));
-						BungeeCraftReciever.readCraftAndBuild(craftData, false);
-						BungeeFileHandler.deleteTransferFile(p.getName());
+						BungeeCraftReceiver.receiveCraft(p.getName());
 					} catch (Exception e){
 						e.printStackTrace();
 						p.sendMessage("Failed to load ship: error. Did you have a ship saved?");
@@ -253,6 +258,7 @@ public class Movecraft extends JavaPlugin {
 
 	public void onEnable() {
 		// Read in config
+		sqlDatabase = new SQLDatabase();
 		this.saveDefaultConfig();
 		Settings.LOCALE = getConfig().getString( "Locale" );
 		// if the PilotTool is specified in the config.yml file, use it
@@ -291,9 +297,8 @@ public class Movecraft extends JavaPlugin {
 			
 			Messenger m = this.getServer().getMessenger();
 			m.registerOutgoingPluginChannel(this, "BungeeCord");
-			BungeeListener b = new BungeeListener();
-		    m.registerIncomingPluginChannel(this, "BungeeCord", b);
-		    m.registerIncomingPluginChannel(this, "cryoBounce", b);
+		    //m.registerIncomingPluginChannel(this, "BungeeCord", b);
+		    //m.registerIncomingPluginChannel(this, "cryoBounce", b);
 		    
 			//StorageChestItem.readFromDisk();
 			//StorageChestItem.addRecipie();

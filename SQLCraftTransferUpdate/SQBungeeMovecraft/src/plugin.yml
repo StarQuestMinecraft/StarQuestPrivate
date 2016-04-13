@@ -34,6 +34,9 @@ commands:
    releaseallships:
       description: sdfsdfsd
       usage: sdfsdf
+   reloadships:
+      description: things
+      usage: things
    claimdock:
       description: claim a dock!
       usage: /claimdock (with a WG region selected)

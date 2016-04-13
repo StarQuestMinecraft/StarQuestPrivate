@@ -90,6 +90,8 @@ public class BlockListener implements Listener {
 	@EventHandler
 	public void onSignChange(SignChangeEvent event) {
 		for (CraftType t : CraftManager.getInstance().getCraftTypes()) {
+			System.out.println("Line 0: " + event.getLine(0));
+			System.out.println("Craft name: " + t.getCraftName());
 			if (event.getLine(0).equalsIgnoreCase(t.getCraftName())) {
 				if (event.getLine(1) == null || event.getLine(1).equals("")) {
 					String str = event.getPlayer().getName();

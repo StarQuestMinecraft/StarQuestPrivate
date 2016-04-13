@@ -190,6 +190,8 @@ public class AsyncManager extends BukkitRunnable {
 							Movecraft.getInstance().getLogger().log( Level.INFO, String.format( I18nSupport.getInternationalisedString( "Detection - Success - Log Output" ), p.getName(), c.getType().getCraftName(), c.getBlockList().length, c.getMinX(), c.getMinZ() ) );
 							CraftManager.getInstance().addCraft( c, p );
 							if(data.getMainSign() != null){
+								System.out.println("starship database: " + Movecraft.getInstance().getStarshipDatabase());
+								System.out.println("sign location: " + data.getMainSign().getLocation());
 								Movecraft.getInstance().getStarshipDatabase().removeStarshipAtLocation(data.getMainSign().getLocation());
 							}
 							if(poll instanceof RedetectTask){
