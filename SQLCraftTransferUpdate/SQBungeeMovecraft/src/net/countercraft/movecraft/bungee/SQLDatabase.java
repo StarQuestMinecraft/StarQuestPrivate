@@ -1,5 +1,8 @@
 package net.countercraft.movecraft.bungee;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.sql.*;
 
 public class SQLDatabase {
@@ -45,12 +48,19 @@ public class SQLDatabase {
 				PreparedStatement s = getCon().getConnection().prepareStatement(READ_SQL);
 				s.setString(1, pilotName);
 				ResultSet resultSet = s.executeQuery();
-				if(resultSet.getObject(1) instanceof TransferData) {
-					return (TransferData) resultSet.getObject(1);
+				if(resultSet.next()) {
+					byte[] b = resultSet.getBytes(1);
+					ObjectInputStream objectStream = null;
+					if(b != null) {
+						objectStream = new ObjectInputStream(new ByteArrayInputStream(b));
+						Object deserializedObject = objectStream.readObject();
+						return (TransferData) deserializedObject;
+					}
 				}
 			}
-			catch (SQLException e) {
-				e.printStackTrace();
+			catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			}
 		}
 		return null;

@@ -15,6 +15,7 @@ import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
@@ -27,7 +28,7 @@ import com.dibujaron.cardboardbox.Knapsack;
 
 public class BungeeCraftSender {
 
-	public static void sendCraft(Player p, String targetserver, String world, int X, int Y, int Z, Craft c) throws IOException {
+	public static void sendCraft(Player p, String targetserver, String world, int X, int Y, int Z, final Craft c) throws IOException {
 		/*try {
 			c.playersRidingLock.acquire();*/
 			for (int i = 0; i < c.playersRidingShip.size(); i++) {
@@ -40,24 +41,31 @@ public class BungeeCraftSender {
 				}
 			}
 			//c.playersRidingLock.release();
-			Location location = new Location(p.getWorld(), (double) X, (double) Y, (double) Z);
-			TransferData data = writeData(p, targetserver, location, c);
+			TransferData data = writeData(p, targetserver, X, Y, Z, c);
 			CraftManager.getInstance().removeCraft(c, false);
-			Movecraft.getInstance().getSQLDatabase().writeData(data);
+			System.out.println("data: " + data);
+			System.out.println("Movecraft singleton: " + Movecraft.getInstance());
+			System.out.println("SQLDatabase singleton: " + Movecraft.getInstance().getSQLDatabase());
+			//Movecraft.getInstance().getSQLDatabase().writeData(data);
 			System.out.println("Saved craft.");
 			sendCraftSpawnPacket(p, targetserver);
 			//c.playersRidingLock.acquire();
 			for (int i = 0; i < c.playersRidingShip.size(); i++) {
 				UUID s = c.playersRidingShip.get(i);
 				Player player = Movecraft.getPlayer(s);
-				if (player != null)
+				if (player != null) {
 					BungeePlayerHandler.connectPlayer(player, targetserver);
+				}
 			}
 			//c.playersRidingLock.release();
 		/*} catch (Exception e) {
 			e.printStackTrace();
 		}*/
-		removeCraftBlocks(c);
+		Bukkit.getScheduler().scheduleAsyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+			public void run() {
+				removeCraftBlocks(c);
+			}
+		}, 20L);
 	}
 	
 	private static void sendCraftSpawnPacket(Player p, String targetserver) {
@@ -85,16 +93,16 @@ public class BungeeCraftSender {
 		}
 	}
 
-	public static TransferData writeData(Player p, String targetserver, Location destination, Craft c) throws IOException {
-		return writeData(p, targetserver, destination, c, true);
+	public static TransferData writeData(Player p, String targetserver, double x, double y, double z, Craft c) {
+		return writeData(p, targetserver, x, y, z, c, true);
 	}
-	public static TransferData writeData(Player p, String targetserver, Location destination, Craft c, boolean wipeInventories) throws IOException {
+	public static TransferData writeData(Player p, String targetserver, double destinationX, double destinationY, double destinationZ, Craft c, boolean wipeInventories) {
 		TransferData transferData = new TransferData();
 		// write out if it's slipspace
 		boolean slip = c.getW().getEnvironment() == Environment.THE_END;
 		transferData.setSlip(slip);
 		// send the destination location
-		transferData.setDestinationLocation(destination);
+		transferData.setDestinationLocation(targetserver, destinationX, destinationY, destinationZ);
 		// send the existing (old) location
 		Location lctn = p.getLocation();
 		transferData.setOldLocation(lctn);
@@ -144,6 +152,8 @@ public class BungeeCraftSender {
 					playerData.setPlayerLocation(l);
 					Knapsack k = new Knapsack(plr);
 					playerData.setPlayerKnapsack(k);
+					GameMode mode = plr.getGameMode();
+					playerData.setPlayerGameMode(mode);
 					if(wipeInventories){
 						BungeePlayerHandler.wipePlayerInventory(plr);
 					}

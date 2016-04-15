@@ -40,8 +40,13 @@ public class BungeeCraftConstructor {
 		System.out.println("tX: " + tX);
 		System.out.println("tY: " + tY);
 		System.out.println("tZ: " + tZ);
+		System.out.println("oldX: " + oldX);
+		System.out.println("oldY: " + oldY);
+		System.out.println("oldZ: " + oldZ);
+		System.out.println("is fake: " + isFake);
+		System.out.println("world: " + world);
 		World w;
-		if(world.equals("transfer")){
+		if(isFake){
 			w = Bukkit.getPlayer(pilotUUID).getWorld();
 		} else {
 			w = Movecraft.getInstance().getServer().getWorld(world);
@@ -49,9 +54,9 @@ public class BungeeCraftConstructor {
 		Location targetLoc = new Location(w, tX, tY, tZ);
 		Location oldLoc = new Location(w, oldX, oldY, oldZ);
 		int dX, dY, dZ;
-		dX = getdX(oldLoc, targetLoc);
-		dY = getdY(oldLoc, targetLoc);
-		dZ = getdZ(oldLoc, targetLoc);
+			dX = getdX(oldLoc, targetLoc);
+			dY = getdY(oldLoc, targetLoc);
+			dZ = getdZ(oldLoc, targetLoc);
 		
 		boolean isSpaceWorld = LocationUtils.spaceCheck(world);
 		System.out.println("This serverjump came from: " + oldworld);
@@ -118,6 +123,7 @@ public class BungeeCraftConstructor {
 	}
 	
 	private static void warpPlayers(ArrayList<ServerjumpTeleport> playersOnShip) {
+		System.out.println("warpPlayers called");
 		for(final ServerjumpTeleport t : playersOnShip){
 			Player p = Movecraft.getPlayer(t.uuid);
 			if (p != null && p.isOnline()) {
@@ -207,7 +213,11 @@ public class BungeeCraftConstructor {
 	public static boolean destinationObstructed(ArrayList<LocAndBlock> bll, World targ, int dX, int dY, int dZ){
 		for (int i = 0; i < bll.size(); i++) {
 			Location newLoc = new Location (targ, bll.get(i).X + dX, bll.get(i).Y + dY, bll.get(i).Z + dZ);
-			Block lBlock = newLoc.getBlock();
+			/*System.out.println("x: " + newLoc.getX());
+			System.out.println("y: " + newLoc.getY());
+			System.out.println("z: " + newLoc.getZ());
+			System.out.println("targ: " + targ);*/
+			Block lBlock = targ.getBlockAt(newLoc);
 			if(lBlock == null) return true;
 			for(Block b : BlockUtils.getEdges(lBlock, true, true)){
 				int testID = b.getTypeId();

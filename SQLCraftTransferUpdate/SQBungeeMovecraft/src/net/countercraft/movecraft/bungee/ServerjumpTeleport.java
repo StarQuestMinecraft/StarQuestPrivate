@@ -33,10 +33,10 @@ public class ServerjumpTeleport implements PlayerTeleport{
 	GameMode gamemode;
 	public Knapsack knapsack;
 
-	public ServerjumpTeleport(UUID uuid, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack playerKnap, GameMode gamemode){
+	public ServerjumpTeleport(UUID uuid, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack playerKnap, GameMode gamemode) {
 		init(uuid, worldname, x, y, z, yaw, pitch, playerKnap, gamemode);
 	}
-	private void init(UUID uuid, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack playerKnap, GameMode gamemode){
+	private void init(UUID uuid, String worldname, int x, int y, int z, double yaw, double pitch, Knapsack playerKnap, GameMode gamemode) {
 		this.uuid = uuid;
 		this.worldname = worldname;
 
@@ -54,7 +54,7 @@ public class ServerjumpTeleport implements PlayerTeleport{
 	}
 
 	public void execute() {
-
+		System.out.println("ServerjumpTeleport executed!");
 		final Player p = Movecraft.getPlayer(uuid);
 		
 		if(p == null){

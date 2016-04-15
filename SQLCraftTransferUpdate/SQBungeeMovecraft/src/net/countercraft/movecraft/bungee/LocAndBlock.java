@@ -1,8 +1,10 @@
 package net.countercraft.movecraft.bungee;
 
+import java.io.Serializable;
+
 import org.bukkit.inventory.Inventory;
 
-public class LocAndBlock {
+public class LocAndBlock implements Serializable {
 	public int X;
 	public int Y;
 	public int Z;

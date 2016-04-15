@@ -93,7 +93,7 @@ public class BungeePlayerHandler {
 	}
 
 	public static void connectPlayer(Player p, String targetserver) {
-
+		System.out.println("connectPlayer called");
 		ByteArrayOutputStream b = new ByteArrayOutputStream();
 		DataOutputStream out = new DataOutputStream(b);
 		try {
@@ -112,7 +112,7 @@ public class BungeePlayerHandler {
 		System.out.println("Sending player.");
 		connectPlayer(p, targetserver);
 	}*/
-	
+	@Deprecated
 	private static void sendPlayerDeathData(Player p, String targetserver){
 		ByteArrayOutputStream b = new ByteArrayOutputStream();
 		DataOutputStream out = new DataOutputStream(b);
@@ -137,7 +137,7 @@ public class BungeePlayerHandler {
 			e.printStackTrace();
 		}
 	}
-
+	@Deprecated
 	private static void sendPlayerCoordinateData(Player p, String targetserver, String world, int X, int Y, int Z, boolean isBedspawn) {
 
 		ByteArrayOutputStream b = new ByteArrayOutputStream();
@@ -162,9 +162,9 @@ public class BungeePlayerHandler {
 			e.printStackTrace();
 		}
 	}
-
+	@Deprecated
 	public static void writePlayerData(DataOutputStream msgout, Player p, String targetserver, String world, int X, int Y, int Z, boolean isBedspawn) throws IOException {
-
+		System.out.println("Writing player data");
 		Location l = p.getLocation();
 		msgout.writeUTF(world);
 		msgout.writeUTF(p.getUniqueId().toString());

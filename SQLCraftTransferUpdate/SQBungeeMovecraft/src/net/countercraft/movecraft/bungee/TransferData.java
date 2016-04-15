@@ -1,18 +1,21 @@
 package net.countercraft.movecraft.bungee;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.Vector;
 
 import org.bukkit.Location;
 
-public class TransferData {
+public class TransferData implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private boolean slip;
 	
-	private Location destinationLocation;
+	private SerializableLocation destinationLocation;
 	
-	private Location oldLocation;
+	private SerializableLocation oldLocation;
 	
 	private String craftType;
 	
@@ -83,20 +86,20 @@ public class TransferData {
 		this.craftType = craftType;
 	}
 
-	public Location getOldLocation() {
+	public SerializableLocation getOldLocation() {
 		return oldLocation;
 	}
 
 	public void setOldLocation(Location oldLocation) {
-		this.oldLocation = oldLocation;
+		this.oldLocation = new SerializableLocation(oldLocation.getWorld().getName(), oldLocation.getX(), oldLocation.getY(), oldLocation.getZ());
 	}
 
-	public Location getDestinationLocation() {
+	public SerializableLocation getDestinationLocation() {
 		return destinationLocation;
 	}
 
-	public void setDestinationLocation(Location destinationLocation) {
-		this.destinationLocation = destinationLocation;
+	public void setDestinationLocation(String worldName, double x, double y, double z) {
+		this.destinationLocation = new SerializableLocation(worldName, x, y, z);
 	}
 
 	public boolean isSlip() {

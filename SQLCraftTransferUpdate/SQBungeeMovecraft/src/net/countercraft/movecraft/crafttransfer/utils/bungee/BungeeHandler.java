@@ -98,10 +98,8 @@ public class BungeeHandler implements Listener {
 		data.addString("Pilot", pilot);
 		data.addString("TargetServer", targetServer);
 		System.out.println("Senders: " + SQNetEvents.getInstance().getSenders());
-		for(Sender sender : SQNetEvents.getInstance().getSenders()) {
-			sender.send(new EventPacket(new ReceivedDataEvent(data)));
-			System.out.println("Writing CraftSpawnPacket to sender");
-		}
+		SQNetEvents.getInstance().send(new EventPacket(new ReceivedDataEvent(data)), targetServer);
+		System.out.println("Writing CraftSpawnPacket to sender");
 	}
 	//connects player to server
 	public static void sendConnectPlayerPacket(String player, String oldServer, SerializableLocation location, String pilot) {
@@ -113,9 +111,7 @@ public class BungeeHandler implements Listener {
 		data.addString("Location", signLocationString);
 		data.addString("Pilot", pilot);
 		data.addString("Packet", "ConnectPlayerPacket");
-		for(Sender sender : SQNetEvents.getInstance().getSenders()) {
-			sender.send(new EventPacket(new ReceivedDataEvent(data)));
-		}
+		SQNetEvents.getInstance().send(new EventPacket(new ReceivedDataEvent(data)), location.getWorldName());
 	}
 	//called when player logs onto the server, triggers teleport to the craft
 	public static void sendPlayerTeleportPacket(String player, String targetServer, String location, String pilot) {
@@ -125,9 +121,7 @@ public class BungeeHandler implements Listener {
 		data.addString("Location", location);
 		data.addString("Pilot", pilot);
 		data.addString("Packet", "PlayerTeleportPacket");
-		for(Sender sender : SQNetEvents.getInstance().getSenders()) {
-			sender.send(new EventPacket(new ReceivedDataEvent(data)));
-		}
+		SQNetEvents.getInstance().send(new EventPacket(new ReceivedDataEvent(data)), targetServer);
 	}
 	//Called after all players have been successfully teleported, triggers removal of original craft copy
 	public static void sendCraftRemovePacket(String pilot) {
@@ -136,8 +130,6 @@ public class BungeeHandler implements Listener {
 		data.addString("Pilot", pilot);
 		data.addString("OldServer", oldServer);
 		data.addString("Packet", "CraftRemovePacket");
-		for(Sender sender : SQNetEvents.getInstance().getSenders()) {
-			sender.send(new EventPacket(new ReceivedDataEvent(data)));
-		}
+		SQNetEvents.getInstance().send(new EventPacket(new ReceivedDataEvent(data)), oldServer);
 	}
 }

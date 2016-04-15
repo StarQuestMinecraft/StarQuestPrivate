@@ -27,6 +27,7 @@ import com.dibujaron.cardboardbox.Knapsack;
 public class BungeeCraftReciever {
 	private static int[] inventoryIDs = { 23,54,61,62,146,158 };
 	public static void recieveCraft(DataInputStream in) {
+		System.out.println("Craft received");
 		try {
 			short len = in.readShort();
 			byte[] msgbytes = new byte[len];
@@ -36,8 +37,8 @@ public class BungeeCraftReciever {
 
 			String pilot = msgin.readUTF();
 			System.out.println(pilot);
-		TransferData craftData = Movecraft.getInstance().getSQLDatabase().readData(pilot);
-		readCraftAndBuild(craftData, true);
+		//TransferData craftData = Movecraft.getInstance().getSQLDatabase().readData(pilot);
+		//readCraftAndBuild(craftData, true);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -45,16 +46,20 @@ public class BungeeCraftReciever {
 	}
 	public static void readCraftAndBuild(TransferData transferData, boolean affectPlayers) {
         try {
+        	System.out.println("Craft read and built");
         	//receive slip data
         	boolean slip = transferData.isSlip();
         	//receive target location data
-        	String targetworld = transferData.getDestinationLocation().getWorld().getName();
+        	System.out.println("transferData: " + transferData);
+        	System.out.println("destinationLocation: " + transferData.getDestinationLocation());
+        	System.out.println("Worldname: " + transferData.getDestinationLocation().getWorldName());
+        	String targetworld = transferData.getDestinationLocation().getWorldName();
         	int Xcoord = (int) transferData.getDestinationLocation().getX();
         	int Ycoord = (int) transferData.getDestinationLocation().getY();
         	int Zcoord = (int) transferData.getDestinationLocation().getZ();
         	
         	//receive initial location data
-        	String oldworld = transferData.getOldLocation().getWorld().getName();
+        	String oldworld = transferData.getOldLocation().getWorldName();
         	int oldX = (int) transferData.getOldLocation().getX();
         	int oldY = (int) transferData.getOldLocation().getY();
         	int oldZ = (int) transferData.getOldLocation().getZ();
@@ -77,31 +82,28 @@ public class BungeeCraftReciever {
         	}
         	//receive the blocks list and their accompanying types
         	ArrayList<LocAndBlock> blockList = transferData.getBlockList();
-        	for (int i = 0; i < blockList.size(); i++) {
-        		LocAndBlock blockData = blockList.get(i);
-        		int X = blockData.X;
-        		int Y = blockData.Y;
-        		int Z = blockData.Z;
-        		int id = blockData.id;
-        		int data = blockData.data;
-        	}
         	ArrayList<String> bedspawnNames = transferData.getPlayersWithBedspawnsOnShip();
         	ArrayList<ServerjumpTeleport> playersOnShip = new ArrayList<ServerjumpTeleport>();
         	ArrayList<PlayerTransferData> playerDataList = transferData.getPlayerData();
         	
         	if(affectPlayers) {
 	        	for(PlayerTransferData playerData : playerDataList) {
-	        		UUID id = playerData.getPlayerID();
-	        		Location location = playerData.getPlayerLocation();
-	        		int x = (int) location.getX();
-	        		int y = (int) location.getY();
-	        		int z = (int) location.getZ();
-	        		float yaw = location.getYaw();
-	        		float pitch = location.getPitch();
-	        		String worldName = location.getWorld().getName();
-	        		Knapsack knapsack = playerData.getPlayerKnapsack();
-	        		GameMode gamemode = Movecraft.getPlayer(id).getGameMode();
+	        		final UUID id = playerData.getPlayerID();
+	        		String worldName = playerData.getPlayerLocation().getWorldName();
+	        		int x = (int) playerData.getPlayerLocation().getX();
+	        		int y = (int) playerData.getPlayerLocation().getY();
+	        		int z = (int) playerData.getPlayerLocation().getZ();
+	        		float yaw = playerData.getPlayerLocation().getYaw();
+	        		float pitch = playerData.getPlayerLocation().getPitch();
+	        		final Knapsack knapsack = playerData.getPlayerKnapsack();
+	        		System.out.println("Knapsack: " + knapsack);
+	        		GameMode gamemode = playerData.getPlayerGameMode();
 	        		playersOnShip.add(new ServerjumpTeleport(id, worldName, x, y, z, yaw, pitch, knapsack, gamemode));
+	        		Bukkit.getScheduler().scheduleAsyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+	        			public void run() {
+	        				knapsack.unpack(Bukkit.getPlayer(id));
+	        			}
+	        		}, 120L);
 	        	}
         	} else {
         		Player p = Movecraft.getPlayer(pUUID);

@@ -12,7 +12,6 @@ public class BungeeListener implements PluginMessageListener {
 
 	public BungeeListener() {
 	}
-
 	@Override
 	public void onPluginMessageReceived(String channel, Player player, byte[] message) {
 		if (channel.equals("BungeeCord")) {
