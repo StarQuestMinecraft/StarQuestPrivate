@@ -6,6 +6,7 @@ import java.util.UUID;
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bungee.BungeeCraftSender;
 import net.countercraft.movecraft.craft.Craft;
+import net.countercraft.movecraft.event.CraftServerJumpEvent;
 import net.countercraft.movecraft.slip.WarpUtils;
 import net.countercraft.movecraft.utils.PlayerFlightUtil;
 
@@ -23,12 +24,18 @@ public class RepeatTryServerJumpTask extends BukkitRunnable{
 	Player p;
 	
 	public static void createServerJumpTask(final Player p, final Craft c, final String server, final int x, final int y, final int z){
-		Bukkit.getServer().getScheduler().runTask(Movecraft.getInstance(), new Runnable(){
-			public void run(){
-				RepeatTryServerJumpTask t = new RepeatTryServerJumpTask(p, c, server, x, y, z);
-				t.runTaskTimer(Movecraft.getInstance(), 0, 1);
-			}
-		});
+		c.setProcessingTeleport(true);
+		CraftServerJumpEvent event = new CraftServerJumpEvent(c, Bukkit.getServerName(), server);
+		if(event.call()){
+			Bukkit.getServer().getScheduler().runTask(Movecraft.getInstance(), new Runnable(){
+				public void run(){
+					RepeatTryServerJumpTask t = new RepeatTryServerJumpTask(p, c, server, x, y, z);
+					t.runTaskTimer(Movecraft.getInstance(), 0, 1);
+				}
+			});
+		} else {
+			p.sendMessage("You cannot enter this world.");
+		}
 	}
 	public static void createServerJumpTask(final Player p, final Craft c, final String server, final String world, final int x, final int y, final int z){
 		Bukkit.getServer().getScheduler().runTask(Movecraft.getInstance(), new Runnable(){

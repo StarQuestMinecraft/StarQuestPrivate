@@ -19,9 +19,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class AutopilotRunTask extends BukkitRunnable{
 	public static ArrayList<Craft> autopilotingCrafts = new ArrayList<Craft>();
 	final static int SQRT_2 = (int) Math.round(Math.sqrt(2));
-	
+	public static boolean DISABLED = false;
 	public AutopilotRunTask() {
 		runTaskTimer(Movecraft.getInstance(), 40, 40);
+		DISABLED = Movecraft.getInstance().getConfig().getBoolean("autopilot");
 	}
 	
 	public void run(){
@@ -116,20 +117,26 @@ public class AutopilotRunTask extends BukkitRunnable{
 
 	public static void startAutopiloting(Sign clicked, Craft c, Player p){
 		if (c.getType().getCanAutopilot()) {
-			int speed = speedFromSign(clicked, c);
-			double craftMax = c.getType().getSpeed(p);
-			craftMax = craftMax + c.getExtraSpeed();
-			if(craftMax < speed){
-				int craftSpeed = (int) craftMax;
-				speedToSign(clicked, craftSpeed);
-				speed = craftSpeed;
+			if(DISABLED){
+				p.sendMessage("Autopilot is disabled on this server!");
+				return;
+			} else {
+				int speed = speedFromSign(clicked, c);
+				double craftMax = c.getType().getSpeed(p);
+				craftMax = craftMax + c.getExtraSpeed();
+				if(craftMax < speed){
+					int craftSpeed = (int) craftMax;
+					speedToSign(clicked, craftSpeed);
+					speed = craftSpeed;
+				}
+				calculateVelocity(c, speed);
+				autopilotingCrafts.add(c);
+				p.sendMessage(ChatColor.RED + "Autopilot Engaged.");
 			}
-			calculateVelocity(c, speed);
-			autopilotingCrafts.add(c);
-			p.sendMessage(ChatColor.RED + "Autopilot Engaged.");
 		} else {
 			p.sendMessage(ChatColor.RED + "This ship type cannot autopilot");
 		}
+		
 	}
 	
 	public static void stopAutopiloting(Craft c, Player p, ArrayList<MovecraftLocation> signLocations){

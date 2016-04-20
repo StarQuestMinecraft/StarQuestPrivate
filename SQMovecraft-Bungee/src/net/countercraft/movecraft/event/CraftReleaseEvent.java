@@ -1,5 +1,6 @@
 package net.countercraft.movecraft.event;
 
-public class CraftReleaseEvent {
+import net.countercraft.movecraft.craft.Craft;
 
+public class CraftReleaseEvent {
 }
