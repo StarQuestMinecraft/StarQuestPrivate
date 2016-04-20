@@ -115,16 +115,21 @@ public class AutopilotRunTask extends BukkitRunnable{
 	}
 
 	public static void startAutopiloting(Sign clicked, Craft c, Player p){
-		int speed = speedFromSign(clicked, c);
-		double craftMax = c.getType().getSpeed(p);
-		if(craftMax < speed){
-			int craftSpeed = (int) craftMax;
-			speedToSign(clicked, craftSpeed);
-			speed = craftSpeed;
+		if (c.getType().getCanAutopilot()) {
+			int speed = speedFromSign(clicked, c);
+			double craftMax = c.getType().getSpeed(p);
+			craftMax = craftMax + c.getExtraSpeed();
+			if(craftMax < speed){
+				int craftSpeed = (int) craftMax;
+				speedToSign(clicked, craftSpeed);
+				speed = craftSpeed;
+			}
+			calculateVelocity(c, speed);
+			autopilotingCrafts.add(c);
+			p.sendMessage(ChatColor.RED + "Autopilot Engaged.");
+		} else {
+			p.sendMessage(ChatColor.RED + "This ship type cannot autopilot");
 		}
-		calculateVelocity(c, speed);
-		autopilotingCrafts.add(c);
-		p.sendMessage(ChatColor.RED + "Autopilot Engaged.");
 	}
 	
 	public static void stopAutopiloting(Craft c, Player p, ArrayList<MovecraftLocation> signLocations){
@@ -202,6 +207,7 @@ public class AutopilotRunTask extends BukkitRunnable{
 	public static void incrementSpeed(Sign s, Craft c){
 		int speed = speedFromSign(s, c);
 		int max = (int) c.getType().getSpeed(c.pilot);
+		max = max + c.getExtraSpeed();
 		if(speed < max){
 			speed++;
 		} else {

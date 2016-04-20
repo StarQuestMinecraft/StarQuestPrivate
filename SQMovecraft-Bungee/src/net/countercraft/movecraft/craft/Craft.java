@@ -40,6 +40,7 @@ import net.countercraft.movecraft.utils.GunUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.PlayerFlightUtil;
 import net.countercraft.movecraft.utils.Rotation;
+import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -52,6 +53,9 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityExplodeEvent;
+
+import us.higashiyama.george.SQSpace.SQSpace;
+
 import java.util.Vector;
 
 public class Craft {
@@ -123,25 +127,63 @@ public class Craft {
 	}
 
 	public void detect(Player p, MovecraftLocation startPoint) {
-		pilot = p;
-		AsyncTask task;
-		if(this.getType().getCraftName().equalsIgnoreCase("Pod")){
-			task = new PodDetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
+		if (SQSpace.spaceWorlds.contains(p.getWorld().getName().toLowerCase())) {
+			if (this.getType().getCanPilotSpace()) {
+				pilot = p;
+				AsyncTask task;
+				if(this.getType().getCraftName().equalsIgnoreCase("Pod")){
+					task = new PodDetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
+				} else {
+					task = new DetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
+				}
+				AsyncManager.getInstance().submitTask(task, this);
+			} else {
+				p.sendMessage(ChatColor.RED + "This craft type cannot be piloted in space");
+			}
 		} else {
-			task = new DetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
+			if (this.getType().getCanPilotPlanet()) {
+				pilot = p;
+				AsyncTask task;
+				if(this.getType().getCraftName().equalsIgnoreCase("Pod")){
+					task = new PodDetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
+				} else {
+					task = new DetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
+				}
+				AsyncManager.getInstance().submitTask(task, this);
+			} else {
+				p.sendMessage(ChatColor.RED + "This craft type cannot be piloted on a planet");
+			}
 		}
-		AsyncManager.getInstance().submitTask(task, this);
 	}
 	
 	public void redetect(Player p, MovecraftLocation startPoint){
-		pilot = p;
-		AsyncTask task;
-		if(this.getType().getCraftName().equalsIgnoreCase("Pod")){
-			task = new PodDetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
+		if (SQSpace.spaceWorlds.contains(p.getWorld().getName().toLowerCase())) {
+			if (this.getType().getCanPilotSpace()) {
+				pilot = p;
+				AsyncTask task;
+				if(this.getType().getCraftName().equalsIgnoreCase("Pod")){
+					task = new PodDetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
+				} else {
+					task = new RedetectTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
+				}
+				AsyncManager.getInstance().submitTask(task, this);
+			} else {
+				p.sendMessage(ChatColor.RED + "This craft type cannot be piloted in space");
+			}
 		} else {
-			task = new RedetectTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
+			if (this.getType().getCanPilotPlanet()) {
+				pilot = p;
+				AsyncTask task;
+				if(this.getType().getCraftName().equalsIgnoreCase("Pod")){
+					task = new PodDetectionTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
+				} else {
+					task = new RedetectTask(this, startPoint, type.getMinSize(), type.getMaxSize(), type.getAllowedBlocks(), type.getForbiddenBlocks(), p.getName(), w);
+				}
+				AsyncManager.getInstance().submitTask(task, this);
+			} else {
+				p.sendMessage(ChatColor.RED + "This craft type cannot be piloted on a planet");
+			}
 		}
-		AsyncManager.getInstance().submitTask(task, this);
 	}
 	
 	public void translate(int dx, int dy, int dz)
@@ -372,5 +414,28 @@ public class Craft {
 	
 	public boolean hasMovedInLastSecond(){
 		return System.currentTimeMillis() - lastMove <= 1000;
+	}
+	
+	public int getExtraSpeed(){
+		if (type.getCanSpeedScale()) {
+			if (blockList.length >= 200 && blockList.length < 400) {
+				return 2;		
+			} else if (blockList.length >= 400 && blockList.length < 600) {
+				return 3;
+			} else if (blockList.length >= 600 && blockList.length < 800) {
+				return 4;
+			} else if (blockList.length >= 800 && blockList.length < 1000) {
+				return 5;
+			} else if (blockList.length >= 1000 && blockList.length < 1200) {
+				return 4;
+			} else if (blockList.length >= 1200 && blockList.length < 1400) {
+				return 3;
+			} else if (blockList.length >= 1400 && blockList.length < 1600) {
+				return 2;
+			} else if (blockList.length >= 1600 && blockList.length < 1800) {
+				return 1;
+			}
+		}
+		return 0;
 	}
 }
