@@ -255,7 +255,6 @@ public class TranslationTask extends AsyncTask {
 					// if(PingUtils.isOnline(s)){
 					double angle = LocationUtils.getAngleFromGivenPointTo(LocationUtils.locationOfPlanet(s), p.getLocation());
 					Location target = LocationUtils.getSpawnLocationFromAngle(angle, STANDARD_SPAWN, 1500);
-					c.setProcessingTeleport(true);
 					RepeatTryServerJumpTask.createServerJumpTask(p, c, s, target.getBlockX(), 205, target.getBlockY());
 					/*
 					 * } else { p.sendMessage(
@@ -270,7 +269,6 @@ public class TranslationTask extends AsyncTask {
 						// if(PingUtils.isOnline(s)){
 						p.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + " Leaving the atmosphere!");
 						Location loc = LocationUtils.getWarpLocation(p.getWorld().getName(), p.getLocation());
-						c.setProcessingTeleport(true);
 						RepeatTryServerJumpTask.createServerJumpTask(p, c, LocationUtils.getSystem(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 						return;
 						/*
@@ -288,7 +286,6 @@ public class TranslationTask extends AsyncTask {
 						Player plr = Movecraft.getPlayer(u);
 						//plr.playSound(plr.getLocation(), Sound.PORTAL_TRAVEL, 2.0F, 1.0F);
 					}
-					c.setProcessingTeleport(true);
 					RepeatTryServerJumpTask.createServerJumpTask(jump.p, jump.c, jump.server, jump.x, jump.y, jump.z);
 				}
 			}
