@@ -57,7 +57,7 @@ public class Bedspawn {
 		username = fc.getString("User");
 		password = fc.getString("Pass");
 		port = "3306";
-		dsn = ("jdbc:mysql://" + hostname + ":" + port + "/" + db_name);
+		dsn = ("jdbc:mysql://" + hostname + ":" + port + "/" + db_name + "?allowMultiQueries=true");
 		String bedspawn_table = "CREATE TABLE IF NOT EXISTS " + "BEDSPAWNS (" + "`name` VARCHAR(32) NOT NULL," + "`server` VARCHAR(32) DEFAULT NULL," + "`world` VARCHAR(32) DEFAULT NULL,"
 				+ "`x` int(11) DEFAULT 0," + "`y` int(11) DEFAULT 0," + "`z` int(11) DEFAULT 0," + "PRIMARY KEY (`name`)" + ")";
 		

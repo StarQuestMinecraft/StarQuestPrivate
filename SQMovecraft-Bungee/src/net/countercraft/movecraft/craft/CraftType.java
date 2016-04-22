@@ -68,12 +68,36 @@ public class CraftType {
 		allowedBlocks = ((ArrayList<Integer>) data.get("allowedBlocks")).toArray(new Integer[1]);
 		forbiddenBlocks = ((ArrayList<Integer>) data.get("forbiddenBlocks")).toArray(new Integer[1]);
 		canFly = (Boolean) data.get("canFly");
-		canHelm = (Boolean) data.get("canHelm");
-		canPilotSpace = (Boolean) data.get("canPilotSpace");
-		canPilotPlanet = (Boolean) data.get("canPilotPlanet");
-		canServerJump = (Boolean) data.get("canServerJump");
-		canSpeedScale = (Boolean) data.get("canSpeedScale");
-		canAutopilot = (Boolean) data.get("canAutopilot");
+		if (data.containsKey("canHelm")) {
+			canHelm = (Boolean) data.get("canHelm");
+		} else {
+			canHelm = false;
+		}	
+		if (data.containsKey("canPilotSpace")) {
+			canPilotSpace = (Boolean) data.get("canPilotSpace");
+		} else {
+			canPilotSpace = false;
+		}
+		if (data.containsKey("canPilotPlanet")) {
+			canPilotPlanet = (Boolean) data.get("canPilotPlanet");
+		} else {
+			canPilotPlanet = false;
+		}
+		if (data.containsKey("canServerJump")) {
+			canServerJump = (Boolean) data.get("canServerJump");
+		} else {
+			canServerJump = false;
+		}
+		if (data.containsKey("canSpeedScale")) {
+			canSpeedScale = (Boolean) data.get("canSpeedScale");
+		} else {
+			canSpeedScale = false;
+		}
+		if (data.containsKey("canAutoPilot")) {
+			canAutopilot = (Boolean) data.get("canAutopilot");
+		} else {
+			canAutopilot = false;
+		}
 		tryNudge = (Boolean) data.get("tryNudge");
 		speed = (double) data.get("speed");
 		tickCooldown = (int) Math.ceil(20 / ((Double) data.get("speed")));
