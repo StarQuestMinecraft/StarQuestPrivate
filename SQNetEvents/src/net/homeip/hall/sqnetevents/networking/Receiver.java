@@ -5,152 +5,189 @@ import java.io.IOException;
 import java.net.SocketAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.ClosedChannelException;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
 
 import net.homeip.hall.sqnetevents.packet.EventPacket;
 
-
-
-
 public class Receiver implements Closeable {
-	
-	private BindThread bindThread;
-	
-	private ListenThread listenThread;
-	
+
+	private AcceptConnectionsThread acceptConnectionsThread;
+
 	private SocketAddress bindAddress;
-	
+
 	private ServerSocketChannel server;
 	
-	private SocketChannel client;
-	
-	//Binds and listens
+	private ArrayList<ListenThread> listenThreads;
+
+	// Binds and listens
 	public Receiver(String listenAddress) {
+		listenThreads = new ArrayList<ListenThread>();
 		System.out.println("[NetEvents] Creating receiver. ListenAt address: " + listenAddress);
 		String[] address = listenAddress.split(":");
-		bindAddress = new InetSocketAddress(address[0], Integer.parseInt(address[1]));
-		//attempts to bind
+		setBindAddress(new InetSocketAddress(address[0], Integer.parseInt(address[1])));
+		// attempts to bind
 		bindAndListen();
 	}
+
 	private void bindAndListen() {
-		//begins attempting to bind to the port
-		bindThread = new BindThread();
-		getBindThread().start();
-		//when bound, will call listen()
+		// begins attempting to bind to the port
+		setAcceptConnectionsThread(new AcceptConnectionsThread());
+		getAcceptConnectionsThread().start();
+		// when bound, will call listen()
 	}
-	//begins to listen on the bound port
-	private void listen() {
-		//begins listening on the port
-		listenThread = new ListenThread();
-		getListenThread().start();
+
+	//registers and starts a new listener given a client socketchannel; called whenever a connection is established
+	private void listen(SocketChannel client) {
+		if(client == null) {
+			System.out.println("Client is null");
+		}
+		ListenThread listenThread = new ListenThread(client);
+		listenThread.start();
+		addListenThread(listenThread);
 	}
-	
+	//get and set the ListenAt / bind address
 	public SocketAddress getBindAddress() {
 		return bindAddress;
 	}
-	
+	public void setBindAddress(SocketAddress address) {
+		bindAddress = address;
+	}
+	//get and set the bound serversocket
 	public ServerSocketChannel getServer() {
 		return server;
 	}
-	
-	public SocketChannel getClient() {
-		return client;
+	public void setServer(ServerSocketChannel serverChannel) {
+		server = serverChannel;
+	}
+	//get and set the thread that binds and continously accepts connections
+	public AcceptConnectionsThread getAcceptConnectionsThread() {
+		return acceptConnectionsThread;
+	}
+	public void setAcceptConnectionsThread(AcceptConnectionsThread acceptThread) {
+		acceptConnectionsThread = acceptThread;
+	}
+	//get and add to the list of registered listenthreads through which data is received from clients
+	public ArrayList<ListenThread> getListenThreads() {
+		return listenThreads;
+	}
+	public void addListenThread(ListenThread listenThread) {
+		if(listenThreads == null) {
+			System.out.println("ListenThreads is null");
+		}
+		listenThreads.add(listenThread);
 	}
 	
-	public BindThread getBindThread() {
-		return bindThread;
-	}
-	
-	public ListenThread getListenThread() {
-		return listenThread;
-	}
-	//Closes the session
+	// Closes all sessions
 	@Override
 	public void close() throws IOException {
-		if(getServer() != null) {
+		if (getServer() != null) {
 			getServer().close();
 		}
-		if(getClient() != null) {
-			getClient().close();
+		for(ListenThread listenThread : getListenThreads()) {
+			SocketChannel client = listenThread.getClient();
+			if(client != null) {
+				client.close();
+			}
 		}
 	}
-	//Will attempt to bind to correct port until successful
-	private class BindThread extends Thread {
-		public BindThread() {
-			super("NetEvents-Bind");
+	//Binds to proper port and accepts connections until end of program
+	private class AcceptConnectionsThread extends Thread {
+		public AcceptConnectionsThread() {
+			super("NetEvents-AcceptConnections");
 		}
 		@Override
 		public synchronized void run() {
-			//opens the socket channel
 			System.out.println("[NetEvents] Attempting to bind to address " + getBindAddress());
-			try {
-				server = ServerSocketChannel.open();
-				getServer().configureBlocking(true);
-				//binds to the proper port
-				while(!(getServer().socket().isBound())) {
-					getServer().bind(getBindAddress());
+			//opens the socket channel and binds to the proper port
+			bind();
+			//begins accepting incoming connections
+			while(getServer().socket().isBound()) {
+				System.out.println("[NetEvents] Socket is bound");
+				//receives connection
+				SocketChannel clientChannel = receiveIncomingConnections();
+				//registers and starts a new listenthread for the client
+				if(clientChannel != null) {
+					listen(clientChannel);
 				}
 			}
-			catch(IOException e) {
+		}
+		//opens socket channel and binds
+		private void bind() {
+			try {
+				//opens channel
+				setServer(ServerSocketChannel.open());
+				getServer().configureBlocking(true);
+				// binds to the proper port
+				while (!(getServer().socket().isBound())) {
+					getServer().bind(getBindAddress());
+				}
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			System.out.println("[NetEvents] Bound to address " + getBindAddress());
-			//begins or resumes listening
-			if(getListenThread() == null) {
-				listen();
+		}
+		//waits for a connect request to be sent, then accepts. returns socketchannel connection
+		private SocketChannel receiveIncomingConnections() {
+			if ((getServer() != null) && (getServer().isOpen())) {
+				try {
+					System.out.println("[NetEvents] The server socket is open, waiting for connections...");
+					//adds a client
+					SocketChannel channel = getServer().accept();
+					System.out.println("[NetEvents] Received connection from: " + channel.getRemoteAddress());
+					return channel;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
-			else {
-				getListenThread().notify();
-			}
-			//waits until unexpected close, whence notify() will be called from listenThread
+			return null;
 		}
 	}
-	//listens until session closed
+
+	// listens until session closed
 	private class ListenThread extends Thread {
-		public ListenThread() {
+		
+		private SocketChannel clientChannel;
+		
+		public ListenThread(SocketChannel channel) {
 			super("NetEvents-Listener");
-	    }
-		//waits to receive an event from another port, then processes
-	    @Override
-	    public synchronized void run() {
-	    	System.out.println("[NetEvents] Listening at address" + getBindAddress());
-	    	try {
-	    		//if not already open
-	    		if((getServer() != null) && (getServer().isOpen()) && (!(getClient() == null))) {
-	    			client = getServer().accept();
-	    			System.out.println("[NetEvents] The server socket is open, waiting for connections...");
-		            System.out.println("[NetEvents] Received connection from: " + getClient().getRemoteAddress());
-	    		}
-	    		//waits until opened
-	    		else {
-	    			try {
-	    				//notify called from bindthread
-	    				wait();
-	    			}
-	    			catch(InterruptedException e) {
-	    				e.printStackTrace();
-	    			}
-	    		}
-	    		//when everything's working fine, listen for incoming messages
-	    		while ((getServer().isOpen()) && (client.isOpen())) {
-	                //Reads the object and reconstructs from byteinputstream
-	    			//TODO: Remove magic number and add breakdown + EOF detection
-	                byte[] bytes = new byte[4096];
-	                ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
-	                client.read(byteBuffer);
-	                System.out.println("[NetEvents] Reading");
-	                EventPacket event = (EventPacket) EventPacket.read(byteBuffer);
-	                System.out.println("[NetEvents] Read EventPacket from bytebuffer");
-	                //fires the event
-	                event.handle();
-	                System.out.println("[NetEvents] Fired event");
-	            }
-	        }
-	    	catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	    }
+			setClient(channel);
+		}
+		
+		public SocketChannel getClient() {
+			return clientChannel;
+		}
+		public void setClient(SocketChannel channel) {
+			clientChannel = channel;
+		}
+		// waits to receive an event from another port, then processes
+		@Override
+		public void run() {
+			System.out.println("[NetEvents] Listening at address" + getBindAddress());
+			try {
+				// when everything's working fine, listen for incoming messages
+				while ((getServer().isOpen()) && (getClient().isOpen())) {
+					// Reads the object and reconstructs from byteinputstream
+					// TODO: Remove magic number and add breakdown + EOF
+					// detection
+					System.out.println("[NetEvents] Client local address: " + getClient().getLocalAddress().toString());
+					System.out.println("[NetEvents] Client remote address: " + getClient().getRemoteAddress().toString());
+					System.out.println("[NetEvents] Server local address: " + getServer().getLocalAddress());
+					byte[] bytes = new byte[4096];
+					ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
+					System.out.println("[NetEvents] Beginning to read");
+					getClient().read(byteBuffer);
+					System.out.println("[NetEvents] Reading");
+					EventPacket event = (EventPacket) EventPacket.read(byteBuffer);
+					System.out.println("[NetEvents] Read EventPacket from bytebuffer");
+					// fires the event
+					event.handle();
+					System.out.println("[NetEvents] Fired event");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
