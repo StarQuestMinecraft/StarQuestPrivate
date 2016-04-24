@@ -1,6 +1,5 @@
 package net.homeip.hall.sqnetevents;
 
-import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.homeip.hall.sqnetevents.networking.Receiver;
@@ -10,7 +9,6 @@ import net.homeip.hall.sqnetevents.packet.Packet;
 import java.util.List;
 import java.util.UUID;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SQNetEvents extends JavaPlugin {
@@ -73,8 +71,17 @@ public class SQNetEvents extends JavaPlugin {
 			sender.send(packet);
 		}
 	}
-	//sends packet to a specific client server
+	//sends packet to a specific client server, or handles the packet if it's local
 	public void send(Packet packet, String serverName) {
+		//if local
+		if(serverName.equals(getName())) {
+			try {
+				packet.handle();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return;
+		}
 		getSenders().get(serverName).send(packet);
 	}
 	//address to bind and listen on

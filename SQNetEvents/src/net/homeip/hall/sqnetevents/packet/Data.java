@@ -101,7 +101,8 @@ public class Data implements Serializable{
         return ((short) object.getData());
     }
 
-    public <T> T getObject(String id){
+    @SuppressWarnings("unchecked")
+	public <T> T getObject(String id){
         DataObject object = map.get(id);
         if(object == null) throw new RuntimeException("No object with id '"+id+"' found!");
         //noinspection unchecked
