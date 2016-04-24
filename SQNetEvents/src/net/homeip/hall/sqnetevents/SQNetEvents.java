@@ -74,7 +74,7 @@ public class SQNetEvents extends JavaPlugin {
 	//sends packet to a specific client server, or handles the packet if it's local
 	public void send(Packet packet, String serverName) {
 		//if local
-		if(serverName.equals(getName())) {
+		if(serverName.equals(getServerName())) {
 			try {
 				packet.handle();
 			} catch (IOException e) {
