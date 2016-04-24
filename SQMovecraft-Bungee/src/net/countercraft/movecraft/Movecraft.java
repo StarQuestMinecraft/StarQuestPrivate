@@ -58,6 +58,7 @@ import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.shield.DockUtils;
 import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.task.AutopilotRunTask;
+import net.countercraft.movecraft.utils.HangarGateUtils;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.ShipNuker;
@@ -80,6 +81,7 @@ public class Movecraft extends JavaPlugin {
 		//StorageChestItem.saveToDisk();
 		shuttingDown = true;
 		VaporRunnable.onDisable();
+		HangarGateUtils.onDisable();
 		ShieldUtils.activateAllRemaining();
 	}
 	

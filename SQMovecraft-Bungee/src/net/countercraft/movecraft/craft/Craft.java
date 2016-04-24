@@ -240,7 +240,7 @@ public class Craft {
 			Block b = w.getBlockAt(l.getX(), l.getY(), l.getZ());
 			if (b.getType() == Material.PISTON_BASE && b.getData() == 0) {
 				Block above = b.getRelative(BlockFace.UP);
-				if (above.getType() == Material.SPONGE) {
+				if (above.getType() == Material.WORKBENCH) {
 					Block below = b.getRelative(BlockFace.DOWN);
 					if (below.getType() == Material.AIR) {
 						Block belowTwo = below.getRelative(BlockFace.DOWN);
@@ -259,8 +259,8 @@ public class Craft {
 			Block b = w.getBlockAt(l.getX(), l.getY(), l.getZ());
 			if (b.getType() == Material.PISTON_BASE && b.getData() == 8) {
 				Block above = b.getRelative(BlockFace.UP);
-				if (above.getTypeId() == 152) {
-					above.setTypeIdAndData(19, (byte) 0, true);
+				if (above.getType() == Material.REDSTONE_BLOCK) {
+					above.setTypeIdAndData(58, (byte) 0, true);
 				}
 			}
 		}

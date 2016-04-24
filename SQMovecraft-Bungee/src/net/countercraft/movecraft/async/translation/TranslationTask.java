@@ -162,7 +162,7 @@ public class TranslationTask extends AsyncTask {
 
 						//THIS LINE.
 						
-						if (testID != 0 && testID != 36 && testID != 30 && testID != 31 && testID != 78 && !existingBlockSet.contains(newLoc) && !drillable) {
+						if (testID != 0 && testID != 36 && testID != 30 && testID != 31 && testID != 78 && testID != 95 && !existingBlockSet.contains(newLoc) && !drillable) {
 							// New block is not air and is not part of the existing
 							// ship
 	

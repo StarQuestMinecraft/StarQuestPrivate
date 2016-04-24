@@ -44,6 +44,7 @@ import net.minecraft.server.v1_9_R1.IBlockData;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -119,7 +120,7 @@ public class MapUpdateManager extends BukkitRunnable {
                 }
                 
                 int origType=b.getTypeId();
-                
+           
 	            if(m.shouldDrill() && b != null){
 	            	Collection<ItemStack> drops = b.getDrops();
 	            	Inventory inv = m.getCraft().pilot.getInventory();
@@ -130,6 +131,8 @@ public class MapUpdateManager extends BukkitRunnable {
 		            		}
 		            	}
 	            	}
+	            } else if(b.getType() == Material.STAINED_GLASS){
+	            	HangarGateUtils.addDestroyedHangarBlock(b);
 	            }
 	            
 	        	//don't blank out block if it's already air, or if blocktype will not be changed
