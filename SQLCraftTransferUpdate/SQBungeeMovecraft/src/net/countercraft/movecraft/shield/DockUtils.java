@@ -10,7 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 
-import com.massivecraft.factions.entity.MPlayer;
+//import com.massivecraft.factions.entity.MPlayer;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.Vector;
@@ -20,8 +20,8 @@ import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import com.massivecraft.factions.engine.EngineMain;
-import com.massivecraft.massivecore.ps.PS;
+//import com.massivecraft.factions.engine.EngineMain;
+//import com.massivecraft.massivecore.ps.PS;
 
 public class DockUtils {
 	public static boolean checkForCanDeployShield(Player p, ProtectedRegion pendingShield) {
@@ -62,7 +62,8 @@ public class DockUtils {
 	}
 
 	public static boolean checkFactionsBuild(Block b, Player p) {
-		return (EngineMain.canPlayerBuildAt(p.getUniqueId(), PS.valueOf(b), false));
+		//return (EngineMain.canPlayerBuildAt(p.getUniqueId(), PS.valueOf(b), false));
+		return true;
 	}
 
 	private static boolean isDockRegion(ProtectedRegion pr) {

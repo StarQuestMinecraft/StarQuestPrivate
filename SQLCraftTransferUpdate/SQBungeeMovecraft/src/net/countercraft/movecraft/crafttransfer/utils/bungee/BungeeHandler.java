@@ -26,9 +26,10 @@ import net.countercraft.movecraft.crafttransfer.utils.transfer.BungeeCraftReceiv
 
 public class BungeeHandler implements Listener {
 	private static PlayerHandler playerHandler;
-	//called by SocketMessenger when a message is received
+	//called by SQNetEvents when a message is received
 	@EventHandler
-	public static void onReceivedData(ReceivedDataEvent event) {
+	public void onReceivedData(ReceivedDataEvent event) {
+		System.out.println("ReceivedDataEvent successfully fired and received. Processing in BungeeHandler.");
 		Data data = event.getData();
 		String packetType = data.getString("Packet");
 		//indicates that craft is on DB, ready to be received

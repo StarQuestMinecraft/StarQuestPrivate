@@ -6,10 +6,12 @@ import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.crafttransfer.SerializableLocation;
 import net.countercraft.movecraft.crafttransfer.transferdata.TransferData;
 import net.countercraft.movecraft.crafttransfer.utils.bungee.BungeeHandler;
+import net.homeip.hall.sqnetevents.packet.ReceivedDataEvent;
 
 public class BungeeCraftSender {
 	//Called externally
 	public static void sendCraft(SerializableLocation destinationLocation, final Craft c) {
+		System.out.println("[Movecraft] ReceivedDataEvent handlers: " + ReceivedDataEvent.getHandlerList().getRegisteredListeners(Movecraft.getInstance()).toString());
 		TransferData data = buildTransferData(c, destinationLocation);
 		writeToDatabase(data);
 		sendCraftSpawnPacket(c.getPilot().getName(), destinationLocation.getWorldName());
@@ -26,5 +28,7 @@ public class BungeeCraftSender {
 	private static void sendCraftSpawnPacket(String pilot, String targetServer) {
 		BungeeHandler.sendCraftSpawnPacket(pilot, targetServer);
 		System.out.println("Sent CraftSpawnPacket for pilot " + pilot);
+		System.out.println("Test");
+		System.out.println("ReceivedDataEvent handlers: " + ReceivedDataEvent.getHandlerList().getRegisteredListeners(Movecraft.getInstance()).toString());
 	}
 }

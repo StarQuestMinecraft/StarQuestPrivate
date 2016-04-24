@@ -29,10 +29,12 @@ public class EventPacket implements Packet {
         return sendEvent;
     }
     //returns object read from bytebuffer
-    public static Packet read(ByteBuffer byteBuffer) throws IOException {
-        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(byteBuffer.array(), byteBuffer.arrayOffset() + byteBuffer.position(), byteBuffer.remaining()));
-        final long msb = ois.readLong(), lsb = ois.readLong();
-        final UUID uid = new UUID(msb, lsb);
+    public static EventPacket read(ByteBuffer byteBuffer) throws IOException {
+    	byteBuffer.position(0);
+        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(byteBuffer.array(), byteBuffer.arrayOffset(), byteBuffer.remaining()));
+        final long mostSignificantBytes = ois.readLong();
+        final long leastSignificantBytes = ois.readLong();
+        final UUID uid = new UUID(mostSignificantBytes, leastSignificantBytes);
 
         Object o;
         try {
@@ -64,7 +66,7 @@ public class EventPacket implements Packet {
         oos.close();
 
         ByteBuffer buf = ByteBuffer.wrap(baos.toByteArray());
-        buf.position(buf.limit());
+        buf.position(0);
         return buf;
     }
     //don't know why you would ever use this

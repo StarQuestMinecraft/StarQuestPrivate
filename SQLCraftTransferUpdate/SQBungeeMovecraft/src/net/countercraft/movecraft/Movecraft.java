@@ -44,11 +44,14 @@ import org.bukkit.plugin.messaging.Messenger;
 
 import net.countercraft.movecraft.async.AsyncManager;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
+
 import net.countercraft.movecraft.crafttransfer.SerializableLocation;
 import net.countercraft.movecraft.crafttransfer.database.SQLDatabase;
 import net.countercraft.movecraft.crafttransfer.utils.bungee.BungeeHandler;
+import net.countercraft.movecraft.crafttransfer.utils.bungee.PlayerHandler;
 import net.countercraft.movecraft.crafttransfer.utils.transfer.BungeeCraftReceiver;
 import net.countercraft.movecraft.crafttransfer.utils.transfer.BungeeCraftSender;
+
 import net.countercraft.movecraft.config.Settings;
 
 import net.countercraft.movecraft.craft.Craft;
@@ -78,6 +81,7 @@ import net.countercraft.movecraft.utils.ShipNuker;
 import net.countercraft.movecraft.utils.ShipSizeUtils;
 
 import net.countercraft.movecraft.vapor.VaporRunnable;
+import net.homeip.hall.sqnetevents.packet.ReceivedDataEvent;
 
 /**
  * @author AJCStriker, Dibujaron
@@ -255,7 +259,7 @@ public class Movecraft extends JavaPlugin {
 //		}
 		return false;
 	}
-
+	@Override
 	public void onEnable() {
 		// Read in config
 		sqlDatabase = new SQLDatabase();
@@ -289,14 +293,17 @@ public class Movecraft extends JavaPlugin {
 			CraftManager.getInstance();
 			
 			PluginManager pm = getServer().getPluginManager();
-			pm.registerEvents( new InteractListener(), this );
-			pm.registerEvents( new CommandListener(), this );
-			pm.registerEvents( new BlockListener(), this );
-			pm.registerEvents( new EntityListener(), this );
-			pm.registerEvents( new InventoryListener(), this );
-			
+			pm.registerEvents(new InteractListener(), this );
+			pm.registerEvents(new CommandListener(), this );
+			pm.registerEvents(new BlockListener(), this );
+			pm.registerEvents(new EntityListener(), this );
+			pm.registerEvents(new InventoryListener(), this );
+			pm.registerEvents(new BungeeHandler(), this);
+			pm.registerEvents(new PlayerHandler(), this);
 			Messenger m = this.getServer().getMessenger();
 			m.registerOutgoingPluginChannel(this, "BungeeCord");
+			logger.log(Level.INFO, "[Movecraft] ReceivedDataEvent handlers: " + ReceivedDataEvent.getHandlerList().getRegisteredListeners(this).toString());
+			System.out.println("[Movecraft] ReceivedDataEvent handlers: " + ReceivedDataEvent.getHandlerList());
 		    //m.registerIncomingPluginChannel(this, "BungeeCord", b);
 		    //m.registerIncomingPluginChannel(this, "cryoBounce", b);
 		    

@@ -35,7 +35,7 @@ public class SQLDatabase {
 	}
 	//Writes the transferdata to the DB for reception
 	public void writeData(TransferData data) {
-		if(!(data.getPilot().contains("\""))) {
+		if(!(containsIllegalCharacters(data.getPilot()))) {
 			try {
 				PreparedStatement s =  getCon().getConnection().prepareStatement(WRITE_DATA_SQL);
 				s.setString(1, data.getPilot());
@@ -50,22 +50,36 @@ public class SQLDatabase {
 	}
 	//Reads the transferdata from the DB, returns
 	public TransferData readData(String pilot) {
+		System.out.println("Pilot: " + pilot);
 		TransferData data = null;
-		if(!pilot.contains("\"")) {
+		if(!(containsIllegalCharacters(pilot))) {
 			try {
 				PreparedStatement s = getCon().getConnection().prepareStatement(READ_DATA_SQL);
 				s.setString(1, pilot);
-				ResultSet result = s.executeQuery();
-				if((result.next()) && (result.getObject(1) instanceof TransferData)) {
-					data = (TransferData) result.getObject(1);
+				ResultSet results = s.executeQuery();
+				if(results.next()) {
+					System.out.println("Results is not empty");
+					Object o = results.getObject(1);
+					System.out.println(o.getClass().getName());
+					if(results.getObject(1) instanceof TransferData) {
+						System.out.println("Is TransferData");
+						data = (TransferData) results.getObject(1);
+					}
 				}
 			}
 			catch(Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("Data: " + data);
 			System.out.println("Read TransferData object from database for pilot " + data.getPilot());
 		}
 		return data;
+	}
+	public boolean containsIllegalCharacters(String input) {
+		if((input.contains("'")) || (input.contains("\"")) || (input.contains("\\"))) {
+			return true;
+		}
+		return false;
 	}
 	//returns the connection provider
 	public ConnectionProvider getCon() {

@@ -40,11 +40,16 @@ public class Sender implements Closeable {
 		if (getClientChannel().isOpen()) {
 			System.out.println("[NetEvents] Attempting to write packet...");
 			try {
+				System.out.println("[NetEvents] Client local address: " + getClientChannel().getLocalAddress().toString());
+				System.out.println("[NetEvents] Client remote address: " + getClientChannel().getRemoteAddress().toString());
 				// writes bytebuffer from packet and sends
 				// TODO: Add breakdown and EOF implementation
 				ByteBuffer byteBuffer = packet.write();
-				System.out.println("Sending packet with length of " + byteBuffer.array().length);
-				getClientChannel().write(byteBuffer);
+				System.out.println("[NetEvents] Sending packet with length of " + byteBuffer.array().length);
+				System.out.println("[NetEvents] Packet: " + new String(byteBuffer.array()));
+				System.out.println("[NetEvents] Done");
+				int bytesWritten = getClientChannel().write(byteBuffer);
+				System.out.println("[NetEvents] Bytes written: " + bytesWritten);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

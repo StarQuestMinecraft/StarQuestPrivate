@@ -1,5 +1,6 @@
 package net.homeip.hall.sqnetevents;
 
+import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.homeip.hall.sqnetevents.networking.Receiver;
@@ -7,6 +8,7 @@ import net.homeip.hall.sqnetevents.networking.Sender;
 import net.homeip.hall.sqnetevents.packet.Packet;
 
 import java.util.List;
+import java.util.UUID;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,16 +19,25 @@ public class SQNetEvents extends JavaPlugin {
 	
 	private Receiver receiver;
 	
+	private String serverName;
+	
+	private UUID uuid;
+	
 	private HashMap<String, Sender> senders;
 	
 	@Override
 	public void onEnable() {
 		setInstance(this);
 		senders = new HashMap<String, Sender>();
-		//address to bind and listen on
-		String listenAddress = getConfig().getString("ListenAt");
+		//server name and receiver address, separated by an @
+		String nameAndListenAddress = getConfig().getString("ListenAt");
+		String[] nala = nameAndListenAddress.split("@");
+		String listenAddress = nala[1];
+		String sName = nala[0];
+		setServerName(sName);
+		setUUID(new UUID(Long.parseLong(getConfig().getString("ServerID")), Long.parseLong(getConfig().getString("ServerID"))));
 		setReceiver(new Receiver(listenAddress));
-		//client name and address, separated by an underscore
+		//client name and address, separated by an @
 		List<String> namesAndAddresses = getConfig().getStringList("SendTo");
 		namesAndAddresses.add(getConfig().getString("SendTo"));
 		//splits the name and address
@@ -80,11 +91,23 @@ public class SQNetEvents extends JavaPlugin {
 	public void addSender(Sender sender, String name) {
 		senders.put(name, sender);
 	}
-	
+	//gets the identifier for this server
+	public String getServerName() {
+		return serverName;
+	}
+	public void setServerName(String name) {
+		serverName = name;
+	}
 	public static SQNetEvents getInstance() {
 		return instance;
 	}
 	public static void setInstance(SQNetEvents anInstance) {
 		instance = anInstance;
+	}
+	public UUID getUUID() {
+		return uuid;
+	}
+	public void setUUID(UUID uuid) {
+		this.uuid = uuid;
 	}
 }

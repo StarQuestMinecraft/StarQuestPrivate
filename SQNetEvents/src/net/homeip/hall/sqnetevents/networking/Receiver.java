@@ -179,7 +179,7 @@ public class Receiver implements Closeable {
 					System.out.println("[NetEvents] Beginning to read");
 					getClient().read(byteBuffer);
 					System.out.println("[NetEvents] Reading");
-					EventPacket event = (EventPacket) EventPacket.read(byteBuffer);
+					EventPacket event = EventPacket.read(byteBuffer);
 					System.out.println("[NetEvents] Read EventPacket from bytebuffer");
 					// fires the event
 					event.handle();
