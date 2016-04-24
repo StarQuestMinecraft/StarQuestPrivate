@@ -82,29 +82,33 @@ public class InteractListener implements Listener {
 				if ( sign.getLine( 0 ).equals( "\\  ||  /" ) && sign.getLine( 1 ).equals( "==      ==" ) && sign.getLine( 2 ).equals( "/  ||  \\" ) ) {
 					Craft craft = CraftManager.getInstance().getCraftByPlayer( event.getPlayer() );
 					if ( craft != null ) {
-						if ( event.getPlayer().hasPermission( "movecraft." + craft.getType().getCraftName() + ".rotate" ) || event.getPlayer().hasPermission("movecraft.override")) {
-
-							Long time = timeMap.get(event.getPlayer());
-							if (time != null) {
-								long ticksElapsed = (System.currentTimeMillis() - time) / 50;
-								if (Math.abs(ticksElapsed) < craft.getType().getTickCooldown()) {
-									event.setCancelled(true);
-									return;
+						if (craft.getType().getCanHelm()) {
+							if ( event.getPlayer().hasPermission( "movecraft." + craft.getType().getCraftName() + ".rotate" ) || event.getPlayer().hasPermission("movecraft.override")) {
+	
+								Long time = timeMap.get(event.getPlayer());
+								if (time != null) {
+									long ticksElapsed = (System.currentTimeMillis() - time) / 50;
+									if (Math.abs(ticksElapsed) < craft.getType().getTickCooldown()) {
+										event.setCancelled(true);
+										return;
+									}
 								}
-							}
-
-							if (MathUtils.playerIsWithinBoundingPolygon(craft.getHitBox(), craft.getMinX(), craft.getMinZ(),
-									MathUtils.bukkit2MovecraftLoc(event.getPlayer().getLocation()))) {
-								if (!craft.isProcessingTeleport()) {
-									CraftManager.getInstance().getCraftByPlayer(event.getPlayer())
-											.rotate(Rotation.ANTICLOCKWISE, MathUtils.bukkit2MovecraftLoc(sign.getLocation()));
-
-									timeMap.put(event.getPlayer(), System.currentTimeMillis());
-									event.setCancelled(true);
+	
+								if (MathUtils.playerIsWithinBoundingPolygon(craft.getHitBox(), craft.getMinX(), craft.getMinZ(),
+										MathUtils.bukkit2MovecraftLoc(event.getPlayer().getLocation()))) {
+									if (!craft.isProcessingTeleport()) {
+										CraftManager.getInstance().getCraftByPlayer(event.getPlayer())
+												.rotate(Rotation.ANTICLOCKWISE, MathUtils.bukkit2MovecraftLoc(sign.getLocation()));
+	
+										timeMap.put(event.getPlayer(), System.currentTimeMillis());
+										event.setCancelled(true);
+									}
+	
 								}
-
+	
 							}
-
+						} else {
+							event.getPlayer().sendMessage(ChatColor.RED + "This craft type cannot use a helm");
 						}
 					}
 				} else if (sign.getLine(0).equalsIgnoreCase(ChatColor.BLUE + "AUTOPILOT")) {
@@ -197,24 +201,28 @@ public class InteractListener implements Listener {
 		} else if ( sign.getLine( 0 ).equals( "\\  ||  /" ) && sign.getLine( 1 ).equals( "==      ==" ) && sign.getLine( 2 ).equals( "/  ||  \\" ) ) {
 			Craft craft = CraftManager.getInstance().getCraftByPlayer( event.getPlayer() );
 			if ( craft != null ) {
-				Long time = timeMap.get( event.getPlayer() );
-				if ( time != null ) {
-					long ticksElapsed = ( System.currentTimeMillis() - time ) / 50;
-					if ( Math.abs( ticksElapsed ) < craft.getType().getTickCooldown() ) {
-						event.setCancelled( true );
-						return;
+				if (craft.getType().getCanHelm()) {				
+					Long time = timeMap.get( event.getPlayer() );
+					if ( time != null ) {
+						long ticksElapsed = ( System.currentTimeMillis() - time ) / 50;
+						if ( Math.abs( ticksElapsed ) < craft.getType().getTickCooldown() ) {
+							event.setCancelled( true );
+							return;
+						}
 					}
-				}
-
-				if (MathUtils.playerIsWithinBoundingPolygon(craft.getHitBox(), craft.getMinX(), craft.getMinZ(),
-						MathUtils.bukkit2MovecraftLoc(event.getPlayer().getLocation()))) {
-					if (!craft.isProcessingTeleport()) {
-						CraftManager.getInstance().getCraftByPlayer(event.getPlayer())
-								.rotate(Rotation.CLOCKWISE, MathUtils.bukkit2MovecraftLoc(sign.getLocation()));
-
-						timeMap.put(event.getPlayer(), System.currentTimeMillis());
-						event.setCancelled(true);
+	
+					if (MathUtils.playerIsWithinBoundingPolygon(craft.getHitBox(), craft.getMinX(), craft.getMinZ(),
+							MathUtils.bukkit2MovecraftLoc(event.getPlayer().getLocation()))) {
+						if (!craft.isProcessingTeleport()) {
+							CraftManager.getInstance().getCraftByPlayer(event.getPlayer())
+									.rotate(Rotation.CLOCKWISE, MathUtils.bukkit2MovecraftLoc(sign.getLocation()));
+	
+							timeMap.put(event.getPlayer(), System.currentTimeMillis());
+							event.setCancelled(true);
+						}
 					}
+				} else {
+					event.getPlayer().sendMessage(ChatColor.RED + "This craft type cannot use a helm");
 				}
 			}
 		} else if (sign.getLine(0).equalsIgnoreCase("[autopilot]")) {

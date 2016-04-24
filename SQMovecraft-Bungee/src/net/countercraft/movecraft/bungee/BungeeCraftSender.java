@@ -25,35 +25,37 @@ import org.bukkit.inventory.InventoryHolder;
 public class BungeeCraftSender {
 
 	public static void sendCraft(Player p, String targetserver, String world, int X, int Y, int Z, Craft c) throws IOException {
-		/*try {
-			c.playersRidingLock.acquire();*/
-			for (int i = 0; i < c.playersRidingShip.size(); i++) {
-				Player plr = Movecraft.getPlayer(c.playersRidingShip.get(i));
-				if (plr == null || !plr.isOnline()) {
-					if (p != null)
-						p.sendMessage("One of your passengers is not currently online, repilot to proceed without him!");
-					//c.playersRidingLock.release();
-					return;
+		if (c.getType().getCanServerJump()) {
+			/*try {
+				c.playersRidingLock.acquire();*/
+				for (int i = 0; i < c.playersRidingShip.size(); i++) {
+					Player plr = Movecraft.getPlayer(c.playersRidingShip.get(i));
+					if (plr == null || !plr.isOnline()) {
+						if (p != null)
+							p.sendMessage("One of your passengers is not currently online, repilot to proceed without him!");
+						//c.playersRidingLock.release();
+						return;
+					}
 				}
-			}
-			//c.playersRidingLock.release();
-			byte[] craftData = serialize(p, targetserver, world, X, Y, Z, c);
-			CraftManager.getInstance().removeCraft(c, false);
-			BungeeFileHandler.saveCraftBytes(craftData, p.getName());
-			System.out.println("Saved craft.");
-			sendCraftSpawnPacket(p, targetserver);
-			//c.playersRidingLock.acquire();
-			for (int i = 0; i < c.playersRidingShip.size(); i++) {
-				UUID s = c.playersRidingShip.get(i);
-				Player player = Movecraft.getPlayer(s);
-				if (player != null)
-					BungeePlayerHandler.connectPlayer(player, targetserver);
-			}
-			//c.playersRidingLock.release();
-		/*} catch (Exception e) {
-			e.printStackTrace();
-		}*/
-		removeCraftBlocks(c);
+				//c.playersRidingLock.release();
+				byte[] craftData = serialize(p, targetserver, world, X, Y, Z, c);
+				CraftManager.getInstance().removeCraft(c, false);
+				BungeeFileHandler.saveCraftBytes(craftData, p.getName());
+				System.out.println("Saved craft.");
+				sendCraftSpawnPacket(p, targetserver);
+				//c.playersRidingLock.acquire();
+				for (int i = 0; i < c.playersRidingShip.size(); i++) {
+					UUID s = c.playersRidingShip.get(i);
+					Player player = Movecraft.getPlayer(s);
+					if (player != null)
+						BungeePlayerHandler.connectPlayer(player, targetserver);
+				}
+				//c.playersRidingLock.release();
+			/*} catch (Exception e) {
+				e.printStackTrace();
+			}*/
+			removeCraftBlocks(c);
+		}
 	}
 
 	private static void sendCraftSpawnPacket(Player p, String targetserver) {

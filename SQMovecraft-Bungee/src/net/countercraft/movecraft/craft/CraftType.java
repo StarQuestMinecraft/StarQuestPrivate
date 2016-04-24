@@ -37,7 +37,7 @@ public class CraftType {
 	private int maxSize, minSize, minHeightLimit, maxHeightLimit, drillHeadID;
 	private Integer[] allowedBlocks, forbiddenBlocks;
 	private ArrayList<Integer> drilledBlocks;
-	private boolean canFly, tryNudge, canCruise, canTeleport, canStaticMove, isGroundVehicle, isPod, isFlagship, isCarrier;
+	private boolean canFly, tryNudge, canCruise, canTeleport, canStaticMove, isGroundVehicle, isPod, isFlagship, isCarrier, canServerJump, canPilotSpace, canPilotPlanet, canHelm, canSpeedScale, canAutopilot;
 	private int cruiseSkipBlocks;
 	private float laserPower, torpedoPower;
 	private double fuelBurnRate;
@@ -68,6 +68,36 @@ public class CraftType {
 		allowedBlocks = ((ArrayList<Integer>) data.get("allowedBlocks")).toArray(new Integer[1]);
 		forbiddenBlocks = ((ArrayList<Integer>) data.get("forbiddenBlocks")).toArray(new Integer[1]);
 		canFly = (Boolean) data.get("canFly");
+		if (data.containsKey("canHelm")) {
+			canHelm = (Boolean) data.get("canHelm");
+		} else {
+			canHelm = false;
+		}	
+		if (data.containsKey("canPilotSpace")) {
+			canPilotSpace = (Boolean) data.get("canPilotSpace");
+		} else {
+			canPilotSpace = false;
+		}
+		if (data.containsKey("canPilotPlanet")) {
+			canPilotPlanet = (Boolean) data.get("canPilotPlanet");
+		} else {
+			canPilotPlanet = false;
+		}
+		if (data.containsKey("canServerJump")) {
+			canServerJump = (Boolean) data.get("canServerJump");
+		} else {
+			canServerJump = false;
+		}
+		if (data.containsKey("canSpeedScale")) {
+			canSpeedScale = (Boolean) data.get("canSpeedScale");
+		} else {
+			canSpeedScale = false;
+		}
+		if (data.containsKey("canAutoPilot")) {
+			canAutopilot = (Boolean) data.get("canAutopilot");
+		} else {
+			canAutopilot = false;
+		}
 		tryNudge = (Boolean) data.get("tryNudge");
 		speed = (double) data.get("speed");
 		tickCooldown = (int) Math.ceil(20 / ((Double) data.get("speed")));
@@ -392,4 +422,29 @@ public class CraftType {
 	public int getMaxPassengeres(){
 		return allowedPassengers;
 	}
+	
+	public boolean getCanHelm(){
+		return canHelm;
+	}
+	
+	public boolean getCanPilotSpace(){
+		return canPilotSpace;
+	}
+	
+	public boolean getCanPilotPlanet(){
+		return canPilotPlanet;
+	}
+	
+	public boolean getCanServerJump(){
+		return canServerJump;
+	}
+	
+	public boolean getCanSpeedScale(){
+		return canSpeedScale;
+	}
+
+	public boolean getCanAutopilot(){
+		return canAutopilot;
+	}
+	
 }
