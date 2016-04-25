@@ -17,11 +17,15 @@ public class CarUtils {
 				}
 			}
 		}
+		int hoverHeight = c.getType().getHoverHeight();
+		if(hoverHeight == 0){
+			return 0;
+		}
 		int groundLevel = getGroundLevel(c, dX, dZ, minY, hb);
-		if (groundLevel < minY - 2){
+		if (groundLevel < minY - (hoverHeight + 1)){
 			return -1;
 		}
-		if (groundLevel > minY - 2){
+		if (groundLevel > minY - (hoverHeight + 1)){
 			return 1;
 		}else{
 			return 0;

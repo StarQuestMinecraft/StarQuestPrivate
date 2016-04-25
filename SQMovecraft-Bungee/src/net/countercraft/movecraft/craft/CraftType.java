@@ -39,6 +39,7 @@ public class CraftType {
 	private ArrayList<Integer> drilledBlocks;
 	private boolean canFly, tryNudge, canCruise, canTeleport, canStaticMove, isGroundVehicle, isPod, isFlagship, isCarrier, canServerJump, canPilotSpace, canPilotPlanet, canHelm, canSpeedScale, canAutopilot;
 	private int cruiseSkipBlocks;
+	private int hoverHeight;
 	private float laserPower, torpedoPower;
 	private double fuelBurnRate;
 	private double sinkPercent;
@@ -122,11 +123,23 @@ public class CraftType {
 		} else {
 			drillHeadID = -1;
 		}
+		
 		if (data.containsKey("isGroundVehicle")) {
 			isGroundVehicle = (Boolean) data.get("isGroundVehicle");
 		} else {
 			isGroundVehicle = false;
 		}
+		
+		if (data.containsKey("hoverHeight")) {
+			hoverHeight = (Integer) data.get("hoverHeight");
+		} else {
+			if(isGroundVehicle){
+				hoverHeight = 1;
+			} else {
+				hoverHeight = -1;
+			}
+		}
+
 		if (data.containsKey("canStaticMove")) {
 			canStaticMove = (Boolean) data.get("canStaticMove");
 		} else {
@@ -285,6 +298,10 @@ public class CraftType {
 
 	public int getDrillHeadID() {
 		return drillHeadID;
+	}
+	
+	public int getHoverHeight() {
+		return hoverHeight;
 	}
 
 	public boolean getCanTeleport() {
