@@ -1,4 +1,6 @@
 # The address to listen on
-ListenAt: 192.168.1.108:12345
+ListenAt: Trinitos_Alpha@192.168.1.108:12346
 # A list of servers that events will be passed on to.
-SendTo: Trinitos_Alpha@192.168.1.108:12346
+SendTo: Rakuria@192.168.1.108:12345
+#The server's assigned UUID
+ServerID: 2

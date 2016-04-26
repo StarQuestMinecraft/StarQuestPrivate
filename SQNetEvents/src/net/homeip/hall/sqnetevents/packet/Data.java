@@ -3,7 +3,7 @@ package net.homeip.hall.sqnetevents.packet;
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class Data implements Serializable{
+public class Data implements Serializable {
 
     private static final long serialVersionUID = 1;
     //map of all added items

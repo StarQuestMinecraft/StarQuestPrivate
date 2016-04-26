@@ -8,12 +8,13 @@ import java.nio.ByteBuffer;
 import java.util.UUID;
 
 public class EventPacket implements Packet {
-    private final UUID uid;
-    private final ReceivedDataEvent sendEvent;
+	private static final long serialVersionUID = 1L;
+	private final UUID uid;
+    private final SerializableReceivedDataEvent sendEvent;
 
     public EventPacket(UUID uid, ReceivedDataEvent sendEvent) {
         this.uid = uid;
-        this.sendEvent = sendEvent;
+        this.sendEvent = new SerializableReceivedDataEvent(sendEvent);
     }
     //Called externally
     public EventPacket(ReceivedDataEvent sendEvent) {
@@ -24,46 +25,40 @@ public class EventPacket implements Packet {
         return uid;
     }
     //gets the event
-    public Event getSendEvent() {
-        return sendEvent;
+    public ReceivedDataEvent getSendEvent() {
+        return sendEvent.toReceivedDataEvent();
     }
     //returns object read from bytebuffer
     public static EventPacket read(ByteBuffer byteBuffer) throws IOException {
     	byteBuffer.position(0);
         ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(byteBuffer.array(), byteBuffer.arrayOffset(), byteBuffer.remaining()));
-        final long mostSignificantBytes = ois.readLong();
-        final long leastSignificantBytes = ois.readLong();
-        final UUID uid = new UUID(mostSignificantBytes, leastSignificantBytes);
-
-        Object o;
+        EventPacket eventPacket;
         try {
-            o = ois.readObject();
-        } catch (ClassNotFoundException e) {
-            return null;
+        	eventPacket = (EventPacket) ois.readObject();
         }
-
-        if (!(o instanceof Event)) {
-            throw new IOException("Read object " + o + " is not an Event");
+        catch(Exception e) {
+        	throw new IOException("Read object is not an instance of EventPacket");
         }
-        return new EventPacket(uid, (ReceivedDataEvent) o);
+        ois.close();
+        System.out.println("[NetEvents] eventPacket: " + eventPacket);
+        System.out.println("[NetEvents] ReceivedDataEvent: " + eventPacket.getSendEvent());
+        System.out.println("[NetEvents] Data: " + eventPacket.getSendEvent().getData());
+        return eventPacket;
     }
     //fires the event
     @Override
     public void handle() {
     	System.out.println("[NetEvents] Firing event...");
+    	System.out.println(this.getSendEvent());
         SQNetEvents.getInstance().getServer().getPluginManager().callEvent(this.getSendEvent());
     }
     //returns a bytebuffer representation of the object
     public ByteBuffer write() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeLong(uid.getMostSignificantBits());
-        oos.writeLong(uid.getLeastSignificantBits());
-
-        oos.writeObject(sendEvent);
+        oos.writeObject(this);
         oos.flush();
         oos.close();
-
         ByteBuffer buf = ByteBuffer.wrap(baos.toByteArray());
         buf.position(0);
         return buf;
@@ -73,7 +68,7 @@ public class EventPacket implements Packet {
     public String toString() {
         return "EventPacket{" +
                 "uid=" + uid +
-                ", sendEvent=" + sendEvent +
+                ", sendEvent=" + getSendEvent() +
                 '}';
     }
 }

@@ -16,7 +16,6 @@ public class ReceivedDataEvent extends Event implements Serializable {
     public ReceivedDataEvent(Data data) {
         this.data = data;
     }
-
     //Returns the data object associated with this event
     public Data getData() {
         return data;

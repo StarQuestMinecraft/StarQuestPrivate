@@ -42,6 +42,7 @@ public class SQNetEvents extends JavaPlugin {
 		for(String nameAndAddress : namesAndAddresses) {
 			String[] naa = nameAndAddress.split("@");
 			String name = naa[0];
+			System.out.println(name);
 			String address = naa[1];
 			System.out.println("[NetEvents] Connect address: " + address);
 			Sender sender = new Sender(address);
@@ -82,6 +83,10 @@ public class SQNetEvents extends JavaPlugin {
 			}
 			return;
 		}
+		System.out.println(serverName);
+		System.out.println(getServerName());
+		System.out.println(getSenders().get(serverName));
+		System.out.println(packet);
 		getSenders().get(serverName).send(packet);
 	}
 	//address to bind and listen on
