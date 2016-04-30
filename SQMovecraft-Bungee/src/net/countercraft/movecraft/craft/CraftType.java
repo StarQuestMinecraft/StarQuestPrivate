@@ -94,7 +94,7 @@ public class CraftType {
 		} else {
 			canSpeedScale = false;
 		}
-		if (data.containsKey("canAutoPilot")) {
+		if (data.containsKey("canAutopilot")) {
 			canAutopilot = (Boolean) data.get("canAutopilot");
 		} else {
 			canAutopilot = false;
