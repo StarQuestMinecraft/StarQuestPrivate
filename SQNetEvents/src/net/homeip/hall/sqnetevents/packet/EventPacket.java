@@ -40,16 +40,12 @@ public class EventPacket implements Packet {
         	throw new IOException("Read object is not an instance of EventPacket");
         }
         ois.close();
-        System.out.println("[NetEvents] eventPacket: " + eventPacket);
-        System.out.println("[NetEvents] ReceivedDataEvent: " + eventPacket.getSendEvent());
-        System.out.println("[NetEvents] Data: " + eventPacket.getSendEvent().getData());
         return eventPacket;
     }
     //fires the event
     @Override
     public void handle() {
     	System.out.println("[NetEvents] Firing event...");
-    	System.out.println(this.getSendEvent());
         SQNetEvents.getInstance().getServer().getPluginManager().callEvent(this.getSendEvent());
     }
     //returns a bytebuffer representation of the object

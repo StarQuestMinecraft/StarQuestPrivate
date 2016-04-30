@@ -23,9 +23,15 @@ public class SQNetEvents extends JavaPlugin {
 	
 	private HashMap<String, Sender> senders;
 	
+	private boolean isHub;
+	
 	@Override
 	public void onEnable() {
 		setInstance(this);
+		saveDefaultConfig();
+		String hubString = getConfig().getString("IsHub");
+		boolean hub = Boolean.parseBoolean(hubString);
+		setIsHub(hub);
 		senders = new HashMap<String, Sender>();
 		//server name and receiver address, separated by an @
 		String nameAndListenAddress = getConfig().getString("ListenAt");
@@ -37,7 +43,6 @@ public class SQNetEvents extends JavaPlugin {
 		setReceiver(new Receiver(listenAddress));
 		//client name and address, separated by an @
 		List<String> namesAndAddresses = getConfig().getStringList("SendTo");
-		namesAndAddresses.add(getConfig().getString("SendTo"));
 		//splits the name and address
 		for(String nameAndAddress : namesAndAddresses) {
 			String[] naa = nameAndAddress.split("@");
@@ -121,5 +126,11 @@ public class SQNetEvents extends JavaPlugin {
 	}
 	public void setUUID(UUID uuid) {
 		this.uuid = uuid;
+	}
+	public boolean isHub() {
+		return isHub;
+	}
+	public void setIsHub(boolean hub) {
+		isHub = hub;
 	}
 }

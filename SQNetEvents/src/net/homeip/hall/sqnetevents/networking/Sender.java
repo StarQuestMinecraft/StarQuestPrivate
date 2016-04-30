@@ -6,6 +6,8 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+
+import net.homeip.hall.sqnetevents.SQNetEvents;
 import net.homeip.hall.sqnetevents.packet.Packet;
 
 public class Sender implements Closeable {
@@ -37,7 +39,7 @@ public class Sender implements Closeable {
 	}
 	// Sends a packet to the sendAddress, called externally
 	public void send(Packet packet) {
-		if (getClientChannel().isOpen()) {
+		if ((getClientChannel().isOpen()) && (getClientChannel().isConnected())) {
 			System.out.println("[NetEvents] Attempting to write packet...");
 			try {
 				System.out.println("[NetEvents] Client local address: " + getClientChannel().getLocalAddress().toString());
@@ -57,9 +59,12 @@ public class Sender implements Closeable {
 		}
 		// Will attempt to reestablish connection
 		else {
-			System.out.println("[NetEvents] Attempting to reestablish connection with address " + getSendAddress());
+			if(!(SQNetEvents.getInstance().isHub())) {
+				System.out.println("[NetEvents] Attempting to reestablish connection with address " + getSendAddress());
+			}
 			ConnectThread connectThread = new ConnectThread();
 			connectThread.start();
+			
 		}
 	}
 
@@ -94,7 +99,12 @@ public class Sender implements Closeable {
 						e.printStackTrace();
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					System.out.println("[NetEvents] Failed to connect. Reattempting...");
+					try {
+						sleep(10000L);
+					} catch (InterruptedException ie) {
+						ie.printStackTrace();
+					}
 				}
 			}
 			System.out.println("[NetEvents] Successfully established connection to address " + getSendAddress());

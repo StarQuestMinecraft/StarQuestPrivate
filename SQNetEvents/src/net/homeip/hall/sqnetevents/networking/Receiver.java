@@ -184,7 +184,7 @@ public class Receiver implements Closeable {
 					EventPacket event = EventPacket.read(byteBuffer);
 					System.out.println("[NetEvents] Read EventPacket from bytebuffer");
 					//if this is the hub, sends again to the correct server
-					if(SQNetEvents.getInstance().getServerName().equals("Hub")) {
+					if(SQNetEvents.getInstance().isHub()) {
 						String targetServer = ((ReceivedDataEvent) event.getSendEvent()).getData().getString("TargetServer");
 						SQNetEvents.getInstance().send(event, targetServer);
 					}
