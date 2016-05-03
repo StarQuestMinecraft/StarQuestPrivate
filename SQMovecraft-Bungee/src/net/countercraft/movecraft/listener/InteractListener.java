@@ -252,7 +252,13 @@ public class InteractListener implements Listener {
 					event.getPlayer().sendMessage("You are not currently piloting a craft, you cannot start the autopilot.");
 					return;
 				} else if (sign.getLine(1).equals(ChatColor.RED + "{ENGAGED}")) {
-					AutopilotRunTask.stopAutopiloting(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer(), sign);
+					Craft c = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());
+					if (c != null) {
+						AutopilotRunTask.stopAutopiloting(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer(), sign);
+						return;
+					}
+					event.getPlayer().sendMessage("You are not currently piloting a craft, you cannot stop the autopilot.");
+					return;
 				}
 			}
 		} else if (sign.getLine(0).equalsIgnoreCase("[cryopod]")){
