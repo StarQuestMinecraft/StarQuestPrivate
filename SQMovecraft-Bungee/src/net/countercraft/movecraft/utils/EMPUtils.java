@@ -76,7 +76,7 @@ public class EMPUtils {
 	
 	private static void smoke(Block b){
 		b.getWorld().playEffect(b.getLocation(), Effect.SMOKE, 0);
-		//b.getWorld().playSound(b.getLocation(), Sound.EXPLODE, 10, 5);
+		b.getWorld().playSound(b.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 10, 5);
 	}
 	
 	private static void nukeBlock(Block b){

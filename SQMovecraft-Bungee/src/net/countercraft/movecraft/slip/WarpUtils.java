@@ -36,7 +36,7 @@ public class WarpUtils {
 		Location l = p.getLocation();
 		for(UUID u : c.playersRidingShip){
 			Player plr = Movecraft.getPlayer(u);
-			//plr.playSound(plr.getLocation(), Sound.PORTAL_TRAVEL, 2.0F, 1.0F);
+			plr.playSound(plr.getLocation(), Sound.BLOCK_PORTAL_TRAVEL, 2.0F, 1.0F);
 		}
 		World w = getEnd(p.getWorld());
 		if(w == null) return;
@@ -61,7 +61,7 @@ public class WarpUtils {
 			}
 			for(int i = 0; i < c.playersRidingShip.size(); i++){
 				Player plr = Movecraft.getPlayer(c.playersRidingShip.get(i));
-				//plr.playSound(plr.getLocation(), Sound.PORTAL_TRAVEL, 2.0F, 1.0F);
+				plr.playSound(plr.getLocation(), Sound.BLOCK_PORTAL_TRAVEL, 2.0F, 1.0F);
 			}
 			RepeatTryWorldJumpTask task = new RepeatTryWorldJumpTask(c, p, targ, repilot, searchSlipSigns);
 			task.runTaskTimer(Movecraft.getInstance(), 0, 1);
