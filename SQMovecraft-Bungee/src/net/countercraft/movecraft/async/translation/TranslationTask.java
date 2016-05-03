@@ -284,7 +284,7 @@ public class TranslationTask extends AsyncTask {
 				if (jump != null) {
 					for(UUID u : c.playersRidingShip){
 						Player plr = Movecraft.getPlayer(u);
-						//plr.playSound(plr.getLocation(), Sound.PORTAL_TRAVEL, 2.0F, 1.0F);
+						plr.playSound(plr.getLocation(), Sound.BLOCK_PORTAL_TRAVEL, 2.0F, 1.0F);
 					}
 					RepeatTryServerJumpTask.createServerJumpTask(jump.p, jump.c, jump.server, jump.x, jump.y, jump.z);
 				}
