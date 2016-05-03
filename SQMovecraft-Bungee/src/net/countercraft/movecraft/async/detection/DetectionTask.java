@@ -208,29 +208,26 @@ public class DetectionTask extends AsyncTask {
 				}
 			}
 			//check each sign to see if it's a craft sign
-//			boolean isCraftType = (!s.getLine(0).equals("Pod")) && (InteractListener.getCraftTypeFromString(s.getLine(0)) != null);
-//			if (isCraftType){
-//				//special rules for carriers!
-//				if (c.getType().equals(CARRIER) || c.getType().equals(FLAGSHIP)){
-//					if (!Movecraft.signContainsPlayername(s, data.getPlayername())){
-//						return true;
-//					}
-//					
-//				//other ships
-//				} else {
-//					
-//					//don't count the main sign as a different ship.
-//					if(data.getMainSign() == null){
-//						if(c.getType().equals(InteractListener.getCraftTypeFromString(s.getLine(0)))){
-//							if (Movecraft.signContainsPlayername(s, data.getPlayername())){
-//								data.setMainSign(s);
-//							}
-//						}
-//					}else{
-//						return true;
-//					}
-//				}
-//			}
+			boolean isCraftType = (!s.getLine(0).equals("Pod")) && (InteractListener.getCraftTypeFromString(s.getLine(0)) != null);
+			if (isCraftType){
+				//special rules for carriers!
+				if (!Movecraft.signContainsPlayername(s, data.getPlayername())){
+					return true;
+				}
+					
+				//other ships
+					
+				//don't count the main sign as a different ship.
+				if(data.getMainSign() == null){
+					if(c.getType().equals(InteractListener.getCraftTypeFromString(s.getLine(0)))){
+						if (Movecraft.signContainsPlayername(s, data.getPlayername())){
+							data.setMainSign(s);
+						}
+					}
+				}else{
+					return true;
+				}
+			}
 			return false;
 		} else {
 			System.out.println("MOVECRAFT ERROR: sign check called on non sign!");
