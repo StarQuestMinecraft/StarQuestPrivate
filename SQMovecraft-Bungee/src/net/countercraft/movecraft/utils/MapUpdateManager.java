@@ -131,8 +131,6 @@ public class MapUpdateManager extends BukkitRunnable {
 		            		}
 		            	}
 	            	}
-	            } else if(b.getType() == Material.STAINED_GLASS){
-	            	HangarGateUtils.addDestroyedHangarBlock(b);
 	            }
 	            
 	        	//don't blank out block if it's already air, or if blocktype will not be changed

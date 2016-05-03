@@ -24,40 +24,34 @@ public class LocationUtils {
 		SYSTEM = cfg.getString("System");
 		if (SYSTEM == null) {
 			Bukkit.getLogger().log(Level.SEVERE, "No System setting found in config! Severe!");
-		} else if (SYSTEM.equals("Trinitos_Alpha")) {
-			planets.put("Cetallion", locationFromConfig(cfg, "Cetallion"));
-			planets.put("Grun", locationFromConfig(cfg, "Grun"));
-			planets.put("Rakuria", locationFromConfig(cfg, "Rakuria"));
-			planets.put("Loyavas", locationFromConfig(cfg, "Loyavas"));
+		} else if (SYSTEM.equals("AratorSystem")) {
+			planets.put("Arator", locationFromConfig(cfg, "Arator"));
+			planets.put("Tyder", locationFromConfig(cfg, "Tyder"));
+			planets.put("Jurion", locationFromConfig(cfg, "Jurion"));
 
-			stargates.put("Trinitos_Gamma", stargateFromConfig(cfg, "Trinitos_Gamma"));
-			stargates.put("Trinitos_Beta", stargateFromConfig(cfg, "Trinitos_Beta"));
+			//stargates.put("QuillonSystem", stargateFromConfig(cfg, "QuillonSystem"));
+			//stargates.put("YavarSystem", stargateFromConfig(cfg, "YavarSystem"));
 
-		} else if (SYSTEM.equals("Trinitos_Gamma")) {
-			planets.put("Avaquo", locationFromConfig(cfg, "Avaquo"));
-			planets.put("Nalavor", locationFromConfig(cfg, "Nalavor"));
-			planets.put("Xylos", locationFromConfig(cfg, "Xylos"));
-			planets.put("Tallimar", locationFromConfig(cfg, "Tallimar"));
+		} else if (SYSTEM.equals("QuillonSystem")) {
+			planets.put("Erilon", locationFromConfig(cfg, "Erilon"));
+			planets.put("Quillon", locationFromConfig(cfg, "Quillon"));
+			planets.put("Mardos", locationFromConfig(cfg, "Mardos"));
 
-			stargates.put("Trinitos_Alpha", stargateFromConfig(cfg, "Trinitos_Alpha"));
-			stargates.put("Trinitos_Beta", stargateFromConfig(cfg, "Trinitos_Beta"));
-
-		} else if (SYSTEM.equals("Trinitos_Beta")) {
+		} else if (SYSTEM.equals("YavarSystem")) {
 			// planets.put("Inaris", locationFromConfig(cfg, "Inaris"));
 			// planets.put("AsteroidBelt", locationFromConfig(cfg,
 			// "AsteroidBelt"));
-			planets.put("Otavo", locationFromConfig(cfg, "Otavo"));
-			planets.put("Eratoss", locationFromConfig(cfg, "Eratoss"));
-			planets.put("Uru", locationFromConfig(cfg, "Uru"));
-			planets.put("Sampetra", locationFromConfig(cfg, "Sampetra"));
+			planets.put("Yavar", locationFromConfig(cfg, "Yavar"));
+			planets.put("Beskytt", locationFromConfig(cfg, "Beskytt"));
+			planets.put("Radawii", locationFromConfig(cfg, "Radawii"));
 
-			stargates.put("Trinitos_Gamma", stargateFromConfig(cfg, "Trinitos_Gamma"));
-			stargates.put("Trinitos_Alpha", stargateFromConfig(cfg, "Trinitos_Alpha"));
+			//stargates.put("QuillonSystem", stargateFromConfig(cfg, "QuillonSystem"));
+			//stargates.put("AratorSystem", stargateFromConfig(cfg, "AratorSystem"));
 		}
 	}
 
 	public static boolean spaceCheck(String worldname) {
-		return (worldname.startsWith("Trinitos_"));
+		return (worldname.toLowerCase().contains("system"));
 	}
 
 	public static boolean spaceCheck(World w) {
@@ -202,46 +196,46 @@ public class LocationUtils {
 
 	public static String slipWarpCheck(int warpX, int warpZ) {
 		// positive x is east. Positive z is south.
-		if (SYSTEM.equals("Trinitos_Alpha")) {
-			// Trinitos_Gamma is to the south of Trinitos_Alpha
+		if (SYSTEM.equals("AratorSystem")) {
+			// QuillonSystem is to the south of AratorSystem
 			if (warpZ > 3500)
-				return "Trinitos_Gamma";
-			// Digitalis is to the east of Trinitos_Alpha
+				return "QuillonSystem";
+			// Digitalis is to the east of AratorSystem
 			if (warpX > 3500)
-				return "Trinitos_Beta";
-		} else if (SYSTEM.equals("Trinitos_Beta")) {
-			// Trinitos_Alpha is to the west of Trinitos_Beta
+				return "YavarSystem";
+		} else if (SYSTEM.equals("YavarSystem")) {
+			// AratorSystem is to the west of YavarSystem
 			if (warpX < -5000)
-				return "Trinitos_Alpha";
-			// Trinitos_Gamma is to the south of Trinitos_Beta
+				return "AratorSystem";
+			// QuillonSystem is to the south of YavarSystem
 			if (warpZ > 5000)
-				return "Trinitos_Gamma";
-		} else if (SYSTEM.equals("Trinitos_Gamma")) {
-			// Trinitos_Alpha is to the north of Trinitos_Gamma
+				return "QuillonSystem";
+		} else if (SYSTEM.equals("QuillonSystem")) {
+			// AratorSystem is to the north of QuillonSystem
 			if (warpZ < -4500)
-				return "Trinitos_Alpha";
-			// Digitalis is to the east of Trinitos_Gamma
+				return "AratorSystem";
+			// Digitalis is to the east of QuillonSystem
 			if (warpX > 4500)
-				return "Trinitos_Gamma";
+				return "QuillonSystem";
 		}
 		return null;
 	}
 
 	public static int getSlipCoordX(String systarget, int coordX) {
-		if (SYSTEM.equals("Trinitos_Alpha")) {
-			if (systarget.equals("Trinitos_Gamma")) {
+		if (SYSTEM.equals("AratorSystem")) {
+			if (systarget.equals("QuillonSystem")) {
 				return coordX;
 			} else {
 				return -4000;
 			}
-		} else if (SYSTEM.equals("Trinitos_Gamma")) {
-			if (systarget.equals("Trinitos_Alpha")) {
+		} else if (SYSTEM.equals("QuillonSystem")) {
+			if (systarget.equals("AratorSystem")) {
 				return coordX;
 			} else {
 				return 4000;
 			}
 		} else {
-			if (systarget.equals("Trinitos_Alpha")) {
+			if (systarget.equals("AratorSystem")) {
 				return 3500;
 			} else {
 				return coordX;
@@ -250,20 +244,20 @@ public class LocationUtils {
 	}
 
 	public static int getSlipCoordZ(String systarget, int coordZ) {
-		if (SYSTEM.equals("Trinitos_Alpha")) {
-			if (systarget.equals("Trinitos_Gamma")) {
+		if (SYSTEM.equals("AratorSystem")) {
+			if (systarget.equals("QuillonSystem")) {
 				return coordZ;
 			} else {
 				return -4000;
 			}
-		} else if (SYSTEM.equals("Trinitos_Gamma")) {
-			if (systarget.equals("Trinitos_Alpha")) {
+		} else if (SYSTEM.equals("QuillonSystem")) {
+			if (systarget.equals("AratorSystem")) {
 				return coordZ;
 			} else {
 				return 4500;
 			}
 		} else {
-			if (systarget.equals("Trinitos_Alpha")) {
+			if (systarget.equals("AratorSystem")) {
 				return 3500;
 			} else {
 				return coordZ;

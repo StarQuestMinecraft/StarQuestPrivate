@@ -4,16 +4,26 @@ import java.util.HashSet;
 
 import net.countercraft.movecraft.Movecraft;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class HangarGateUtils {
 
 	private static HashSet<DestroyedBlock> activeBlocks = new HashSet<DestroyedBlock>();
-	public static void addDestroyedHangarBlock(Block b){
+	
+	public static void addDestroyedHangarBlock(final World w, final MovecraftLocation loc){
+		Bukkit.getScheduler().runTask(Movecraft.getInstance(), new Runnable(){
+			public void run(){
+				addDestroyedHangarBlock(new Location(w,loc.getX(),loc.getY(),loc.getZ()).getBlock());
+			}
+		});
+	}
+	private static void addDestroyedHangarBlock(Block b){
 		final DestroyedBlock d = new DestroyedBlock(b.getLocation(), b.getData());
 		activeBlocks.add(d);
 		BukkitRunnable r = new BukkitRunnable(){

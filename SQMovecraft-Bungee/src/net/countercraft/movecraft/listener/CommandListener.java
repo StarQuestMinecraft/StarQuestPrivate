@@ -20,7 +20,6 @@ package net.countercraft.movecraft.listener;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.localisation.I18nSupport;
-import net.countercraft.movecraft.shield.DockUtils;
 import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.slip.WarpUtils;
 import net.countercraft.movecraft.utils.MathUtils;
@@ -106,12 +105,6 @@ public class CommandListener implements Listener {
 			} else {
 				p.sendMessage("/ride is now disabled except for in slipspace, to ride a ship ask the pilot to release and repilot the ship. /stopriding still works.");
 			}
-		} else if (e.getMessage().toLowerCase().startsWith("/region claim")) {
-			boolean success = checkForTownyFactionsInSel(e.getPlayer());
-			if (!success) {
-				e.getPlayer().sendMessage("You cannot claim a worldguard in faction or town territory.");
-				e.setCancelled(true);
-			}
 		}
 
 		else if (newMessage.equals("/stopriding")) {
@@ -158,33 +151,5 @@ public class CommandListener implements Listener {
 						+ " report what you found - or suffer the consequences when I fix it my way! :)");
 			}
 		}
-	}
-
-	private static boolean checkForTownyFactionsInSel(Player p) {
-		Selection sel = null;
-		try {
-			sel = ShieldUtils.wg.getWorldEdit().getSelection(p);
-		} catch (CommandException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return true;
-		}
-		if(sel == null) return true;
-		int[] cmin = DockUtils.getChunkCoordinates(p.getWorld(), sel.getMinimumPoint().getBlockX(), sel.getMinimumPoint().getBlockZ());
-		int[] cmax = DockUtils.getChunkCoordinates(p.getWorld(), sel.getMaximumPoint().getBlockX(), sel.getMaximumPoint().getBlockZ());
-
-		// iterate over every chunk that the region contains
-		for (int x = cmin[0]; x <= cmax[0]; x++) {
-			for (int z = cmin[1]; z <= cmax[1]; z++) {
-
-				// create a block to test
-				Block b = p.getWorld().getBlockAt(x, 100, z);
-				Boolean success = DockUtils.checkFactionsBuild(b, p);
-				if (!success){
-					return false;
-				}
-			}
-		}
-		return true;
 	}
 }

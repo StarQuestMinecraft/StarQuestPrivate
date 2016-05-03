@@ -15,7 +15,7 @@ public class KillUtils {
 
 	public static boolean onBreakShipSign(Sign s, Player breaker) {
 
-		boolean cancel = false;
+		/*boolean cancel = false;
 		
 		StarshipData d = Movecraft.getInstance().getStarshipDatabase().getStarshipByLocation(s.getLocation());
 		
@@ -60,9 +60,9 @@ public class KillUtils {
 				breaker.sendMessage("No kills were credited for this sign break.");
 				cancel = true;
 			}
-		}
+		}*/
 		
-		return cancel;
+		return false;
 	}
 
 }

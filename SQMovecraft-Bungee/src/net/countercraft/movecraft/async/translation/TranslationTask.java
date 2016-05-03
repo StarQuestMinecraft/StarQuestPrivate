@@ -21,6 +21,7 @@ import net.countercraft.movecraft.utils.BoundingBoxUtils;
 import net.countercraft.movecraft.utils.CarUtils;
 import net.countercraft.movecraft.utils.EntityUpdateCommand;
 import net.countercraft.movecraft.utils.FakeBlockUtils;
+import net.countercraft.movecraft.utils.HangarGateUtils;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateCommand;
 import net.countercraft.movecraft.utils.MapUpdateManager;
@@ -33,13 +34,10 @@ import net.countercraft.movecraft.vapor.VaporUtils;
 import org.apache.commons.collections.ListUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 
@@ -119,11 +117,6 @@ public class TranslationTask extends AsyncTask {
 			HashSet<EntityUpdateCommand> entityUpdateSet = new HashSet<EntityUpdateCommand>();
 			Set<MapUpdateCommand> updateSet = new HashSet<MapUpdateCommand>();
 			
-			if(!checkChunks(getCraft().getW(), getCraft().getMinX(), getCraft().getMinZ(), getCraft().getHitBox(), data.getDx(), data.getDz())){
-				fail("You're going a bit fast and the chunks can't render fast enough.");
-				data.setChunksFail(true);
-			}
-			
 			
 			
 			if(!data.failed()){
@@ -156,22 +149,18 @@ public class TranslationTask extends AsyncTask {
 						break;
 					}
 					try{
-						int testID = getCraft().getW().getBlockTypeIdAt(newLoc.getX(), newLoc.getY(), newLoc.getZ());
-						int oldID = getCraft().getW().getBlockTypeIdAt(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ());
-						boolean drillable = canDrillBlock(getCraft(), oldID, testID, getCraft().getW(), newLoc);
+						int testID = getCraft().getW().getBlockAt(newLoc.getX(), newLoc.getY(), newLoc.getZ()).getTypeId();
+						int oldID = getCraft().getW().getBlockAt(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ()).getTypeId();
 
-						//THIS LINE.
 						
-						if (testID != 0 && testID != 36 && testID != 30 && testID != 31 && testID != 78 && testID != 95 && !existingBlockSet.contains(newLoc) && !drillable) {
-							// New block is not air and is not part of the existing
-							// ship
-	
+						if(isBlocked(getCraft(),testID, existingBlockSet, newLoc)){
 							fail("Craft is obstructed! Blocked by " +  Material.getMaterial(testID) + " at coordinates "
 									+ newLoc.getX() + " , " + newLoc.getY() + " , " + newLoc.getZ());
 							break;
 						}
 						
-	
+						boolean drillable = canDrillBlock(getCraft(), oldID, testID, getCraft().getW(), newLoc);
+							
 						updateSet.add(new MapUpdateCommand(blocksList[i], newBlockList[i], oldID, getCraft(), drillable));
 					} catch (Exception e){
 						fail("Unexpected exception! We'll try to save your ship...");
@@ -186,20 +175,21 @@ public class TranslationTask extends AsyncTask {
 				//boolean isAutopiloting = AutopilotRunTask.autopilotingCrafts.contains(getCraft());
 				try{
 					for(int i = 0; i < getCraft().playersRidingShip.size(); i++) {
-						Player pTest = Movecraft.getPlayer(getCraft().playersRidingShip.get(i));
+						final Player pTest = Movecraft.getPlayer(getCraft().playersRidingShip.get(i));
 						if(pTest != null){
 							if (MathUtils.playerIsWithinBoundingPolygon(getCraft().getHitBox(), getCraft().getMinX(), getCraft().getMinZ(), MathUtils.bukkit2MovecraftLoc(pTest.getLocation()))) {
 								Location tempLoc = pTest.getLocation();
 								tempLoc=tempLoc.add( data.getDx(), data.getDy(), data.getDz() );
-								Location newPLoc=new Location(getCraft().getW(), tempLoc.getX(), tempLoc.getY(), tempLoc.getZ());
+								final Location newPLoc=new Location(getCraft().getW(), tempLoc.getX(), tempLoc.getY(), tempLoc.getZ());
 								newPLoc.setPitch(pTest.getLocation().getPitch());
 								newPLoc.setYaw(pTest.getLocation().getYaw());
 								//if(data.getDy() < 0 || isAutopiloting || isStandingInBlock(pTest)){
-								if (data.getDoAsyncTeleport())
-								{
-									FakeBlockUtils.sendFakeBlocks(pTest, newPLoc);
-									pTest.teleport(newPLoc);
-								}
+								FakeBlockUtils.sendFakeBlocks(pTest, newPLoc);
+								Bukkit.getScheduler().runTask(Movecraft.getInstance(),new Runnable(){
+									public void run(){
+										pTest.teleport(newPLoc);
+									}
+								});
 								//}
 								EntityUpdateCommand eUp=new EntityUpdateCommand(pTest.getLocation().clone(),newPLoc,pTest, pTest.getVelocity(), getCraft());
 								entityUpdateSet.add(eUp);
@@ -282,10 +272,6 @@ public class TranslationTask extends AsyncTask {
 				// if they are near a stargate initialize solar system jump
 				StargateJumpHolder jump = LocationUtils.checkStargateJump(p, c);
 				if (jump != null) {
-					for(UUID u : c.playersRidingShip){
-						Player plr = Movecraft.getPlayer(u);
-						//plr.playSound(plr.getLocation(), Sound.PORTAL_TRAVEL, 2.0F, 1.0F);
-					}
 					RepeatTryServerJumpTask.createServerJumpTask(jump.p, jump.c, jump.server, jump.x, jump.y, jump.z);
 				}
 			}
@@ -295,7 +281,7 @@ public class TranslationTask extends AsyncTask {
 		}
 	}
 	
-	private boolean isStandingInBlock(Player pTest) {
+	/*private boolean isStandingInBlock(Player pTest) {
 		int feet = pTest.getWorld().getBlockTypeIdAt(pTest.getLocation());
 		int head = pTest.getWorld().getBlockTypeIdAt(pTest.getEyeLocation());
 		if(head != 0 && Arrays.binarySearch(ACCEPTABLE_PLAYER_BLOCKS, head) <= 0){
@@ -305,7 +291,7 @@ public class TranslationTask extends AsyncTask {
 			return true;
 		}
 		return false;
-	}
+	}*/
 
 	private void fail(String message) {
 		data.setFailed(true);
@@ -315,29 +301,8 @@ public class TranslationTask extends AsyncTask {
 	public TranslationTaskData getData() {
 		return data;
 	}
-	//a thread safe method that checks the chunks with no chance of crashing
-	public boolean checkChunks(World w, int minX, int minZ, int[][][] hitBox, int dx, int dz) {
-		if (dx == 0 && dz == 0)
-			return true;
-
-		int maxX = minX + hitBox.length;
-		int maxZ = minZ + hitBox[0].length;
-		
-		int minChunkX = minX >> 4;
-		int minChunkZ = minZ >> 4;
-		int maxChunkX = maxX >> 4;
-		int maxChunkZ = maxZ >> 4;
-
-		for (int x = minChunkX; x <= maxChunkX; x++) {
-			for (int z = minChunkZ; z <= maxChunkZ; z++) {
-				if (!w.isChunkLoaded(x, z)) {
-					System.out.println("Chunks not loaded caught!");
-					return false;
-				}
-			}
-		}
-		return true;
-	}
+	
+	private static int[] PASSTHROUGH_IDS = new int[]{0,36,30,31,78};
 	
 	private boolean canDrillBlock(Craft c, int oldID, int newID, World w, MovecraftLocation l){
 		try{
@@ -353,5 +318,24 @@ public class TranslationTask extends AsyncTask {
 			c.pilot.sendMessage("Whoa there, your drill got stuck for a minute. If you try again it may go through.");
 			return false;
 		}
+	}
+	
+	private boolean isBlocked(Craft c, int testID, Set<MovecraftLocation> ebs, MovecraftLocation newLoc){
+		for(int i : PASSTHROUGH_IDS){
+			//we can overwrite these no problem.
+			if(i == testID) return false;
+		}
+		//it's not one of those ids.
+		if(ebs.contains(newLoc)){
+			return false;
+		}
+		//we're blocked
+		//but WAIT: unless it's a hangar door!
+		if(testID == 95){
+			//we're about to overwrite this here stained glass, so let HangarGateUtils know.
+        	HangarGateUtils.addDestroyedHangarBlock(c.getW(), newLoc);
+			return false;
+		}
+		return true;
 	}
 }

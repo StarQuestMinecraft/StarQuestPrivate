@@ -97,7 +97,7 @@ public class CraftType {
 		if (data.containsKey("canAutopilot")) {
 			canAutopilot = (Boolean) data.get("canAutopilot");
 		} else {
-			canAutopilot = false;
+			canAutopilot = true;
 		}
 		tryNudge = (Boolean) data.get("tryNudge");
 		speed = (double) data.get("speed");

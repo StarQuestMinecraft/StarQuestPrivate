@@ -79,19 +79,17 @@ public class ShieldUtils {
 		BlockVector min = new BlockVector(ship.getMinX(), minY, ship.getMinZ());
 		BlockVector max = new BlockVector(maxX, maxY, maxZ);
 		ArrayList<String> members = getMembersMainSign(p, sign);
-		if (DockUtils.checkForCanDeployShield(p, new ProtectedCuboidRegion("test", min, max))) {
-			p.sendMessage(ChatColor.YELLOW + "Your ship's shield has been activated.");
-			p.sendMessage(ChatColor.YELLOW + "Shield warming up... estimated time: 5 minutes");
+		p.sendMessage(ChatColor.YELLOW + "Your ship's shield has been activated.");
+		p.sendMessage(ChatColor.YELLOW + "Shield warming up... estimated time: 5 minutes");
 
-			final PendingActivation a = new PendingActivation(ship.getW(), min, max, createRName(p.getName()), p.getName(), members, sign);
-			pendingActivations.add(a);
-			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
-				public void run() {
-					a.activate(pendingActivations.contains(a) && (a.sign.getType() == Material.WALL_SIGN || a.sign.getType() == Material.SIGN_POST));
-					pendingActivations.remove(a);
-				}
-			}, SHIELD_DELAY_TICKS);
-		}
+		final PendingActivation a = new PendingActivation(ship.getW(), min, max, createRName(p.getName()), p.getName(), members, sign);
+		pendingActivations.add(a);
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+			public void run() {
+				a.activate(pendingActivations.contains(a) && (a.sign.getType() == Material.WALL_SIGN || a.sign.getType() == Material.SIGN_POST));
+				pendingActivations.remove(a);
+			}
+		}, SHIELD_DELAY_TICKS);
 	}
 
 	private static ArrayList<String> getMembersMainSign(Player p, Block sign) {

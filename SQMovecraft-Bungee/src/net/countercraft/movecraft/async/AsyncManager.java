@@ -216,15 +216,7 @@ public class AsyncManager extends BukkitRunnable {
 					if ( task.getData().failed()) {
 						//The craft translation failed
 						p.sendMessage( task.getData().getFailMessage() );
-						if(task.getData().isChunksFail()){
-							Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
-								public void run(){
-									clear(c);
-								}
-							}, 5L);
-						} else {
-							clear(c);
-						}
+						clear(c);
 						if (AutopilotRunTask.autopilotingCrafts.contains(c)){
 							AutopilotRunTask.stopAutopiloting(c, p);
 						}

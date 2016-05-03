@@ -55,7 +55,6 @@ import net.countercraft.movecraft.listener.EntityListener;
 import net.countercraft.movecraft.listener.InteractListener;
 import net.countercraft.movecraft.listener.InventoryListener;
 import net.countercraft.movecraft.localisation.I18nSupport;
-import net.countercraft.movecraft.shield.DockUtils;
 import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.task.AutopilotRunTask;
 import net.countercraft.movecraft.utils.HangarGateUtils;
@@ -128,11 +127,10 @@ public class Movecraft extends JavaPlugin {
 				e.printStackTrace();
 			}
 			return true;
-		} else if(cmd.getName().equalsIgnoreCase("serverjump") && sender.isOp()){
-			String serverName = args[0];
+		} else if(cmd.getName().equalsIgnoreCase("serverjump") && sender.getName().equalsIgnoreCase("dibujaron")){
 			Player p = (Player) sender;
 			try {
-				BungeeCraftSender.sendCraft(p, serverName, "world", 0, 200, 0, CraftManager.getInstance().getCraftByPlayer(p));
+				BungeeCraftSender.sendCraft(p, args[0], args[0],Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), CraftManager.getInstance().getCraftByPlayer(p));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -228,11 +226,6 @@ public class Movecraft extends JavaPlugin {
 				sender.sendMessage("All crafts released!");
 				return true;
 			}
-		} else if(cmd.getName().equalsIgnoreCase("claimdock") && sender instanceof Player){
-			return DockUtils.claimDock((Player) sender);
-		} else if(cmd.getName().equalsIgnoreCase("removedock") && sender instanceof Player){
-			DockUtils.removeDockRegions((Player) sender);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("shipsize") && sender instanceof Player){
 			return ShipSizeUtils.printPlayerShipSize((Player) sender, false);
 		} else if (cmd.getName().equalsIgnoreCase("shipsizecolor") && sender instanceof Player){
@@ -307,6 +300,13 @@ public class Movecraft extends JavaPlugin {
 			
 			logger.log( Level.INFO, String.format( I18nSupport.getInternationalisedString( "Startup - Enabled message" ), getDescription().getVersion() ) );
 		}
+		if(Bukkit.getServerName().equalsIgnoreCase("CoreSystem")){
+			Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable(){
+				public void run(){
+				    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "reloadchat");
+				}
+			}, 6000L,6000L);
+		}
 	}
 
 	@Override
@@ -354,11 +354,11 @@ public class Movecraft extends JavaPlugin {
 	}
 	
 	public Bedspawn getDefaultBedspawn(){
-		String server = getConfig().getString("defaultBedspawnServer");
-		String world = getConfig().getString("defaultBedspawnWorld");
-		int X = getConfig().getInt("defaultBedspawnX");
-		int Y = getConfig().getInt("defaultBedspawnY");
-		int Z = getConfig().getInt("defaultBedspawnZ");
+		String server = /*getConfig().getString("defaultBedspawnServer")*/ "CoreSystem";
+		String world = /*getConfig().getString("defaultBedspawnWorld")*/ "CoreSystem";
+		int X = /*getConfig().getInt("defaultBedspawnX")*/ 0;
+		int Y = /*getConfig().getInt("defaultBedspawnY")*/ 100;
+		int Z = /*getConfig().getInt("defaultBedspawnZ")*/ 0;
 		return new Bedspawn(null, server, world, X, Y, Z);
 	}
 	

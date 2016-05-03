@@ -36,10 +36,8 @@ public class TranslationTaskData {
 	private int[][][] hitbox;
 	private int minX, minZ;
 	private int maxHeight, minHeight;
-	private boolean doAsyncTeleport;
-	private boolean chunksFail = false;
 	
-	public TranslationTaskData( int dx, int dz, int dy, MovecraftLocation[] blockList, int[][][] hitbox, int minZ, int minX, int maxHeight, int minHeight, boolean doAsyncTeleport) {
+	public TranslationTaskData( int dx, int dz, int dy, MovecraftLocation[] blockList, int[][][] hitbox, int minZ, int minX, int maxHeight, int minHeight) {
 		this.dx = dx;
 		this.dz = dz;
 		this.dy = dy;
@@ -49,7 +47,6 @@ public class TranslationTaskData {
 		this.minX = minX;
 		this.maxHeight = maxHeight;
 		this.minHeight = minHeight;
-		this.doAsyncTeleport = doAsyncTeleport;
 	}
 
 	public int getDx() {
@@ -136,18 +133,6 @@ public class TranslationTaskData {
 
 	public int getMaxHeight() {
 		return maxHeight;
-	}
-	
-	public boolean getDoAsyncTeleport() {
-		return doAsyncTeleport;
-	}
-	
-	public boolean isChunksFail(){
-		return chunksFail;
-	}
-	
-	public void setChunksFail(boolean val){
-		chunksFail = val;
 	}
 
 	public List<MovecraftLocation> getAirLocations() {

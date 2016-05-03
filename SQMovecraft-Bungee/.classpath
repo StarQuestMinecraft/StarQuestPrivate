@@ -7,7 +7,5 @@
 	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/WorldGuard.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/WorldEdit.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/SQSpace.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/MassiveCore.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Drew/Dropbox/Eclipse/External Jars/Factions.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

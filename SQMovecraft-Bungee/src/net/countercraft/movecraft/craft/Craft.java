@@ -80,6 +80,7 @@ public class Craft {
 	private boolean released = false;
 	public boolean isJamming = false;
 	private long lastMove = 0;
+	public int hoverHeight;
 
 	public Craft(CraftType type, World world) {
 		this.type = type;
@@ -89,6 +90,7 @@ public class Craft {
 		xDist = 0;
 		yDist = 0;
 		zDist = 0;
+		this.hoverHeight = type.getHoverHeight();
 	}
 
 	/*
@@ -186,16 +188,18 @@ public class Craft {
 		}
 	}
 	
-	public void translate(int dx, int dy, int dz)
-	{
-		translate(dx, dy, dz, true);
-	}
-	
-	public void translate(int dx, int dy, int dz, boolean doAsyncTeleport) {
-		if (w.getEnvironment() == Environment.THE_END){
-			WarpUtils.translate(this, dx, dy, dz);
-		} else if(getType().isGroundVehicle() && dy != 0){
-			pilot.sendMessage("Ground Vehicles cannot move up and down.");
+	public void translate(int dx, int dy, int dz) {
+		if(getType().isGroundVehicle() && dy != 0){
+			int newHeight = hoverHeight;
+			if(dy > 0){
+				newHeight += 1;
+			} else {
+				newHeight -= 1;
+			}
+			if(newHeight >= 0 && newHeight <= getType().getHoverHeight()){
+				pilot.sendMessage("New hover height: " + newHeight + " blocks above the ground.");
+				hoverHeight = newHeight;
+			}
 			return;
 		} else if(getType().isFlagship()){
 			pilot.sendMessage("Flagships cannot move through realspace.");
@@ -208,9 +212,13 @@ public class Craft {
 				FakeBlockUtils.sendFakeBlocks(p, p.getLocation());
 			}
 			//playersRidingLock.release();
-			TranslationTaskData data = new TranslationTaskData(dx, dz, dy, getBlockList(), getHitBox(), minZ, minX, type.getMaxHeightLimit(), type.getMinHeightLimit(), doAsyncTeleport);
+			TranslationTaskData data = new TranslationTaskData(dx, dz, dy, getBlockList(), getHitBox(), minZ, minX, type.getMaxHeightLimit(), type.getMinHeightLimit());
 			CraftSyncTranslateEvent event = new CraftSyncTranslateEvent(this, data);
 			if (event.call()) {
+				if(!checkChunks(getW(), getMinX(), getMinZ(), getHitBox(), dx, dz)){
+					pilot.sendMessage("You're going a bit fast and the chunks can't render fast enough.");
+					return;
+				}
 				lastMove = System.currentTimeMillis();
 				AsyncManager.getInstance().submitTask(new TranslationTask(this, data), this);
 			}
@@ -437,5 +445,28 @@ public class Craft {
 			}
 		}
 		return 0;
+	}
+	//a thread safe method that checks the chunks with no chance of crashing
+	public boolean checkChunks(World w, int minX, int minZ, int[][][] hitBox, int dx, int dz) {
+		if (dx == 0 && dz == 0)
+			return true;
+
+		int maxX = minX + hitBox.length;
+		int maxZ = minZ + hitBox[0].length;
+		
+		int minChunkX = minX >> 4;
+		int minChunkZ = minZ >> 4;
+		int maxChunkX = maxX >> 4;
+		int maxChunkZ = maxZ >> 4;
+
+		for (int x = minChunkX; x <= maxChunkX; x++) {
+			for (int z = minChunkZ; z <= maxChunkZ; z++) {
+				if (!w.isChunkLoaded(x, z)) {
+					System.out.println("Chunks not loaded caught!");
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }
