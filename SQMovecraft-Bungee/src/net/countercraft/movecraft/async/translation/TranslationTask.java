@@ -152,15 +152,18 @@ public class TranslationTask extends AsyncTask {
 						int testID = getCraft().getW().getBlockAt(newLoc.getX(), newLoc.getY(), newLoc.getZ()).getTypeId();
 						int oldID = getCraft().getW().getBlockAt(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ()).getTypeId();
 
+						boolean drillable = canDrillBlock(getCraft(), oldID, testID, getCraft().getW(), newLoc);
 						
-						if(isBlocked(getCraft(),testID, existingBlockSet, newLoc)){
-							fail("Craft is obstructed! Blocked by " +  Material.getMaterial(testID) + " at coordinates "
-									+ newLoc.getX() + " , " + newLoc.getY() + " , " + newLoc.getZ());
-							break;
+						if (!drillable) {
+						
+							if(isBlocked(getCraft(),testID, existingBlockSet, newLoc)){
+								fail("Craft is obstructed! Blocked by " +  Material.getMaterial(testID) + " at coordinates "
+										+ newLoc.getX() + " , " + newLoc.getY() + " , " + newLoc.getZ());
+								break;
+							}
+							
 						}
 						
-						boolean drillable = canDrillBlock(getCraft(), oldID, testID, getCraft().getW(), newLoc);
-							
 						updateSet.add(new MapUpdateCommand(blocksList[i], newBlockList[i], oldID, getCraft(), drillable));
 					} catch (Exception e){
 						fail("Unexpected exception! We'll try to save your ship...");

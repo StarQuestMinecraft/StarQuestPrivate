@@ -341,17 +341,7 @@ public class CraftType {
 	}
 
 	public double getSpeed(Player p) {
-		double s = speed;
-		if(p.hasPermission("movecraft." + craftName + ".speed.1")){
-			if(p.hasPermission("movecraft." + craftName + ".speed.2")){
-				if(p.hasPermission("movecraft." + craftName + ".speed.3")){
-					return s + 6;
-				}
-				return s + 4;
-			}
-			return s + 2;
-		}
-		return s;
+		return speed;
 	}
 
 	public HashMap<Integer, ArrayList<Double>> getFlyBlocks(Player p) {
