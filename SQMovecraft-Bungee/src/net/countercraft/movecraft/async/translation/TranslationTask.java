@@ -152,17 +152,12 @@ public class TranslationTask extends AsyncTask {
 						int testID = getCraft().getW().getBlockAt(newLoc.getX(), newLoc.getY(), newLoc.getZ()).getTypeId();
 						int oldID = getCraft().getW().getBlockAt(oldLoc.getX(), oldLoc.getY(), oldLoc.getZ()).getTypeId();
 
-						boolean drillable = canDrillBlock(getCraft(), oldID, testID, getCraft().getW(), newLoc);
-						
-						if (!drillable) {
-						
-							if(isBlocked(getCraft(),testID, existingBlockSet, newLoc)){
-								fail("Craft is obstructed! Blocked by " +  Material.getMaterial(testID) + " at coordinates "
-										+ newLoc.getX() + " , " + newLoc.getY() + " , " + newLoc.getZ());
-								break;
-							}
-							
+						if(isBlocked(getCraft(), testID, existingBlockSet, newLoc)){
+							fail("Craft is obstructed! Blocked by " +  Material.getMaterial(testID) + " at coordinates "
+									+ newLoc.getX() + " , " + newLoc.getY() + " , " + newLoc.getZ());
+							break;
 						}
+						boolean drillable = canDrillBlock(getCraft(), oldID, testID, getCraft().getW(), newLoc);
 						
 						updateSet.add(new MapUpdateCommand(blocksList[i], newBlockList[i], oldID, getCraft(), drillable));
 					} catch (Exception e){
@@ -188,6 +183,7 @@ public class TranslationTask extends AsyncTask {
 								newPLoc.setYaw(pTest.getLocation().getYaw());
 								//if(data.getDy() < 0 || isAutopiloting || isStandingInBlock(pTest)){
 								FakeBlockUtils.sendFakeBlocks(pTest, newPLoc);
+								FakeBlockUtils.sendFakeBlocks(pTest,pTest.getLocation());
 								Bukkit.getScheduler().runTask(Movecraft.getInstance(),new Runnable(){
 									public void run(){
 										pTest.teleport(newPLoc);
@@ -345,4 +341,6 @@ public class TranslationTask extends AsyncTask {
 		}
 		return true;
 	}
+	
+	
 }

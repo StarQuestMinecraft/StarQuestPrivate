@@ -252,6 +252,7 @@ public class Movecraft extends JavaPlugin {
 		} else {
 			logger.log( Level.INFO, "No PilotTool setting, using default");
 		}
+		HangarGateUtils.onEnable();
 		// if the CompatibilityMode is specified in the config.yml file, use it. Otherwise set to false. - NOT IMPLEMENTED YET - Mark
 		Settings.CompatibilityMode=getConfig().getBoolean("CompatibilityMode", false);
 		LocationUtils.setUp(getConfig());
