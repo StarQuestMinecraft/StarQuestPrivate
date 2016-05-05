@@ -347,6 +347,9 @@ public class Movecraft extends JavaPlugin {
 		}
 		for(int i = 1; i < 4; i++){
 			String s = lines[i];
+			if(s.length() > 15){
+				s = s.substring(0, 15);
+			}
 			if(name.equals(s)){
 				return true;
 			}
