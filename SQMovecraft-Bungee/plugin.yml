@@ -55,6 +55,9 @@ commands:
    movecraftreload:
       description: reload movecraft craft files
       usage: /movecraftreload
+   mapfailures:
+      description: check how many block placements have failed (diagnostic)
+      usage: /mapfailures
 depend:
    - WorldEdit
    - WorldGuard

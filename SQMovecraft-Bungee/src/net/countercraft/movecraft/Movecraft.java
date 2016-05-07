@@ -234,6 +234,9 @@ public class Movecraft extends JavaPlugin {
 			sender.sendMessage("Reinitializing craft types...");
 			CraftManager.getInstance().initCraftTypes();
 			sender.sendMessage("Craft types reloaded.");
+		} else if (cmd.getName().equalsIgnoreCase("mapfailures")){
+			sender.sendMessage("Found " + MapUpdateManager.failures + ".");
+			return true;
 		}
 //		else if (cmd.getName().equalsIgnoreCase("redline") && sender instanceof Player) {
 //			return RedlineUtils.onRedlineCommand((Player) sender, args);

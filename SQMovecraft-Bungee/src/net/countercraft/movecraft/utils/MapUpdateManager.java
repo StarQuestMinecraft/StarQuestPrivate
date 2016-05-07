@@ -66,6 +66,7 @@ public class MapUpdateManager extends BukkitRunnable {
         private final HashMap<World, ArrayList<EntityUpdateCommand>> entityUpdates = new HashMap<World, ArrayList<EntityUpdateCommand>>();
         public final int[] fragileBlocks = new int[]{ 29, 33, /*34,*/ 50, 52, 55, 63, 65, 68, 69, 70, 71, 72, 75, 76, 77, 93, 94, 96, 131, 132, 143, 147, 148, 149, 150, 151, 171, 323, 324, 330, 331, 356, 404 };
         public final int[] tileEntities = new int[]{63, 68, 176, 177, 54, 130, 146, 23, 61, 62, 117, 154, 158, 138, 52, 25, 34, 29, 33, 84, 116, 114, 137, 151, 140, 149, 150};
+        public static int failures = 0;
         final net.minecraft.server.v1_9_R1.Block AIR_ID;
         final byte ZERO = 0;
         
@@ -151,6 +152,7 @@ public class MapUpdateManager extends BukkitRunnable {
 		                    b.setTypeIdAndData( newTypeID, data, false );
 		            }
 		            if ( !chunks.contains( c ) ) {
+		            	failures++;
 		                chunks.add( c );
 		            }
 	            }
