@@ -32,6 +32,8 @@ import net.countercraft.movecraft.localisation.I18nSupport;
 import org.bukkit.entity.Player;
 import org.yaml.snakeyaml.Yaml;
 
+import com.ginger_walnut.sqboosters.SQBoosters;
+
 public class CraftType {
 	private String craftName;
 	private int maxSize, minSize, minHeightLimit, maxHeightLimit, drillHeadID;
@@ -255,17 +257,7 @@ public class CraftType {
 	}
 
 	public int getAllowedCannons(Player p) {
-		int c = allowedCannons;
-		if(p.hasPermission("movecraft." + craftName + ".guns.1")){
-			if(p.hasPermission("movecraft." + craftName + ".guns.2")){
-				if(p.hasPermission("movecraft." + craftName + ".guns.3")){
-					return c + 3;
-				}
-				return c + 2;
-			}
-			return c + 1;
-		}
-		return c;
+		return allowedCannons;
 	}
 
 	public Integer[] getAllowedBlocks() {
@@ -341,7 +333,9 @@ public class CraftType {
 	}
 
 	public double getSpeed(Player p) {
-		return speed;
+		double spd = speed;
+		spd = spd + SQBoosters.getSpeedBooster() - 1;
+		return spd;
 	}
 
 	public HashMap<Integer, ArrayList<Double>> getFlyBlocks(Player p) {
@@ -349,34 +343,8 @@ public class CraftType {
 			for(Integer i : flyBlocks.keySet()){ 
 				ArrayList<Double> values = flyBlocks.get(i);
 				ArrayList<Double> newValues = new ArrayList<Double>();
-				if(i != 158){
-					for(Double d : values){
-						newValues.add(d);
-					}
-				} else {
-					double oldMax = values.get(values.size() - 1);
-					newValues.add((double) 0);
-					if(p.hasPermission("movecraft." + craftName + ".capacity.3")){
-						newValues.add(oldMax + 3);
-					} else if(p.hasPermission("movecraft." + craftName + ".capacity.2")){
-						newValues.add(oldMax + 2);
-					} else if(p.hasPermission("movecraft." + craftName + ".capacity.1")){
-						newValues.add(oldMax + 1);
-					} else {
-						newValues.add(oldMax);
-					}
-					
-					if(p.hasPermission("movecraft." + craftName + ".capacity.1")){
-						if(p.hasPermission("movecraft." + craftName + ".capacity.2")){
-							if(p.hasPermission("movecraft." + craftName + ".capacity.1")){
-								newValues.add(oldMax + 3);
-							} else 
-							newValues.add(oldMax + 2);
-						} else 
-						newValues.add(oldMax + 1);
-					} else 
-					newValues.add(oldMax);
-					
+				for(Double d : values){
+					newValues.add(d);
 				}
 				retval.put(i, newValues);
 			}
@@ -408,18 +376,7 @@ public class CraftType {
 	}
 	
 	public int getArmorMax(Player p){
-		int armor = armorMax;
-		
-		if(p.hasPermission("movecraft." + craftName + ".armor.1")){
-			if(p.hasPermission("movecraft." + craftName + ".armor.2")){
-				if(p.hasPermission("movecraft." + craftName + ".armor.3")){
-					return armor + 15;
-				}
-				return armor + 10;
-			}
-			return armor + 5;
-		}
-		return armor;
+		return armorMax;
 	}
 	
 	public int getArmorResistance(){

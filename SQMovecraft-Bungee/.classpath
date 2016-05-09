@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="C:/Starquest testing Servers/Spigot Server/plugins/Vault.jar"/>
 	<classpathentry kind="lib" path="C:/Starquest testing Servers/Spigot Server/plugins/WorldEdit.jar"/>
 	<classpathentry kind="lib" path="C:/Starquest testing Servers/Spigot Server/plugins/WorldGuard.jar"/>
+	<classpathentry kind="lib" path="C:/Starquest testing Servers/Spigot Server/plugins/SQBoosters.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
