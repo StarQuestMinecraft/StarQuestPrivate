@@ -41,6 +41,10 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 
+import com.sk89q.worldguard.bukkit.WGBukkit;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+
 /**
  * @author AJCStriker, Dibujaron
  * The main "heavy lifting" class of movecraft; this task calculates the craft movements.
@@ -269,13 +273,39 @@ public class TranslationTask extends AsyncTask {
 				}
 
 				// if they are near a stargate initialize solar system jump
-				StargateJumpHolder jump = LocationUtils.checkStargateJump(p, c);
-				if(jump != null){
-					for(UUID u : c.playersRidingShip){
-						Player plr = Movecraft.getPlayer(u);
-						plr.playSound(plr.getLocation(), Sound.BLOCK_PORTAL_TRAVEL, 2.0F, 1.0F);
+				ApplicableRegionSet regionSet = WGBukkit.getRegionManager(p.getWorld()).getApplicableRegions(p.getLocation());
+				boolean hasPerm = false;
+				for(ProtectedRegion region : regionSet) {
+					if(p.hasPermission("as.all")) {
+						if(region.getId().contains("as")) {
+							hasPerm = true;
+						}
 					}
-					RepeatTryServerJumpTask.createServerJumpTask(jump.p, jump.c, jump.server, jump.x, jump.y, jump.z);
+					if(p.hasPermission("rs.all")) {
+						if(region.getId().contains("rs")) {
+							hasPerm = true;
+						}
+					}
+					if(p.hasPermission("ys.all")) {
+						if(region.getId().contains("ys")) {
+							hasPerm = true;
+						}
+					}
+					
+					if(p.hasPermission(region.getId() + ".slipgate")) {
+						hasPerm = true;
+					}
+					
+				}
+				if(hasPerm) {
+					StargateJumpHolder jump = LocationUtils.checkStargateJump(p, c);
+					if(jump != null){
+						for(UUID u : c.playersRidingShip){
+							Player plr = Movecraft.getPlayer(u);
+							plr.playSound(plr.getLocation(), Sound.BLOCK_PORTAL_TRAVEL, 2.0F, 1.0F);
+						}
+						RepeatTryServerJumpTask.createServerJumpTask(jump.p, jump.c, jump.server, jump.x, jump.y, jump.z);
+					}
 				}
 			}
 		} catch (IllegalStateException e) {

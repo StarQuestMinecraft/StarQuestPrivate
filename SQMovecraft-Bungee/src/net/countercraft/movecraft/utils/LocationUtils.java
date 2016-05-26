@@ -28,7 +28,11 @@ public class LocationUtils {
 			planets.put("Arator", locationFromConfig(cfg, "Arator"));
 			planets.put("Tyder", locationFromConfig(cfg, "Tyder"));
 			planets.put("Jurion", locationFromConfig(cfg, "Jurion"));
-
+			if(cfg.contains("stargates")) {
+				for(String stargateName : cfg.getConfigurationSection("stargates").getKeys(false)) {
+					stargates.put(stargateName, stargateFromConfig(cfg, stargateName));
+				}
+			}
 			//stargates.put("QuillonSystem", stargateFromConfig(cfg, "QuillonSystem"));
 			//stargates.put("YavarSystem", stargateFromConfig(cfg, "YavarSystem"));
 
@@ -36,6 +40,12 @@ public class LocationUtils {
 			planets.put("Erilon", locationFromConfig(cfg, "Erilon"));
 			planets.put("Quillon", locationFromConfig(cfg, "Quillon"));
 			planets.put("Mardos", locationFromConfig(cfg, "Mardos"));
+			
+			if(cfg.contains("stargates")) {
+				for(String stargateName : cfg.getConfigurationSection("stargates").getKeys(false)) {
+					stargates.put(stargateName, stargateFromConfig(cfg, stargateName));
+				}
+			}
 
 		} else if (SYSTEM.equals("YavarSystem")) {
 			// planets.put("Inaris", locationFromConfig(cfg, "Inaris"));
@@ -44,6 +54,12 @@ public class LocationUtils {
 			planets.put("Yavar", locationFromConfig(cfg, "Yavar"));
 			planets.put("Beskytt", locationFromConfig(cfg, "Beskytt"));
 			planets.put("Radawii", locationFromConfig(cfg, "Radawii"));
+			
+			if(cfg.contains("stargates")) {
+				for(String stargateName : cfg.getConfigurationSection("stargates").getKeys(false)) {
+					stargates.put(stargateName, stargateFromConfig(cfg, stargateName));
+				}
+			}
 
 			//stargates.put("QuillonSystem", stargateFromConfig(cfg, "QuillonSystem"));
 			//stargates.put("AratorSystem", stargateFromConfig(cfg, "AratorSystem"));
@@ -90,16 +106,23 @@ public class LocationUtils {
 	}
 
 	private static StargateData stargateFromConfig(FileConfiguration cfg, String key) {
-		int x = cfg.getInt(key + ".Xcoord");
-		int y = cfg.getInt(key + ".Ycoord");
-		int z = cfg.getInt(key + ".Zcoord");
+		int x = cfg.getInt("stargates." + key + ".Xcoord");
+		int y = cfg.getInt("stargates." + key + ".Ycoord");
+		int z = cfg.getInt("stargates." + key + ".Zcoord");
 		Location myLoc = new Location(getSpaceWorld(), x, y, z);
-		int tx = cfg.getInt(key + ".XcoordTarget");
-		int ty = cfg.getInt(key + ".YcoordTarget");
-		int tz = cfg.getInt(key + ".ZcoordTarget");
+		int tx = cfg.getInt("stargates." + key + ".XcoordTarget");
+		int ty = cfg.getInt("stargates." + key + ".YcoordTarget");
+		int tz = cfg.getInt("stargates." + key + ".ZcoordTarget");
 		Location targLoc = new Location(getSpaceWorld(), tx, ty, tz);
-		int orientation = cfg.getInt(key + ".orientation");
-		return new StargateData(orientation, myLoc, targLoc);
+		int orientation = cfg.getInt("stargates." + key + ".orientation");
+		String targServer = null;
+		if(cfg.getString("stargates." + key + ".server") != null) {
+			targServer = cfg.getString("stargates." + key + ".server");
+		}
+		else {
+			targServer = key;
+		}
+		return new StargateData(orientation, myLoc, targLoc, targServer);
 	}
 
 	public static String locationCheck(Player pilot) {
@@ -162,10 +185,10 @@ public class LocationUtils {
 		Location loc = p.getLocation();
 		for (String s : stargates.keySet()) {
 			StargateData d = stargates.get(s);
-			if (stargateCheck(d, loc)) {
-				p.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + "Entering slipgate to " + s + "!");
-				return new StargateJumpHolder(p, c, s, d.targetLocation.getBlockX(), d.targetLocation.getBlockY(), d.targetLocation.getBlockZ());
-			}
+				if (stargateCheck(d, loc)) {
+					p.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + "Entering slipgate to " + d.targetServer + "!");
+					return new StargateJumpHolder(p, c, d.targetServer, d.targetLocation.getBlockX(), d.targetLocation.getBlockY(), d.targetLocation.getBlockZ());
+				}
 		}
 		return null;
 	}
