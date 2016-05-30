@@ -40,6 +40,7 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.permissions.Permission;
 
 import com.sk89q.worldguard.bukkit.WGBukkit;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -276,23 +277,27 @@ public class TranslationTask extends AsyncTask {
 				ApplicableRegionSet regionSet = WGBukkit.getRegionManager(p.getWorld()).getApplicableRegions(p.getLocation());
 				boolean hasPerm = false;
 				for(ProtectedRegion region : regionSet) {
-					if(p.hasPermission("as.all")) {
+					Permission araAll = new Permission("as.all");
+					if(p.hasPermission(araAll)) {
 						if(region.getId().contains("as")) {
 							hasPerm = true;
 						}
 					}
-					if(p.hasPermission("rs.all")) {
+					Permission reqAll = new Permission("rs.all");
+					if(p.hasPermission(reqAll)) {
 						if(region.getId().contains("rs")) {
 							hasPerm = true;
 						}
 					}
-					if(p.hasPermission("ys.all")) {
+					Permission yavAll = new Permission("ys.all");
+					if(p.hasPermission(yavAll)) {
 						if(region.getId().contains("ys")) {
 							hasPerm = true;
 						}
 					}
 					
-					if(p.hasPermission(region.getId() + ".slipgate")) {
+					Permission miscPerm = new Permission(region.getId() + ".slipgate");
+					if(p.hasPermission(miscPerm)) {
 						hasPerm = true;
 					}
 					
