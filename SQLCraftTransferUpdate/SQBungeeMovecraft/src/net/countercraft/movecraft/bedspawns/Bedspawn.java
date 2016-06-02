@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.bukkit.configuration.file.FileConfiguration;
+
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
@@ -22,13 +24,13 @@ public class Bedspawn {
 	public String world;
 	public int x, y, z;
 	public static String driver = "com.mysql.jdbc.Driver";
-	public static String hostname = /*(CInfo.get().getHostname() != null) ? CInfo.get().getHostname() :*/ "192.99.20.8";
-	public static String port = /*(CInfo.get().getPort() != null) ? CInfo.get().getPort() :*/ "3306";
-	public static String db_name = /*(CInfo.get().getDBName() != null) ? CInfo.get().getDBName() :*/ "minecraft";
-	public static String username = /*(CInfo.get().getUsername() != null) ? CInfo.get().getUsername() :*/ "minecraft";
-	public static String password = /*(CInfo.get().getPassword() != null) ? CInfo.get().getPassword() :*/ "gghax0rs";
+	public static String hostname;
+	public static String port;
+	public static String db_name;
+	public static String username;
+	public static String password;
 	public static Connection cntx = null;
-	public static String dsn = ("jdbc:mysql://" + hostname + ":" + port + "/" + db_name);
+	public static String dsn;
 	public final static Bedspawn DEFAULT = Movecraft.getInstance().getDefaultBedspawn();
 	
 	public static final boolean SAVE_BEDSPAWNS = !Movecraft.getInstance().getConfig().getBoolean("ignoreBedspawns");
@@ -45,9 +47,18 @@ public class Bedspawn {
 		return " BEDSPAWN: Player = " + player + " & server = " + server + " & world = " + world + " & coords = " + x + "," + y + "," + z + ".";
 	}
 
-	public static void setUp() {
+
+	public static void setUp(){
 		// called from onEnable
-		if(!SAVE_BEDSPAWNS) return;
+		
+		FileConfiguration fc = Movecraft.getInstance().getConfig();
+		
+		hostname = fc.getString("Host");
+		db_name = fc.getString("Database");
+		username = fc.getString("User");
+		password = fc.getString("Pass");
+		port = "3306";
+		dsn = ("jdbc:mysql://" + hostname + ":" + port + "/" + db_name + "?allowMultiQueries=true");
 		String bedspawn_table = "CREATE TABLE IF NOT EXISTS " + "BEDSPAWNS (" + "`name` VARCHAR(32) NOT NULL," + "`server` VARCHAR(32) DEFAULT NULL," + "`world` VARCHAR(32) DEFAULT NULL,"
 				+ "`x` int(11) DEFAULT 0," + "`y` int(11) DEFAULT 0," + "`z` int(11) DEFAULT 0," + "PRIMARY KEY (`name`)" + ")";
 		
@@ -66,10 +77,7 @@ public class Bedspawn {
 			System.out.println("[SQBedSpawn] Table check/creation sucessful");
 		} catch (SQLException ee) {
 			System.out.println("[SQBedSpawn] Table Creation Error");
-		} finally {
-			close(s);
 		}
-
 	}
 
 	/*public static Bedspawn getBedspawn(String player) {

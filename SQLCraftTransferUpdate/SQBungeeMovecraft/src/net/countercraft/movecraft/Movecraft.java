@@ -262,7 +262,6 @@ public class Movecraft extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		// Read in config
-		sqlDatabase = new SQLDatabase();
 		this.saveDefaultConfig();
 		Settings.LOCALE = getConfig().getString( "Locale" );
 		// if the PilotTool is specified in the config.yml file, use it
@@ -316,6 +315,7 @@ public class Movecraft extends JavaPlugin {
 			
 			Bedspawn.setUp();
 			CryoSpawn.setUp();
+			sqlDatabase = new SQLDatabase();
 			//PingUtils.setUp();
 			
 			database = new FileDatabase();

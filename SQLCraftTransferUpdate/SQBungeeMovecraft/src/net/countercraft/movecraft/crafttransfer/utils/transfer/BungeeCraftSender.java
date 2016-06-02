@@ -11,7 +11,6 @@ import net.homeip.hall.sqnetevents.packet.ReceivedDataEvent;
 public class BungeeCraftSender {
 	//Called externally
 	public static void sendCraft(SerializableLocation destinationLocation, final Craft c) {
-		System.out.println("[Movecraft] ReceivedDataEvent handlers: " + ReceivedDataEvent.getHandlerList().getRegisteredListeners(Movecraft.getInstance()).toString());
 		TransferData data = buildTransferData(c, destinationLocation);
 		writeToDatabase(data);
 		sendCraftSpawnPacket(c.getPilot().getName(), destinationLocation.getWorldName());
@@ -23,12 +22,12 @@ public class BungeeCraftSender {
 	//Writes the data to the SQL db
 	private static void writeToDatabase(TransferData data) {
 		Movecraft.getInstance().getSQLDatabase().writeData(data);
+		System.out.println("Transfer data returned: " + Movecraft.getInstance().getSQLDatabase().readData(data.getPilot()));
 	}
 	//Sends a message to Bungee-linked servers through SocketMessenger that triggers craft reception
 	private static void sendCraftSpawnPacket(String pilot, String targetServer) {
 		BungeeHandler.sendCraftSpawnPacket(pilot, targetServer);
 		System.out.println("Sent CraftSpawnPacket for pilot " + pilot);
 		System.out.println("Test");
-		System.out.println("ReceivedDataEvent handlers: " + ReceivedDataEvent.getHandlerList().getRegisteredListeners(Movecraft.getInstance()).toString());
 	}
 }

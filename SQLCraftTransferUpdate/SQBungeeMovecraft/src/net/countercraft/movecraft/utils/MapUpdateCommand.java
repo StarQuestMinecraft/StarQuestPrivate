@@ -20,6 +20,7 @@ package net.countercraft.movecraft.utils;
 import org.bukkit.block.Block;
 
 import net.countercraft.movecraft.craft.Craft;
+import net.minecraft.server.v1_9_R1.Chunk;
 
 /**
  * Class that stores the data about a single blocks changes to the map in an unspecified world. The world is retrieved contextually from the submitting craft.
@@ -35,7 +36,7 @@ public class MapUpdateCommand {
 	private boolean finalBlockFragile;
 	private boolean initialBlockFragile;
 	Block block;
-	private net.minecraft.server.v1_8_R1.Chunk chunk = null;
+	private Chunk chunk = null;
 
 	public MapUpdateCommand( MovecraftLocation blockLocation, MovecraftLocation newBlockLocation, int newTypeID, Rotation rotation, Craft c) {
 		this.blockLocation = blockLocation;
@@ -113,10 +114,10 @@ public class MapUpdateCommand {
 		initialBlockFragile = fragile;
 	}
 	
-	public void setChunk(net.minecraft.server.v1_8_R1.Chunk chunk){
+	public void setChunk(net.minecraft.server.v1_9_R1.Chunk chunk){
 		this.chunk = chunk;
 	}
-	public net.minecraft.server.v1_8_R1.Chunk getChunk(){
+	public net.minecraft.server.v1_9_R1.Chunk getChunk(){
 		return chunk;
 	}
 	public Block getBlock(){

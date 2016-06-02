@@ -24,7 +24,7 @@ public class BungeeCraftReceiver {
 	}
 	//Sends packets to connect (and later, indirectly, to teleport) players across server, called after craft successfully built
 	private static void sendPlayerServerjumpPackets(ArrayList<PlayerTransferData> pData, String oldWorld, SerializableLocation signLocation, String pilot) {
-		//iterates over players
+		//iterates over players and sends packet
 		for(PlayerTransferData playerData : pData) {
 			System.out.println("Sent ConnectPlayerPacket for player " + playerData.getPlayer());
 			BungeeHandler.sendConnectPlayerPacket(playerData.getPlayer(), oldWorld, signLocation, pilot);

@@ -61,4 +61,17 @@ public class SerializableLocation implements Serializable {
 	public SerializableLocation copy() {
 		return new SerializableLocation(this);
 	}
+	@Override
+	public String toString() {
+		String locationString = worldName + "," + Double.toString(x) + "," + Double.toString(y) + "," + Double.toString(z);
+		return locationString;
+	}
+	public static SerializableLocation fromString(String locationString) {
+		String[] values = locationString.split(",");
+		double x = Double.parseDouble(values[0]);
+		double y = Double.parseDouble(values[1]);
+		double z = Double.parseDouble(values[2]);
+		String worldName = values[3];
+		return new SerializableLocation(worldName, x, y, z);
+	}
 }

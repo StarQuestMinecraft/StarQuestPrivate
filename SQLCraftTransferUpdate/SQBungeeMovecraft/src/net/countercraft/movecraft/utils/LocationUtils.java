@@ -4,14 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 
+import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
+import net.countercraft.movecraft.crafttransfer.SerializableLocation;
 import net.countercraft.movecraft.task.RepeatTryServerJumpTask;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -24,40 +27,14 @@ public class LocationUtils {
 		SYSTEM = cfg.getString("System");
 		if (SYSTEM == null) {
 			Bukkit.getLogger().log(Level.SEVERE, "No System setting found in config! Severe!");
-		} else if (SYSTEM.equals("Trinitos_Alpha")) {
-			planets.put("Cetallion", locationFromConfig(cfg, "Cetallion"));
-			planets.put("Grun", locationFromConfig(cfg, "Grun"));
-			planets.put("Rakuria", locationFromConfig(cfg, "Rakuria"));
-			planets.put("Loyavas", locationFromConfig(cfg, "Loyavas"));
+		} else if (SYSTEM.equals("Defalos")) {
+			planets.put("Acualis", locationFromConfig(cfg, "Acualis"));
 
-			stargates.put("Trinitos_Gamma", stargateFromConfig(cfg, "Trinitos_Gamma"));
-			stargates.put("Trinitos_Beta", stargateFromConfig(cfg, "Trinitos_Beta"));
-
-		} else if (SYSTEM.equals("Trinitos_Gamma")) {
-			planets.put("Avaquo", locationFromConfig(cfg, "Avaquo"));
-			planets.put("Nalavor", locationFromConfig(cfg, "Nalavor"));
-			planets.put("Xylos", locationFromConfig(cfg, "Xylos"));
-			planets.put("Tallimar", locationFromConfig(cfg, "Tallimar"));
-
-			stargates.put("Trinitos_Alpha", stargateFromConfig(cfg, "Trinitos_Alpha"));
-			stargates.put("Trinitos_Beta", stargateFromConfig(cfg, "Trinitos_Beta"));
-
-		} else if (SYSTEM.equals("Trinitos_Beta")) {
-			// planets.put("Inaris", locationFromConfig(cfg, "Inaris"));
-			// planets.put("AsteroidBelt", locationFromConfig(cfg,
-			// "AsteroidBelt"));
-			planets.put("Otavo", locationFromConfig(cfg, "Otavo"));
-			planets.put("Eratoss", locationFromConfig(cfg, "Eratoss"));
-			planets.put("Uru", locationFromConfig(cfg, "Uru"));
-			planets.put("Sampetra", locationFromConfig(cfg, "Sampetra"));
-
-			stargates.put("Trinitos_Gamma", stargateFromConfig(cfg, "Trinitos_Gamma"));
-			stargates.put("Trinitos_Alpha", stargateFromConfig(cfg, "Trinitos_Alpha"));
 		}
 	}
 
 	public static boolean spaceCheck(String worldname) {
-		return (worldname.startsWith("Trinitos_"));
+		return (worldname.startsWith("Defalos"));
 	}
 
 	public static boolean spaceCheck(World w) {
@@ -133,9 +110,12 @@ public class LocationUtils {
 		}
 		return false;
 	}
-
+	@Deprecated
 	public static Location getWarpLocation(String planet, Location playerLoc) {
+		System.out.println("Planets is null: " + (planets == null));
 		for (String s : planets.keySet()) {
+			System.out.println("s: " + s);
+			System.out.println("planet: " + planet);
 			if (s.equals(planet)) {
 				Location planetLoc = planets.get(s);
 				double angle = getAngleFromOriginTo(playerLoc);
@@ -145,11 +125,33 @@ public class LocationUtils {
 		}
 		return null;
 	}
-
+	public static SerializableLocation getWarpLocation(Location playerLoc) {
+		String worldName = playerLoc.getWorld().getName();
+		System.out.println("worldName: " + worldName);
+		String systemName = Movecraft.getInstance().getConfig().getString("System");
+		System.out.println("systemName: " + systemName);
+		ConfigurationSection worldLocation = Movecraft.getInstance().getConfig().getConfigurationSection(worldName);
+		String xString = worldLocation.getString("Xcoord");
+		String yString = worldLocation.getString("Ycoord");
+		String zString = worldLocation.getString("Zcoord");
+		System.out.println(xString);
+		System.out.println(yString);
+		System.out.println(zString);
+		double x = Double.parseDouble(xString);
+		double y = Double.parseDouble(yString);
+		double z = Double.parseDouble(zString);
+		
+		System.out.println("Destination x: " + x);
+		System.out.println("Destination y: " + y);
+		System.out.println("Destination z: " + z);
+		SerializableLocation planetLocation = new SerializableLocation(systemName, x, y, z);
+		double angle = getAngleFromOriginTo(playerLoc);
+		SerializableLocation targetLocation = getSpawnLocationFromAngle(angle, planetLocation, 120);
+		return targetLocation;
+	}
 	public static double getAngleFromOriginTo(Location loc) {
 		return Math.atan2(loc.getZ(), loc.getX());
 	}
-
 	public static double getAngleFromGivenPointTo(Location point, Location loc) {
 		if (point == null || loc == null)
 			return 0;
@@ -162,6 +164,10 @@ public class LocationUtils {
 		double x = origin.getX() + (Math.cos(angle) * distance);
 		double z = origin.getZ() + (Math.sin(angle) * distance);
 		return new Location(origin.getWorld(), x, 100, z);
+	}
+	public static SerializableLocation getSpawnLocationFromAngle(double angle, SerializableLocation planetLocation, int distance) {
+		planetLocation.offsetCoordinatesBy(Math.cos(angle) * distance, 0, Math.sin(angle) * distance);
+		return planetLocation;
 	}
 
 	public static StargateJumpHolder checkStargateJump(Player p, Craft c) {

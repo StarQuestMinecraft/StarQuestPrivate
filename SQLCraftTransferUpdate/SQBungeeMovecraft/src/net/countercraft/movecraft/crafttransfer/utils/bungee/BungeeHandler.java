@@ -1,21 +1,18 @@
 package net.countercraft.movecraft.crafttransfer.utils.bungee;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-
-import org.bukkit.entity.Player;
-
-import net.homeip.hall.sqnetevents.networking.Sender;
 import net.homeip.hall.sqnetevents.SQNetEvents;
 import net.homeip.hall.sqnetevents.packet.ReceivedDataEvent;
 import net.homeip.hall.sqnetevents.packet.Data;
 import net.homeip.hall.sqnetevents.packet.EventPacket;
 
-import me.redepicness.socketmessenger.bukkit.SocketAPI;
-
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 
 import net.countercraft.movecraft.Movecraft;
 
@@ -25,112 +22,114 @@ import net.countercraft.movecraft.crafttransfer.utils.transfer.BungeeCraftConstr
 import net.countercraft.movecraft.crafttransfer.utils.transfer.BungeeCraftReceiver;
 
 public class BungeeHandler implements Listener {
-	private static PlayerHandler playerHandler;
+	private static PlayerHandler playerHandler = new PlayerHandler();
 	//called by SQNetEvents when a message is received
 	@EventHandler
 	public void onReceivedData(ReceivedDataEvent event) {
 		System.out.println("ReceivedDataEvent successfully fired and received. Processing in BungeeHandler.");
 		Data data = event.getData();
 		String packetType = data.getString("Packet");
-		//indicates that craft is on DB, ready to be received
+		//indicates that craft is on DB, ready to be received. Executed by receiving end
 		if(packetType.equals("CraftSpawnPacket")) {
 			String targetServer = data.getString("TargetServer");
-			String pilot = data.getString("Pilot");
+			final String pilot = data.getString("Pilot");
 			//If this is the correct server
 			if(Bukkit.getWorld(targetServer) != null) {
-				BungeeCraftReceiver.receiveCraft(pilot);
+				Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable() {
+					public void run() {
+						BungeeCraftReceiver.receiveCraft(pilot);
+					}
+				});
 				System.out.println("Successfully dispatched CraftSpawnPacket to " + targetServer + " for pilot " + pilot);
 			}
 		}
-		//indicates that craft has been received, ready to connect players
+		//indicates that craft has been received, ready to connect players. Executed by sending end
 		else if(packetType.equals("ConnectPlayerPacket")) {
-			String targetServer = data.getString("TargetServer");
+			final String targetServer = data.getString("TargetServer");
 			String currentServer = data.getString("CurrentServer");
-			String location = data.getString("Location");
-			String player = data.getString("Player");
-			String pilot = data.getString("Pilot");
+			final String player = data.getString("Player");
 			//if this is the correct server
 			if(Bukkit.getWorld(currentServer) != null) {
-				SocketAPI.connectPlayerToServer(player, targetServer);
-				playerHandler.getPlayerTeleportQueue().put(player, location);
-				playerHandler.getPassengerPilotMap().put(player, pilot);
-				System.out.println("Successfully dispatched ConnectPlayerPacket to " + targetServer + " for  player " + player);
+				Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable() {
+					public void run() {
+						//Sends plugin message to connect player to server
+						ByteArrayDataOutput out = ByteStreams.newDataOutput();
+						out.writeUTF("Connect");
+						out.writeUTF(targetServer);
+						Bukkit.getPlayer(player).sendPluginMessage(Movecraft.getInstance(), "BungeeCord", out.toByteArray());
+					}
+				});
+				System.out.println("Successfully dispatched ConnectPlayerPacket to " + currentServer + " for  player " + player);
 			}
 		}
-		//indicates that player has been connected, ready for teleport
-		else if(packetType.equals("PlayerTeleportPacket")) {
-			String targetServer  = data.getString("CurrentServer");
-			String player = data.getString("Player");
-			String location = data.getString("Location");
-			String pilot = data.getString("Pilot");
-			//If this is the correct server
-			if(Bukkit.getWorld(targetServer) != null) {
-				Player p = Bukkit.getPlayer(player);
-				World w = Bukkit.getWorld(targetServer);
-				double x = Double.parseDouble(location.split(",")[0]);
-				double y = Double.parseDouble(location.split(",")[1]);
-				double z = Double.parseDouble(location.split(",")[2]);
-				Location l = new Location(w, x, y, z);
-				p.teleport(l);
-				playerHandler.getPlayerTeleportQueue().remove(player);
-				playerHandler.getPassengerPilotMap().remove(player);
-				System.out.println("Successfully dispatched PlayerTeleportPacket to " + targetServer + " for player " + player);
-				//If no more players left to teleport
-				if((!playerHandler.getPlayerTeleportQueue().containsValue(location))) {
-					sendCraftRemovePacket(pilot);
-					System.out.println("Successfully sent CraftRemovePacket for pilot " + pilot);
-				}
-			}
-		}
-		//indicates that all players have been teleported, ready for craft removal
+		//indicates that all players have been teleported, ready for craft removal. Executed by sending end
 		else if(packetType.equals("CraftRemovePacket")) {
-			String pilot = data.getString("Pilot");
+			final String pilot = data.getString("Pilot");
 			String oldServer = data.getString("OldServer");
 			if(Bukkit.getWorld(oldServer) != null) {
-				BungeeCraftConstructor.findAndRemove(pilot);
+				Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable() {
+					public void run() {
+						BungeeCraftConstructor.findAndRemove(pilot);
+					}
+				});
 			}
 			System.out.println("Successfully dispatched CraftRemovePacket to " + oldServer + " for pilot " + pilot);
 		}
 	}
 	//triggers target server to receive the craft in transit
-	public static void sendCraftSpawnPacket(String pilot, String targetServer) {
-		Data data = new Data();
-		data.addString("Packet", "CraftSpawnPacket");
-		data.addString("Pilot", pilot);
-		data.addString("TargetServer", targetServer);
-		System.out.println("Senders: " + SQNetEvents.getInstance().getSenders());
-		SQNetEvents.getInstance().send(new EventPacket(new ReceivedDataEvent(data)), targetServer);
+	public static void sendCraftSpawnPacket(final String pilot, final String targetServer) {
+		Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable() {
+			public void run() {
+				Data data = new Data();
+				data.addString("Packet", "CraftSpawnPacket");
+				data.addString("Pilot", pilot);
+				data.addString("TargetServer", targetServer);
+				System.out.println("Senders: " + SQNetEvents.getInstance().getSenders());
+				SQNetEvents.getInstance().send(new EventPacket(new ReceivedDataEvent(data)), targetServer);
+			}
+		});
 		System.out.println("Writing CraftSpawnPacket to sender");
 	}
-	//connects player to server
-	public static void sendConnectPlayerPacket(String player, String oldServer, SerializableLocation location, String pilot) {
-		Data data = new Data();
-		String signLocationString = location.getX() + "," + location.getY() + "," + location.getZ();
-		data.addString("CurrentServer", oldServer);
-		data.addString("TargetServer", location.getWorldName());
-		data.addString("Player", player);
-		data.addString("Location", signLocationString);
-		data.addString("Pilot", pilot);
-		data.addString("Packet", "ConnectPlayerPacket");
-		SQNetEvents.getInstance().send(new EventPacket(new ReceivedDataEvent(data)), location.getWorldName());
+	//Called by receiving end. Tells sending end to connect player, and adds player to teleport queues.
+	public static void sendConnectPlayerPacket(final String player, final String oldServer, final SerializableLocation signLocation, final String pilot) {
+		Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable() {
+			public void run() {
+				System.out.println("Pilot: " + pilot);
+				System.out.println("Player: " + player);
+				//sends packet
+				Data data = new Data();
+				String signLocationString = signLocation.toString();
+				System.out.println("SignLocationString: " + signLocationString);
+				data.addString("CurrentServer", oldServer);
+				data.addString("TargetServer", signLocation.getWorldName());
+				data.addString("Player", player);
+				data.addString("Location", signLocationString);
+				data.addString("Pilot", pilot);
+				data.addString("Packet", "ConnectPlayerPacket");
+				SQNetEvents.getInstance().send(new EventPacket(new ReceivedDataEvent(data)), oldServer);
+				//adds player to queue
+				System.out.println("PlayerHandler: " + playerHandler);
+				System.out.println("PlayerTeleportQueue: " + playerHandler.getPlayerTeleportQueue());
+				playerHandler.addPlayerToTeleportQueue(player, signLocation);
+				playerHandler.addPlayerToPassengerMap(player, pilot);
+			}
+		});
 	}
-	//called when player logs onto the server, triggers teleport to the craft
-	public static void sendPlayerTeleportPacket(String player, String targetServer, String location, String pilot) {
-		Data data = new Data();
-		data.addString("Player", player);
-		data.addString("CurrentServer", targetServer);
-		data.addString("Location", location);
-		data.addString("Pilot", pilot);
-		data.addString("Packet", "PlayerTeleportPacket");
-		SQNetEvents.getInstance().send(new EventPacket(new ReceivedDataEvent(data)), targetServer);
+	//Called by receiving after all players have been successfully teleported, triggers removal of original craft copy
+	public static void sendCraftRemovePacket(final String pilot) {
+		Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable() {
+			public void run() {
+				Data data = new Data();
+				String oldServer = Movecraft.getInstance().getSQLDatabase().readData(pilot).getOldServer();
+				data.addString("Pilot", pilot);
+				data.addString("OldServer", oldServer);
+				data.addString("Packet", "CraftRemovePacket");
+				SQNetEvents.getInstance().send(new EventPacket(new ReceivedDataEvent(data)), oldServer);
+			}
+		});
 	}
-	//Called after all players have been successfully teleported, triggers removal of original craft copy
-	public static void sendCraftRemovePacket(String pilot) {
-		Data data = new Data();
-		String oldServer = Movecraft.getInstance().getSQLDatabase().readData(pilot).getOldServer();
-		data.addString("Pilot", pilot);
-		data.addString("OldServer", oldServer);
-		data.addString("Packet", "CraftRemovePacket");
-		SQNetEvents.getInstance().send(new EventPacket(new ReceivedDataEvent(data)), oldServer);
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		playerHandler.onPlayerJoin(event);
 	}
 }

@@ -1,15 +1,17 @@
 package net.countercraft.movecraft.crafttransfer.utils.transfer;
 
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-
 import net.countercraft.movecraft.Movecraft;
 
 import net.countercraft.movecraft.crafttransfer.SerializableLocation;
@@ -22,7 +24,10 @@ import net.countercraft.movecraft.utils.LocationUtils;
 public class BungeeCraftConstructor {
 	//called externally, returns location of ship sign
 	public static SerializableLocation calculateAndBuild(TransferData transferData) {
+		System.out.println("In calculateAndBuild()");
 		SerializableLocation newDestinationLocation = getUnobstructedLocation(transferData);
+		System.out.println("newDestinationLocation: " + newDestinationLocation);
+		System.out.println("newDestinationLocation.getLocation(): " + newDestinationLocation.getLocation());
 		//Tests if build was successful
 		if(buildCraftAtLocation(transferData.getCraftData(), newDestinationLocation.getLocation())) {
 			System.out.println("Successfully built craft for pilot " + transferData.getPilot());
@@ -38,22 +43,47 @@ public class BungeeCraftConstructor {
 		}
 	}
 	//returns true if any blocks will be obstructed
-	private static boolean isObstructed(ArrayList<CraftTransferData> craftTransferData, SerializableLocation signLocation) {
-		for(CraftTransferData craftData : craftTransferData) {
-			String name = signLocation.getWorldName();
-			double x = craftData.getRelativeX() + signLocation.getX();
-			double y = craftData.getRelativeY() + signLocation.getY();
-			double z = craftData.getRelativeZ() + signLocation.getZ();
-			Location blockLocation = new Location(Bukkit.getWorld(name), x, y, z);
-			//if not air
-			if(!(blockLocation.getBlock().getTypeId() == 0)) {
+	private static boolean isObstructed(final ArrayList<CraftTransferData> craftTransferData, final SerializableLocation signLocation) {
+		System.out.println("In isObstructed()");
+		//Does some stuff with concurrent synchronous calls to avoid an IllegalStateException
+		Future<Boolean> isObstructed = Bukkit.getScheduler().callSyncMethod(Movecraft.getInstance(), new Callable<Boolean>() {
+			public Boolean call() {
+				String name = signLocation.getWorldName();
+				System.out.println("worldname: " + name);
+				System.out.println("world is null: " + Bukkit.getWorld(name) == null);
+				System.out.println("Sign x: " + signLocation.getX());
+				System.out.println("Sign y: " + signLocation.getY());
+				System.out.println("Sign z: " + signLocation.getZ());
+				for(CraftTransferData craftData : craftTransferData) {
+					Double x = craftData.getRelativeX() + signLocation.getX();
+					Double y = craftData.getRelativeY() + signLocation.getY();
+					Double z = craftData.getRelativeZ() + signLocation.getZ();
+					//System.out.println("x: " + x);
+					//System.out.println("y: " + y);
+					//System.out.println("z: " + z);
+					//System.out.println("world name again: " + Bukkit.getWorld(name).getName());
+					//gets the block at the given location
+					if(!(Bukkit.getWorld(name).getBlockAt(x.intValue(), y.intValue(), z.intValue()).getTypeId() == 0)) {
+						return true;
+					}
+				}
+				return false;
+			}
+		});
+		System.out.println("Outside of the callable of death");
+		//Checks if it's obstructed once callSyncMethod returns
+		try {
+			if(isObstructed.get().booleanValue() == true) {
 				return true;
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return false;
 	}
 	//returns the optimal unobstructed location for the craft to be built at
 	private static SerializableLocation getUnobstructedLocation(TransferData transferData) {
+		System.out.println("In getUnobstructedLocation()");
 		SerializableLocation signLocation = transferData.getDestinationLocation();
 		SerializableLocation oldLocation = transferData.getOriginalSignLocation();
 		if(!isObstructed(transferData.getCraftData(), signLocation)) {
@@ -99,32 +129,66 @@ public class BungeeCraftConstructor {
 		return null;
 	}
 	//attempts to build craft at given location. returns true if build successful
-	private static boolean buildCraftAtLocation(ArrayList<CraftTransferData> craftTransferData, Location newDestinationLocation) {
-		for(CraftTransferData craftData : craftTransferData) {
-			World w = newDestinationLocation.getWorld();
-			double x = craftData.getRelativeX() + newDestinationLocation.getX();
-			double y = craftData.getRelativeY() + newDestinationLocation.getY();
-			double z = craftData.getRelativeZ() + newDestinationLocation.getZ();
-			Location blockLocation = new Location(w, x, y, z);
-			//Tests that craft is still not obstructed
-			if(!(blockLocation.getBlock().getTypeId() == 0)) {
+	private static boolean buildCraftAtLocation(final ArrayList<CraftTransferData> craftTransferData, Location newDestinationLocation) {
+		System.out.println("In buildCraftAtLocation()");
+		final String worldName = newDestinationLocation.getWorld().getName();
+		final Double destinationX = newDestinationLocation.getX();
+		final Double destinationY = newDestinationLocation.getY();
+		final Double destinationZ = newDestinationLocation.getZ();
+		//Sets all of the blocks, and checks if the craft is obstructed
+		Future<Boolean> isObstructed = Bukkit.getScheduler().callSyncMethod(Movecraft.getInstance(), new Callable<Boolean>() {
+			public Boolean call() {
+				for(CraftTransferData craftData : craftTransferData) {
+					final Double x = craftData.getRelativeX() + destinationX;
+					final Double y = craftData.getRelativeY() + destinationY;
+					final Double z = craftData.getRelativeZ() + destinationZ;
+					//Tests that craft is still not obstructed
+					if(!(Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue()).getTypeId() == 0)) {
+						return true;
+					}
+					//appropriately sets blocks
+					final int id = craftData.getID();
+					final byte data = craftData.getData();
+					Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue()).setTypeIdAndData(id, data, false);
+				}
 				return false;
 			}
-			//appropriately sets blocks
-			int id = craftData.getID();
-			byte data = craftData.getData();
+		});
+		//Closes builder and tells the program to cancel the transfer if the craft was obstructed
+		try {
+			if(isObstructed.get().booleanValue()) {
+				return false;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//Goes through and sets inventories and sign lines appropriately after the block setting has already occurred
+		for(CraftTransferData craftData : craftTransferData) {
+			final Double x = craftData.getRelativeX() + destinationX;
+			final Double y = craftData.getRelativeY() + destinationY;
+			final Double z = craftData.getRelativeZ() + destinationZ;
+			
+			final int id = craftData.getID();
+			final byte data = craftData.getData();
 			boolean isSign = craftData.isSign();
 			boolean hasInventory = craftData.hasInventory();
-			blockLocation.getBlock().setTypeIdAndData(id, data, false);
 			//sets inventory contents
 			if(hasInventory) {
-				InventoryHolder i = (InventoryHolder) blockLocation.getBlock().getState();
+				InventoryHolder i = (InventoryHolder) Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue()).getState();
 				Inventory inv = craftData.getInventory();
 				i.getInventory().setContents(inv.getContents());
 			}
 			//sets sign lines
 			else if(isSign) {
-				Sign s = (Sign) blockLocation.getBlock().getState();
+				Block block = Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue());
+				BlockState state = block.getState();
+				if(Bukkit.getWorld(worldName).getChunkAt(block).isLoaded()) {
+					System.out.println("Chunk is loaded");
+				}
+				System.out.println(state.getData().toString());
+				System.out.println(state.getType().toString());
+				Sign s = (Sign) state;
 				String[] lines = craftData.getSignLines();
 				s.setLine(0, lines[0]);
 				s.setLine(1, lines[1]);

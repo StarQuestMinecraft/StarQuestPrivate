@@ -74,7 +74,7 @@ public class Torpedo extends Projectile{
 	public void move(Block target){
 		super.move(target);
 		myBlock.getWorld().playEffect(myBlock.getLocation(), Effect.SMOKE, 20);
-		myBlock.getWorld().playSound(myBlock.getLocation(), Sound.FIREWORK_LAUNCH, 2.0F, 1.0F);
+		//myBlock.getWorld().playSound(myBlock.getLocation(), Sound.FIREWORK_LAUNCH, 2.0F, 1.0F);
 	}
 	
 	public void detonate(){

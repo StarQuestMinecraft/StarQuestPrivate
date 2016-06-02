@@ -1,5 +1,6 @@
 package net.countercraft.movecraft.crafttransfer.database;
 
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,6 +10,12 @@ import java.util.UUID;
 
 import net.countercraft.movecraft.crafttransfer.transferdata.TransferData;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.Exception;
 
 public class SQLDatabase {
@@ -38,11 +45,19 @@ public class SQLDatabase {
 		if(!(containsIllegalCharacters(data.getPilot()))) {
 			try {
 				PreparedStatement s =  getCon().getConnection().prepareStatement(WRITE_DATA_SQL);
+				System.out.println("Data: " + data);
+				System.out.println("Pilot" + data.getPilot());
+				//does some black magic with io streams to make it properly upsert the object as a BLOB
+				ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+				ObjectOutputStream objectStream = new ObjectOutputStream(byteStream);
+				objectStream.writeObject(data);
+				byte[] dataBytes = byteStream.toByteArray();
+				ByteArrayInputStream inputStream = new ByteArrayInputStream(dataBytes);
 				s.setString(1, data.getPilot());
-				s.setObject(2, data);
+				s.setBlob(2, inputStream);
 				s.executeUpdate();
 			} 
-			catch (SQLException e) {
+			catch (Exception e) {
 				e.printStackTrace();
 			}
 			System.out.println("Wrote TransferData to database for pilot " + data.getPilot());
@@ -59,11 +74,16 @@ public class SQLDatabase {
 				ResultSet results = s.executeQuery();
 				if(results.next()) {
 					System.out.println("Results is not empty");
-					Object o = results.getObject(1);
-					System.out.println(o.getClass().getName());
-					if(results.getObject(1) instanceof TransferData) {
+					//Does some black magic with io streams to make an object
+					Blob blob = results.getBlob(1);
+					byte[] dataBytes = blob.getBytes(1L, (int) blob.length());
+					ByteArrayInputStream byteStream = new ByteArrayInputStream(dataBytes);
+					ObjectInputStream objectStream = new ObjectInputStream(byteStream);
+					Object dataObject = objectStream.readObject();
+					//It's a real object!
+					if(dataObject instanceof TransferData) {
 						System.out.println("Is TransferData");
-						data = (TransferData) results.getObject(1);
+						data = (TransferData) dataObject;
 					}
 				}
 			}

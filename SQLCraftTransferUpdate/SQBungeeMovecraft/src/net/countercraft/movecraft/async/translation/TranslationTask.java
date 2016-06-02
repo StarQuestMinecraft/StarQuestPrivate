@@ -271,12 +271,12 @@ public class TranslationTask extends AsyncTask {
 					if (!LocationUtils.spaceCheck(p, false)) {
 						// if(PingUtils.isOnline(s)){
 						p.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + " Leaving the atmosphere!");
-						Location l = LocationUtils.getWarpLocation(p.getWorld().getName(), p.getLocation());
-						SerializableLocation destinationLocation = new SerializableLocation(LocationUtils.getSystem(), l.getX(), l.getY(), l.getZ());
-						c.setProcessingTeleport(true);
+						SerializableLocation destinationLocation = LocationUtils.getWarpLocation(p.getLocation());
+						System.out.println("l: " + destinationLocation);
 						System.out.println("p: " + p);
 						System.out.println("c: " + c);
-						System.out.println("System: " + LocationUtils.getSystem());
+						System.out.println("System: " + destinationLocation.getWorldName());
+						c.setProcessingTeleport(true);
 						RepeatTryServerJumpTask.createServerJumpTask(c, destinationLocation);
 						return;
 						/*
@@ -292,7 +292,7 @@ public class TranslationTask extends AsyncTask {
 				if (jump != null) {
 					for(UUID u : c.playersRidingShip){
 						Player plr = Movecraft.getPlayer(u);
-						plr.playSound(plr.getLocation(), Sound.PORTAL_TRAVEL, 2.0F, 1.0F);
+						//plr.playSound(plr.getLocation(), Sound.PORTAL_TRAVEL, 2.0F, 1.0F);
 					}
 					SerializableLocation destinationLocation = new SerializableLocation(jump.server, jump.x, jump.y, jump.z);
 					c.setProcessingTeleport(true);

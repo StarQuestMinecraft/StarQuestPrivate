@@ -45,7 +45,7 @@ public class LaserBolt extends Projectile{
 		blocks.add(target);
 		super.move(target);
 		myBlock.getWorld().playEffect(myBlock.getLocation(), Effect.MOBSPAWNER_FLAMES, 20);
-		myBlock.getWorld().playSound(myBlock.getLocation(), Sound.SPLASH, 2.0F, 1.0F);
+		//myBlock.getWorld().playSound(myBlock.getLocation(), Sound.SPLASH, 2.0F, 1.0F);
 	}
 	
 	@Override
