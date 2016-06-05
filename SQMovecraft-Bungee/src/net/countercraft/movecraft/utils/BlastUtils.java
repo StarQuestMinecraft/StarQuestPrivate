@@ -62,14 +62,21 @@ public class BlastUtils {
 		case ENDER_STONE:
 			return 45;
 		case COAL_BLOCK:
+			return 40;
 		case DIAMOND_BLOCK:
+			return 40;
 		case EMERALD_BLOCK:
+			return 40;
 		case IRON_BLOCK:
+			return 40;
 		case REDSTONE_BLOCK:
+			return 40;
 		case CLAY_BRICK:
 		case STAINED_CLAY:
+			return 17.5;
 		case BRICK_STAIRS:
 		case HARD_CLAY:
+			return 17.5;
 		case STONE:
 		case COBBLESTONE:
 		case COBBLESTONE_STAIRS:
@@ -78,19 +85,27 @@ public class BlastUtils {
 		case JUKEBOX:
 		case MOSSY_COBBLESTONE:
 		case NETHER_BRICK:
+			return 40;
 		case NETHER_FENCE:
 		case NETHER_BRICK_STAIRS:
+			return 40;
 		case PRISMARINE:
 		case SMOOTH_BRICK:
 		case SMOOTH_STAIRS:
 		case STEP:
+			return 17.5;
 		case DOUBLE_STEP:
+			return 17.5;
 		case PURPUR_BLOCK:
+			return 40;
 		case PURPUR_SLAB:
+			return 40;
 		case PURPUR_DOUBLE_SLAB:
+			return 40;
 		case PURPUR_PILLAR:
+			return 40;
 		case PURPUR_STAIRS:
-			return 30;
+			return 40;
 		case IRON_DOOR_BLOCK:
 		case IRON_TRAPDOOR:
 		case MOB_SPAWNER:
@@ -112,6 +127,7 @@ public class BlastUtils {
 		case HOPPER:
 		case IRON_ORE:
 		case LAPIS_BLOCK:
+			return 40;
 		case LAPIS_ORE:
 		case QUARTZ_ORE:
 		case REDSTONE_ORE:
@@ -138,7 +154,9 @@ public class BlastUtils {
 		case SIGN_POST:
 			return 5;
 		case QUARTZ_BLOCK:
+			return 40;
 		case QUARTZ_STAIRS:
+			return 40;
 		case NOTE_BLOCK:
 		case RED_SANDSTONE:
 		case RED_SANDSTONE_STAIRS:
