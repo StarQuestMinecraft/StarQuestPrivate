@@ -38,7 +38,7 @@ public class Torpedo extends Projectile{
 			Block placeLoc = dispenser.getRelative(direction);
 			if(placeLoc.getType() != Material.AIR) return;
 			if(di.contains(Material.FIREWORK)){
-				if(!LocationUtils.spaceCheck(p) || LocationUtils.isInCorePlanet(p)){
+				if(!LocationUtils.spaceCheck(p) && !LocationUtils.isInCorePlanet(p)){
 					p.sendMessage("You can't fire TNT torpedoes on a rim planet.");
 					return;
 				}
