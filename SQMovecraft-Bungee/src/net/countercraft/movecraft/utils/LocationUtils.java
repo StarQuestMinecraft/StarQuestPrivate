@@ -65,6 +65,16 @@ public class LocationUtils {
 
 			//stargates.put("QuillonSystem", stargateFromConfig(cfg, "QuillonSystem"));
 			//stargates.put("AratorSystem", stargateFromConfig(cfg, "AratorSystem"));
+		} else if (SYSTEM.equals("CoreSystem")) {
+			
+			planets.put("Xira", locationFromConfig(cfg, "Xira"));
+			
+			if(cfg.contains("stargates")) {
+				for(String stargateName : cfg.getConfigurationSection("stargates").getKeys(false)) {
+					stargates.put(stargateName, stargateFromConfig(cfg, stargateName));
+				}
+			}
+			
 		}
 	}
 

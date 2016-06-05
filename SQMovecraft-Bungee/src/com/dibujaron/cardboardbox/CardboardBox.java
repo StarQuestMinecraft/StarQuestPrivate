@@ -161,14 +161,14 @@ public class CardboardBox implements Serializable {
 		
 		item.addUnsafeEnchantments(map);
 		
-		net.minecraft.server.v1_9_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
+		//net.minecraft.server.v1_9_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
 		
-		if(nmsStack != null) {
+		//if(nmsStack != null) {
 			
-			nmsStack.setTag(this.nbtCompound);
-			item = CraftItemStack.asBukkitCopy(nmsStack);
+			//nmsStack.setTag(this.nbtCompound);
+			//item = CraftItemStack.asBukkitCopy(nmsStack);
 			
-		}
+		//}
 		
 		return item;
 	}
