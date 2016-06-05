@@ -65,12 +65,22 @@ public class LocationUtils {
 
 			//stargates.put("QuillonSystem", stargateFromConfig(cfg, "QuillonSystem"));
 			//stargates.put("AratorSystem", stargateFromConfig(cfg, "AratorSystem"));
+		} else if (SYSTEM.equals("CoreSystem")) {
+			
+			planets.put("Xira", locationFromConfig(cfg, "Xira"));
+			
+			if(cfg.contains("stargates")) {
+				for(String stargateName : cfg.getConfigurationSection("stargates").getKeys(false)) {
+					stargates.put(stargateName, stargateFromConfig(cfg, stargateName));
+				}
+			}
+			
 		}
 	}
 
 	public static boolean spaceCheck(String worldname) {
 		
-		if (SQSpace.spaceWorlds.contains(worldname)) {
+		if (SQSpace.spaceWorlds.contains(worldname.toLowerCase())) {
 			
 			return true;
 			
@@ -82,7 +92,7 @@ public class LocationUtils {
 
 	public static boolean spaceCheck(World w) {
 		
-		if (SQSpace.spaceWorlds.contains(w.getName())) {
+		if (SQSpace.spaceWorlds.contains(w.getName().toLowerCase())) {
 			
 			return true;
 			
@@ -94,7 +104,7 @@ public class LocationUtils {
 
 	public static boolean spaceCheck(Location l) {
 	
-		if (SQSpace.spaceWorlds.contains(l.getWorld().getName())) {
+		if (SQSpace.spaceWorlds.contains(l.getWorld().getName().toLowerCase())) {
 			
 			return true;
 			
@@ -106,7 +116,7 @@ public class LocationUtils {
 
 	public static boolean spaceCheck(Player p) {
 		
-		if (SQSpace.spaceWorlds.contains(p.getLocation().getWorld().getName())) {
+		if (SQSpace.spaceWorlds.contains(p.getLocation().getWorld().getName().toLowerCase())) {
 			
 			return true;
 			
@@ -119,7 +129,7 @@ public class LocationUtils {
 	public static boolean spaceCheck(Player p, boolean includeAsteroidBelt) {
 		if (includeAsteroidBelt) {
 			
-			if (SQSpace.spaceWorlds.contains(p.getLocation().getWorld().getName())) {
+			if (SQSpace.spaceWorlds.contains(p.getLocation().getWorld().getName().toLowerCase())) {
 				
 				return true;
 				
@@ -129,7 +139,7 @@ public class LocationUtils {
 			
 		} else {
 			
-			if (SQSpace.spaceWorlds.contains(p.getLocation().getWorld().getName()) && !p.getLocation().getWorld().getName().equalsIgnoreCase("AsteroidBelt")) {
+			if (SQSpace.spaceWorlds.contains(p.getLocation().getWorld().getName().toLowerCase()) && !p.getLocation().getWorld().getName().equalsIgnoreCase("AsteroidBelt")) {
 				
 				return true;
 				
