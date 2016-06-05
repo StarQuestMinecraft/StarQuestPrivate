@@ -15,6 +15,8 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import us.higashiyama.george.SQSpace.SQSpace;
+
 public class LocationUtils {
 	public static HashMap<String, Location> planets = new HashMap<String, Location>();
 	public static HashMap<String, StargateData> stargates = new HashMap<String, StargateData>();
@@ -67,30 +69,75 @@ public class LocationUtils {
 	}
 
 	public static boolean spaceCheck(String worldname) {
-		return (worldname.toLowerCase().contains("system"));
+		
+		if (SQSpace.spaceWorlds.contains(worldname)) {
+			
+			return true;
+			
+		}
+		
+		return false;
+		
 	}
 
 	public static boolean spaceCheck(World w) {
-		return spaceCheck(w.getName());
+		
+		if (SQSpace.spaceWorlds.contains(w.getName())) {
+			
+			return true;
+			
+		}
+		
+		return false;
+		
 	}
 
 	public static boolean spaceCheck(Location l) {
-		return spaceCheck(l.getWorld().getName());
+	
+		if (SQSpace.spaceWorlds.contains(l.getWorld().getName())) {
+			
+			return true;
+			
+		}
+		
+		return false;
+		
 	}
 
 	public static boolean spaceCheck(Player p) {
-		String wName = p.getLocation().getWorld().getName();
-		if (wName.equals("AsteroidBelt")) {
+		
+		if (SQSpace.spaceWorlds.contains(p.getLocation().getWorld().getName())) {
+			
 			return true;
+			
 		}
-		return spaceCheck(wName);
+		
+		return false;
+		
 	}
 
 	public static boolean spaceCheck(Player p, boolean includeAsteroidBelt) {
-		if (includeAsteroidBelt)
-			return spaceCheck(p);
-		else
-			return spaceCheck(p.getLocation());
+		if (includeAsteroidBelt) {
+			
+			if (SQSpace.spaceWorlds.contains(p.getLocation().getWorld().getName())) {
+				
+				return true;
+				
+			}
+			
+			return false;
+			
+		} else {
+			
+			if (SQSpace.spaceWorlds.contains(p.getLocation().getWorld().getName()) && !p.getLocation().getWorld().getName().equalsIgnoreCase("AsteroidBelt")) {
+				
+				return true;
+				
+			}
+			
+			return false;
+			
+		}
 	}
 
 	public static World getSpaceWorld() {
@@ -317,5 +364,19 @@ public class LocationUtils {
 			}
 		}
 		return false;
+	}
+	
+	public static boolean isInCorePlanet(Player p) {
+		
+		String world = p.getLocation().getWorld().getName();
+		
+		if (world.equals("Xira")) {
+			
+			return true;
+			
+		}
+		
+		return false;
+		
 	}
 }
