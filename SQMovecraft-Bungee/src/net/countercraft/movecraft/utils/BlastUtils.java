@@ -93,9 +93,9 @@ public class BlastUtils {
 		case SMOOTH_BRICK:
 		case SMOOTH_STAIRS:
 		case STEP:
-			return 17.5;
+			return 40;
 		case DOUBLE_STEP:
-			return 17.5;
+			return 40;
 		case PURPUR_BLOCK:
 			return 40;
 		case PURPUR_SLAB:

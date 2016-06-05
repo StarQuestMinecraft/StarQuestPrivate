@@ -2,11 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Starquest testing Servers/Spigot Server/spigot.jar"/>
-	<classpathentry kind="lib" path="C:/Starquest testing Servers/Spigot Server/plugins/SQSpace.jar"/>
-	<classpathentry kind="lib" path="C:/Starquest testing Servers/Spigot Server/plugins/Vault.jar"/>
-	<classpathentry kind="lib" path="C:/Starquest testing Servers/Spigot Server/plugins/WorldEdit.jar"/>
-	<classpathentry kind="lib" path="C:/Starquest testing Servers/Spigot Server/plugins/WorldGuard.jar"/>
-	<classpathentry kind="lib" path="C:/Starquest testing Servers/Spigot Server/plugins/SQBoosters.jar"/>
+	<classpathentry kind="lib" path="/Users/WillyB/Downloads/SQBoosters.jar"/>
+	<classpathentry kind="lib" path="/Users/WillyB/Downloads/SQSpace.jar"/>
+	<classpathentry kind="lib" path="/Users/WillyB/Downloads/Vault.jar"/>
+	<classpathentry kind="lib" path="/Users/WillyB/Downloads/worldedit.jar"/>
+	<classpathentry kind="lib" path="/Users/WillyB/Downloads/worldguard.jar"/>
+	<classpathentry kind="lib" path="/Users/WillyB/Desktop/Server/spigot.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
