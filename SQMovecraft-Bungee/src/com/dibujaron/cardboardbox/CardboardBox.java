@@ -60,7 +60,7 @@ public class CardboardBox implements Serializable {
 			
 			if (nmsStack.hasTag()) {
 				
-				if(item.getType().equals(Material.POTION)) {
+				if(item.getType().equals(Material.POTION) || item.getType().equals(Material.SPLASH_POTION)) {
 					
 					this.potionNBT = nmsStack.getTag().getString("Potion");
 					Bukkit.getServer().broadcastMessage(this.potionNBT);
@@ -172,7 +172,7 @@ public class CardboardBox implements Serializable {
 			
 			if(this.potionNBT != null) {
 				
-				if(item.getType().equals(Material.POTION)) {
+				if(item.getType().equals(Material.POTION) || item.getType().equals(Material.SPLASH_POTION)) {
 					
 					NBTTagCompound compound = nmsStack.getTag();
 					compound.set("Potion", new NBTTagString(this.potionNBT));
