@@ -27,8 +27,10 @@ import com.dibujaron.cardboardbox.meta.CardboardMetaSkull;
 import com.dibujaron.cardboardbox.utils.CardboardEnchantment;
 import com.sk89q.util.ReflectionUtil;
 
+import net.minecraft.server.v1_9_R1.NBTBase;
 import net.minecraft.server.v1_9_R1.NBTTagCompound;
 import net.minecraft.server.v1_9_R1.NBTTagList;
+import net.minecraft.server.v1_9_R1.NBTTagString;
 
 /**
  * A serializable ItemStack
@@ -41,7 +43,7 @@ public class CardboardBox implements Serializable {
 	private final short damage;
 	private String name;
 	private List<String> lore;
-	private NBTTagCompound nbtCompound;
+	private String potionNBT;
 	
 	private final HashMap<CardboardEnchantment, Integer> enchants;
 	private CardboardItemMeta meta;
@@ -58,8 +60,11 @@ public class CardboardBox implements Serializable {
 			
 			if (nmsStack.hasTag()) {
 				
-				this.nbtCompound = nmsStack.getTag();
-				
+				if(item.getType().equals(Material.POTION)) {
+					
+					this.potionNBT = nmsStack.getTag().getString("Potion");
+
+				}
 			}   
 			
 		}
@@ -161,14 +166,19 @@ public class CardboardBox implements Serializable {
 		
 		item.addUnsafeEnchantments(map);
 		
-		//net.minecraft.server.v1_9_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
-		
-		//if(nmsStack != null) {
-			
-			//nmsStack.setTag(this.nbtCompound);
-			//item = CraftItemStack.asBukkitCopy(nmsStack);
-			
-		//}
+		net.minecraft.server.v1_9_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
+
+		if(this.potionNBT != null) {
+				
+			if(item.getType().equals(Material.POTION)) {
+					
+				NBTTagCompound compound = nmsStack.getTag();
+				compound.set("Potion", new NBTTagString(this.potionNBT));
+				nmsStack.setTag(compound);
+				item = CraftItemStack.asBukkitCopy(nmsStack);
+					
+			}
+		}
 		
 		return item;
 	}
