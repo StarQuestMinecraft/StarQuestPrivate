@@ -2,7 +2,6 @@
 package com.dibujaron.cardboardbox;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +13,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import com.dibujaron.cardboardbox.meta.CardboardItemMeta;
-import com.dibujaron.cardboardbox.meta.CardboardMetaBook;
 import com.dibujaron.cardboardbox.meta.CardboardMetaBook2;
 import com.dibujaron.cardboardbox.meta.CardboardMetaEnchantment;
 import com.dibujaron.cardboardbox.meta.CardboardMetaFirework;
@@ -25,11 +22,7 @@ import com.dibujaron.cardboardbox.meta.CardboardMetaLeatherArmor;
 import com.dibujaron.cardboardbox.meta.CardboardMetaMap;
 import com.dibujaron.cardboardbox.meta.CardboardMetaSkull;
 import com.dibujaron.cardboardbox.utils.CardboardEnchantment;
-import com.sk89q.util.ReflectionUtil;
-
-import net.minecraft.server.v1_9_R1.NBTBase;
 import net.minecraft.server.v1_9_R1.NBTTagCompound;
-import net.minecraft.server.v1_9_R1.NBTTagList;
 import net.minecraft.server.v1_9_R1.NBTTagString;
 
 /**
@@ -55,7 +48,6 @@ public class CardboardBox implements Serializable {
 		this.damage = item.getDurability();
 		
 		net.minecraft.server.v1_9_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
-		
 		if(nmsStack != null) {
 			
 			if (nmsStack.hasTag()) {
@@ -170,15 +162,23 @@ public class CardboardBox implements Serializable {
 		
 		if(this.potionNBT != null) {
 			
-			
 			if(item.getType().equals(Material.POTION) || item.getType().equals(Material.SPLASH_POTION)) {
 				
-				
-				NBTTagCompound compound = nmsStack.getTag();
-				compound.set("Potion", new NBTTagString(this.potionNBT));
-				nmsStack.setTag(compound);
-				item = CraftItemStack.asBukkitCopy(nmsStack);
-				
+				if(nmsStack.getTag() != null) {
+					
+					NBTTagCompound compound = nmsStack.getTag();
+					compound.set("Potion", new NBTTagString(this.potionNBT));
+					nmsStack.setTag(compound);
+					item = CraftItemStack.asBukkitCopy(nmsStack);
+					
+				} else {
+					
+					NBTTagCompound compound = new NBTTagCompound();
+					compound.set("Potion", new NBTTagString(this.potionNBT));
+					nmsStack.setTag(compound);
+					item = CraftItemStack.asBukkitCopy(nmsStack);	
+					
+				}
 			}
 		}
 		
