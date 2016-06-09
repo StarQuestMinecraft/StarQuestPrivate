@@ -1,0 +1,70 @@
+name: Movecraft
+version: 3.1.32
+description: The original flight and movement plugin for minecraft.
+author: AJCStriker
+website: http://madrealms.net/forums/
+main: net.countercraft.movecraft.Movecraft
+database: false
+
+commands:
+   removehome:
+      description: remove your home.
+      usage: /removehome
+   s:
+      description: Shoot the cannons!
+      usage: /s
+   cryocheck:
+      description: Check your cyropod status.
+      usage: /cryocheck
+   serverjump:
+      description: lolnope
+      usage: lolnope
+   handlers:
+      description: sdfsdf
+      usage: sdfsdf
+   loadship:
+      description: sdfsdf
+      usage: sdfsdf
+   saveship:
+      description: save a starship to the database.
+      usage: /saveship (while piloting the ship to save)
+   nukeship:
+      description: ssdfsdf
+      usage: sdfsdf
+   releaseallships:
+      description: sdfsdfsd
+      usage: sdfsdf
+   claimdock:
+      description: claim a dock!
+      usage: /claimdock (with a WG region selected)
+   removedock:
+      description: remove docks where you are standing.
+      usage: /removedock (standing in a dock region)
+   shipclass:
+      description: Get the shipclass that someone is flying currently.
+      usage: /shipclass <player>
+   shipsize:
+      description: Tells you the size of your ship and other information
+      usage: /shipsize
+   shipsizecolor:
+      description: Tells you the size of your ship and other information - includes extra information about wool colors
+      usage: /shipsizecolor
+   redline:
+      description: Initialize a redline jump
+      usage: /redline <destination | <x> <z>>
+   movecraftreload:
+      description: reload movecraft craft files
+      usage: /movecraftreload
+   mapfailures:
+      description: check how many block placements have failed (diagnostic)
+      usage: /mapfailures
+depend:
+   - WorldEdit
+   - WorldGuard
+
+permissions:
+    movecraft.*:
+        description: Gives access to all movecraft commands
+        children:
+            movecraft.override: true
+            movecraft.loadship: true

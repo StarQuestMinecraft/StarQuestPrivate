@@ -1,0 +1,46 @@
+Locale: en
+autopilot: false
+#dagobah
+Boskevine:
+    Xcoord: 100
+    Ycoord: 200
+    Zcoord: 100
+#tatooine
+Quavara:
+    Xcoord: 500
+    Ycoord: 200
+    Zcoord: -300
+#hoth
+Iffrizar:
+    Xcoord: -250
+    Ycoord: 200
+    Zcoord: -300
+#nether planet
+Ceharram:
+    Xcoord: -700
+    Ycoord: 200
+    Zcoord: -500
+#tropical planet
+Kelakaria:
+    Xcoord: -100
+    Ycoord: -300
+    Zcoord: -400
+#naboo
+Valadro:
+    Xcoord:
+    Ycoord:
+    Zcoord:
+#Mushroom planet
+Boletarian:
+    Xcoord:
+    Ycoord:
+    Zcoord:
+ 
+#Database   
+Host: localhost
+Database: minecraft
+User: minecraft
+Pass: nope
+
+
+
