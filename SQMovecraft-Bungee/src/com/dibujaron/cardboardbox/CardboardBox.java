@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import com.dibujaron.cardboardbox.meta.CardboardItemMeta;
+import com.dibujaron.cardboardbox.meta.CardboardMetaBanner;
 import com.dibujaron.cardboardbox.meta.CardboardMetaBook2;
 import com.dibujaron.cardboardbox.meta.CardboardMetaEnchantment;
 import com.dibujaron.cardboardbox.meta.CardboardMetaFirework;
@@ -63,7 +64,7 @@ public class CardboardBox implements Serializable {
 		
 		if (item.hasItemMeta()) {
 			ItemMeta m = item.getItemMeta();
-			System.out.println("has item meta: " + item.getType());
+			System.out.println("Item that has meta: " + item.getType() + " The meta: " + item.getItemMeta());
 			if (m.hasDisplayName()) {
 				this.name = m.getDisplayName();
 			}
@@ -116,6 +117,9 @@ public class CardboardBox implements Serializable {
 			break;
 		case 397: // player head
 			this.meta = (new CardboardMetaSkull(item));
+			break;
+		case 425: // banner
+			this.meta = (new CardboardMetaBanner(item));
 			break;
 		default:
 			this.meta = null;
