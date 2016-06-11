@@ -74,6 +74,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
 public class EntityListener implements Listener {
 	private final HashMap<Player, BukkitTask> releaseEvents = new HashMap<Player, BukkitTask>();
@@ -394,7 +395,11 @@ public class EntityListener implements Listener {
 				if (event.getEntity() != null && crafts != null) {
 					for (Craft c : crafts) {
 						if (c.playersRidingShip.contains(plr.getUniqueId())) {
-							plr.teleport(c.originalPilotLoc);
+							event.setCancelled(true);
+							Vector direction = plr.getLocation().getDirection();
+							Location location = c.originalPilotLoc.clone();
+							location.setDirection(direction);
+							plr.teleport(location);
 							plr.setHealth(plr.getMaxHealth());
 							plr.sendMessage("Whoa there! You kissed a wall...");
 							return;
