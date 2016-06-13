@@ -396,13 +396,18 @@ public class EntityListener implements Listener {
 					for (Craft c : crafts) {
 						if (c.playersRidingShip.contains(plr.getUniqueId())) {
 							event.setCancelled(true);
-							Vector direction = plr.getLocation().getDirection();
-							Location location = c.originalPilotLoc.clone();
-							location.setDirection(direction);
-							plr.teleport(location);
-							plr.setHealth(plr.getMaxHealth());
-							plr.sendMessage("Whoa there! You kissed a wall...");
-							return;
+							if (!(plr.getLocation().getBlock().getType().equals(Material.GLOWSTONE) && (plr.getLocation().getBlock().getRelative(BlockFace.UP).getType().equals(Material.GLASS) || plr.getLocation().getBlock().getRelative(BlockFace.UP).getType().equals(Material.STAINED_GLASS)))) {
+								
+								Vector direction = plr.getLocation().getDirection();
+								Location location = c.originalPilotLoc.clone();
+								location.setDirection(direction);
+								plr.teleport(location);
+								//Dont want to delete this becuase of its historical value
+								//plr.setHealth(plr.getMaxHealth());
+								//plr.sendMessage("Whoa there! You kissed a wall...");
+								return;
+								
+							}
 						}
 					}
 				}
