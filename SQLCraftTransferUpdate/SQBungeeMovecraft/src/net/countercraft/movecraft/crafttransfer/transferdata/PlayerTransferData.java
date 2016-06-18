@@ -30,14 +30,22 @@ public class PlayerTransferData implements Serializable {
 	private String player;
 	private UUID uuid;
 	private GameMode gameMode;
-	private SerializableLocation destinationLocation;
 	private Knapsack playerKnapsack;
+	private double xOffsetFromShipSign, yOffsetFromShipSign, zOffsetFromShipSign;
+	private double pitch, yaw;
+
 	
-	public PlayerTransferData(Player p, String destinationWorldName) {
+	public PlayerTransferData(Player p, String destinationWorldName, SerializableLocation shipSignLocation) {
 		player = p.getName();
 		uuid = p.getUniqueId();
 		gameMode = p.getGameMode();
 		playerKnapsack = new Knapsack(p);
+		Location l = p.getLocation();
+		xOffsetFromShipSign = l.getX() - shipSignLocation.getX();
+		yOffsetFromShipSign = l.getY() - shipSignLocation.getY();
+		zOffsetFromShipSign = l.getZ() - shipSignLocation.getZ();
+		pitch = l.getPitch();
+		yaw = l.getYaw();
 	}
 	
 	public String getPlayer() {
@@ -49,13 +57,26 @@ public class PlayerTransferData implements Serializable {
 	public GameMode getGameMode() {
 		return gameMode;
 	}
-	public SerializableLocation getDestination() {
-		return destinationLocation;
-	}
-	public void setDestination(SerializableLocation l) {
-		destinationLocation = l;
-	}
 	public Knapsack getPlayerKnapsack() {
 		return playerKnapsack;
+	}
+	public double getRelativeX() {
+		return xOffsetFromShipSign;
+	}
+	public double getRelativeY() {
+		return yOffsetFromShipSign;
+	}
+	public double getRelativeZ() {
+		return zOffsetFromShipSign;
+	}
+	public double getPitch() {
+		return pitch;
+	}
+	public double getYaw() {
+		return yaw;
+	}
+	public void unpack(Player p) {
+		getPlayerKnapsack().unpack(p);
+		p.setGameMode(getGameMode());
 	}
 }

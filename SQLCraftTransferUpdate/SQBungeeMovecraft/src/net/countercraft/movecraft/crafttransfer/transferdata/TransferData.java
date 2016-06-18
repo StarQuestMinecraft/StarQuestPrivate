@@ -49,7 +49,7 @@ public class TransferData implements Serializable {
 		playerData = new ArrayList<PlayerTransferData>();
 		for(UUID u : c.playersRidingShip) {
 			Player p = Movecraft.getPlayer(u);
-			playerData.add(new PlayerTransferData(p, c.getW().getName()));
+			playerData.add(new PlayerTransferData(p, c.getW().getName(), originalSignLocation));
 		}
 	}
 	public ArrayList<PlayerTransferData> getPlayerData() {
@@ -64,8 +64,14 @@ public class TransferData implements Serializable {
 	public SerializableLocation getDestinationLocation() {
 		return destinationLocation;
 	}
+	public void setDestinationLocation(SerializableLocation l) {
+		destinationLocation = l;
+	}
 	public String getOldServer() {
 		return oldServer;
+	}
+	public void setOldServer(String server) {
+		oldServer = server;
 	}
 	public SerializableLocation getOriginalSignLocation() {
 		return originalSignLocation;

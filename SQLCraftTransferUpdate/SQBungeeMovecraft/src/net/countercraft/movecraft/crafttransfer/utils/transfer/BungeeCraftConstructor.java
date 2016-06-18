@@ -58,10 +58,6 @@ public class BungeeCraftConstructor {
 					Double x = craftData.getRelativeX() + signLocation.getX();
 					Double y = craftData.getRelativeY() + signLocation.getY();
 					Double z = craftData.getRelativeZ() + signLocation.getZ();
-					//System.out.println("x: " + x);
-					//System.out.println("y: " + y);
-					//System.out.println("z: " + z);
-					//System.out.println("world name again: " + Bukkit.getWorld(name).getName());
 					//gets the block at the given location
 					if(!(Bukkit.getWorld(name).getBlockAt(x.intValue(), y.intValue(), z.intValue()).getTypeId() == 0)) {
 						return true;
@@ -70,7 +66,6 @@ public class BungeeCraftConstructor {
 				return false;
 			}
 		});
-		System.out.println("Outside of the callable of death");
 		//Checks if it's obstructed once callSyncMethod returns
 		try {
 			if(isObstructed.get().booleanValue() == true) {
@@ -83,7 +78,6 @@ public class BungeeCraftConstructor {
 	}
 	//returns the optimal unobstructed location for the craft to be built at
 	private static SerializableLocation getUnobstructedLocation(TransferData transferData) {
-		System.out.println("In getUnobstructedLocation()");
 		SerializableLocation signLocation = transferData.getDestinationLocation();
 		SerializableLocation oldLocation = transferData.getOriginalSignLocation();
 		if(!isObstructed(transferData.getCraftData(), signLocation)) {
@@ -130,7 +124,6 @@ public class BungeeCraftConstructor {
 	}
 	//attempts to build craft at given location. returns true if build successful
 	private static boolean buildCraftAtLocation(final ArrayList<CraftTransferData> craftTransferData, Location newDestinationLocation) {
-		System.out.println("In buildCraftAtLocation()");
 		final String worldName = newDestinationLocation.getWorld().getName();
 		final Double destinationX = newDestinationLocation.getX();
 		final Double destinationY = newDestinationLocation.getY();
@@ -149,7 +142,21 @@ public class BungeeCraftConstructor {
 					//appropriately sets blocks
 					final int id = craftData.getID();
 					final byte data = craftData.getData();
-					Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue()).setTypeIdAndData(id, data, false);
+					Block block = Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue());
+					block.setTypeIdAndData(id, data, false);
+					if(craftData.isSign()) {
+						String[] lines = craftData.getSignLines();
+						Sign sign = (Sign) block.getState();
+						for(int i = 0; i < lines.length; i++) {
+							System.out.println(lines[i]);
+							sign.setLine(i, lines[i]);
+						}
+						sign.update();
+					}
+					else if(craftData.hasInventory()) {
+						InventoryHolder i = (InventoryHolder) block.getState();
+						craftData.getInventory().unpack(i.getInventory());
+					}
 				}
 				return false;
 			}
@@ -163,50 +170,21 @@ public class BungeeCraftConstructor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//Goes through and sets inventories and sign lines appropriately after the block setting has already occurred
-		for(CraftTransferData craftData : craftTransferData) {
-			final Double x = craftData.getRelativeX() + destinationX;
-			final Double y = craftData.getRelativeY() + destinationY;
-			final Double z = craftData.getRelativeZ() + destinationZ;
-			
-			final int id = craftData.getID();
-			final byte data = craftData.getData();
-			boolean isSign = craftData.isSign();
-			boolean hasInventory = craftData.hasInventory();
-			//sets inventory contents
-			if(hasInventory) {
-				InventoryHolder i = (InventoryHolder) Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue()).getState();
-				Inventory inv = craftData.getInventory();
-				i.getInventory().setContents(inv.getContents());
-			}
-			//sets sign lines
-			else if(isSign) {
-				Block block = Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue());
-				BlockState state = block.getState();
-				if(Bukkit.getWorld(worldName).getChunkAt(block).isLoaded()) {
-					System.out.println("Chunk is loaded");
-				}
-				System.out.println(state.getData().toString());
-				System.out.println(state.getType().toString());
-				Sign s = (Sign) state;
-				String[] lines = craftData.getSignLines();
-				s.setLine(0, lines[0]);
-				s.setLine(1, lines[1]);
-				s.setLine(2, lines[2]);
-				s.setLine(3, lines[3]);
-			}
-		}
 		return true;
 	}
 	//attempts to remove craft at given location, returns true if successful
-	private static boolean removeCraftAtLocation(ArrayList<CraftTransferData> craftTransferData, SerializableLocation oldShipSignLocation) {
-		World world = Bukkit.getWorld(oldShipSignLocation.getWorldName());
-		for(CraftTransferData craftData : craftTransferData) {
-			SerializableLocation l = oldShipSignLocation.copy();
-			l.offsetCoordinatesBy(craftData.getRelativeX(), craftData.getRelativeY(), craftData.getRelativeZ());
-			Location blockLocation = l.getLocation();
-			world.getBlockAt(blockLocation).setTypeId(0);
-		}
+	private static boolean removeCraftAtLocation(final ArrayList<CraftTransferData> craftTransferData, final SerializableLocation oldShipSignLocation) {
+		final World world = Bukkit.getWorld(oldShipSignLocation.getWorldName());
+		Bukkit.getScheduler().runTask(Movecraft.getInstance(), new Runnable() {
+			public void run() {
+				for(CraftTransferData craftData : craftTransferData) {
+					SerializableLocation l = oldShipSignLocation.copy();
+					l.offsetCoordinatesBy(craftData.getRelativeX(), craftData.getRelativeY(), craftData.getRelativeZ());
+					Location blockLocation = l.getLocation();
+					world.getBlockAt(blockLocation).setTypeId(0);
+				}
+			}
+		});
 		return true;
 	}
 	//grabs transferdata from db

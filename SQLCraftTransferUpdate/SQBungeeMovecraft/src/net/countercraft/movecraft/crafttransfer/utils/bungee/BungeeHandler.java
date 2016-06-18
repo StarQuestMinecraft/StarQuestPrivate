@@ -17,7 +17,7 @@ import com.google.common.io.ByteStreams;
 import net.countercraft.movecraft.Movecraft;
 
 import net.countercraft.movecraft.crafttransfer.SerializableLocation;
-
+import net.countercraft.movecraft.crafttransfer.transferdata.PlayerTransferData;
 import net.countercraft.movecraft.crafttransfer.utils.transfer.BungeeCraftConstructor;
 import net.countercraft.movecraft.crafttransfer.utils.transfer.BungeeCraftReceiver;
 
@@ -91,27 +91,29 @@ public class BungeeHandler implements Listener {
 		System.out.println("Writing CraftSpawnPacket to sender");
 	}
 	//Called by receiving end. Tells sending end to connect player, and adds player to teleport queues.
-	public static void sendConnectPlayerPacket(final String player, final String oldServer, final SerializableLocation signLocation, final String pilot) {
+	public static void sendConnectPlayerPacket(final PlayerTransferData playerData, final String oldServer, final SerializableLocation signLocation, final String pilot) {
 		Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable() {
 			public void run() {
 				System.out.println("Pilot: " + pilot);
-				System.out.println("Player: " + player);
+				System.out.println("Player: " + playerData.getPlayer());
 				//sends packet
 				Data data = new Data();
 				String signLocationString = signLocation.toString();
 				System.out.println("SignLocationString: " + signLocationString);
 				data.addString("CurrentServer", oldServer);
 				data.addString("TargetServer", signLocation.getWorldName());
-				data.addString("Player", player);
+				data.addString("Player", playerData.getPlayer());
 				data.addString("Location", signLocationString);
 				data.addString("Pilot", pilot);
 				data.addString("Packet", "ConnectPlayerPacket");
 				SQNetEvents.getInstance().send(new EventPacket(new ReceivedDataEvent(data)), oldServer);
-				//adds player to queue
-				System.out.println("PlayerHandler: " + playerHandler);
-				System.out.println("PlayerTeleportQueue: " + playerHandler.getPlayerTeleportQueue());
-				playerHandler.addPlayerToTeleportQueue(player, signLocation);
-				playerHandler.addPlayerToPassengerMap(player, pilot);
+				//adds player to queues
+				SerializableLocation l = new SerializableLocation(signLocation);
+				l.offsetCoordinatesBy(playerData.getRelativeX(), playerData.getRelativeY(), playerData.getRelativeZ());
+				SerializableLocation destinationLocation = new SerializableLocation(l.getWorldName(), l.getX(), l.getY(), l.getZ(), l.getPitch(), l.getYaw());
+				playerHandler.addPlayerToTeleportQueue(playerData.getPlayer(), destinationLocation);
+				playerHandler.addPlayerToPassengerMap(playerData.getPlayer(), pilot);
+				playerHandler.addPlayerToDataMap(playerData.getPlayer(), playerData);
 			}
 		});
 	}

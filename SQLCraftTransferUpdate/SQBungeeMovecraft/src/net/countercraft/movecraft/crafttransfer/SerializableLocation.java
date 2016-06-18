@@ -13,24 +13,38 @@ public class SerializableLocation implements Serializable {
 	private double x;
 	private double y;
 	private double z;
+	private double pitch;
+	private double yaw;
 	
 	public SerializableLocation(Location l) {
 		worldName = l.getWorld().getName();
 		x = l.getX();
 		y = l.getY();
 		z = l.getZ();
+		pitch = l.getPitch();
+		yaw = l.getYaw();
 	}
-	private SerializableLocation(SerializableLocation l) {
+	public SerializableLocation(SerializableLocation l) {
 		worldName = l.getWorldName();
 		x = l.getX();
 		y = l.getY();
 		z = l.getZ();
+		pitch = l.getPitch();
+		yaw = l.getYaw();
 	}
 	public SerializableLocation(String aWorldName, double xValue, double yValue, double zValue) {
 		worldName = aWorldName;
 		x = xValue;
 		y = yValue;
 		z = zValue;
+	}
+	public SerializableLocation(String aWorldName, double xValue, double yValue, double zValue, double pitchValue, double yawValue) {
+		worldName = aWorldName;
+		x = xValue;
+		y = yValue;
+		z = zValue;
+		pitch = pitchValue;
+		yaw = yawValue;
 	}
 	public String getWorldName() {
 		return worldName;
@@ -43,6 +57,12 @@ public class SerializableLocation implements Serializable {
 	}
 	public double getZ() {
 		return z;
+	}
+	public double getPitch() {
+		return pitch;
+	}
+	public double getYaw() {
+		return yaw;
 	}
 	public Location getLocation() {
 		return new Location(Bukkit.getWorld(worldName), x, y, z);

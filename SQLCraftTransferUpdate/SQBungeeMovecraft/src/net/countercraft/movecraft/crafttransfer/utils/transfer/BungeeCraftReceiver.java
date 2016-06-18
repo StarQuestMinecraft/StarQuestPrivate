@@ -2,6 +2,9 @@ package net.countercraft.movecraft.crafttransfer.utils.transfer;
 
 import java.util.ArrayList;
 
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
 import net.countercraft.movecraft.Movecraft;
 
 import net.countercraft.movecraft.crafttransfer.SerializableLocation;
@@ -18,6 +21,17 @@ public class BungeeCraftReceiver {
 			sendPlayerServerjumpPackets(transferData.getPlayerData(), transferData.getOldServer(), signLocation, pilot);
 		}
 	}
+	//called in oncommand for loadship
+	public static void receiveCraft(Player p) {
+		Location l = p.getLocation();
+		TransferData transferData = readData(p.getName());
+		transferData.setDestinationLocation(new SerializableLocation(l));
+		transferData.setOldServer(p.getWorld().getName());
+		SerializableLocation signLocation = BungeeCraftConstructor.calculateAndBuild(transferData);
+		if(signLocation != null) {
+			sendPlayerServerjumpPackets(transferData.getPlayerData(), transferData.getOldServer(), signLocation, p.getName());
+		}
+	}
 	//grabs transferdata from db
 	private static TransferData readData(String pilot) {
 		return Movecraft.getInstance().getSQLDatabase().readData(pilot);
@@ -27,7 +41,7 @@ public class BungeeCraftReceiver {
 		//iterates over players and sends packet
 		for(PlayerTransferData playerData : pData) {
 			System.out.println("Sent ConnectPlayerPacket for player " + playerData.getPlayer());
-			BungeeHandler.sendConnectPlayerPacket(playerData.getPlayer(), oldWorld, signLocation, pilot);
+			BungeeHandler.sendConnectPlayerPacket(playerData, oldWorld, signLocation, pilot);
 		}
 	}
 }

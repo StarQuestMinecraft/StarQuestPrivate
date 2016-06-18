@@ -3,9 +3,12 @@ package net.countercraft.movecraft.crafttransfer.transferdata;
 import java.io.Serializable;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+
+import com.dibujaron.cardboardbox.Crate;
 
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
@@ -17,7 +20,7 @@ public class CraftTransferData implements Serializable {
 	private int id;
 	private byte data;
 	private boolean hasInventory;
-	private Inventory inventory;
+	private Crate inventory;
 	private boolean isSign;
 	private boolean isShipSign;
 	private String[] lines = new String[4];
@@ -36,12 +39,16 @@ public class CraftTransferData implements Serializable {
 			lines[1] = s.getLine(1);
 			lines[2] = s.getLine(2);
 			lines[3] = s.getLine(3);
+			//test
+			for(String line : lines) {
+				System.out.println(line);
+			}
 		}
 		else {
 			if(location.getBlock().getState() instanceof InventoryHolder) {
 				hasInventory = true;
 				InventoryHolder invholder = (InventoryHolder) location.getBlock().getState();
-				inventory = invholder.getInventory();
+				inventory = new Crate(null, invholder.getInventory());
 			}
 			else {
 				hasInventory = false;
@@ -73,7 +80,7 @@ public class CraftTransferData implements Serializable {
 	public boolean hasInventory() {
 		return hasInventory;
 	}
-	public Inventory getInventory() {
+	public Crate getInventory() {
 		return inventory;
 	}
 	public boolean isSign() {

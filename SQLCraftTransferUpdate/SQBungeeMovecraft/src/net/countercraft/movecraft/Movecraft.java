@@ -157,7 +157,7 @@ public class Movecraft extends JavaPlugin {
 		} else if(cmd.getName().equalsIgnoreCase("loadship")){
 			if(sender.hasPermission("movecraft.loadship")){
 				if(args.length == 1){
-					BungeeCraftReceiver.receiveCraft(args[0]);
+					BungeeCraftReceiver.receiveCraft(getServer().getPlayer(args[0]));
 					sender.sendMessage("loaded ship.");
 					return true;
 				} else if(args.length == 4){
