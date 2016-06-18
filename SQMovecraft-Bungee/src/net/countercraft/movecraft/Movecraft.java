@@ -39,13 +39,17 @@ import org.bukkit.plugin.messaging.Messenger;
 
 import net.countercraft.movecraft.async.AsyncManager;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
-import net.countercraft.movecraft.bungee.BungeeCraftReciever;
-import net.countercraft.movecraft.bungee.BungeeCraftSender;
+import net.countercraft.movecraft.crafttransfer.utils.transfer.BungeeCraftReceiver;
+import net.countercraft.movecraft.crafttransfer.utils.transfer.BungeeCraftSender;
 import net.countercraft.movecraft.bungee.BungeeFileHandler;
 import net.countercraft.movecraft.bungee.BungeeListener;
 import net.countercraft.movecraft.config.Settings;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
+import net.countercraft.movecraft.crafttransfer.SerializableLocation;
+import net.countercraft.movecraft.crafttransfer.database.SQLDatabase;
+import net.countercraft.movecraft.crafttransfer.utils.bungee.BungeeHandler;
+import net.countercraft.movecraft.crafttransfer.utils.bungee.PlayerHandler;
 import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.database.FileDatabase;
 import net.countercraft.movecraft.database.StarshipDatabase;
@@ -74,6 +78,7 @@ public class Movecraft extends JavaPlugin {
 	private Logger logger;
 	private boolean shuttingDown;
 	private StarshipDatabase database;
+	private SQLDatabase sqlDatabase;
 	
 	public void onDisable() {
 		// Process the storage crates to disk
@@ -84,7 +89,7 @@ public class Movecraft extends JavaPlugin {
 		ShieldUtils.activateAllRemaining();
 	}
 	
-	public boolean onCommand(final CommandSender sender, Command cmd, String label, String[] args) {
+	public boolean onCommand(final CommandSender sender, Command cmd, String label, final String[] args) {
 	if (cmd.getName().equalsIgnoreCase("removehome") && sender instanceof Player){
 			if(args.length > 0){
 				String player = args[0];
@@ -128,20 +133,23 @@ public class Movecraft extends JavaPlugin {
 			}
 			return true;
 		} else if(cmd.getName().equalsIgnoreCase("serverjump") && sender.getName().equalsIgnoreCase("dibujaron")){
-			Player p = (Player) sender;
-			try {
-				BungeeCraftSender.sendCraft(p, args[0], args[0],Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), CraftManager.getInstance().getCraftByPlayer(p));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			String serverName = args[0];
+			final SerializableLocation destinationLocation = new SerializableLocation(serverName, 0, 200, 0);
+			Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
+				public void run() {
+					BungeeCraftSender.sendCraft(destinationLocation, CraftManager.getInstance().getCraftByPlayer((Player) sender));
+				}
+			});
 			return true;
 		} else if(cmd.getName().equalsIgnoreCase("loadship")){
 			if(sender.hasPermission("movecraft.loadship")){
 				if(args.length == 1){
-					byte[] craftData = BungeeFileHandler.readCraftBytes(args[0]);
-					BungeeCraftReciever.readCraftAndBuild(craftData, false);
-					sender.sendMessage("loaded ship.");
+					Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable()  {
+						public void run() {
+							BungeeCraftReceiver.receiveCraft(getServer().getPlayer(args[0]));
+							sender.sendMessage("loaded ship.");
+						}
+					});
 					return true;
 				} else if(args.length == 4){
 					final Player p = Bukkit.getPlayer(args[0]);
@@ -159,10 +167,7 @@ public class Movecraft extends JavaPlugin {
 						return false;
 					}
 					try{
-						byte[] craftData = BungeeFileHandler.readCraftBytes(p.getName(), BungeeFileHandler.transferFolder);
-						p.teleport(new Location(p.getWorld(), x, y, z));
-						BungeeCraftReciever.readCraftAndBuild(craftData, false);
-						BungeeFileHandler.deleteTransferFile(p.getName());
+						BungeeCraftReceiver.receiveCraft(p.getName());
 					} catch (Exception e){
 						e.printStackTrace();
 						p.sendMessage("Failed to load ship: error. Did you have a ship saved?");
@@ -171,7 +176,6 @@ public class Movecraft extends JavaPlugin {
 					return true;
 				}
 				sender.sendMessage("incorrect arguments.");
-				return true;
 			}
 			sender.sendMessage("you don't have permission.");
 			return true;
@@ -282,6 +286,8 @@ public class Movecraft extends JavaPlugin {
 			pm.registerEvents( new BlockListener(), this );
 			pm.registerEvents( new EntityListener(), this );
 			pm.registerEvents( new InventoryListener(), this );
+			pm.registerEvents( new BungeeHandler(), this );
+			pm.registerEvents( new PlayerHandler(), this );
 			
 			Messenger m = this.getServer().getMessenger();
 			m.registerOutgoingPluginChannel(this, "BungeeCord");
@@ -298,6 +304,7 @@ public class Movecraft extends JavaPlugin {
 			
 			Bedspawn.setUp();
 			CryoSpawn.setUp();
+			sqlDatabase = new SQLDatabase();
 			//PingUtils.setUp();
 			
 			database = new FileDatabase();
@@ -387,5 +394,9 @@ public class Movecraft extends JavaPlugin {
 	//gets the player with given UUID. Attempts to resolve from cache, if it cannot it gets from bukkit.
 	public static Player getPlayer(UUID u){
 		return Bukkit.getPlayer(u);
+	}
+	
+	public SQLDatabase getSQLDatabase() {
+		return sqlDatabase;
 	}
 }

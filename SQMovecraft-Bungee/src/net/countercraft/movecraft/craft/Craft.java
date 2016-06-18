@@ -391,9 +391,9 @@ public class Craft {
 		return null;
 	}
 
-	public ArrayList<UUID> getPilot() {
+	public Player getPilot() {
 		// TODO Auto-generated method stub
-		return null;
+		return pilot;
 	}
 
 	public ArrayList<UUID> getMembers() {
