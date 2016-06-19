@@ -18,6 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class AutopilotRunTask extends BukkitRunnable{
 	public static ArrayList<Craft> autopilotingCrafts = new ArrayList<Craft>();
+	public static ArrayList<Craft> verticalAutopilotingCrafts = new ArrayList<Craft>();
 	final static int SQRT_2 = (int) Math.round(Math.sqrt(2));
 	public static boolean DISABLED = false;
 	public AutopilotRunTask() {
@@ -35,6 +36,10 @@ public class AutopilotRunTask extends BukkitRunnable{
 					c.pilot.sendMessage("Path is obstructed!");
 				}*/
 			}
+		}
+		for (Craft c : verticalAutopilotingCrafts){
+			Location l = c.pilot.getLocation();
+			c.translate(0, c.vY, 0);
 		}
 	}
 	
@@ -187,7 +192,52 @@ public class AutopilotRunTask extends BukkitRunnable{
 		s.setLine(1, ChatColor.GREEN + "{DISABLED}");
 		s.update();
 	}
-
+	
+	public static void startVerticalAutopilotingUp(Sign clicked, Craft c, Player p){
+		if (c.getType().getCanAutopilot()) {
+			if(DISABLED){
+				p.sendMessage("Autopilot is disabled on this server!");
+				return;
+			} else {
+				double craftMax = c.getType().getSpeed(p);
+				craftMax = craftMax + c.getExtraSpeed();
+				c.vY = (int) craftMax;
+				verticalAutopilotingCrafts.add(c);
+				p.sendMessage(ChatColor.RED + "Thrusters Engaged. Going upwards at " + c.vY + " bps.");
+			}
+		} else {
+			p.sendMessage(ChatColor.RED + "This ship type cannot autopilot");
+		}
+		
+	}
+	
+	public static void startVerticalAutopilotingDown(Sign clicked, Craft c, Player p){
+		if (c.getType().getCanAutopilot()) {
+			if(DISABLED){
+				p.sendMessage("Autopilot is disabled on this server!");
+				return;
+			} else {
+				double craftMax = c.getType().getSpeed(p);
+				craftMax = craftMax + c.getExtraSpeed();
+				craftMax = -craftMax; //Invert speed so it goes down
+				c.vY = (int) craftMax;
+				verticalAutopilotingCrafts.add(c);
+				int bps = (int) -craftMax; //Invert it again to turn it into a blocks per second number
+				p.sendMessage(ChatColor.RED + "Thrusters Engaged. Going downwards at " + bps + " bps.");
+			}
+		} else {
+			p.sendMessage(ChatColor.RED + "This ship type cannot autopilot");
+		}
+		
+	}
+	
+	public static void stopVerticalAutopiloting(Craft c, Player p, Sign s){
+		if (verticalAutopilotingCrafts.contains(c)) verticalAutopilotingCrafts.remove(c);
+		p.sendMessage(ChatColor.RED + "Thrusters disabled.");
+		s.setLine(1, ChatColor.GREEN + "{DISABLED}");
+		s.update();
+	}
+	
 	private static void calculateVelocity(Craft c, int speed){
 		Player p = c.pilot;
 		int modif = 2 * ((int) Math.round(speed));

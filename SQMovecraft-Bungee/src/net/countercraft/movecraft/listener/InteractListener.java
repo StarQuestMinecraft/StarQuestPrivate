@@ -114,6 +114,36 @@ public class InteractListener implements Listener {
 				} else if (sign.getLine(0).equalsIgnoreCase(ChatColor.BLUE + "AUTOPILOT")) {
 					AutopilotRunTask.incrementSpeed(sign, event.getPlayer());
 					return;
+				} else if (sign.getLine(0).equalsIgnoreCase(ChatColor.AQUA + "THRUSTERS")) {
+					if(!event.isCancelled()){
+						if (sign.getLine(1).equals(ChatColor.GREEN + "{DISABLED}")) {
+							Craft c = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());
+							if (c != null) {
+								if (!AutopilotRunTask.verticalAutopilotingCrafts.contains(c)) {
+									if(LocationUtils.isBeingJammed(c.getW(), c.getMinX(), c.getMinZ())){
+										c.pilot.sendMessage("Your thrusters are being jammed and cannot start.");
+										return;
+									}
+									sign.setLine(1, ChatColor.RED + "{ENGAGED}");
+									sign.update();
+									AutopilotRunTask.startVerticalAutopilotingUp(sign, CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer());
+									return;
+								}
+								event.getPlayer().sendMessage("Your craft is already using thrusters!");
+								return;
+							}
+							event.getPlayer().sendMessage("You are not currently piloting a craft, you cannot start the thrusters.");
+							return;
+						} else if (sign.getLine(1).equals(ChatColor.RED + "{ENGAGED}")) {
+							Craft c = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());
+							if (c != null) {
+								AutopilotRunTask.stopVerticalAutopiloting(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer(), sign);
+								return;
+							}
+							event.getPlayer().sendMessage("You are not currently piloting a craft, you cannot stop the thrusters.");
+							return;
+						}
+					}
 				}
 				if(event.getPlayer().getItemInHand().getType() == Material.WATCH){
 					if ( getCraftTypeFromString( sign.getLine( 0 ) ) != null ) {
@@ -258,6 +288,42 @@ public class InteractListener implements Listener {
 						return;
 					}
 					event.getPlayer().sendMessage("You are not currently piloting a craft, you cannot stop the autopilot.");
+					return;
+				}
+			}
+		} else if (sign.getLine(0).equalsIgnoreCase("[thrusters]")) {
+			sign.setLine(0, ChatColor.AQUA + "THRUSTERS");
+			sign.setLine(1, ChatColor.GREEN + "{DISABLED}");
+			event.getPlayer().sendMessage("You have created a thruster control sign. Left click to go up, right click to go down.");
+			sign.update();
+			return;
+		} else if (sign.getLine(0).equalsIgnoreCase(ChatColor.AQUA + "THRUSTERS")) {
+			if(!event.isCancelled()){
+				if (sign.getLine(1).equals(ChatColor.GREEN + "{DISABLED}")) {
+					Craft c = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());
+					if (c != null) {
+						if (!AutopilotRunTask.verticalAutopilotingCrafts.contains(c)) {
+							if(LocationUtils.isBeingJammed(c.getW(), c.getMinX(), c.getMinZ())){
+								c.pilot.sendMessage("Your thrusters are being jammed and cannot start.");
+								return;
+							}
+							sign.setLine(1, ChatColor.RED + "{ENGAGED}");
+							sign.update();
+							AutopilotRunTask.startVerticalAutopilotingDown(sign, CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer());
+							return;
+						}
+						event.getPlayer().sendMessage("Your craft is already using thrusters!");
+						return;
+					}
+					event.getPlayer().sendMessage("You are not currently piloting a craft, you cannot start the thrusters.");
+					return;
+				} else if (sign.getLine(1).equals(ChatColor.RED + "{ENGAGED}")) {
+					Craft c = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());
+					if (c != null) {
+						AutopilotRunTask.stopVerticalAutopiloting(CraftManager.getInstance().getCraftByPlayer(event.getPlayer()), event.getPlayer(), sign);
+						return;
+					}
+					event.getPlayer().sendMessage("You are not currently piloting a craft, you cannot stop the thrusters.");
 					return;
 				}
 			}

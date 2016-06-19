@@ -70,7 +70,7 @@ public class Craft {
 	public int xDist, yDist, zDist;
 	public ArrayList<String> playersWithBedspawnsOnShip = new ArrayList<String>();
 	public Semaphore bedspawnsLock = new Semaphore(1);
-	public int vX, vZ;
+	public int vX, vZ, vY;
 	public Vector<UUID> playersRidingShip = new Vector<UUID>();
 	//public Semaphore playersRidingLock = new Semaphore(1);
 	public int warpCoordsX;
