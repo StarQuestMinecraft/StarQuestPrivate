@@ -21,7 +21,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-
+@Deprecated
 public class BungeeCraftSender {
 
 	public static void sendCraft(Player p, String targetserver, String world, int X, int Y, int Z, Craft c) throws IOException {

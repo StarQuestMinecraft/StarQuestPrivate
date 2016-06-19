@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
@@ -23,8 +23,8 @@ import com.dibujaron.cardboardbox.meta.CardboardMetaLeatherArmor;
 import com.dibujaron.cardboardbox.meta.CardboardMetaMap;
 import com.dibujaron.cardboardbox.meta.CardboardMetaSkull;
 import com.dibujaron.cardboardbox.utils.CardboardEnchantment;
-import net.minecraft.server.v1_9_R1.NBTTagCompound;
-import net.minecraft.server.v1_9_R1.NBTTagString;
+import net.minecraft.server.v1_10_R1.NBTTagCompound;
+import net.minecraft.server.v1_10_R1.NBTTagString;
 
 /**
  * A serializable ItemStack
@@ -48,7 +48,7 @@ public class CardboardBox implements Serializable {
 		this.amount = item.getAmount();
 		this.damage = item.getDurability();
 		
-		net.minecraft.server.v1_9_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
+		net.minecraft.server.v1_10_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
 		if(nmsStack != null) {
 			
 			if (nmsStack.hasTag()) {
@@ -162,7 +162,7 @@ public class CardboardBox implements Serializable {
 		
 		item.addUnsafeEnchantments(map);
 		
-		net.minecraft.server.v1_9_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
+		net.minecraft.server.v1_10_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
 		
 		if(this.potionNBT != null) {
 			
