@@ -12,6 +12,7 @@ import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.AsyncTask;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftType;
+import net.countercraft.movecraft.crafttransfer.SerializableLocation;
 import net.countercraft.movecraft.event.CraftAsyncTranslateEvent;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.task.AutopilotRunTask;
@@ -249,7 +250,8 @@ public class TranslationTask extends AsyncTask {
 					// if(PingUtils.isOnline(s)){
 					double angle = LocationUtils.getAngleFromGivenPointTo(LocationUtils.locationOfPlanet(s), p.getLocation());
 					Location target = LocationUtils.getSpawnLocationFromAngle(angle, STANDARD_SPAWN, 1500);
-					RepeatTryServerJumpTask.createServerJumpTask(p, c, s, target.getBlockX(), 205, target.getBlockY());
+					SerializableLocation destinationLocation = new SerializableLocation(s, target.getX(), 205, target.getZ());
+					RepeatTryServerJumpTask.createServerJumpTask(c, destinationLocation);
 					/*
 					 * } else { p.sendMessage(
 					 * "This planet's server is offline at the moment, you cannot enter."
@@ -263,7 +265,10 @@ public class TranslationTask extends AsyncTask {
 						// if(PingUtils.isOnline(s)){
 						p.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + " Leaving the atmosphere!");
 						Location loc = LocationUtils.getWarpLocation(p.getWorld().getName(), p.getLocation());
-						RepeatTryServerJumpTask.createServerJumpTask(p, c, LocationUtils.getSystem(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+						System.out.println(loc.getX() + " " + loc.getY() + " " + loc.getZ());
+						System.out.println(LocationUtils.getSystem());
+						SerializableLocation destinationLocation = new SerializableLocation(LocationUtils.getSystem(), loc.getX(), loc.getY(), loc.getZ());
+						RepeatTryServerJumpTask.createServerJumpTask(c, destinationLocation);
 						return;
 						/*
 						 * } else { p.sendMessage(
@@ -309,7 +314,9 @@ public class TranslationTask extends AsyncTask {
 							Player plr = Movecraft.getPlayer(u);
 							plr.playSound(plr.getLocation(), Sound.BLOCK_PORTAL_TRAVEL, 2.0F, 1.0F);
 						}
-						RepeatTryServerJumpTask.createServerJumpTask(jump.p, jump.c, jump.server, jump.x, jump.y, jump.z);
+						//Ginger y u no use getters and setters?
+						SerializableLocation destinationLocation = new SerializableLocation(jump.server, jump.x, jump.y, jump.z);
+						RepeatTryServerJumpTask.createServerJumpTask(c, destinationLocation);
 					}
 				}
 			}

@@ -5,6 +5,7 @@ import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.translation.TranslationTask;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
+import net.countercraft.movecraft.crafttransfer.SerializableLocation;
 import net.countercraft.movecraft.task.RepeatTryServerJumpTask;
 import net.countercraft.movecraft.utils.BorderUtils;
 import net.countercraft.movecraft.utils.DirectionUtils;
@@ -84,7 +85,8 @@ public class WarpUtils {
 			p.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + " You have reached the edge of the solar system!");
 			p.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + "Your ship's computer will now navigate through the Slip to the next solar system.");
 			c.setProcessingTeleport(true);
-			RepeatTryServerJumpTask.createServerJumpTask(p, c, system, system + "_the_end", LocationUtils.getSlipCoordX(system, c.warpCoordsX), 100, LocationUtils.getSlipCoordZ(system, c.warpCoordsZ));
+			SerializableLocation destinationLocation = new SerializableLocation(system + "_the_end", LocationUtils.getSlipCoordX(system, c.warpCoordsX), 100, LocationUtils.getSlipCoordZ(system, c.warpCoordsZ));
+			RepeatTryServerJumpTask.createServerJumpTask(c, destinationLocation);
 		}
 	}
 	

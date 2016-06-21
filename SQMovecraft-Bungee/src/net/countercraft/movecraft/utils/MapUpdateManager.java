@@ -62,10 +62,6 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import com.starquestminecraft.sqtechbase.GUIBlock;
-import com.starquestminecraft.sqtechbase.Network;
-import com.starquestminecraft.sqtechbase.SQTechBase;
-
 public class MapUpdateManager extends BukkitRunnable {
         private final HashMap<World, ArrayList<MapUpdateCommand>> updates = new HashMap<World, ArrayList<MapUpdateCommand>>();
         private final HashMap<World, ArrayList<EntityUpdateCommand>> entityUpdates = new HashMap<World, ArrayList<EntityUpdateCommand>>();
@@ -156,16 +152,6 @@ public class MapUpdateManager extends BukkitRunnable {
 	        	
 	            for (int i = 0; i < m.oldMetadataName.size(); i ++) {
 	            	b.setMetadata(m.oldMetadataName.get(i), m.oldMetadataValue.get(i));
-	            	if (m.oldMetadataName.get(i).equals("guiblock")) {
-	            		int id = m.oldMetadataValue.get(i).asInt();
-	            		for (Network network : SQTechBase.networks) {
-	            			for (GUIBlock guiBlock : network.getGUIBlocks()) {
-	            				if (guiBlock.id == id) {
-	            					guiBlock.setLocation(b.getLocation());
-	            				}
-	            			}
-	            		}
-	            	}
 	            }
 	        	
 	            if(origType != newTypeID || data != b.getData()){
