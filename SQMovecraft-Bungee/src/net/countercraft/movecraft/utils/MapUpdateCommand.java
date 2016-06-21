@@ -17,8 +17,14 @@
 
 package net.countercraft.movecraft.utils;
 
-import org.bukkit.block.Block;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
+import org.bukkit.metadata.MetadataValue;
+
+import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
 
 /**
@@ -35,7 +41,10 @@ public class MapUpdateCommand {
 	private boolean finalBlockFragile;
 	private boolean initialBlockFragile;
 	Block block;
-	private net.minecraft.server.v1_9_R1.Chunk chunk = null;
+	private net.minecraft.server.v1_10_R1.Chunk chunk = null;
+	
+	public List<String> oldMetadataName = new ArrayList<String>();
+	public List<MetadataValue> oldMetadataValue = new ArrayList<MetadataValue>();
 
 	public MapUpdateCommand( MovecraftLocation blockLocation, MovecraftLocation newBlockLocation, int newTypeID, Rotation rotation, Craft c) {
 		this.blockLocation = blockLocation;
@@ -43,7 +52,15 @@ public class MapUpdateCommand {
 		this.newTypeID = newTypeID;
 		this.rotation = rotation;
 		this.myCraft = c;
-		this.isLastUpdate = false;
+		this.isLastUpdate = false;		
+
+        Block block = c.getW().getBlockAt(blockLocation.getX(), blockLocation.getY(), blockLocation.getZ());
+        for (String metadata : Movecraft.blockMetadataTransfer) {
+        	if (block.hasMetadata(metadata)) { 
+            	oldMetadataValue.add(block.getMetadata(metadata).get(0));
+            	oldMetadataName.add(metadata);
+        	}
+        }
 	}
 
 	public MapUpdateCommand( MovecraftLocation blockLocation, MovecraftLocation newBlockLocation, int newTypeID, Craft c, boolean drill) {
@@ -53,7 +70,15 @@ public class MapUpdateCommand {
 		this.rotation = Rotation.NONE;
 		this.myCraft = c;
 		this.isLastUpdate = false;
-		this.drill = drill;
+		this.drill = drill;	
+		
+        Block block = c.getW().getBlockAt(blockLocation.getX(), blockLocation.getY(), blockLocation.getZ());
+        for (String metadata : Movecraft.blockMetadataTransfer) {
+        	if (block.hasMetadata(metadata)) { 
+            	oldMetadataValue.add(block.getMetadata(metadata).get(0));
+            	oldMetadataName.add(metadata);
+        	}
+        }
 	}
 
 	public MapUpdateCommand( MovecraftLocation newBlockLocation, int typeID, Craft c, boolean drill) {
@@ -113,10 +138,10 @@ public class MapUpdateCommand {
 		initialBlockFragile = fragile;
 	}
 	
-	public void setChunk(net.minecraft.server.v1_9_R1.Chunk chunk){
+	public void setChunk(net.minecraft.server.v1_10_R1.Chunk chunk){
 		this.chunk = chunk;
 	}
-	public net.minecraft.server.v1_9_R1.Chunk getChunk(){
+	public net.minecraft.server.v1_10_R1.Chunk getChunk(){
 		return chunk;
 	}
 	public Block getBlock(){

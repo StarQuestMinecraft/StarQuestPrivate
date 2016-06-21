@@ -75,6 +75,8 @@ public class Movecraft extends JavaPlugin {
 	private boolean shuttingDown;
 	private StarshipDatabase database;
 	
+	public static String[] blockMetadataTransfer = new String[] {"guiblock"};
+	
 	public void onDisable() {
 		// Process the storage crates to disk
 		//StorageChestItem.saveToDisk();
