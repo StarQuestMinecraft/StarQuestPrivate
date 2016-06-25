@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
+import net.countercraft.movecraft.crafttransfer.SerializableLocation;
+import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
 import org.bukkit.ChatColor;
@@ -39,6 +41,19 @@ public class AutopilotRunTask extends BukkitRunnable{
 		}
 		for (Craft c : verticalAutopilotingCrafts){
 			Location l = c.pilot.getLocation();
+			
+			if (l.getY() > 220) {
+				if (!LocationUtils.spaceCheck(c.pilot, false)) {
+					c.pilot.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + " Leaving the atmosphere!");
+					Location loc = LocationUtils.getWarpLocation(c.pilot.getWorld().getName(), c.pilot.getLocation());
+					System.out.println(loc.getX() + " " + loc.getY() + " " + loc.getZ());
+					System.out.println(LocationUtils.getSystem());
+					SerializableLocation destinationLocation = new SerializableLocation(LocationUtils.getSystem(), loc.getX(), loc.getY(), loc.getZ());
+					RepeatTryServerJumpTask.createServerJumpTask(c, destinationLocation);
+					continue;
+				}
+			}
+			
 			c.translate(0, c.vY, 0);
 		}
 	}
