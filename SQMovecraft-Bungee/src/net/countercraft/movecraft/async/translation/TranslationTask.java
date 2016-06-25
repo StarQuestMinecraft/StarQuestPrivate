@@ -252,6 +252,7 @@ public class TranslationTask extends AsyncTask {
 					Location target = LocationUtils.getSpawnLocationFromAngle(angle, STANDARD_SPAWN, 1500);
 					SerializableLocation destinationLocation = new SerializableLocation(s, target.getX(), 205, target.getZ());
 					RepeatTryServerJumpTask.createServerJumpTask(c, destinationLocation);
+					c.setProcessingTeleport(true);
 					/*
 					 * } else { p.sendMessage(
 					 * "This planet's server is offline at the moment, you cannot enter."
@@ -269,6 +270,7 @@ public class TranslationTask extends AsyncTask {
 						System.out.println(LocationUtils.getSystem());
 						SerializableLocation destinationLocation = new SerializableLocation(LocationUtils.getSystem(), loc.getX(), loc.getY(), loc.getZ());
 						RepeatTryServerJumpTask.createServerJumpTask(c, destinationLocation);
+						c.setProcessingTeleport(true);
 						return;
 						/*
 						 * } else { p.sendMessage(
@@ -317,6 +319,7 @@ public class TranslationTask extends AsyncTask {
 						//Ginger y u no use getters and setters?
 						SerializableLocation destinationLocation = new SerializableLocation(jump.server, jump.x, jump.y, jump.z);
 						RepeatTryServerJumpTask.createServerJumpTask(c, destinationLocation);
+						c.setProcessingTeleport(true);
 					}
 				}
 			}
