@@ -1,6 +1,7 @@
 package net.countercraft.movecraft.crafttransfer.utils.transfer;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
@@ -8,10 +9,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+
+import com.google.common.collect.Lists;
+
 import net.countercraft.movecraft.Movecraft;
 
 import net.countercraft.movecraft.crafttransfer.SerializableLocation;
@@ -129,63 +131,67 @@ public class BungeeCraftConstructor {
 		final Double destinationX = newDestinationLocation.getX();
 		final Double destinationY = newDestinationLocation.getY();
 		final Double destinationZ = newDestinationLocation.getZ();
-		//Sets all of the blocks, and checks if the craft is obstructed
-		Future<Boolean> isObstructed = Bukkit.getScheduler().callSyncMethod(Movecraft.getInstance(), new Callable<Boolean>() {
-			public Boolean call() {
-				for(CraftTransferData craftData : craftTransferData) {
-					final Double x = craftData.getRelativeX() + destinationX;
-					final Double y = craftData.getRelativeY() + destinationY;
-					final Double z = craftData.getRelativeZ() + destinationZ;
-					//Tests that craft is still not obstructed
-					if(!(Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue()).getTypeId() == 0)) {
-						return true;
-					}
-					//appropriately sets blocks
-					final int id = craftData.getID();
-					final byte data = craftData.getData();
-					Block block = Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue());
-					block.setTypeIdAndData(id, data, false);
-					if(craftData.isSign()) {
-						String[] lines = craftData.getSignLines();
-						Sign sign = (Sign) block.getState();
-						for(int i = 0; i < lines.length; i++) {
-							System.out.println(lines[i]);
-							sign.setLine(i, lines[i]);
+		List<List<CraftTransferData>> partitionedList = Lists.partition(craftTransferData, 2000);
+		//Sets all of the blocks
+		long delay = 0;
+		for(final List<CraftTransferData> data : partitionedList) {
+			Bukkit.getScheduler().runTaskLater(Movecraft.getInstance(), new Runnable() {
+				public void run() {
+					for(CraftTransferData craftData : data) {
+						final Double x = craftData.getRelativeX() + destinationX;
+						final Double y = craftData.getRelativeY() + destinationY;
+						final Double z = craftData.getRelativeZ() + destinationZ;
+						//Tests that craft is still not obstructed
+						if(!(Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue()).getTypeId() == 0)) {
+							System.out.println("Om nom nom ship");
 						}
-						sign.update();
-					}
-					else if(craftData.hasInventory()) {
-						InventoryHolder i = (InventoryHolder) block.getState();
-						craftData.getInventory().unpack(i.getInventory());
+						//appropriately sets blocks
+						final int id = craftData.getID();
+						final byte data = craftData.getData();
+						Block block = Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue());
+						block.setTypeIdAndData(id, data, false);
+						//sets sign lines
+						if(craftData.isSign()) {
+							String[] lines = craftData.getSignLines();
+							Sign sign = (Sign) block.getState();
+							for(int i = 0; i < lines.length; i++) {
+								System.out.println(lines[i]);
+								sign.setLine(i, lines[i]);
+							}
+							sign.update();
+						}
+						//sets container inventories
+						else if(craftData.hasInventory()) {
+							InventoryHolder i = (InventoryHolder) block.getState();
+							craftData.getInventory().unpack(i.getInventory());
+						}
 					}
 				}
-				return false;
-			}
-		});
-		//Closes builder and tells the program to cancel the transfer if the craft was obstructed
-		try {
-			if(isObstructed.get().booleanValue()) {
-				return false;
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			}, delay);
+			delay += 2;
 		}
+		//Closes builder and tells the program to cancel the transfer if the craft was obstructed
 		return true;
 	}
 	//attempts to remove craft at given location, returns true if successful
 	private static boolean removeCraftAtLocation(final ArrayList<CraftTransferData> craftTransferData, final SerializableLocation oldShipSignLocation) {
 		final World world = Bukkit.getWorld(oldShipSignLocation.getWorldName());
-		Bukkit.getScheduler().runTask(Movecraft.getInstance(), new Runnable() {
-			public void run() {
-				for(CraftTransferData craftData : craftTransferData) {
-					SerializableLocation l = oldShipSignLocation.copy();
-					l.offsetCoordinatesBy(craftData.getRelativeX(), craftData.getRelativeY(), craftData.getRelativeZ());
-					Location blockLocation = l.getLocation();
-					world.getBlockAt(blockLocation).setTypeId(0);
+		List<List<CraftTransferData>> partitionedList = Lists.partition(craftTransferData, 2000);
+		long delay = 0;
+		for(final List<CraftTransferData> data : partitionedList) {
+			Bukkit.getScheduler().runTaskLater(Movecraft.getInstance(), new Runnable() {
+				public void run() {
+					SerializableLocation l;
+					for(CraftTransferData craftData : data) {
+						l = oldShipSignLocation.copy();
+						l.offsetCoordinatesBy(craftData.getRelativeX(), craftData.getRelativeY(), craftData.getRelativeZ());
+						Location blockLocation = l.getLocation();
+						world.getBlockAt(blockLocation).setTypeId(0);
+					}
 				}
-			}
-		});
+			}, delay);
+			delay += 2;
+		}
 		return true;
 	}
 	//grabs transferdata from db
