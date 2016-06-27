@@ -5,9 +5,9 @@
 	<classpathentry kind="lib" path="C:/Users/Evan/Desktop/BungeeCord/Bukkit Servers/Defalos/Defalos/plugins/WorldEdit.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Evan/Desktop/BungeeCord/Bukkit Servers/Defalos/Defalos/plugins/WorldGuard.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Evan/Desktop/BungeeCord/Bukkit Servers/Defalos/Defalos/plugins/Vault.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Evan/Desktop/BungeeCord/Bukkit Servers/Defalos/Defalos/plugins/SQNetEvents.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Evan/Desktop/BungeeCord/Bukkit Servers/Defalos/Defalos/spigot.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Evan/Desktop/BungeeCord/Bukkit Servers/Defalos/Defalos/plugins/SQBoosters.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Evan/Desktop/BungeeCord/Bukkit Servers/Defalos/Defalos/plugins/SQSpace.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Evan/Desktop/BungeeCord/Bukkit Servers/Defalos/Defalos/plugins/SQNetEvents.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

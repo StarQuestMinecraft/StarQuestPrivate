@@ -75,6 +75,9 @@ public class LocationUtils {
 				}
 			}
 			
+		} else if (SYSTEM.equals("Defalos")) {
+			planets.put("Acualis", locationFromConfig(cfg, "Acualis"));
+			planets.put("Hub", locationFromConfig(cfg, "Hub"));
 		}
 	}
 
