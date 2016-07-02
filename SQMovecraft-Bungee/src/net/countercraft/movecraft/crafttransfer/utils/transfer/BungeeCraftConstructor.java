@@ -19,7 +19,7 @@ import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.crafttransfer.SerializableLocation;
 import net.countercraft.movecraft.crafttransfer.transferdata.CraftTransferData;
 import net.countercraft.movecraft.crafttransfer.transferdata.TransferData;
-
+import net.countercraft.movecraft.utils.BlockUtils;
 import net.countercraft.movecraft.utils.BorderUtils;
 import net.countercraft.movecraft.utils.LocationUtils;
 
@@ -126,7 +126,7 @@ public class BungeeCraftConstructor {
 		return null;
 	}
 	//attempts to build craft at given location. returns true if build successful
-	private static boolean buildCraftAtLocation(final ArrayList<CraftTransferData> craftTransferData, Location newDestinationLocation) {
+	private static synchronized boolean buildCraftAtLocation(final ArrayList<CraftTransferData> craftTransferData, Location newDestinationLocation) {
 		final String worldName = newDestinationLocation.getWorld().getName();
 		final Double destinationX = newDestinationLocation.getX();
 		final Double destinationY = newDestinationLocation.getY();
@@ -134,6 +134,7 @@ public class BungeeCraftConstructor {
 		List<List<CraftTransferData>> partitionedList = Lists.partition(craftTransferData, 2000);
 		//Sets all of the blocks
 		long delay = 0;
+		final List<CraftTransferData> fragiles = new ArrayList<CraftTransferData>();
 		for(final List<CraftTransferData> data : partitionedList) {
 			Bukkit.getScheduler().runTaskLater(Movecraft.getInstance(), new Runnable() {
 				public void run() {
@@ -145,31 +146,62 @@ public class BungeeCraftConstructor {
 						if(!(Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue()).getTypeId() == 0)) {
 							System.out.println("Om nom nom ship");
 						}
-						//appropriately sets blocks
-						final int id = craftData.getID();
-						final byte data = craftData.getData();
-						Block block = Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue());
-						block.setTypeIdAndData(id, data, false);
-						//sets sign lines
-						if(craftData.isSign()) {
-							String[] lines = craftData.getSignLines();
-							Sign sign = (Sign) block.getState();
-							for(int i = 0; i < lines.length; i++) {
-								System.out.println(lines[i]);
-								sign.setLine(i, lines[i]);
-							}
-							sign.update();
+						//if block is attached, do later
+						if(BlockUtils.blockIsFragile(craftData.getID())) {
+							fragiles.add(craftData);
 						}
-						//sets container inventories
-						else if(craftData.hasInventory()) {
-							InventoryHolder i = (InventoryHolder) block.getState();
-							craftData.getInventory().unpack(i.getInventory());
+						else {
+							//appropriately sets blocks
+							final int id = craftData.getID();
+							final byte data = craftData.getData();
+							Block block = Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue());
+							block.setTypeIdAndData(id, data, false);
+							//sets container inventories
+							if(craftData.hasInventory()) {
+								InventoryHolder i = (InventoryHolder) block.getState();
+								craftData.getInventory().unpack(i.getInventory());
+							}
 						}
 					}
 				}
 			}, delay);
 			delay += 2;
 		}
+		//does the fragile blocks
+		Bukkit.getScheduler().runTask(Movecraft.getInstance(), new Runnable() {
+			public void run() {
+				for(CraftTransferData craftData : fragiles) {
+					final Double x = craftData.getRelativeX() + destinationX;
+					final Double y = craftData.getRelativeY() + destinationY;
+					final Double z = craftData.getRelativeZ() + destinationZ;
+					//Tests that craft is still not obstructed
+					if(!(Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue()).getTypeId() == 0)) {
+						System.out.println("Om nom nom ship");
+					}
+					//appropriately sets blocks
+					final int id = craftData.getID();
+					final byte data = craftData.getData();
+					Block block = Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue());
+					block.setTypeIdAndData(id, data, false);
+					
+					//sets sign lines
+					if(craftData.isSign()) {
+						String[] lines = craftData.getSignLines();
+						Sign sign = (Sign) block.getState();
+						for(int i = 0; i < lines.length; i++) {
+							System.out.println(lines[i]);
+							sign.setLine(i, lines[i]);
+						}
+						sign.update();
+					}
+					//sets container inventories
+					else if(craftData.hasInventory()) {
+						InventoryHolder i = (InventoryHolder) block.getState();
+						craftData.getInventory().unpack(i.getInventory());
+					}
+				}
+			}
+		});
 		//Closes builder and tells the program to cancel the transfer if the craft was obstructed
 		return true;
 	}
@@ -186,6 +218,11 @@ public class BungeeCraftConstructor {
 						l = oldShipSignLocation.copy();
 						l.offsetCoordinatesBy(craftData.getRelativeX(), craftData.getRelativeY(), craftData.getRelativeZ());
 						Location blockLocation = l.getLocation();
+						//clears dropper inventories
+						if(craftData.hasInventory()) {
+							InventoryHolder i = (InventoryHolder) blockLocation.getBlock().getState();
+							i.getInventory().clear();
+						}
 						world.getBlockAt(blockLocation).setTypeId(0);
 					}
 				}

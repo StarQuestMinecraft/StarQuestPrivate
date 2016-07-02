@@ -29,9 +29,11 @@ public class BlockUtils {
 
 	private static final int[] rotationBlocks = new int[]{ 17, 50, 75, 76, 26, 29, 33, 34, 53, 67, 108, 109, 114, 128, 134, 135, 136, 156, 63, 64, 71, 66, 27, 28, 65, 68, 61, 23, 69, 77, 143, 93, 94, 96, 107, 120, 131, 144, 145, 62, 99, 100, 106, 127, 130, 145, 149, 154, 157, 158, 170, 86, 91, 203, 202 };
 	
+	public static final int[] fragileBlocks = new int[]{ 63, 68, 323, 77, 143, 69, 50, 75, 76, 64, 71, 96, 167, 193, 194, 195, 196, 197, 324, 330, 427, 428, 429, 430, 431, 198 };
 	static {
 		Arrays.sort(dataBlocks);
 		Arrays.sort(rotationBlocks);
+		Arrays.sort(fragileBlocks);
 	}
 
 	public static boolean blockHasNoData( int id ) {
@@ -42,6 +44,9 @@ public class BlockUtils {
 		return Arrays.binarySearch(rotationBlocks, id) != -1;
 	}
 
+	public static boolean blockIsFragile ( int id ) {
+		return Arrays.binarySearch(fragileBlocks, id) != -1;
+	}
 	public static boolean arrayContainsOverlap( Object[] array1, Object[] array2 ) {
 		for ( Object o : array1 ) {
 
