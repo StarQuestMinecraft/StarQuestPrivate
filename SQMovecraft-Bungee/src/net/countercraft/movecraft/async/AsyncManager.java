@@ -220,6 +220,9 @@ public class AsyncManager extends BukkitRunnable {
 						if (AutopilotRunTask.autopilotingCrafts.contains(c)){
 							AutopilotRunTask.stopAutopiloting(c, p);
 						}
+						if (AutopilotRunTask.verticalAutopilotingCrafts.contains(c)){
+							AutopilotRunTask.stopVerticalAutopiloting(c, p, c.getSignLocations());
+						}
 					} else {
 						//The craft is clear to move, perform the block updates
 

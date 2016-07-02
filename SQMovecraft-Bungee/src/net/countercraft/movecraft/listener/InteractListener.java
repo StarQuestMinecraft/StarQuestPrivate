@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -116,6 +117,12 @@ public class InteractListener implements Listener {
 					return;
 				} else if (sign.getLine(0).equalsIgnoreCase(ChatColor.AQUA + "THRUSTERS")) {
 					if(!event.isCancelled()){
+						
+						//Just to make testing in creative easier
+						if (event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+							event.setCancelled(true);
+						}
+						
 						if (sign.getLine(1).equals(ChatColor.GREEN + "{DISABLED}")) {
 							Craft c = CraftManager.getInstance().getCraftByPlayer(event.getPlayer());
 							if (c != null) {

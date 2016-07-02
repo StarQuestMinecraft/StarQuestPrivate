@@ -1,6 +1,7 @@
 package net.countercraft.movecraft.task;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
@@ -39,12 +40,15 @@ public class AutopilotRunTask extends BukkitRunnable{
 				}*/
 			}
 		}
-		for (Craft c : verticalAutopilotingCrafts){
+		Iterator<Craft> verticalAutopilotIterator = verticalAutopilotingCrafts.iterator();
+		while (verticalAutopilotIterator.hasNext()){
+			Craft c = verticalAutopilotIterator.next();
 			Location l = c.pilot.getLocation();
 			
 			if (l.getY() > 220) {
 				if (!LocationUtils.spaceCheck(c.pilot, false)) {
 					c.pilot.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + " Leaving the atmosphere!");
+					stopVerticalAutopiloting(c, c.pilot, c.getSignLocations());
 					Location loc = LocationUtils.getWarpLocation(c.pilot.getWorld().getName(), c.pilot.getLocation());
 					System.out.println(loc.getX() + " " + loc.getY() + " " + loc.getZ());
 					System.out.println(LocationUtils.getSystem());
@@ -251,6 +255,27 @@ public class AutopilotRunTask extends BukkitRunnable{
 		p.sendMessage(ChatColor.RED + "Thrusters disabled.");
 		s.setLine(1, ChatColor.GREEN + "{DISABLED}");
 		s.update();
+	}
+	
+	public static void stopVerticalAutopiloting(Craft c, Player p, ArrayList<MovecraftLocation> signLocations){
+		if (verticalAutopilotingCrafts.contains(c)){
+			verticalAutopilotingCrafts.remove(c);
+			if (p != null){
+				p.sendMessage(ChatColor.RED + "Your thrusters have turned off.");
+			}
+		}
+		for(MovecraftLocation l : signLocations){
+			Block b = c.getW().getBlockAt(l.getX(), l.getY(), l.getZ());
+				Sign s = (Sign) b.getState();
+				if (s.getLine(0).equals(ChatColor.AQUA + "THRUSTERS")){
+					if (s.getLine(1).equals(ChatColor.RED + "{ENGAGED}")){
+						s.setLine(1, ChatColor.GREEN + "{DISABLED}");
+						s.setLine(2, "");
+						s.update();
+						break;
+					}
+				}
+		}
 	}
 	
 	private static void calculateVelocity(Craft c, int speed){
