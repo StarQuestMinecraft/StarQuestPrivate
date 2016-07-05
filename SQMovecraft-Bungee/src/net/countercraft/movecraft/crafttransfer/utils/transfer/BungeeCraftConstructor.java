@@ -3,6 +3,7 @@ package net.countercraft.movecraft.crafttransfer.utils.transfer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.bukkit.Bukkit;
@@ -74,7 +75,10 @@ public class BungeeCraftConstructor {
 			if(isObstructed.get().booleanValue() == true) {
 				return true;
 			}
-		} catch (Exception e) {
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;

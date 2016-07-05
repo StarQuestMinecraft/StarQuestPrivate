@@ -4,10 +4,12 @@ import org.bukkit.event.Listener;
 
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.crafttransfer.SerializableLocation;
@@ -27,22 +29,26 @@ public class PlayerHandler implements Listener {
 		pilotCraftTypeMap = new HashMap<String, String>();
 	}
 	//Called on receiving end. Will teleport players to appropriate location after serverjump and remove them from queue appropriately
-	public void onPlayerJoin(PlayerJoinEvent event) {
+	public void onPlayerJoin(final PlayerJoinEvent event) {
 		System.out.println("In onPlayerLogin");
-		String player = event.getPlayer().getName();
-		boolean isPilot = getPassengerPilotMap().containsKey(player);
+		final String player = event.getPlayer().getName();
+		final boolean isPilot = getPassengerPilotMap().containsKey(player);
 		if(getPlayerTeleportQueue().containsKey(player)) {
 			System.out.println("Player is in teleport queue");
-			PlayerTransferData data = getPlayerDataMap().get(player);
-			teleportPlayer(event.getPlayer(), getPlayerTeleportQueue().get(player), getPassengerPilotMap().get(player));
-			data.unpack(event.getPlayer());
-			getPlayerTeleportQueue().remove(player);
-			getPlayerDataMap().remove(player);
-			//if pilot, detect craft
-			if(isPilot) {
-				detectCraft(event.getPlayer(), getPilotCraftTypeMap().get(player));
-				getPilotCraftTypeMap().remove(player);
-			}
+			Bukkit.getScheduler().runTaskLater(Movecraft.getInstance(), new Runnable() {
+				public void run() {
+					PlayerTransferData data = getPlayerDataMap().get(player);
+					teleportPlayer(event.getPlayer(), getPlayerTeleportQueue().get(player), getPassengerPilotMap().get(player));
+					data.unpack(event.getPlayer());
+					getPlayerTeleportQueue().remove(player);
+					getPlayerDataMap().remove(player);
+					//if pilot, detect craft
+					if(isPilot) {
+						detectCraft(event.getPlayer(), getPilotCraftTypeMap().get(player));
+						getPilotCraftTypeMap().remove(player);
+					}
+				}
+			}, 3L);
 		}
 	}
 	//Maps player to teleport location
