@@ -19,6 +19,7 @@ import com.dibujaron.cardboardbox.meta.CardboardMetaBook2;
 import com.dibujaron.cardboardbox.meta.CardboardMetaEnchantment;
 import com.dibujaron.cardboardbox.meta.CardboardMetaFirework;
 import com.dibujaron.cardboardbox.meta.CardboardMetaFireworkEffect;
+import com.dibujaron.cardboardbox.meta.CardboardMetaGlobal;
 import com.dibujaron.cardboardbox.meta.CardboardMetaLeatherArmor;
 import com.dibujaron.cardboardbox.meta.CardboardMetaMap;
 import com.dibujaron.cardboardbox.meta.CardboardMetaSkull;
@@ -122,7 +123,7 @@ public class CardboardBox implements Serializable {
 			this.meta = (new CardboardMetaBanner(item));
 			break;
 		default:
-			this.meta = null;
+			this.meta = (new CardboardMetaGlobal(item)); //This one works for any item, so it's default.
 			break;
 			
 		}
