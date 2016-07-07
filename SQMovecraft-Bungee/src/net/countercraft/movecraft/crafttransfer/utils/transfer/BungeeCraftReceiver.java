@@ -18,7 +18,7 @@ public class BungeeCraftReceiver {
 		TransferData transferData = readData(pilot);
 		SerializableLocation signLocation = BungeeCraftConstructor.calculateAndBuild(transferData);
 		if(signLocation != null) {
-			sendPlayerServerjumpPackets(transferData.getPlayerData(), transferData.getOldServer(), signLocation, pilot);
+			sendPlayerServerjumpPackets(transferData, transferData.getOldServer(), signLocation, pilot);
 		}
 	}
 	//called in oncommand for loadship
@@ -33,7 +33,7 @@ public class BungeeCraftReceiver {
 		SerializableLocation signLocation = BungeeCraftConstructor.calculateAndBuild(transferData);
 		if(signLocation != null) {
 			System.out.println("Sending serverjump packets");
-			sendPlayerServerjumpPackets(transferData.getPlayerData(), transferData.getOldServer(), signLocation, p.getName());
+			sendPlayerServerjumpPackets(transferData, transferData.getOldServer(), signLocation, p.getName());
 		}
 	}
 	//grabs transferdata from db
@@ -41,11 +41,11 @@ public class BungeeCraftReceiver {
 		return Movecraft.getInstance().getSQLDatabase().readData(pilot);
 	}
 	//Sends packets to connect (and later, indirectly, to teleport) players across server, called after craft successfully built
-	private static void sendPlayerServerjumpPackets(ArrayList<PlayerTransferData> pData, String oldWorld, SerializableLocation signLocation, String pilot) {
+	private static void sendPlayerServerjumpPackets(TransferData data, String oldWorld, SerializableLocation signLocation, String pilot) {
 		//iterates over players and sends packet
-		for(PlayerTransferData playerData : pData) {
+		for(PlayerTransferData playerData : data.getPlayerData()) {
 			System.out.println("Sent ConnectPlayerPacket for player " + playerData.getPlayer());
-			BungeeHandler.sendConnectPlayerPacket(playerData, oldWorld, signLocation, pilot);
+			BungeeHandler.sendConnectPlayerPacket(playerData, oldWorld, signLocation, pilot, data.getCraftType());
 		}
 	}
 }

@@ -29,6 +29,7 @@ public class BungeeHandler implements Listener {
 		System.out.println("ReceivedDataEvent successfully fired and received. Processing in BungeeHandler.");
 		Data data = event.getData();
 		String packetType = data.getString("Packet");
+		System.out.println("PacketType: " + packetType);
 		//indicates that craft is on DB, ready to be received. Executed by receiving end
 		if(packetType.equals("CraftSpawnPacket")) {
 			String targetServer = data.getString("TargetServer");
@@ -84,18 +85,19 @@ public class BungeeHandler implements Listener {
 				data.addString("Packet", "CraftSpawnPacket");
 				data.addString("Pilot", pilot);
 				data.addString("TargetServer", targetServer);
-				System.out.println("Senders: " + SQNetEvents.getInstance().getSenders());
-				SQNetEvents.getInstance().send(new EventPacket(new ReceivedDataEvent(data)), targetServer);
+				System.out.println("Senders: " + SQNetEvents.getInstance().getClients());
+				SQNetEvents.getInstance().send(new EventPacket(new ReceivedDataEvent(data), targetServer), targetServer);
 			}
 		});
 		System.out.println("Writing CraftSpawnPacket to sender");
 	}
 	//Called by receiving end. Tells sending end to connect player, and adds player to teleport queues.
-	public static void sendConnectPlayerPacket(final PlayerTransferData playerData, final String oldServer, final SerializableLocation signLocation, final String pilot) {
+	public static void sendConnectPlayerPacket(final PlayerTransferData playerData, final String oldServer, final SerializableLocation signLocation, final String pilot, final String craftType) {
 		Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable() {
 			public void run() {
 				System.out.println("Pilot: " + pilot);
 				System.out.println("Player: " + playerData.getPlayer());
+				System.out.println("In sendConnectPlayerPacket()");
 				//sends packet
 				Data data = new Data();
 				String signLocationString = signLocation.toString();
@@ -106,7 +108,8 @@ public class BungeeHandler implements Listener {
 				data.addString("Location", signLocationString);
 				data.addString("Pilot", pilot);
 				data.addString("Packet", "ConnectPlayerPacket");
-				SQNetEvents.getInstance().send(new EventPacket(new ReceivedDataEvent(data)), oldServer);
+				System.out.println("Old server: " + oldServer);
+				SQNetEvents.getInstance().send(new EventPacket(new ReceivedDataEvent(data), oldServer), oldServer);
 				//adds player to queues
 				SerializableLocation l = new SerializableLocation(signLocation);
 				l.offsetCoordinatesBy(playerData.getRelativeX(), playerData.getRelativeY(), playerData.getRelativeZ());
@@ -114,8 +117,12 @@ public class BungeeHandler implements Listener {
 				playerHandler.addPlayerToTeleportQueue(playerData.getPlayer(), destinationLocation);
 				playerHandler.addPlayerToPassengerMap(playerData.getPlayer(), pilot);
 				playerHandler.addPlayerToDataMap(playerData.getPlayer(), playerData);
+				if(playerData.getPlayer().equals(pilot)) {
+					playerHandler.addPlayerToCraftTypeMap(playerData.getPlayer(), craftType);
+				}
 			}
 		});
+		System.out.println("Writing ConnectPlayerPacket to sender");
 	}
 	//Called by receiving after all players have been successfully teleported, triggers removal of original craft copy
 	public static void sendCraftRemovePacket(final String pilot) {
@@ -126,9 +133,10 @@ public class BungeeHandler implements Listener {
 				data.addString("Pilot", pilot);
 				data.addString("OldServer", oldServer);
 				data.addString("Packet", "CraftRemovePacket");
-				SQNetEvents.getInstance().send(new EventPacket(new ReceivedDataEvent(data)), oldServer);
+				SQNetEvents.getInstance().send(new EventPacket(new ReceivedDataEvent(data), oldServer), oldServer);
 			}
 		});
+		System.out.println("Writing CraftRemovePacket to sender");
 	}
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {

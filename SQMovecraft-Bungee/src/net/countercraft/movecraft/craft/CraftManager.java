@@ -143,6 +143,7 @@ public class CraftManager {
 
 		craftList.get(c.getW()).remove(c);
 		AutopilotRunTask.stopAutopiloting(c, p, signLocations);
+		AutopilotRunTask.stopVerticalAutopiloting(c, p, signLocations);
 		craftPlayerIndex.remove(p.getUniqueId());
 		if (p.isOnline()) {
 			p.sendMessage(String.format(I18nSupport.getInternationalisedString("Release - Craft has been released message")));

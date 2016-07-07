@@ -21,6 +21,7 @@ public class TransferData implements Serializable {
 	
 	private ArrayList<PlayerTransferData>  playerData;
 	private ArrayList<CraftTransferData> craftData;
+	private String craftType;
 	private String pilot;
 	private SerializableLocation destinationLocation;
 	private String oldServer;
@@ -30,6 +31,7 @@ public class TransferData implements Serializable {
 		pilot = c.getPilot().getName();
 		destinationLocation = destination;
 		oldServer = Bukkit.getServerName();
+		craftType = c.getType().getCraftName();
 		//iterates over blocklist
 		for(MovecraftLocation l : c.getBlockList()) {
 			Location loc = new Location(c.getW(), l.getX(), l.getY(), l.getZ());
@@ -75,5 +77,11 @@ public class TransferData implements Serializable {
 	}
 	public SerializableLocation getOriginalSignLocation() {
 		return originalSignLocation;
+	}
+	public String getCraftType() {
+		return craftType;
+	}
+	public void setCraftType(String craftType) {
+		this.craftType = craftType;
 	}
 }

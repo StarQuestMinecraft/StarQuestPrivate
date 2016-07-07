@@ -75,6 +75,9 @@ public class LocationUtils {
 				}
 			}
 			
+		} else if (SYSTEM.equals("Defalos")) {
+			planets.put("Acualis", locationFromConfig(cfg, "Acualis"));
+			planets.put("Hub", locationFromConfig(cfg, "Hub"));
 		}
 	}
 
@@ -388,5 +391,15 @@ public class LocationUtils {
 		
 		return false;
 		
+	}
+	
+	public static boolean isInPlanetHitbox(Location l) {
+		for(Location location : planets.values()) {
+			double distance = Math.sqrt(((int) (location.getX() - l.getX()) ^ 2) + ((int) (location.getZ() - l.getZ()) ^ 2));
+			if(distance < 200) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
