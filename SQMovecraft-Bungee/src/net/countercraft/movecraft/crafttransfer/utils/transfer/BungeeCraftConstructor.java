@@ -96,7 +96,9 @@ public class BungeeCraftConstructor {
 		double angle = 0;
 		boolean reversed = false;
 		//if this is a space server
+		boolean isInSpace = false;
 		if(LocationUtils.spaceCheck(newDestination.getWorldName())) {
+			isInSpace = true;
 			//If the jump came from a space server
 			if(!LocationUtils.spaceCheck(oldLocation.getWorldName())) {
 				angle = LocationUtils.getAngleFromGivenPointTo(LocationUtils.locationOfPlanet(oldLocation.getWorldName()), newDestination.getLocation());
@@ -109,7 +111,7 @@ public class BungeeCraftConstructor {
 		double yOffset = 0;
 		double zOffset = Math.cos(angle) * 10;
 		//returns true when it finds an unobstructed location
-		while((count < 20) && (isObstructed(transferData.getCraftData(), newDestination))) {
+		while((count < 40) && (isObstructed(transferData.getCraftData(), newDestination))) {
 			count++;
 			if(!reversed) {
 				newDestination.offsetCoordinatesBy(xOffset, yOffset, zOffset);
@@ -117,14 +119,13 @@ public class BungeeCraftConstructor {
 			else {
 				newDestination.offsetCoordinatesBy(-1 * xOffset, -1 * yOffset, -1 * zOffset);
 			}
-			
 			if(!(BorderUtils.isWithinBorder((int) newDestination.getX(), (int) newDestination.getZ())) && !(reversed)){
 				reversed = true;
 				count = 0;
 				newDestination = signLocation.copy();
 			}
 		}
-		if(!isObstructed(transferData.getCraftData(), newDestination)) {
+		if((!isObstructed(transferData.getCraftData(), newDestination)) && ((!isInSpace) || ((isInSpace) && (!LocationUtils.isInPlanetHitbox(newDestination.getLocation()))))) {
 			return newDestination;
 		}
 		return null;
