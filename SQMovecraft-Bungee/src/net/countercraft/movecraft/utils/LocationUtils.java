@@ -396,7 +396,7 @@ public class LocationUtils {
 	public static boolean isInPlanetHitbox(Location l) {
 		for(Location location : planets.values()) {
 			double distance = Math.sqrt(((int) (location.getX() - l.getX()) ^ 2) + ((int) (location.getZ() - l.getZ()) ^ 2));
-			if(distance < 150) {
+			if(distance < 200) {
 				return true;
 			}
 		}
