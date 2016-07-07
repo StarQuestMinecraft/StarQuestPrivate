@@ -116,14 +116,22 @@ public class CardboardBox implements Serializable {
 		case 358: // map
 			this.meta = (new CardboardMetaMap(item));
 			break;
+		case 373: //potion
+			this.meta = (new CardboardMetaGlobal(item));
+			break;
 		case 397: // player head
 			this.meta = (new CardboardMetaSkull(item));
 			break;
 		case 425: // banner
 			this.meta = (new CardboardMetaBanner(item));
 			break;
+		case 438: //splash potion
+			this.meta = (new CardboardMetaGlobal(item));
+			break;
+		case 441: //lingering potion
+			this.meta = (new CardboardMetaGlobal(item));
+			break;
 		default:
-			this.meta = (new CardboardMetaGlobal(item)); //This one works for any item, so it's default.
 			break;
 			
 		}
