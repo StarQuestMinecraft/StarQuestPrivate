@@ -31,6 +31,7 @@ import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.database.StarshipData;
+import net.countercraft.movecraft.event.CraftReleaseEvent;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.slip.WarpUtils;
@@ -105,7 +106,10 @@ public class CraftManager {
 	}
 
 	public void removeCraft(final Craft c, final boolean save, final boolean checkSlip) {
-
+		
+		CraftReleaseEvent event = new CraftReleaseEvent(c);
+		event.call();		
+		
 		if (checkSlip) {
 			if (c.getW().getEnvironment() == Environment.THE_END) {
 				WarpUtils.leaveWarp(c.pilot, c, false);
