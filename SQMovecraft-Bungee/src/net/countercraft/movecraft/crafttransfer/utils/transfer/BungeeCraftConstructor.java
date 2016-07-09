@@ -219,6 +219,16 @@ public class BungeeCraftConstructor {
 			Bukkit.getScheduler().runTaskLater(Movecraft.getInstance(), new Runnable() {
 				public void run() {
 					SerializableLocation l;
+					//goes through and removes fragiles first
+					for(CraftTransferData craftData : data) {
+						l = oldShipSignLocation.copy();
+						l.offsetCoordinatesBy(craftData.getRelativeX(), craftData.getRelativeY(), craftData.getRelativeZ());
+						Location blockLocation = l.getLocation();
+						if(BlockUtils.blockIsFragile(craftData.getID())) {
+							world.getBlockAt(blockLocation).setTypeId(0);
+						}
+					}
+					//clears everything else
 					for(CraftTransferData craftData : data) {
 						l = oldShipSignLocation.copy();
 						l.offsetCoordinatesBy(craftData.getRelativeX(), craftData.getRelativeY(), craftData.getRelativeZ());
