@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-public class CardboardMetaSkull implements CardboardItemMeta, Serializable {
+public class CardboardMetaSkull implements CardboardItemMeta {
 
 	private static final long serialVersionUID = 8207182730575059588L;
 	private int id;

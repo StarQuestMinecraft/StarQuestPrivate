@@ -20,7 +20,7 @@ import com.dibujaron.cardboardbox.utils.CardboardEnchantment;
  * to enchanting books, but not items with enchantments.
  */
 
-public class CardboardMetaEnchantment implements CardboardItemMeta, Serializable {
+public class CardboardMetaEnchantment implements CardboardItemMeta {
 
 	private static final long serialVersionUID = 5343923327369616762L;
 	private int id;

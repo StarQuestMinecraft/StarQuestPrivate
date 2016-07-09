@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class CardboardMetaBook2 implements CardboardItemMeta, Serializable{
+public class CardboardMetaBook2 implements CardboardItemMeta {
 
 	/**
 	 * 

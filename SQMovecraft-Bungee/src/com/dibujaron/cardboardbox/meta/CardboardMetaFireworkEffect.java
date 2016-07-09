@@ -9,7 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.dibujaron.cardboardbox.utils.CardboardFireworkEffect;
 
-public class CardboardMetaFireworkEffect implements CardboardItemMeta, Serializable {
+public class CardboardMetaFireworkEffect implements CardboardItemMeta {
 
 	private static final long serialVersionUID = -738623056624942344L;
 	private int id;

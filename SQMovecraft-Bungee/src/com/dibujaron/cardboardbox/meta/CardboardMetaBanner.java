@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class CardboardMetaBanner implements CardboardItemMeta, Serializable {
+public class CardboardMetaBanner implements CardboardItemMeta {
 
 	private static final long serialVersionUID = 7679865680958983363L;
 	private int id;

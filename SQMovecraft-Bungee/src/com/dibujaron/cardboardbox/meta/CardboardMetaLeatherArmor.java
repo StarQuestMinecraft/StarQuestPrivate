@@ -9,7 +9,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import com.dibujaron.cardboardbox.utils.CardboardColor;
 
-public class CardboardMetaLeatherArmor implements CardboardItemMeta, Serializable {
+public class CardboardMetaLeatherArmor implements CardboardItemMeta {
 
 	private static final long serialVersionUID = 6469379988073713423L;
 	private CardboardColor color;
