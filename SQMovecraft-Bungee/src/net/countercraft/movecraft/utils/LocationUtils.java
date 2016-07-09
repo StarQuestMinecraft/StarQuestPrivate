@@ -203,8 +203,8 @@ public class LocationUtils {
 	}
 
 	private static boolean check(Location planet, Location pilot) {
-		if (planet.getX() - 100 < pilot.getX() && pilot.getX() < planet.getX() + 100) {
-			if (planet.getZ() - 100 < pilot.getZ() && pilot.getZ() < planet.getZ() + 100) {
+		if (planet.getX() - 75 < pilot.getX() && pilot.getX() < planet.getX() + 75) {
+			if (planet.getZ() - 75 < pilot.getZ() && pilot.getZ() < planet.getZ() + 75) {
 				return true;
 			}
 		}
@@ -394,9 +394,8 @@ public class LocationUtils {
 	}
 	
 	public static boolean isInPlanetHitbox(Location l) {
-		for(Location location : planets.values()) {
-			double distance = Math.sqrt(((int) (location.getX() - l.getX()) ^ 2) + ((int) (location.getZ() - l.getZ()) ^ 2));
-			if(distance < 200) {
+		for(Location loc : planets.values()) {
+			if(check(loc, l)) {
 				return true;
 			}
 		}
