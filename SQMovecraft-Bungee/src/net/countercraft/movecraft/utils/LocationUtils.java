@@ -246,16 +246,16 @@ public class LocationUtils {
 		for (String s : stargates.keySet()) {
 			StargateData d = stargates.get(s);
 				if (stargateCheck(d, loc)) {
-					p.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + "Entering slipgate to " + d.targetServer + "!");
-					return new StargateJumpHolder(p, c, d.targetServer, d.targetLocation.getBlockX(), d.targetLocation.getBlockY(), d.targetLocation.getBlockZ());
+					p.sendMessage(ChatColor.RED + "[ALERT]" + ChatColor.GOLD + "Entering slipgate to " + d.getTargetServer() + "!");
+					return new StargateJumpHolder(p, c, d.getTargetServer(), d.getTargetLocation().getBlockX(), d.getTargetLocation().getBlockY(), d.getTargetLocation().getBlockZ());
 				}
 		}
 		return null;
 	}
 
 	private static boolean stargateCheck(StargateData d, Location pilot) {
-		Location gate = d.startLocation;
-		if (d.orientation == 0) { // north/south orientation
+		Location gate = d.getStartLocation();
+		if (d.getOrientation() == 0) { // north/south orientation
 			// stargate bounding boxes are 24 radius across and vertical and 50
 			// on either side to the front / back
 			if (gate.getX() - 24 < pilot.getX() && pilot.getX() < gate.getX() + 24) {
@@ -393,8 +393,14 @@ public class LocationUtils {
 		
 	}
 	
-	public static boolean isInPlanetHitbox(Location l) {
+	public static boolean isInRegionHitbox(Location l) {
 		for(Location loc : planets.values()) {
+			if(check(loc, l)) {
+				return true;
+			}
+		}
+		for(StargateData data : stargates.values()) {
+			Location loc = data.getStartLocation();
 			if(check(loc, l)) {
 				return true;
 			}

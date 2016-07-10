@@ -125,7 +125,7 @@ public class BungeeCraftConstructor {
 				newDestination = signLocation.copy();
 			}
 		}
-		if((!isObstructed(transferData.getCraftData(), newDestination)) && ((!isInSpace) || ((isInSpace) && (!LocationUtils.isInPlanetHitbox(newDestination.getLocation()))))) {
+		if((!isObstructed(transferData.getCraftData(), newDestination)) && ((!isInSpace) || ((isInSpace) && (!LocationUtils.isInRegionHitbox(newDestination.getLocation()))))) {
 			return newDestination;
 		}
 		return null;
