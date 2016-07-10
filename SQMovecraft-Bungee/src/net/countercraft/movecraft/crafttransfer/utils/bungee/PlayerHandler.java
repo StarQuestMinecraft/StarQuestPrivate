@@ -48,7 +48,7 @@ public class PlayerHandler implements Listener {
 						getPilotCraftTypeMap().remove(player);
 					}
 				}
-			}, 3L);
+			}, 6L);
 		}
 	}
 	//Maps player to teleport location
