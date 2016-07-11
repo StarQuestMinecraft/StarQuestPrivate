@@ -32,9 +32,17 @@ public class BungeeCraftConstructor {
 		System.out.println("newDestinationLocation: " + newDestinationLocation);
 		System.out.println("newDestinationLocation.getLocation(): " + newDestinationLocation.getLocation());
 		//Tests if build was successful
-		if(buildCraftAtLocation(transferData.getCraftData(), newDestinationLocation.getLocation())) {
+		if(buildCraftAtLocation(transferData.getCraftData(), newDestinationLocation.getLocation(), true)) {
 			System.out.println("Successfully built craft for pilot " + transferData.getPilot());
 			return newDestinationLocation;
+		}
+		return null;
+	}
+	//called externally, builds craft at location, returns location of shipsign. Used for non-transferdata setup
+	public static SerializableLocation calculateAndBuild(ArrayList<CraftTransferData> transferData, SerializableLocation location, boolean saveInventories) {
+		SerializableLocation destinationLocation = getUnobstructedLocation(transferData, location);
+		if(buildCraftAtLocation(transferData, destinationLocation.getLocation(), saveInventories)) {
+			return destinationLocation;
 		}
 		return null;
 	}
@@ -78,7 +86,6 @@ public class BungeeCraftConstructor {
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -111,7 +118,7 @@ public class BungeeCraftConstructor {
 		double yOffset = 0;
 		double zOffset = Math.cos(angle) * 10;
 		//returns true when it finds an unobstructed location
-		while((count < 40) && (isObstructed(transferData.getCraftData(), newDestination))) {
+		while((count < 512) && (isObstructed(transferData.getCraftData(), newDestination))) {
 			count++;
 			if(!reversed) {
 				newDestination.offsetCoordinatesBy(xOffset, yOffset, zOffset);
@@ -130,8 +137,53 @@ public class BungeeCraftConstructor {
 		}
 		return null;
 	}
+	
+	private static SerializableLocation getUnobstructedLocation(ArrayList<CraftTransferData> transferData, SerializableLocation destinationLocation) {
+		if(!isObstructed(transferData, destinationLocation)) {
+			return destinationLocation;
+		}
+		int count = 0;
+		//creates shallow copy
+		SerializableLocation newDestination = destinationLocation.copy();
+		double angle = 0;
+		boolean reversed = false;
+		//if this is a space server
+		boolean isInSpace = false;
+		if(LocationUtils.spaceCheck(newDestination.getWorldName())) {
+			isInSpace = true;
+			//If the jump came from a space server
+			if(!LocationUtils.spaceCheck(destinationLocation.getWorldName())) {
+				angle = LocationUtils.getAngleFromGivenPointTo(LocationUtils.locationOfPlanet(destinationLocation.getWorldName()), newDestination.getLocation());
+			}
+		}
+		else {
+			angle = LocationUtils.getAngleFromOriginTo(newDestination.getLocation());
+		}
+		double xOffset = Math.sin(angle) * 10;
+		double yOffset = 0;
+		double zOffset = Math.cos(angle) * 10;
+		//returns true when it finds an unobstructed location
+		while((count < 512) && (isObstructed(transferData, newDestination))) {
+			count++;
+			if(!reversed) {
+				newDestination.offsetCoordinatesBy(xOffset, yOffset, zOffset);
+			} 
+			else {
+				newDestination.offsetCoordinatesBy(-1 * xOffset, -1 * yOffset, -1 * zOffset);
+			}
+			if(!(BorderUtils.isWithinBorder((int) newDestination.getX(), (int) newDestination.getZ())) && !(reversed)){
+				reversed = true;
+				count = 0;
+				newDestination = destinationLocation.copy();
+			}
+		}
+		if((!isObstructed(transferData, newDestination)) && ((!isInSpace) || ((isInSpace) && (!LocationUtils.isInRegionHitbox(newDestination.getLocation()))))) {
+			return newDestination;
+		}
+		return null;
+	}
 	//attempts to build craft at given location. returns true if build successful
-	private static synchronized boolean buildCraftAtLocation(final ArrayList<CraftTransferData> craftTransferData, Location newDestinationLocation) {
+	private static synchronized boolean buildCraftAtLocation(final ArrayList<CraftTransferData> craftTransferData, Location newDestinationLocation, final boolean saveInventories) {
 		final String worldName = newDestinationLocation.getWorld().getName();
 		final Double destinationX = newDestinationLocation.getX();
 		final Double destinationY = newDestinationLocation.getY();
@@ -162,7 +214,7 @@ public class BungeeCraftConstructor {
 							Block block = Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue());
 							block.setTypeIdAndData(id, data, false);
 							//sets container inventories
-							if(craftData.hasInventory()) {
+							if((craftData.hasInventory()) && (saveInventories)) {
 								InventoryHolder i = (InventoryHolder) block.getState();
 								craftData.getInventory().unpack(i.getInventory());
 							}
