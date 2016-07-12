@@ -39,10 +39,19 @@ public class BungeeCraftConstructor {
 		return null;
 	}
 	//called externally, builds craft at location, returns location of shipsign. Used for non-transferdata setup
-	public static SerializableLocation calculateAndBuild(ArrayList<CraftTransferData> transferData, SerializableLocation location, boolean saveInventories) {
-		SerializableLocation destinationLocation = getUnobstructedLocation(transferData, location);
-		if(buildCraftAtLocation(transferData, destinationLocation.getLocation(), saveInventories)) {
-			return destinationLocation;
+	public static SerializableLocation calculateAndBuild(ArrayList<CraftTransferData> transferData, SerializableLocation location, boolean saveInventories, boolean testExtraLocations) {
+		if(testExtraLocations) {
+			SerializableLocation destinationLocation = getUnobstructedLocation(transferData, location);
+			if(buildCraftAtLocation(transferData, destinationLocation.getLocation(), saveInventories)) {
+				return destinationLocation;
+			}
+		}
+		else {
+			if(!isObstructed(transferData, location)) {
+				if(buildCraftAtLocation(transferData, location.getLocation(), saveInventories)) {
+					return location;
+				}
+			}
 		}
 		return null;
 	}
@@ -118,7 +127,7 @@ public class BungeeCraftConstructor {
 		double yOffset = 0;
 		double zOffset = Math.cos(angle) * 10;
 		//returns true when it finds an unobstructed location
-		while((count < 512) && (isObstructed(transferData.getCraftData(), newDestination))) {
+		while((count < 512) && (isObstructed(transferData.getCraftData(), newDestination)) && ((!isInSpace) || ((isInSpace) && (LocationUtils.isInRegionHitbox(newDestination.getLocation()))))) {
 			count++;
 			if(!reversed) {
 				newDestination.offsetCoordinatesBy(xOffset, yOffset, zOffset);
