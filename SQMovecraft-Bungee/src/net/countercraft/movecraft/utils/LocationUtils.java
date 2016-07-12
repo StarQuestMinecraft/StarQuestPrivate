@@ -400,8 +400,7 @@ public class LocationUtils {
 			}
 		}
 		for(StargateData data : stargates.values()) {
-			Location loc = data.getStartLocation();
-			if(check(loc, l)) {
+			if(stargateCheck(data, l)) {
 				return true;
 			}
 		}

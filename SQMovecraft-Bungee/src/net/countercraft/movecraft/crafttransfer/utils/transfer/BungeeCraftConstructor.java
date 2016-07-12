@@ -128,6 +128,7 @@ public class BungeeCraftConstructor {
 		double zOffset = Math.cos(angle) * 10;
 		//returns true when it finds an unobstructed location
 		while((count < 512) && (isObstructed(transferData.getCraftData(), newDestination)) && ((!isInSpace) || ((isInSpace) && (LocationUtils.isInRegionHitbox(newDestination.getLocation()))))) {
+			System.out.println("Count: " + count);
 			count++;
 			if(!reversed) {
 				newDestination.offsetCoordinatesBy(xOffset, yOffset, zOffset);
