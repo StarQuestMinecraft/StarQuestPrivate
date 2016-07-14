@@ -202,6 +202,12 @@ public class MapUpdateManager extends BukkitRunnable {
                 chunks.add( c );
             }
             
+            for (String metadata : Movecraft.blockMetadataTransfer) {
+            	if (b.hasMetadata(metadata) && m.oldMetadataName.contains(metadata)) { 
+            		b.removeMetadata(metadata, b.getMetadata(metadata).get(0).getOwningPlugin());
+            	}
+            }	
+            
         }
         
         public net.minecraft.server.v1_10_R1.Chunk calculateChunk(ArrayList<Chunk> chunkList, int x, int y, int z, Block b){
