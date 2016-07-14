@@ -102,7 +102,9 @@ public class BungeeCraftConstructor {
 	//returns the optimal unobstructed location for the craft to be built at
 	private static SerializableLocation getUnobstructedLocation(TransferData transferData) {
 		SerializableLocation signLocation = transferData.getDestinationLocation();
+		System.out.println("signLocation: " + signLocation);
 		SerializableLocation oldLocation = transferData.getOriginalSignLocation();
+		System.out.println("oldLocation: " + oldLocation);
 		if(!isObstructed(transferData.getCraftData(), signLocation)) {
 			return signLocation;
 		}
@@ -127,7 +129,7 @@ public class BungeeCraftConstructor {
 		double yOffset = 0;
 		double zOffset = Math.cos(angle) * 10;
 		//returns true when it finds an unobstructed location
-		while((count < 512) && (isObstructed(transferData.getCraftData(), newDestination)) && ((!isInSpace) || ((isInSpace) && (LocationUtils.isInRegionHitbox(newDestination.getLocation()))))) {
+		while((count < 512) && ((isObstructed(transferData.getCraftData(), newDestination)) || ((isInSpace) && (LocationUtils.isInRegionHitbox(newDestination.getLocation()))))) {
 			System.out.println("Count: " + count);
 			count++;
 			if(!reversed) {
