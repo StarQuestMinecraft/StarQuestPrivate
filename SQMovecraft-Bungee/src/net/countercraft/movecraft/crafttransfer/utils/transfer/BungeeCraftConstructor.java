@@ -286,6 +286,11 @@ public class BungeeCraftConstructor {
 						l = oldShipSignLocation.copy();
 						l.offsetCoordinatesBy(craftData.getRelativeX(), craftData.getRelativeY(), craftData.getRelativeZ());
 						Location blockLocation = l.getLocation();
+						if(blockLocation.getBlock().getState() instanceof InventoryHolder) {
+							System.out.println("Has inventory");
+							InventoryHolder i = (InventoryHolder) blockLocation.getBlock().getState();
+							i.getInventory().clear();
+						}
 						if(BlockUtils.blockIsFragile(craftData.getID())) {
 							world.getBlockAt(blockLocation).setTypeId(0);
 						}
@@ -295,11 +300,6 @@ public class BungeeCraftConstructor {
 						l = oldShipSignLocation.copy();
 						l.offsetCoordinatesBy(craftData.getRelativeX(), craftData.getRelativeY(), craftData.getRelativeZ());
 						Location blockLocation = l.getLocation();
-						//clears dropper inventories
-						if(craftData.hasInventory()) {
-							InventoryHolder i = (InventoryHolder) blockLocation.getBlock().getState();
-							i.getInventory().clear();
-						}
 						world.getBlockAt(blockLocation).setTypeId(0);
 					}
 				}
