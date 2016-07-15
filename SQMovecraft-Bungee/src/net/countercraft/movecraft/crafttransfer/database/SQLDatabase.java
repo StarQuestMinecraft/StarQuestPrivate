@@ -27,7 +27,7 @@ public class SQLDatabase {
 		createTable(con.getConnection());
 	}
 	
-	private static String CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS bungee_craft_transfer (pilot_name varchar(36), transfer_data BLOB, PRIMARY KEY (pilot_name))";
+	private static String CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS bungee_craft_transfer (pilot_name varchar(36), transfer_data MEDIUMBLOB, PRIMARY KEY (pilot_name))";
 	private static String WRITE_DATA_SQL = "INSERT INTO bungee_craft_transfer(pilot_name, transfer_data) VALUES (?, ?) ON DUPLICATE KEY UPDATE `pilot_name` = VALUES(pilot_name), `transfer_data` = VALUES(transfer_data)";
 	private static String READ_DATA_SQL = "SELECT `transfer_data` FROM bungee_craft_transfer WHERE `pilot_name` = ?";
 	

@@ -148,12 +148,25 @@ public class Movecraft extends JavaPlugin {
 				if(args.length == 1){
 					Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable()  {
 						public void run() {
-							BungeeCraftReceiver.receiveCraft(getServer().getPlayer(args[0]));
+							BungeeCraftReceiver.receiveCraft(args[0]);
 							sender.sendMessage("loaded ship.");
 						}
 					});
 					return true;
-				} else if(args.length == 4){
+				}
+				else if(args.length == 2) {
+					Bukkit.getScheduler().runTaskAsynchronously(this,  new Runnable() {
+						public void run() {
+							if(args[1].equalsIgnoreCase("true")) {
+								BungeeCraftReceiver.receiveCraft(Bukkit.getPlayer(args[0]));
+							}
+							else {
+								BungeeCraftReceiver.receiveCraft(args[0]);
+							}
+						}
+					});
+				}
+				else if(args.length == 4){
 					final Player p = Bukkit.getPlayer(args[0]);
 					if(p == null){
 						sender.sendMessage("player not found.");
