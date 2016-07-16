@@ -17,11 +17,7 @@
 
 package net.countercraft.movecraft.utils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 

@@ -211,6 +211,9 @@ public class BungeeCraftConstructor {
 						final Double x = craftData.getRelativeX() + destinationX;
 						final Double y = craftData.getRelativeY() + destinationY;
 						final Double z = craftData.getRelativeZ() + destinationZ;
+						if(craftData.isSign()) {
+							System.out.println("Is sign");
+						}
 						//Tests that craft is still not obstructed
 						if(!(Bukkit.getWorld(worldName).getBlockAt(x.intValue(), y.intValue(), z.intValue()).getTypeId() == 0)) {
 							System.out.println("Om nom nom ship");
@@ -237,7 +240,7 @@ public class BungeeCraftConstructor {
 			delay += 2;
 		}
 		//does the fragile blocks
-		Bukkit.getScheduler().runTask(Movecraft.getInstance(), new Runnable() {
+		Bukkit.getScheduler().runTaskLater(Movecraft.getInstance(), new Runnable() {
 			public void run() {
 				for(CraftTransferData craftData : fragiles) {
 					final Double x = craftData.getRelativeX() + destinationX;
@@ -263,14 +266,9 @@ public class BungeeCraftConstructor {
 						}
 						sign.update();
 					}
-					//sets container inventories
-					else if(craftData.hasInventory()) {
-						InventoryHolder i = (InventoryHolder) block.getState();
-						craftData.getInventory().unpack(i.getInventory());
-					}
 				}
 			}
-		});
+		}, delay);
 		//Closes builder and tells the program to cancel the transfer if the craft was obstructed
 		return true;
 	}
