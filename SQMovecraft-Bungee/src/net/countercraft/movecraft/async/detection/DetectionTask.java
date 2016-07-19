@@ -191,7 +191,9 @@ public class DetectionTask extends AsyncTask {
 		}
 		if(test == 63 || test == 68){
 			boolean foundDisallowedSign = checkSignForDisallowed(c, x, y, z);
-			if(foundDisallowedSign) return true;
+			if(foundDisallowedSign){
+				return true;
+			}
 		}
 
 		return false;
@@ -224,8 +226,6 @@ public class DetectionTask extends AsyncTask {
 							data.setMainSign(s);
 						}
 					}
-				}else{
-					return true;
 				}
 			}
 			return false;
