@@ -219,7 +219,7 @@ public class BungeeCraftConstructor {
 							System.out.println("Om nom nom ship");
 						}
 						//if block is attached, do later
-						if((!craftData.hasInventory()) && (BlockUtils.blockIsFragile(craftData.getID))) {
+						if((!craftData.hasInventory()) && (BlockUtils.blockIsFragile(craftData.getID()))) {
 							fragiles.add(craftData);
 						}
 						else {
