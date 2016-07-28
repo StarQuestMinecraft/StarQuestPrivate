@@ -339,6 +339,7 @@ public class AutopilotRunTask extends BukkitRunnable{
 		String line = s.getLine(2);
 		if(line == null || line.equals("")){
 			int speed = (int) c.getType().getSpeed(c.pilot);
+			speed = speed + c.getExtraSpeed();
 			speedToSign(s, speed);
 			return speed;
 		}

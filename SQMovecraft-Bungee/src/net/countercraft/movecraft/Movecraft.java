@@ -61,6 +61,7 @@ import net.countercraft.movecraft.listener.InventoryListener;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.task.AutopilotRunTask;
+import net.countercraft.movecraft.task.CooldownTask;
 import net.countercraft.movecraft.utils.HangarGateUtils;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
@@ -316,6 +317,8 @@ public class Movecraft extends JavaPlugin {
 			//bungee server/minecraft server/plugins/movecraft
 			
 			new AutopilotRunTask();
+			
+			Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new CooldownTask(), 0, 0);
 			
 			Bedspawn.setUp();
 			CryoSpawn.setUp();

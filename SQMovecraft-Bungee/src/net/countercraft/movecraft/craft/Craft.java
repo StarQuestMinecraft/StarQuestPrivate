@@ -18,6 +18,7 @@
 package net.countercraft.movecraft.craft;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,28 +32,31 @@ import net.countercraft.movecraft.async.detection.RedetectTask;
 import net.countercraft.movecraft.async.rotation.RotationTask;
 import net.countercraft.movecraft.async.translation.TranslationTask;
 import net.countercraft.movecraft.async.translation.TranslationTaskData;
+import net.countercraft.movecraft.event.CraftProjectileDetonateEvent;
 import net.countercraft.movecraft.event.CraftShootEvent;
 import net.countercraft.movecraft.event.CraftSyncTranslateEvent;
-import net.countercraft.movecraft.projectile.LaserBolt;
-import net.countercraft.movecraft.slip.WarpUtils;
 import net.countercraft.movecraft.utils.FakeBlockUtils;
 import net.countercraft.movecraft.utils.GunUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
-import net.countercraft.movecraft.utils.PlayerFlightUtil;
 import net.countercraft.movecraft.utils.Rotation;
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Fireball;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityExplodeEvent;
+import org.inventivetalent.particle.ParticleEffect;
+
+import com.whirlwindgames.dibujaron.sqempire.Empire;
+import com.whirlwindgames.dibujaron.sqempire.database.object.EmpirePlayer;
 
 import us.higashiyama.george.SQSpace.SQSpace;
 
@@ -82,6 +86,8 @@ public class Craft {
 	private long lastMove = 0;
 	public int hoverHeight;
 
+	public int cannonCooldown = 0;
+	
 	public Craft(CraftType type, World world) {
 		this.type = type;
 		this.w = world;
@@ -317,73 +323,257 @@ public class Craft {
 	}
 
 	@SuppressWarnings("deprecation")
-	public void shootGuns(Player p) {
+	public void shootGuns(final Player p) {
 
-		BlockFace playerFacing = GunUtils.yawToFace(p.getLocation().getYaw());
-		int datavalue = GunUtils.getIntegerDirection(playerFacing);
-		Material type = p.getEyeLocation().getBlock().getType();
-		if (!this.processing.get() && type != Material.GLASS && type != Material.STAINED_GLASS) {
-			this.processing.set(true);
-			int cannonCount = 0;
-			int allowed = this.getType().getAllowedCannons(p);
-			for (MovecraftLocation l : getBlockList()) {
+		if (cannonCooldown == 0) {
+			
+			BlockFace playerFacing = GunUtils.yawToFace(p.getLocation().getYaw());
+			int datavalue = GunUtils.getIntegerDirection(playerFacing);
+			Material type = p.getEyeLocation().getBlock().getType();
+			if (!this.processing.get() && type != Material.GLASS && type != Material.STAINED_GLASS) {
+				this.processing.set(true);
+				int cannonCount = 0;
+				int allowed = this.getType().getAllowedCannons(p);
+				
+				cannonCooldown = getType().getCannonCooldown();
+				
+				for (MovecraftLocation l : getBlockList()) {
 
-				Block b = w.getBlockAt(l.getX(), l.getY(), l.getZ());
+					final Block b = w.getBlockAt(l.getX(), l.getY(), l.getZ());
 
-				if (b.getType() == Material.PISTON_BASE) {
+					if (b.getType() == Material.PISTON_BASE) {
 
-					if (b.getData() == datavalue) {
-						final Block behind = GunUtils.getBlockBehind(b);
+						if (b.getData() == datavalue) {
+							
+							final Block behind = GunUtils.getBlockBehind(b);
 							if (behind.getType() == Material.SPONGE) {
-								
+									
 								cannonCount++;
-								
+									
 								if(cannonCount <= allowed){
-	
-								Block twoinfront = b.getRelative(playerFacing).getRelative(playerFacing);
-	
-								behind.setType(Material.REDSTONE_BLOCK);
-	
-								// Location fLoc =
-								// twoinfront.getLocation().toVector().add(GunUtils.getFireBallVelocity(playerFacing).multiply(2)).toLocation(twoinfront.getWorld(),
-								// 0, 0);
-								/*Fireball f = ((Fireball) twoinfront.getLocation().getWorld().spawn(twoinfront.getLocation(), Fireball.class));
-	
-								f.setDirection(GunUtils.getFireBallVelocity(playerFacing).multiply(2));
-								f.setShooter(pilot);
-								f.setIsIncendiary(true);
-								f.setYield(2.5F);
-								f.setBounce(false);*/
-								if(twoinfront.getType() == Material.AIR){
+		
 									CraftShootEvent event = new CraftShootEvent(this);
 									event.call();
+									
 									if(!event.isCancelled()){
-										new LaserBolt(twoinfront, playerFacing, this.pilot);
-										twoinfront.getWorld().playSound(twoinfront.getLocation(), Sound.ENTITY_ARROW_SHOOT, 2.0F, 1.0F);
+									
+										double pitch = p.getLocation().getPitch();
+										
+										if (pitch > getType().getCannonMaxDegress()) {
+											
+											pitch = getType().getCannonMaxDegress();
+											
+										} else if (pitch < -getType().getCannonMaxDegress()) {
+											
+											pitch = -getType().getCannonMaxDegress();
+											
+										}
+										
+										double yaw = p.getLocation().getYaw();
+										
+										if (yaw < 0) {
+											
+											yaw = yaw + 360;
+											
+										}
+										
+										if (playerFacing.equals(BlockFace.NORTH)) {
+											
+											if (yaw > 180 + getType().getCannonMaxDegress()) {
+												
+												yaw = 180 + getType().getCannonMaxDegress();
+												
+											} else if (yaw < 180 - getType().getCannonMaxDegress()) {
+												
+												yaw = 180 - getType().getCannonMaxDegress();
+												
+											}
+											
+										} else if (playerFacing.equals(BlockFace.EAST))	 {
+											
+											if (yaw > 270 + getType().getCannonMaxDegress()) {
+												
+												yaw = 270 + getType().getCannonMaxDegress();
+												
+											} else if (yaw < 270 - getType().getCannonMaxDegress()) {
+												
+												yaw = 270 - getType().getCannonMaxDegress();
+												
+											}
+											
+										} else if (playerFacing.equals(BlockFace.SOUTH))	 {
+											
+											if (yaw > getType().getCannonMaxDegress()) {
+												
+												if (yaw > 180) {
+													
+													if (yaw < 360 - getType().getCannonMaxDegress()) {
+														
+														yaw = 360 - getType().getCannonMaxDegress();
+														
+													}
+													
+												} else {
+													
+													yaw = getType().getCannonMaxDegress();
+													
+												}
+
+											}
+											
+										} else if (playerFacing.equals(BlockFace.WEST))	 {
+											
+											if (yaw > 90 + getType().getCannonMaxDegress()) {
+												
+												yaw = 90 + getType().getCannonMaxDegress();
+												
+											} else if (yaw < 90 - getType().getCannonMaxDegress()) {
+												
+												yaw = 90 - getType().getCannonMaxDegress();
+												
+											}
+											
+										}
+										
+										double x = Math.sin(Math.toRadians(yaw)) * -1;
+										double y = Math.sin(Math.toRadians(pitch)) * -1;
+										double z = Math.cos(Math.toRadians(yaw));
+
+										Location blockLocation = b.getRelative(playerFacing).getLocation();
+										
+										blockLocation.add(.5, .5, .5);
+										
+										double currentX = blockLocation.getX();
+										double currentY = blockLocation.getY();
+										double currentZ = blockLocation.getZ();
+		
+										b.getWorld().playSound(b.getLocation(), Sound.ENTITY_ARROW_SHOOT, 2.0F, 1.0F);
+										
+										for (int i = 0; i < 100; i ++) {
+											
+											final Location location = new Location(b.getWorld(), currentX, currentY, currentZ);
+											
+											List<Entity> entites = new ArrayList<Entity>();
+											entites.addAll(location.getWorld().getNearbyEntities(location, 1, 1, 1));
+											
+											for (Entity entity : location.getWorld().getNearbyEntities(location, 1, 1, 1)) {
+													
+												if (entity instanceof LivingEntity) {
+														
+													i = 100;
+													
+													((LivingEntity) entity).damage(getType().getCannonDamage() / 2, p);
+													
+													location.getWorld().playSound(location, Sound.ENTITY_ARROW_HIT, 2.0F, 1.0F);
+														
+												}
+													
+											}
+												
+											if (location.getBlock().getType().equals(Material.AIR)) {
+												
+												EmpirePlayer ep = EmpirePlayer.getOnlinePlayer(p);
+												
+												if (ep.getEmpire().equals(Empire.ARATOR)) {
+													
+													ParticleEffect.REDSTONE.sendColor(Bukkit.getOnlinePlayers(),location.getX(), location.getY(),location.getZ(), Color.BLUE);
+													
+												} else if (ep.getEmpire().equals(Empire.REQUIEM)) {
+													
+													ParticleEffect.REDSTONE.sendColor(Bukkit.getOnlinePlayers(),location.getX(), location.getY(),location.getZ(), Color.RED);
+													
+												} else if (ep.getEmpire().equals(Empire.YAVARI)) {
+													
+													ParticleEffect.REDSTONE.sendColor(Bukkit.getOnlinePlayers(),location.getX(), location.getY(),location.getZ(), Color.PURPLE);
+													
+												} else {
+													
+													ParticleEffect.REDSTONE.sendColor(Bukkit.getOnlinePlayers(),location.getX(), location.getY(),location.getZ(), Color.WHITE);
+													
+												}
+						
+												currentX = currentX + x;
+												currentY = currentY + y;
+												currentZ = currentZ + z;
+												
+											} else {
+												
+												CraftProjectileDetonateEvent detonateEvent = new CraftProjectileDetonateEvent(p, location.getBlock());
+												detonateEvent.call();
+												
+												if(!detonateEvent.isCancelled()){
+													
+													i = 100;
+													
+													Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+														
+														public void run(){
+															
+															b.getWorld().createExplosion(location, getType().getLaserPower());
+		
+														}
+														
+													}, 1L);
+													
+												}
+												
+											}
+											
+										}
+										
 									}
-								}
-								Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
-	
-									@Override
-									public void run() {
-										if(behind.getType() == Material.REDSTONE_BLOCK){
-											behind.setType(Material.SPONGE);
+										
+									/*Block twoinfront = b.getRelative(playerFacing).getRelative(playerFacing);
+		
+									behind.setType(Material.REDSTONE_BLOCK);
+		
+									// Location fLoc =
+									// twoinfront.getLocation().toVector().add(GunUtils.getFireBallVelocity(playerFacing).multiply(2)).toLocation(twoinfront.getWorld(),
+									// 0, 0);
+									Fireball f = ((Fireball) twoinfront.getLocation().getWorld().spawn(twoinfront.getLocation(), Fireball.class));
+		
+									f.setDirection(GunUtils.getFireBallVelocity(playerFacing).multiply(2));
+									f.setShooter(pilot);
+									f.setIsIncendiary(true);
+									f.setYield(2.5F);
+									f.setBounce(false);
+									if(twoinfront.getType() == Material.AIR){
+										CraftShootEvent event = new CraftShootEvent(this);
+										event.call();
+										if(!event.isCancelled()){
+											new LaserBolt(twoinfront, playerFacing, this.pilot);
+											twoinfront.getWorld().playSound(twoinfront.getLocation(), Sound.ENTITY_ARROW_SHOOT, 2.0F, 1.0F);
 										}
 									}
-								}, 5L);
+									Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+		
+										@Override
+										public void run() {
+											if(behind.getType() == Material.REDSTONE_BLOCK){
+												behind.setType(Material.SPONGE);
+											}
+										}
+									}, 5L);*/
+								}
 							}
 						}
 					}
 				}
+				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+					
+					@Override
+					public void run() {
+						processing.set(false);
+					}
+				}, 10L);
 			}
-			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
-				
-				@Override
-				public void run() {
-					processing.set(false);
-				}
-			}, 10L);
+			
+		} else {
+			
+			p.sendMessage(ChatColor.RED + "The cannons are on cooldown");
+			
 		}
+
 	}
 
 	public String getGivenName() {

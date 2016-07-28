@@ -51,6 +51,9 @@ public class CraftType {
 	private HashMap<Integer, ArrayList<Double>> flyBlocks = new HashMap<Integer, ArrayList<Double>>();
 	private int allowedCannons, allowedPassengers, armorMax, armorResistance;
 	private String altName;
+	private double cannonDamage;
+	private double cannonMaxDegrees;
+	private int cannonCooldown;
 
 	public CraftType(File f) {
 		try {
@@ -236,6 +239,21 @@ public class CraftType {
 		} else {
 			laserPower = 1.80f;
 		}
+		if (data.containsKey("cannonDamage")) {
+			cannonDamage = (Double) data.get("cannonDamage");
+		} else {
+			cannonDamage = 10;
+		}
+		if (data.containsKey("cannonMaxDegrees")) {
+			cannonMaxDegrees = (Double) data.get("cannonMaxDegrees");
+		} else {
+			cannonMaxDegrees = 15;
+		}
+		if (data.containsKey("cannonCooldown")) {
+			cannonCooldown = (int) data.get("cannonCooldown");
+		} else {
+			cannonCooldown = 20;
+		}
 		if (data.containsKey("torpedoPower")) {
 			double d = (Double) data.get("torpedoPower");
 			torpedoPower = (float) d;
@@ -409,6 +427,18 @@ public class CraftType {
 
 	public boolean getCanAutopilot(){
 		return canAutopilot;
+	}
+	
+	public double getCannonMaxDegress(){
+		return cannonMaxDegrees;
+	}
+	
+	public double getCannonDamage(){
+		return cannonDamage;
+	}
+	
+	public int getCannonCooldown(){
+		return cannonCooldown;
 	}
 	
 }
