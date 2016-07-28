@@ -462,7 +462,7 @@ public class Craft {
 														
 													i = 100;
 													
-													((LivingEntity) entity).damage(getType().getCannonDamage() / 2, p);
+													((LivingEntity) entity).damage(getType().getCannonDamage(), p);
 													
 													location.getWorld().playSound(location, Sound.ENTITY_ARROW_HIT, 2.0F, 1.0F);
 														

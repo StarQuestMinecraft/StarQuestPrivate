@@ -242,7 +242,7 @@ public class CraftType {
 		if (data.containsKey("cannonDamage")) {
 			cannonDamage = (Double) data.get("cannonDamage");
 		} else {
-			cannonDamage = 10;
+			cannonDamage = 20;
 		}
 		if (data.containsKey("cannonMaxDegrees")) {
 			cannonMaxDegrees = (Double) data.get("cannonMaxDegrees");
