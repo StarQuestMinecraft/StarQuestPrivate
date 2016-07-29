@@ -435,9 +435,9 @@ public class Craft {
 											
 										}
 										
-										double x = Math.sin(Math.toRadians(yaw)) * -1;
-										double y = Math.sin(Math.toRadians(pitch)) * -1;
-										double z = Math.cos(Math.toRadians(yaw));
+										double x = Math.sin(Math.toRadians(yaw)) * -.25;
+										double y = Math.sin(Math.toRadians(pitch)) * -.25;
+										double z = Math.cos(Math.toRadians(yaw)) * .25;
 
 										Location blockLocation = b.getRelative(playerFacing).getLocation();
 										
@@ -448,8 +448,10 @@ public class Craft {
 										double currentZ = blockLocation.getZ();
 		
 										b.getWorld().playSound(b.getLocation(), Sound.ENTITY_ARROW_SHOOT, 2.0F, 1.0F);
+		
+										MovecraftLocation firstBlock = null;
 										
-										for (int i = 0; i < 100; i ++) {
+										for (int i = 0; i < 400; i ++) {
 											
 											final Location location = new Location(b.getWorld(), currentX, currentY, currentZ);
 											
@@ -460,12 +462,16 @@ public class Craft {
 													
 												if (entity instanceof LivingEntity) {
 														
-													i = 100;
-													
-													((LivingEntity) entity).damage(getType().getCannonDamage(), p);
-													
-													location.getWorld().playSound(location, Sound.ENTITY_ARROW_HIT, 2.0F, 1.0F);
+													if (entity != p) {
 														
+														i = 400;
+														
+														((LivingEntity) entity).damage(getType().getCannonDamage(), p);
+														
+														location.getWorld().playSound(location, Sound.ENTITY_ARROW_HIT, 2.0F, 1.0F);
+														
+													}
+	
 												}
 													
 											}
@@ -498,25 +504,69 @@ public class Craft {
 												
 											} else {
 												
-												CraftProjectileDetonateEvent detonateEvent = new CraftProjectileDetonateEvent(p, location.getBlock());
-												detonateEvent.call();
+												boolean contains = false;
 												
-												if(!detonateEvent.isCancelled()){
+												for (MovecraftLocation ml : blockList) {
 													
-													i = 100;
-													
-													Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
-														
-														public void run(){
+													if (ml.equals(new MovecraftLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ()))) {
 															
-															b.getWorld().createExplosion(location, getType().getLaserPower());
-		
+														if (firstBlock == null) {
+														
+															firstBlock = ml;
+															
+															currentX = currentX + x;
+															currentY = currentY + y;
+															currentZ = currentZ + z;
+
+														} else if (firstBlock != ml) {
+															
+															i = 400;
+															
 														}
 														
-													}, 1L);
+														contains = true;
+
+													}
 													
 												}
 												
+												if (firstBlock != null) {
+												
+													if (firstBlock.equals(new MovecraftLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ()))) {
+													
+														contains = true;
+														
+														currentX = currentX + x;
+														currentY = currentY + y;
+														currentZ = currentZ + z;
+														
+													}
+													
+												}
+												
+												if (!contains) {
+													
+													CraftProjectileDetonateEvent detonateEvent = new CraftProjectileDetonateEvent(p, location.getBlock());
+													detonateEvent.call();
+													
+													if(!detonateEvent.isCancelled()){
+														
+														i = 400;
+														
+														Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+															
+															public void run(){
+																
+																b.getWorld().createExplosion(location, getType().getLaserPower());
+			
+															}
+															
+														}, 1L);
+														
+													}
+
+												}
+		
 											}
 											
 										}
