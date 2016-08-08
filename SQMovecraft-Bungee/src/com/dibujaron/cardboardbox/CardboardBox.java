@@ -64,7 +64,6 @@ public class CardboardBox implements Serializable {
 		
 		if (item.hasItemMeta()) {
 			ItemMeta m = item.getItemMeta();
-			System.out.println("Item that has meta: " + item.getType() + " The meta: " + item.getItemMeta());
 			if (m.hasDisplayName()) {
 				this.name = m.getDisplayName();
 			}
@@ -92,7 +91,6 @@ public class CardboardBox implements Serializable {
 		switch (item.getTypeId()) {
 		case 386: // Book and quill
 		case 387: // Written Book
-			System.out.println("Creating new cardboard meta book.");
 			this.meta = (new CardboardMetaBook2(item));
 			break;
 		case 403: // Enchanted Book

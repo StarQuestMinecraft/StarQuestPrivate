@@ -435,9 +435,9 @@ public class Craft {
 											
 										}
 										
-										double x = Math.sin(Math.toRadians(yaw)) * -.25;
+										double x = Math.sin(Math.toRadians(yaw)) * -.25 * Math.cos(Math.toRadians(pitch));
 										double y = Math.sin(Math.toRadians(pitch)) * -.25;
-										double z = Math.cos(Math.toRadians(yaw)) * .25;
+										double z = Math.cos(Math.toRadians(yaw)) * .25 * Math.cos(Math.toRadians(pitch));
 
 										Location blockLocation = b.getRelative(playerFacing).getLocation();
 										
