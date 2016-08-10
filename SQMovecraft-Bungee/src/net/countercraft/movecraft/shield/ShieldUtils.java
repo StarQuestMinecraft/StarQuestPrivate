@@ -79,6 +79,25 @@ public class ShieldUtils {
 		BlockVector min = new BlockVector(ship.getMinX(), minY, ship.getMinZ());
 		BlockVector max = new BlockVector(maxX, maxY, maxZ);
 		ArrayList<String> members = getMembersMainSign(p, sign);
+		
+		for (UUID uuid : ship.getMembers()) {
+			
+			OfflinePlayer plr = Bukkit.getOfflinePlayer(uuid);
+			
+			if (!members.contains(plr.getName())) {
+				
+				members.add(plr.getName());
+				
+			}
+			
+		}
+		
+		if (!members.contains(ship.getPilot().getName())) {
+			
+			members.add(ship.getPilot().getName());
+			
+		}
+		
 		p.sendMessage(ChatColor.YELLOW + "Your ship's shield has been activated.");
 		p.sendMessage(ChatColor.YELLOW + "Shield warming up... estimated time: 5 minutes");
 
