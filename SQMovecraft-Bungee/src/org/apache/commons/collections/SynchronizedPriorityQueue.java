@@ -30,6 +30,7 @@ import java.util.NoSuchElementException;
  * 
  * @author Ram Chidambaram
  */
+@Deprecated
 public final class SynchronizedPriorityQueue implements PriorityQueue {
 
     /**
@@ -49,7 +50,8 @@ public final class SynchronizedPriorityQueue implements PriorityQueue {
     /**
      * Clear all elements from queue.
      */
-    public synchronized void clear() {
+    @Override
+	public synchronized void clear() {
         m_priorityQueue.clear();
     }
 
@@ -58,7 +60,8 @@ public final class SynchronizedPriorityQueue implements PriorityQueue {
      *
      * @return true if queue is empty else false.
      */
-    public synchronized boolean isEmpty() {
+    @Override
+	public synchronized boolean isEmpty() {
         return m_priorityQueue.isEmpty();
     }
 
@@ -67,7 +70,8 @@ public final class SynchronizedPriorityQueue implements PriorityQueue {
      *
      * @param element the element to be inserted
      */
-    public synchronized void insert(final Object element) {
+    @Override
+	public synchronized void insert(final Object element) {
         m_priorityQueue.insert(element);
     }
 
@@ -77,7 +81,8 @@ public final class SynchronizedPriorityQueue implements PriorityQueue {
      * @return the element at top of heap
      * @throws NoSuchElementException if isEmpty() == true
      */
-    public synchronized Object peek() throws NoSuchElementException {
+    @Override
+	public synchronized Object peek() throws NoSuchElementException {
         return m_priorityQueue.peek();
     }
 
@@ -87,7 +92,8 @@ public final class SynchronizedPriorityQueue implements PriorityQueue {
      * @return the element at top of heap
      * @throws NoSuchElementException if isEmpty() == true
      */
-    public synchronized Object pop() throws NoSuchElementException {
+    @Override
+	public synchronized Object pop() throws NoSuchElementException {
         return m_priorityQueue.pop();
     }
 
@@ -96,7 +102,8 @@ public final class SynchronizedPriorityQueue implements PriorityQueue {
      *
      * @return a string representation of the underlying queue
      */
-    public synchronized String toString() {
+    @Override
+	public synchronized String toString() {
         return m_priorityQueue.toString();
     }
     

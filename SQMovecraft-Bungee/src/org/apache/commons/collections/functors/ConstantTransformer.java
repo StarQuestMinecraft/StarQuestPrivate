@@ -73,7 +73,8 @@ public class ConstantTransformer implements Transformer, Serializable {
      * @param input  the input object which is ignored
      * @return the stored constant
      */
-    public Object transform(Object input) {
+    @Override
+	public Object transform(Object input) {
         return iConstant;
     }
 

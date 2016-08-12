@@ -68,7 +68,8 @@ public class TransformingComparator implements Comparator {
      * @param obj2  the second object to transform then compare
      * @return negative if obj1 is less, positive if greater, zero if equal
      */
-    public int compare(Object obj1, Object obj2) {
+    @Override
+	public int compare(Object obj1, Object obj2) {
         Object value1 = this.transformer.transform(obj1);
         Object value2 = this.transformer.transform(obj2);
         return this.decorated.compare(value1, value2);

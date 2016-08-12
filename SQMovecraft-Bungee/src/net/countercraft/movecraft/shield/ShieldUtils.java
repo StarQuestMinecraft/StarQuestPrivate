@@ -27,7 +27,6 @@ import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
 import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class ShieldUtils {
@@ -104,6 +103,7 @@ public class ShieldUtils {
 		final PendingActivation a = new PendingActivation(ship.getW(), min, max, createRName(p.getName()), p.getName(), members, sign);
 		pendingActivations.add(a);
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+			@Override
 			public void run() {
 				a.activate(pendingActivations.contains(a) && (a.sign.getType() == Material.WALL_SIGN || a.sign.getType() == Material.SIGN_POST));
 				pendingActivations.remove(a);

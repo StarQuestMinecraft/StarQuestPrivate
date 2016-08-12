@@ -1,6 +1,5 @@
 package com.dibujaron.cardboardbox.meta;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +35,7 @@ public class CardboardMetaBanner implements CardboardItemMeta {
 		
 	}
 
+	@Override
 	public ItemMeta unbox() {
 
 		BannerMeta meta = (BannerMeta) new ItemStack(this.id).getItemMeta();

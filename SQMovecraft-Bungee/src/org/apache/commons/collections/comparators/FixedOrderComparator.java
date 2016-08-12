@@ -234,7 +234,8 @@ public class FixedOrderComparator implements Comparator {
      *  to this Comparator and an alternative behavior has not been set
      *  via {@link #setUnknownObjectBehavior(int)}.
      */
-    public int compare(Object obj1, Object obj2) {
+    @Override
+	public int compare(Object obj1, Object obj2) {
         isLocked = true;
         Integer position1 = (Integer) map.get(obj1);
         Integer position2 = (Integer) map.get(obj2);

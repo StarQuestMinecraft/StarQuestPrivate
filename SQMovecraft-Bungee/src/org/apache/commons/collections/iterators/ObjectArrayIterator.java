@@ -125,7 +125,8 @@ public class ObjectArrayIterator
      *
      * @return true if there is a next element to return
      */
-    public boolean hasNext() {
+    @Override
+	public boolean hasNext() {
         return (this.index < this.endIndex);
     }
 
@@ -136,7 +137,8 @@ public class ObjectArrayIterator
      * @throws NoSuchElementException if all the elements in the array
      *    have already been returned
      */
-    public Object next() {
+    @Override
+	public Object next() {
         if (hasNext() == false) {
             throw new NoSuchElementException();
         }
@@ -148,7 +150,8 @@ public class ObjectArrayIterator
      *
      * @throws UnsupportedOperationException always
      */
-    public void remove() {
+    @Override
+	public void remove() {
         throw new UnsupportedOperationException("remove() method is not supported for an ObjectArrayIterator");
     }
 
@@ -209,7 +212,8 @@ public class ObjectArrayIterator
     /**
      * Resets the iterator back to the start index.
      */
-    public void reset() {
+    @Override
+	public void reset() {
         this.index = this.startIndex;
     }
 

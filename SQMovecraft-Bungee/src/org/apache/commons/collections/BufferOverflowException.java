@@ -67,7 +67,8 @@ public class BufferOverflowException extends RuntimeException {
      *
      * @return the root cause
      */
-    public final Throwable getCause() {
+    @Override
+	public final Throwable getCause() {
         return throwable;
     }
     

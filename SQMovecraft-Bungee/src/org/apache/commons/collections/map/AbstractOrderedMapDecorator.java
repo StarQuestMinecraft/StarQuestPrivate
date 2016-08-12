@@ -68,27 +68,33 @@ public abstract class AbstractOrderedMapDecorator
     }
 
     //-----------------------------------------------------------------------
-    public Object firstKey() {
+    @Override
+	public Object firstKey() {
         return getOrderedMap().firstKey();
     }
 
-    public Object lastKey() {
+    @Override
+	public Object lastKey() {
         return getOrderedMap().lastKey();
     }
 
-    public Object nextKey(Object key) {
+    @Override
+	public Object nextKey(Object key) {
         return getOrderedMap().nextKey(key);
     }
 
-    public Object previousKey(Object key) {
+    @Override
+	public Object previousKey(Object key) {
         return getOrderedMap().previousKey(key);
     }
 
-    public MapIterator mapIterator() {
+    @Override
+	public MapIterator mapIterator() {
         return getOrderedMap().mapIterator();
     }
 
-    public OrderedMapIterator orderedMapIterator() {
+    @Override
+	public OrderedMapIterator orderedMapIterator() {
         return getOrderedMap().orderedMapIterator();
     }
 

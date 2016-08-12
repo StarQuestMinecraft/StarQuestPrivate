@@ -121,29 +121,35 @@ public class LazySortedMap
     }
 
     //-----------------------------------------------------------------------
-    public Object firstKey() {
+    @Override
+	public Object firstKey() {
         return getSortedMap().firstKey();
     }
 
-    public Object lastKey() {
+    @Override
+	public Object lastKey() {
         return getSortedMap().lastKey();
     }
 
-    public Comparator comparator() {
+    @Override
+	public Comparator comparator() {
         return getSortedMap().comparator();
     }
 
-    public SortedMap subMap(Object fromKey, Object toKey) {
+    @Override
+	public SortedMap subMap(Object fromKey, Object toKey) {
         SortedMap map = getSortedMap().subMap(fromKey, toKey);
         return new LazySortedMap(map, factory);
     }
 
-    public SortedMap headMap(Object toKey) {
+    @Override
+	public SortedMap headMap(Object toKey) {
         SortedMap map = getSortedMap().headMap(toKey);
         return new LazySortedMap(map, factory);
     }
 
-    public SortedMap tailMap(Object fromKey) {
+    @Override
+	public SortedMap tailMap(Object fromKey) {
         SortedMap map = getSortedMap().tailMap(fromKey);
         return new LazySortedMap(map, factory);
     }

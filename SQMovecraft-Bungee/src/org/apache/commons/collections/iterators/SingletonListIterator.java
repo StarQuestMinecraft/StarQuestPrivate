@@ -55,7 +55,8 @@ public class SingletonListIterator implements ListIterator, ResettableListIterat
      * 
      * @return true if the single object hasn't been returned yet
      */
-    public boolean hasNext() {
+    @Override
+	public boolean hasNext() {
         return beforeFirst && !removed;
     }
 
@@ -66,7 +67,8 @@ public class SingletonListIterator implements ListIterator, ResettableListIterat
      * 
      * @return true if the single object has been returned
      */
-    public boolean hasPrevious() {
+    @Override
+	public boolean hasPrevious() {
         return !beforeFirst && !removed;
     }
 
@@ -76,7 +78,8 @@ public class SingletonListIterator implements ListIterator, ResettableListIterat
      *
      * @return 0 or 1 depending on current state. 
      */
-    public int nextIndex() {
+    @Override
+	public int nextIndex() {
         return (beforeFirst ? 0 : 1);
     }
 
@@ -87,7 +90,8 @@ public class SingletonListIterator implements ListIterator, ResettableListIterat
      *
      * @return 0 or -1 depending on current state. 
      */
-    public int previousIndex() {
+    @Override
+	public int previousIndex() {
         return (beforeFirst ? -1 : 0);
     }
 
@@ -100,7 +104,8 @@ public class SingletonListIterator implements ListIterator, ResettableListIterat
      * @throws NoSuchElementException if the single object has already 
      *    been returned
      */
-    public Object next() {
+    @Override
+	public Object next() {
         if (!beforeFirst || removed) {
             throw new NoSuchElementException();
         }
@@ -118,7 +123,8 @@ public class SingletonListIterator implements ListIterator, ResettableListIterat
      * @throws NoSuchElementException if the single object has not already 
      *    been returned
      */
-    public Object previous() {
+    @Override
+	public Object previous() {
         if (beforeFirst || removed) {
             throw new NoSuchElementException();
         }
@@ -133,7 +139,8 @@ public class SingletonListIterator implements ListIterator, ResettableListIterat
      *        has already been called after the last call to <tt>next</tt>
      *        or <tt>previous</tt>.
      */
-    public void remove() {
+    @Override
+	public void remove() {
         if(!nextCalled || removed) {
             throw new IllegalStateException();
         } else {
@@ -147,7 +154,8 @@ public class SingletonListIterator implements ListIterator, ResettableListIterat
      *
      * @throws UnsupportedOperationException always
      */
-    public void add(Object obj) {
+    @Override
+	public void add(Object obj) {
         throw new UnsupportedOperationException("add() is not supported by this iterator");
     }
     
@@ -158,7 +166,8 @@ public class SingletonListIterator implements ListIterator, ResettableListIterat
      * @throws IllegalStateException if <tt>next</tt> has not been called 
      *          or the object has been removed
      */
-    public void set(Object obj) {
+    @Override
+	public void set(Object obj) {
         if (!nextCalled || removed) {
             throw new IllegalStateException();
         }
@@ -168,7 +177,8 @@ public class SingletonListIterator implements ListIterator, ResettableListIterat
     /**
      * Reset the iterator back to the start.
      */
-    public void reset() {
+    @Override
+	public void reset() {
         beforeFirst = true;
         nextCalled = false;
     }

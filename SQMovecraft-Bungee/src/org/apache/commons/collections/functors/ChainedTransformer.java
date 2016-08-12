@@ -118,7 +118,8 @@ public class ChainedTransformer implements Transformer, Serializable {
      * @param object  the input object passed to the first transformer
      * @return the transformed result
      */
-    public Object transform(Object object) {
+    @Override
+	public Object transform(Object object) {
         for (int i = 0; i < iTransformers.length; i++) {
             object = iTransformers[i].transform(object);
         }

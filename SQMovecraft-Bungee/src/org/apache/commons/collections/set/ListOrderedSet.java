@@ -166,16 +166,19 @@ public class ListOrderedSet extends AbstractSerializableSetDecorator implements 
     }
 
     //-----------------------------------------------------------------------
-    public void clear() {
+    @Override
+	public void clear() {
         collection.clear();
         setOrder.clear();
     }
 
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         return new OrderedSetIterator(setOrder.iterator(), collection);
     }
 
-    public boolean add(Object object) {
+    @Override
+	public boolean add(Object object) {
         if (collection.contains(object)) {
             // re-adding doesn't change order
             return collection.add(object);
@@ -187,7 +190,8 @@ public class ListOrderedSet extends AbstractSerializableSetDecorator implements 
         }
     }
 
-    public boolean addAll(Collection coll) {
+    @Override
+	public boolean addAll(Collection coll) {
         boolean result = false;
         for (Iterator it = coll.iterator(); it.hasNext();) {
             Object object = it.next();
@@ -196,13 +200,15 @@ public class ListOrderedSet extends AbstractSerializableSetDecorator implements 
         return result;
     }
 
-    public boolean remove(Object object) {
+    @Override
+	public boolean remove(Object object) {
         boolean result = collection.remove(object);
         setOrder.remove(object);
         return result;
     }
 
-    public boolean removeAll(Collection coll) {
+    @Override
+	public boolean removeAll(Collection coll) {
         boolean result = false;
         for (Iterator it = coll.iterator(); it.hasNext();) {
             Object object = it.next();
@@ -211,7 +217,8 @@ public class ListOrderedSet extends AbstractSerializableSetDecorator implements 
         return result;
     }
 
-    public boolean retainAll(Collection coll) {
+    @Override
+	public boolean retainAll(Collection coll) {
         boolean result = collection.retainAll(coll);
         if (result == false) {
             return false;
@@ -228,11 +235,13 @@ public class ListOrderedSet extends AbstractSerializableSetDecorator implements 
         return result;
     }
 
-    public Object[] toArray() {
+    @Override
+	public Object[] toArray() {
         return setOrder.toArray();
     }
 
-    public Object[] toArray(Object a[]) {
+    @Override
+	public Object[] toArray(Object a[]) {
         return setOrder.toArray(a);
     }
 
@@ -278,7 +287,8 @@ public class ListOrderedSet extends AbstractSerializableSetDecorator implements 
      * any custom toStrings will be ignored. 
      */
     // Fortunately List.toString and Set.toString look the same
-    public String toString() {
+    @Override
+	public String toString() {
         return setOrder.toString();
     }
 
@@ -298,12 +308,14 @@ public class ListOrderedSet extends AbstractSerializableSetDecorator implements 
             this.set = set;
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             last = iterator.next();
             return last;
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             set.remove(last);
             iterator.remove();
             last = null;

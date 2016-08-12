@@ -92,7 +92,8 @@ public abstract class AbstractMapBag implements Bag {
      *
      * @return current size of the bag
      */
-    public int size() {
+    @Override
+	public int size() {
         return size;
     }
 
@@ -101,7 +102,8 @@ public abstract class AbstractMapBag implements Bag {
      *
      * @return true if bag is empty
      */
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         return map.isEmpty();
     }
 
@@ -112,7 +114,8 @@ public abstract class AbstractMapBag implements Bag {
      * @param object  the object to search for
      * @return the number of occurrences of the object, zero if not found
      */
-    public int getCount(Object object) {
+    @Override
+	public int getCount(Object object) {
         MutableInteger count = (MutableInteger) map.get(object);
         if (count != null) {
             return count.value;
@@ -128,7 +131,8 @@ public abstract class AbstractMapBag implements Bag {
      * @param object  the object to search for
      * @return true if the bag contains the given element
      */
-    public boolean contains(Object object) {
+    @Override
+	public boolean contains(Object object) {
         return map.containsKey(object);
     }
 
@@ -138,7 +142,8 @@ public abstract class AbstractMapBag implements Bag {
      * @param coll  the collection to check against
      * @return <code>true</code> if the Bag contains all the collection
      */
-    public boolean containsAll(Collection coll) {
+    @Override
+	public boolean containsAll(Collection coll) {
         if (coll instanceof Bag) {
             return containsAll((Bag) coll);
         }
@@ -170,7 +175,8 @@ public abstract class AbstractMapBag implements Bag {
      * 
      * @return the iterator
      */
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         return new BagIterator(this);
     }
 
@@ -198,11 +204,13 @@ public abstract class AbstractMapBag implements Bag {
             this.canRemove = false;
         }
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             return (itemCount > 0 || entryIterator.hasNext());
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             if (parent.modCount != mods) {
                 throw new ConcurrentModificationException();
             }
@@ -215,7 +223,8 @@ public abstract class AbstractMapBag implements Bag {
             return current.getKey();
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             if (parent.modCount != mods) {
                 throw new ConcurrentModificationException();
             }
@@ -240,7 +249,8 @@ public abstract class AbstractMapBag implements Bag {
      * @param object  the object to add
      * @return <code>true</code> if the object was not already in the <code>uniqueSet</code>
      */
-    public boolean add(Object object) {
+    @Override
+	public boolean add(Object object) {
         return add(object, 1);
     }
 
@@ -251,7 +261,8 @@ public abstract class AbstractMapBag implements Bag {
      * @param nCopies  the number of copies to add
      * @return <code>true</code> if the object was not already in the <code>uniqueSet</code>
      */
-    public boolean add(Object object, int nCopies) {
+    @Override
+	public boolean add(Object object, int nCopies) {
         modCount++;
         if (nCopies > 0) {
             MutableInteger mut = (MutableInteger) map.get(object);
@@ -274,7 +285,8 @@ public abstract class AbstractMapBag implements Bag {
      * @param coll  the collection to add
      * @return <code>true</code> if this call changed the bag
      */
-    public boolean addAll(Collection coll) {
+    @Override
+	public boolean addAll(Collection coll) {
         boolean changed = false;
         Iterator i = coll.iterator();
         while (i.hasNext()) {
@@ -288,7 +300,8 @@ public abstract class AbstractMapBag implements Bag {
     /**
      * Clears the bag by clearing the underlying map.
      */
-    public void clear() {
+    @Override
+	public void clear() {
         modCount++;
         map.clear();
         size = 0;
@@ -300,7 +313,8 @@ public abstract class AbstractMapBag implements Bag {
      * @param object  the object to remove
      * @return true if the bag changed
      */
-    public boolean remove(Object object) {
+    @Override
+	public boolean remove(Object object) {
         MutableInteger mut = (MutableInteger) map.get(object);
         if (mut == null) {
             return false;
@@ -318,7 +332,8 @@ public abstract class AbstractMapBag implements Bag {
      * @param nCopies  the number of copies to remove
      * @return true if the bag changed
      */
-    public boolean remove(Object object, int nCopies) {
+    @Override
+	public boolean remove(Object object, int nCopies) {
         MutableInteger mut = (MutableInteger) map.get(object);
         if (mut == null) {
             return false;
@@ -343,7 +358,8 @@ public abstract class AbstractMapBag implements Bag {
      * @param coll  the collection to use
      * @return true if the bag changed
      */
-    public boolean removeAll(Collection coll) {
+    @Override
+	public boolean removeAll(Collection coll) {
         boolean result = false;
         if (coll != null) {
             Iterator i = coll.iterator();
@@ -362,7 +378,8 @@ public abstract class AbstractMapBag implements Bag {
      * @param coll  the collection to retain
      * @return true if this call changed the collection
      */
-    public boolean retainAll(Collection coll) {
+    @Override
+	public boolean retainAll(Collection coll) {
         if (coll instanceof Bag) {
             return retainAll((Bag) coll);
         }
@@ -413,14 +430,16 @@ public abstract class AbstractMapBag implements Bag {
             this.value = value;
         }
         
-        public boolean equals(Object obj) {
+        @Override
+		public boolean equals(Object obj) {
             if (obj instanceof MutableInteger == false) {
                 return false;
             }
             return ((MutableInteger) obj).value == value;
         }
 
-        public int hashCode() {
+        @Override
+		public int hashCode() {
             return value;
         }
     }
@@ -431,7 +450,8 @@ public abstract class AbstractMapBag implements Bag {
      *
      * @return an array of all of this bag's elements
      */
-    public Object[] toArray() {
+    @Override
+	public Object[] toArray() {
         Object[] result = new Object[size()];
         int i = 0;
         Iterator it = map.keySet().iterator();
@@ -450,7 +470,8 @@ public abstract class AbstractMapBag implements Bag {
      * @param array  the array to populate
      * @return an array of all of this bag's elements
      */
-    public Object[] toArray(Object[] array) {
+    @Override
+	public Object[] toArray(Object[] array) {
         int size = size();
         if (array.length < size) {
             array = (Object[]) Array.newInstance(array.getClass().getComponentType(), size);
@@ -475,7 +496,8 @@ public abstract class AbstractMapBag implements Bag {
      *
      * @return the set of unique elements in this bag
      */
-    public Set uniqueSet() {
+    @Override
+	public Set uniqueSet() {
         if (uniqueSet == null) {
             uniqueSet = UnmodifiableSet.decorate(map.keySet());
         }
@@ -524,7 +546,8 @@ public abstract class AbstractMapBag implements Bag {
      * @param object  the Bag to compare to
      * @return true if equal
      */
-    public boolean equals(Object object) {
+    @Override
+	public boolean equals(Object object) {
         if (object == this) {
             return true;
         }
@@ -553,7 +576,8 @@ public abstract class AbstractMapBag implements Bag {
      * 
      * @return the hash code of the Bag
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         int total = 0;
         for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
             Map.Entry entry = (Map.Entry) it.next();
@@ -569,7 +593,8 @@ public abstract class AbstractMapBag implements Bag {
      * 
      * @return a debugging toString
      */
-    public String toString() {
+    @Override
+	public String toString() {
         if (size() == 0) {
             return "[]";
         }

@@ -76,70 +76,86 @@ public abstract class AbstractCollectionDecorator implements Collection {
     }
 
     //-----------------------------------------------------------------------
-    public boolean add(Object object) {
+    @Override
+	public boolean add(Object object) {
         return collection.add(object);
     }
 
-    public boolean addAll(Collection coll) {
+    @Override
+	public boolean addAll(Collection coll) {
         return collection.addAll(coll);
     }
 
-    public void clear() {
+    @Override
+	public void clear() {
         collection.clear();
     }
 
-    public boolean contains(Object object) {
+    @Override
+	public boolean contains(Object object) {
         return collection.contains(object);
     }
 
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         return collection.isEmpty();
     }
 
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         return collection.iterator();
     }
 
-    public boolean remove(Object object) {
+    @Override
+	public boolean remove(Object object) {
         return collection.remove(object);
     }
 
-    public int size() {
+    @Override
+	public int size() {
         return collection.size();
     }
 
-    public Object[] toArray() {
+    @Override
+	public Object[] toArray() {
         return collection.toArray();
     }
 
-    public Object[] toArray(Object[] object) {
+    @Override
+	public Object[] toArray(Object[] object) {
         return collection.toArray(object);
     }
 
-    public boolean containsAll(Collection coll) {
+    @Override
+	public boolean containsAll(Collection coll) {
         return collection.containsAll(coll);
     }
 
-    public boolean removeAll(Collection coll) {
+    @Override
+	public boolean removeAll(Collection coll) {
         return collection.removeAll(coll);
     }
 
-    public boolean retainAll(Collection coll) {
+    @Override
+	public boolean retainAll(Collection coll) {
         return collection.retainAll(coll);
     }
 
-    public boolean equals(Object object) {
+    @Override
+	public boolean equals(Object object) {
         if (object == this) {
             return true;
         }
         return collection.equals(object);
     }
 
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return collection.hashCode();
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         return collection.toString();
     }
 

@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.StringTokenizer;
-
 import net.countercraft.movecraft.Movecraft;
 
 import org.bukkit.Bukkit;
@@ -27,6 +25,7 @@ public class HangarGateUtils {
 	public static void onEnable(){
 		loadFromDatabase(activeBlocks);
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(Movecraft.getInstance(), new Runnable(){
+			@Override
 			public void run(){
 				Iterator<DestroyedBlock> i = activeBlocks.iterator();
 				while(i.hasNext()){
@@ -41,6 +40,7 @@ public class HangarGateUtils {
 
 	public static void addDestroyedHangarBlock(final World w, final MovecraftLocation loc){
 		Bukkit.getScheduler().runTask(Movecraft.getInstance(), new Runnable(){
+			@Override
 			public void run(){
 				addDestroyedHangarBlock(new Location(w,loc.getX(),loc.getY(),loc.getZ()).getBlock());
 			}
@@ -49,6 +49,7 @@ public class HangarGateUtils {
 	private static void addDestroyedHangarBlock(Block b){
 		final DestroyedBlock d = new DestroyedBlock(b.getLocation(), b.getData());
 		BukkitRunnable r = new BukkitRunnable(){
+			@Override
 			public void run(){
 				activeBlocks.add(d);
 			}
@@ -121,6 +122,7 @@ public class HangarGateUtils {
 			bornTime = Long.parseLong(split[4]);
 		}
 		
+		@Override
 		public String toString(){
 			return l.getBlockX() + "," + l.getBlockY() + "," + l.getBlockZ() + "," + data + "," + bornTime;
 		}

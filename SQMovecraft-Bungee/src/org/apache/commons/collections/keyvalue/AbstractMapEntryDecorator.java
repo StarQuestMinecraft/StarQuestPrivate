@@ -57,30 +57,36 @@ public abstract class AbstractMapEntryDecorator implements Map.Entry, KeyValue {
     }
 
     //-----------------------------------------------------------------------
-    public Object getKey() {
+    @Override
+	public Object getKey() {
         return entry.getKey();
     }
 
-    public Object getValue() {
+    @Override
+	public Object getValue() {
         return entry.getValue();
     }
 
-    public Object setValue(Object object) {
+    @Override
+	public Object setValue(Object object) {
         return entry.setValue(object);
     }
    
-    public boolean equals(Object object) {
+    @Override
+	public boolean equals(Object object) {
         if (object == this) {
             return true;
         }
         return entry.equals(object);
     }
 
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return entry.hashCode();
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         return entry.toString();
     }
 

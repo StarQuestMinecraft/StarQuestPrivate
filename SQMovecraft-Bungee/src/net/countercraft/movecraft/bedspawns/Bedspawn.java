@@ -3,16 +3,11 @@ package net.countercraft.movecraft.bedspawns;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-
 import org.bukkit.configuration.file.FileConfiguration;
 
 import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.utils.MovecraftLocation;
 
 /**
  * @author Dibujaron
@@ -43,6 +38,7 @@ public class Bedspawn {
 		this.z = z;
 	}
 
+	@Override
 	public String toString() {
 		return " BEDSPAWN: Player = " + player + " & server = " + server + " & world = " + world + " & coords = " + x + "," + y + "," + z + ".";
 	}

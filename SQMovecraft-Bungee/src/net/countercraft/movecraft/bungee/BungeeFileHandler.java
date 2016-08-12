@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import net.countercraft.movecraft.Movecraft;

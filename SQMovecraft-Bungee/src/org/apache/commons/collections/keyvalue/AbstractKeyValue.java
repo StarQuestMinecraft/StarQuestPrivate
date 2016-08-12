@@ -54,7 +54,8 @@ public abstract class AbstractKeyValue implements KeyValue {
      *
      * @return the key 
      */
-    public Object getKey() {
+    @Override
+	public Object getKey() {
         return key;
     }
 
@@ -63,7 +64,8 @@ public abstract class AbstractKeyValue implements KeyValue {
      *
      * @return the value
      */
-    public Object getValue() {
+    @Override
+	public Object getValue() {
         return value;
     }
 
@@ -72,7 +74,8 @@ public abstract class AbstractKeyValue implements KeyValue {
      * 
      * @return a String view of the entry
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return new StringBuffer()
             .append(getKey())
             .append('=')

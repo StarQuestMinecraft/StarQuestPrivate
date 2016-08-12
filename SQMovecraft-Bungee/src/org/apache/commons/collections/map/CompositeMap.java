@@ -167,7 +167,8 @@ public class CompositeMap implements Map {
      *
      * @throws UnsupportedOperationException if any of the composited Maps do not support clear()
      */
-    public void clear() {
+    @Override
+	public void clear() {
         for (int i = this.composite.length - 1; i >= 0; --i) {
             this.composite[i].clear();
         }
@@ -189,7 +190,8 @@ public class CompositeMap implements Map {
      * @throws NullPointerException if the key is <tt>null</tt> and this map
      *            does not not permit <tt>null</tt> keys (optional).
      */
-    public boolean containsKey(Object key) {
+    @Override
+	public boolean containsKey(Object key) {
         for (int i = this.composite.length - 1; i >= 0; --i) {
             if (this.composite[i].containsKey(key)) {
                 return true;
@@ -214,7 +216,8 @@ public class CompositeMap implements Map {
      * @throws NullPointerException if the value is <tt>null</tt> and this map
      *            does not not permit <tt>null</tt> values (optional).
      */
-    public boolean containsValue(Object value) {
+    @Override
+	public boolean containsValue(Object value) {
         for (int i = this.composite.length - 1; i >= 0; --i) {
             if (this.composite[i].containsValue(value)) {
                 return true;
@@ -240,7 +243,8 @@ public class CompositeMap implements Map {
      * @see CompositeSet
      * @return a set view of the mappings contained in this map.
      */
-    public Set entrySet() {
+    @Override
+	public Set entrySet() {
         CompositeSet entries = new CompositeSet();
         for (int i = this.composite.length - 1; i >= 0; --i) {
             entries.addComposited(this.composite[i].entrySet());
@@ -272,7 +276,8 @@ public class CompositeMap implements Map {
      *
      * @see #containsKey(Object)
      */
-    public Object get(Object key) {
+    @Override
+	public Object get(Object key) {
         for (int i = this.composite.length - 1; i >= 0; --i) {
             if (this.composite[i].containsKey(key)) {
                 return this.composite[i].get(key);
@@ -286,7 +291,8 @@ public class CompositeMap implements Map {
      *
      * @return <tt>true</tt> if this map contains no key-value mappings.
      */
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         for (int i = this.composite.length - 1; i >= 0; --i) {
             if (!this.composite[i].isEmpty()) {
                 return false;
@@ -310,7 +316,8 @@ public class CompositeMap implements Map {
      *
      * @return a set view of the keys contained in this map.
      */
-    public Set keySet() {
+    @Override
+	public Set keySet() {
         CompositeSet keys = new CompositeSet();
         for (int i = this.composite.length - 1; i >= 0; --i) {
             keys.addComposited(this.composite[i].keySet());
@@ -343,7 +350,8 @@ public class CompositeMap implements Map {
      *            keys or values, and the specified key or value is
      *            <tt>null</tt>.
      */
-    public Object put(Object key, Object value) {
+    @Override
+	public Object put(Object key, Object value) {
         if (this.mutator == null) {
             throw new UnsupportedOperationException("No mutator specified");
         }
@@ -372,7 +380,8 @@ public class CompositeMap implements Map {
      *         this map does not permit <tt>null</tt> keys or values, and the
      *         specified map contains <tt>null</tt> keys or values.
      */
-    public void putAll(Map map) {
+    @Override
+	public void putAll(Map map) {
         if (this.mutator == null) {
             throw new UnsupportedOperationException("No mutator specified");
         }
@@ -404,7 +413,8 @@ public class CompositeMap implements Map {
      * @throws UnsupportedOperationException if the <tt>remove</tt> method is
      *         not supported by the composited map containing the key
      */
-    public Object remove(Object key) {
+    @Override
+	public Object remove(Object key) {
         for (int i = this.composite.length - 1; i >= 0; --i) {
             if (this.composite[i].containsKey(key)) {
                 return this.composite[i].remove(key);
@@ -420,7 +430,8 @@ public class CompositeMap implements Map {
      *
      * @return the number of key-value mappings in this map.
      */
-    public int size() {
+    @Override
+	public int size() {
         int size = 0;
         for (int i = this.composite.length - 1; i >= 0; --i) {
             size += this.composite[i].size();
@@ -441,7 +452,8 @@ public class CompositeMap implements Map {
      *
      * @return a collection view of the values contained in this map.
      */
-    public Collection values() {
+    @Override
+	public Collection values() {
         CompositeCollection keys = new CompositeCollection();
         for (int i = this.composite.length - 1; i >= 0; --i) {
             keys.addComposited(this.composite[i].values());
@@ -455,7 +467,8 @@ public class CompositeMap implements Map {
      * @param obj  the object to compare to
      * @return true if the maps are equal
      */
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
         if (obj instanceof Map) {
             Map map = (Map) obj;
             return (this.entrySet().equals(map.entrySet()));
@@ -466,7 +479,8 @@ public class CompositeMap implements Map {
     /**
      * Gets a hash code for the Map as per the Map specification.
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         int code = 0;
         for (Iterator i = this.entrySet().iterator(); i.hasNext();) {
             code += i.next().hashCode();

@@ -61,23 +61,28 @@ public abstract class AbstractSortedBidiMapDecorator
     }
 
     //-----------------------------------------------------------------------
-    public SortedBidiMap inverseSortedBidiMap() {
+    @Override
+	public SortedBidiMap inverseSortedBidiMap() {
         return getSortedBidiMap().inverseSortedBidiMap();
     }
 
-    public Comparator comparator() {
+    @Override
+	public Comparator comparator() {
         return getSortedBidiMap().comparator();
     }
 
-    public SortedMap subMap(Object fromKey, Object toKey) {
+    @Override
+	public SortedMap subMap(Object fromKey, Object toKey) {
         return getSortedBidiMap().subMap(fromKey, toKey);
     }
 
-    public SortedMap headMap(Object toKey) {
+    @Override
+	public SortedMap headMap(Object toKey) {
         return getSortedBidiMap().headMap(toKey);
     }
 
-    public SortedMap tailMap(Object fromKey) {
+    @Override
+	public SortedMap tailMap(Object fromKey) {
         return getSortedBidiMap().tailMap(fromKey);
     }
 

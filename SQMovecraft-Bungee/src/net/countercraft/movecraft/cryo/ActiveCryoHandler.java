@@ -36,6 +36,7 @@ public class ActiveCryoHandler {
 		final CryoSpawn s = CryoSpawn.getSpawnIfNeedsActiveRespawn(p.getName());
 		if(s == null || !s.isActive) return false;
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+			@Override
 			public void run(){
 				CryoSpawn.unsetUpdatedSinceLastLogin(p.getName());
 				if(!s.server.equals(Bukkit.getServerName())){

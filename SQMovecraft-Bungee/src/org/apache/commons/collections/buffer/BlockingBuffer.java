@@ -105,7 +105,8 @@ public class BlockingBuffer extends SynchronizedBuffer {
     }
 
     //-----------------------------------------------------------------------
-    public boolean add(Object o) {
+    @Override
+	public boolean add(Object o) {
         synchronized (lock) {
             boolean result = collection.add(o);
             lock.notifyAll();
@@ -113,7 +114,8 @@ public class BlockingBuffer extends SynchronizedBuffer {
         }
     }
 
-    public boolean addAll(Collection c) {
+    @Override
+	public boolean addAll(Collection c) {
         synchronized (lock) {
             boolean result = collection.addAll(c);
             lock.notifyAll();
@@ -128,7 +130,8 @@ public class BlockingBuffer extends SynchronizedBuffer {
      *
      * @throws BufferUnderflowException if an interrupt is received
      */
-    public Object get() {
+    @Override
+	public Object get() {
         synchronized (lock) {
             while (collection.isEmpty()) {
                 try {
@@ -184,7 +187,8 @@ public class BlockingBuffer extends SynchronizedBuffer {
      *
      * @throws BufferUnderflowException if an interrupt is received
      */
-    public Object remove() {
+    @Override
+	public Object remove() {
         synchronized (lock) {
             while (collection.isEmpty()) {
                 try {

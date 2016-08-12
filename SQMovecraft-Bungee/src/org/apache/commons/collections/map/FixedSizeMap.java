@@ -111,14 +111,16 @@ public class FixedSizeMap
     }
 
     //-----------------------------------------------------------------------
-    public Object put(Object key, Object value) {
+    @Override
+	public Object put(Object key, Object value) {
         if (map.containsKey(key) == false) {
             throw new IllegalArgumentException("Cannot put new key/value pair - Map is fixed size");
         }
         return map.put(key, value);
     }
 
-    public void putAll(Map mapToCopy) {
+    @Override
+	public void putAll(Map mapToCopy) {
         for (Iterator it = mapToCopy.keySet().iterator(); it.hasNext(); ) {
             if (mapToCopy.containsKey(it.next()) == false) {
                 throw new IllegalArgumentException("Cannot put new key/value pair - Map is fixed size");
@@ -127,35 +129,42 @@ public class FixedSizeMap
         map.putAll(mapToCopy);
     }
 
-    public void clear() {
+    @Override
+	public void clear() {
         throw new UnsupportedOperationException("Map is fixed size");
     }
 
-    public Object remove(Object key) {
+    @Override
+	public Object remove(Object key) {
         throw new UnsupportedOperationException("Map is fixed size");
     }
 
-    public Set entrySet() {
+    @Override
+	public Set entrySet() {
         Set set = map.entrySet();
         // unmodifiable set will still allow modification via Map.Entry objects
         return UnmodifiableSet.decorate(set);
     }
 
-    public Set keySet() {
+    @Override
+	public Set keySet() {
         Set set = map.keySet();
         return UnmodifiableSet.decorate(set);
     }
 
-    public Collection values() {
+    @Override
+	public Collection values() {
         Collection coll = map.values();
         return UnmodifiableCollection.decorate(coll);
     }
 
-    public boolean isFull() {
+    @Override
+	public boolean isFull() {
         return true;
     }
 
-    public int maxSize() {
+    @Override
+	public int maxSize() {
         return size();
     }
    

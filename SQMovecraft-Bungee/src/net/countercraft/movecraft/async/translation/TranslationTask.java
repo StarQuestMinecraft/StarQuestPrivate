@@ -1,9 +1,7 @@
 package net.countercraft.movecraft.async.translation;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -11,9 +9,7 @@ import java.util.UUID;
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.AsyncTask;
 import net.countercraft.movecraft.craft.Craft;
-import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.crafttransfer.SerializableLocation;
-import net.countercraft.movecraft.event.CraftAsyncTranslateEvent;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.task.AutopilotRunTask;
 import net.countercraft.movecraft.task.RepeatTryServerJumpTask;
@@ -28,10 +24,7 @@ import net.countercraft.movecraft.utils.MapUpdateCommand;
 import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
-import net.countercraft.movecraft.utils.PlayerFlightUtil;
 import net.countercraft.movecraft.utils.StargateJumpHolder;
-import net.countercraft.movecraft.vapor.VaporUtils;
-
 import org.apache.commons.collections.ListUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -191,6 +184,7 @@ public class TranslationTask extends AsyncTask {
 								FakeBlockUtils.sendFakeBlocks(pTest, newPLoc);
 								FakeBlockUtils.sendFakeBlocks(pTest,pTest.getLocation());
 								Bukkit.getScheduler().runTask(Movecraft.getInstance(),new Runnable(){
+									@Override
 									public void run(){
 										pTest.teleport(newPLoc);
 									}

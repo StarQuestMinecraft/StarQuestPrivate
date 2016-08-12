@@ -3,7 +3,6 @@ package net.countercraft.movecraft.projectile;
 import java.util.HashSet;
 
 import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.config.Settings;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.event.CraftProjectileDetonateEvent;
@@ -55,6 +54,7 @@ public class LaserBolt extends Projectile{
 		event.call();
 		if(!event.isCancelled()){
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+				@Override
 				public void run(){
 					Craft c = CraftManager.getInstance().getCraftByPlayer(shooter);
 					if(c != null){

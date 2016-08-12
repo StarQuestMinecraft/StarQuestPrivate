@@ -20,7 +20,6 @@ package net.countercraft.movecraft.listener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,15 +31,12 @@ import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.CraftType;
 import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.event.CraftGunsHitEvent;
-import net.countercraft.movecraft.event.CraftShootEvent;
 import net.countercraft.movecraft.projectile.LaserBolt;
 import net.countercraft.movecraft.projectile.LaserBolt.LocationHit;
-import net.countercraft.movecraft.slip.WarpUtils;
 import net.countercraft.movecraft.task.SneakMoveTask;
 import net.countercraft.movecraft.utils.BlockUtils;
 import net.countercraft.movecraft.utils.BoardingRampUtils;
 import net.countercraft.movecraft.utils.JammerUtils;
-import net.countercraft.movecraft.utils.KillUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.OfflinePilotUtils;
 import net.countercraft.movecraft.utils.PlayerFlightUtil;
@@ -50,17 +46,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByBlockEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -185,7 +177,7 @@ public class EntityListener implements Listener {
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
 
-		Player p = (Player) e.getEntity();
+		Player p = e.getEntity();
 		Craft c = CraftManager.getInstance().getCraftByPlayer(p);
 		if (c != null)
 			CraftManager.getInstance().removeCraft(CraftManager.getInstance().getCraftByPlayer(p));
@@ -346,12 +338,14 @@ public class EntityListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerRespawn(final PlayerRespawnEvent event) {
 		Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable() {
+			@Override
 			public void run() {
 				if (CryoSpawn.respawnPlayerAsync(event.getPlayer())) {
 					return;
 				} else {
 					System.out.println("Defaulting back to bedspawn, CryoSpawn failed.");
 					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+						@Override
 						public void run() {
 							BungeePlayerHandler.sendPlayer(event.getPlayer(), Bedspawn.DEFAULT.server, Bedspawn.DEFAULT.world, Bedspawn.DEFAULT.x, Bedspawn.DEFAULT.y, Bedspawn.DEFAULT.z);
 						}

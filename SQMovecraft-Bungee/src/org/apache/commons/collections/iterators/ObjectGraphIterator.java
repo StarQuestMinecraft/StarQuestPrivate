@@ -207,7 +207,8 @@ public class ObjectGraphIterator implements Iterator {
      * 
      * @return true if elements remain in the iteration
      */
-    public boolean hasNext() {
+    @Override
+	public boolean hasNext() {
         updateCurrentIterator();
         return hasNext;
     }
@@ -218,7 +219,8 @@ public class ObjectGraphIterator implements Iterator {
      * @return the next element from the iteration
      * @throws NoSuchElementException if all the Iterators are exhausted
      */
-    public Object next() {
+    @Override
+	public Object next() {
         updateCurrentIterator();
         if (hasNext == false) {
             throw new NoSuchElementException("No more elements in the iteration");
@@ -243,7 +245,8 @@ public class ObjectGraphIterator implements Iterator {
      *   if the next method has not yet been called, or the remove method has
      *   already been called after the last call to the next method.
      */
-    public void remove() {
+    @Override
+	public void remove() {
         if (lastUsedIterator == null) {
             throw new IllegalStateException("Iterator remove() cannot be called at this time");
         }

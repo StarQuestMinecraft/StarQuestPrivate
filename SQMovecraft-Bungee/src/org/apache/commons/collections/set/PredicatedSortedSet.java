@@ -86,30 +86,36 @@ public class PredicatedSortedSet extends PredicatedSet implements SortedSet {
     }
 
     //-----------------------------------------------------------------------
-    public SortedSet subSet(Object fromElement, Object toElement) {
+    @Override
+	public SortedSet subSet(Object fromElement, Object toElement) {
         SortedSet sub = getSortedSet().subSet(fromElement, toElement);
         return new PredicatedSortedSet(sub, predicate);
     }
 
-    public SortedSet headSet(Object toElement) {
+    @Override
+	public SortedSet headSet(Object toElement) {
         SortedSet sub = getSortedSet().headSet(toElement);
         return new PredicatedSortedSet(sub, predicate);
     }
 
-    public SortedSet tailSet(Object fromElement) {
+    @Override
+	public SortedSet tailSet(Object fromElement) {
         SortedSet sub = getSortedSet().tailSet(fromElement);
         return new PredicatedSortedSet(sub, predicate);
     }
 
-    public Object first() {
+    @Override
+	public Object first() {
         return getSortedSet().first();
     }
 
-    public Object last() {
+    @Override
+	public Object last() {
         return getSortedSet().last();
     }
 
-    public Comparator comparator() {
+    @Override
+	public Comparator comparator() {
         return getSortedSet().comparator();
     }
 

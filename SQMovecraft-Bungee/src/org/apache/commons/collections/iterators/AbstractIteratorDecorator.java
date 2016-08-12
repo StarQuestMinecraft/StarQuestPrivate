@@ -59,15 +59,18 @@ public class AbstractIteratorDecorator implements Iterator {
     }
 
     //-----------------------------------------------------------------------
-    public boolean hasNext() {
+    @Override
+	public boolean hasNext() {
         return iterator.hasNext();
     }
 
-    public Object next() {
+    @Override
+	public Object next() {
         return iterator.next();
     }
 
-    public void remove() {
+    @Override
+	public void remove() {
         iterator.remove();
     }
 

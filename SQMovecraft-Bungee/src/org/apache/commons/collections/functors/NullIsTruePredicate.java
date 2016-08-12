@@ -68,7 +68,8 @@ public final class NullIsTruePredicate implements Predicate, PredicateDecorator,
      * @param object  the input object
      * @return true if decorated predicate returns true or input is null
      */
-    public boolean evaluate(Object object) {
+    @Override
+	public boolean evaluate(Object object) {
         if (object == null) {
             return true;
         }
@@ -81,7 +82,8 @@ public final class NullIsTruePredicate implements Predicate, PredicateDecorator,
      * @return the predicate as the only element in an array
      * @since Commons Collections 3.1
      */
-    public Predicate[] getPredicates() {
+    @Override
+	public Predicate[] getPredicates() {
         return new Predicate[] {iPredicate};
     }
 

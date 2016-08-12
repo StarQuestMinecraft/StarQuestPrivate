@@ -83,7 +83,8 @@ public class ListIteratorWrapper implements ResettableListIterator {
      * @param obj  the object to add, ignored
      * @throws UnsupportedOperationException always
      */
-    public void add(Object obj) throws UnsupportedOperationException {
+    @Override
+	public void add(Object obj) throws UnsupportedOperationException {
         throw new UnsupportedOperationException(UNSUPPORTED_OPERATION_MESSAGE);
     }
 
@@ -92,7 +93,8 @@ public class ListIteratorWrapper implements ResettableListIterator {
      *
      * @return true if there are more elements
      */
-    public boolean hasNext() {
+    @Override
+	public boolean hasNext() {
         if (currentIndex == wrappedIteratorIndex) {
             return iterator.hasNext();
         }
@@ -104,7 +106,8 @@ public class ListIteratorWrapper implements ResettableListIterator {
      *
      * @return true if there are previous elements
      */
-    public boolean hasPrevious() {
+    @Override
+	public boolean hasPrevious() {
         if (currentIndex == 0) {
             return false;
         }
@@ -117,7 +120,8 @@ public class ListIteratorWrapper implements ResettableListIterator {
      * @return the next element from the iterator
      * @throws NoSuchElementException if there are no more elements
      */
-    public Object next() throws NoSuchElementException {
+    @Override
+	public Object next() throws NoSuchElementException {
         if (currentIndex < wrappedIteratorIndex) {
             ++currentIndex;
             return list.get(currentIndex - 1);
@@ -135,7 +139,8 @@ public class ListIteratorWrapper implements ResettableListIterator {
      *
      * @return the index of the next element
      */
-    public int nextIndex() {
+    @Override
+	public int nextIndex() {
         return currentIndex;
     }
 
@@ -145,7 +150,8 @@ public class ListIteratorWrapper implements ResettableListIterator {
      * @return the previous element
      * @throws NoSuchElementException  if there are no previous elements
      */
-    public Object previous() throws NoSuchElementException {
+    @Override
+	public Object previous() throws NoSuchElementException {
         if (currentIndex == 0) {
             throw new NoSuchElementException();
         }
@@ -158,7 +164,8 @@ public class ListIteratorWrapper implements ResettableListIterator {
      *
      * @return  the index of the previous element
      */
-    public int previousIndex() {
+    @Override
+	public int previousIndex() {
         return currentIndex - 1;
     }
 
@@ -167,7 +174,8 @@ public class ListIteratorWrapper implements ResettableListIterator {
      *
      * @throws UnsupportedOperationException always
      */
-    public void remove() throws UnsupportedOperationException {
+    @Override
+	public void remove() throws UnsupportedOperationException {
         throw new UnsupportedOperationException(UNSUPPORTED_OPERATION_MESSAGE);
     }
 
@@ -177,7 +185,8 @@ public class ListIteratorWrapper implements ResettableListIterator {
      * @param obj  the object to set, ignored
      * @throws UnsupportedOperationException always
      */
-    public void set(Object obj) throws UnsupportedOperationException {
+    @Override
+	public void set(Object obj) throws UnsupportedOperationException {
         throw new UnsupportedOperationException(UNSUPPORTED_OPERATION_MESSAGE);
     }
 
@@ -189,7 +198,8 @@ public class ListIteratorWrapper implements ResettableListIterator {
      *
      * @since Commons Collections 3.2
      */
-    public void reset()  {
+    @Override
+	public void reset()  {
         currentIndex = 0;
     }
 

@@ -72,7 +72,8 @@ public class TransformIterator implements Iterator {
     }
 
     //-----------------------------------------------------------------------
-    public boolean hasNext() {
+    @Override
+	public boolean hasNext() {
         return iterator.hasNext();
     }
 
@@ -84,11 +85,13 @@ public class TransformIterator implements Iterator {
      * @return the next object
      * @throws java.util.NoSuchElementException if there are no more elements
      */
-    public Object next() {
+    @Override
+	public Object next() {
         return transform(iterator.next());
     }
 
-    public void remove() {
+    @Override
+	public void remove() {
         iterator.remove();
     }
 

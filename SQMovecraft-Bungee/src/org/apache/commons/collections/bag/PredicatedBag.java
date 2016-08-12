@@ -89,20 +89,24 @@ public class PredicatedBag
     }
     
     //-----------------------------------------------------------------------
-    public boolean add(Object object, int count) {
+    @Override
+	public boolean add(Object object, int count) {
         validate(object);
         return getBag().add(object, count);
     }
 
-    public boolean remove(Object object, int count) {
+    @Override
+	public boolean remove(Object object, int count) {
         return getBag().remove(object, count);
     }
 
-    public Set uniqueSet() {
+    @Override
+	public Set uniqueSet() {
         return getBag().uniqueSet();
     }
 
-    public int getCount(Object object) {
+    @Override
+	public int getCount(Object object) {
         return getBag().getCount(object);
     }
 

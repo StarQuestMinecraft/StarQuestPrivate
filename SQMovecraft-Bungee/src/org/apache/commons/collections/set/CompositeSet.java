@@ -69,7 +69,8 @@ public class CompositeSet extends CompositeCollection implements Set {
      * @see org.apache.commons.collections.collection.CompositeCollection.CollectionMutator
      * @see SetMutator
      */
-    public synchronized void addComposited(Collection c) {
+    @Override
+	public synchronized void addComposited(Collection c) {
         if (!(c instanceof Set)) {
             throw new IllegalArgumentException("Collections added must implement java.util.Set");
         }
@@ -101,7 +102,8 @@ public class CompositeSet extends CompositeCollection implements Set {
      *
      * @throws IllegalArgumentException if c or d does not implement java.util.Set
      */
-    public synchronized void addComposited(Collection c, Collection d) {
+    @Override
+	public synchronized void addComposited(Collection c, Collection d) {
         if (!(c instanceof Set)) throw new IllegalArgumentException("Argument must implement java.util.Set");
         if (!(d instanceof Set)) throw new IllegalArgumentException("Argument must implement java.util.Set");
         this.addComposited(new Set[]{(Set) c, (Set) d});
@@ -112,7 +114,8 @@ public class CompositeSet extends CompositeCollection implements Set {
      * @param comps
      * @throws IllegalArgumentException if any of the collections in comps do not implement Set
      */
-    public synchronized void addComposited(Collection[] comps) {
+    @Override
+	public synchronized void addComposited(Collection[] comps) {
         for (int i = comps.length - 1; i >= 0; --i) {
             this.addComposited(comps[i]);
         }
@@ -125,7 +128,8 @@ public class CompositeSet extends CompositeCollection implements Set {
      * composited sets will throw IllegalArgumentException
      * <p>
      */
-    public void setMutator(CollectionMutator mutator) {
+    @Override
+	public void setMutator(CollectionMutator mutator) {
         super.setMutator(mutator);
     }
     
@@ -138,7 +142,8 @@ public class CompositeSet extends CompositeCollection implements Set {
      * @param obj Object to be removed
      * @return true if the object is removed, false otherwise
      */
-    public boolean remove(Object obj) {
+    @Override
+	public boolean remove(Object obj) {
         for (Iterator i = this.getCollections().iterator(); i.hasNext();) {
             Set set = (Set) i.next();
             if (set.contains(obj)) return set.remove(obj);
@@ -150,7 +155,8 @@ public class CompositeSet extends CompositeCollection implements Set {
     /**
      * @see Set#equals
      */
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
         if (obj instanceof Set) {
             Set set = (Set) obj;
             if (set.containsAll(this) && set.size() == this.size()) {
@@ -163,7 +169,8 @@ public class CompositeSet extends CompositeCollection implements Set {
     /**
      * @see Set#hashCode
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         int code = 0;
         for (Iterator i = this.iterator(); i.hasNext();) {
             Object next = i.next();

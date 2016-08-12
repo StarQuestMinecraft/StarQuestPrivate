@@ -153,7 +153,8 @@ public class FastArrayList extends ArrayList {
      *
      * @param element The element to be appended
      */
-    public boolean add(Object element) {
+    @Override
+	public boolean add(Object element) {
 
         if (fast) {
             synchronized (this) {
@@ -180,7 +181,8 @@ public class FastArrayList extends ArrayList {
      *
      * @exception IndexOutOfBoundsException if the index is out of range
      */
-    public void add(int index, Object element) {
+    @Override
+	public void add(int index, Object element) {
 
         if (fast) {
             synchronized (this) {
@@ -204,7 +206,8 @@ public class FastArrayList extends ArrayList {
      *
      * @param collection The collection to be appended
      */
-    public boolean addAll(Collection collection) {
+    @Override
+	public boolean addAll(Collection collection) {
 
         if (fast) {
             synchronized (this) {
@@ -232,7 +235,8 @@ public class FastArrayList extends ArrayList {
      *
      * @exception IndexOutOfBoundsException if the index is out of range
      */
-    public boolean addAll(int index, Collection collection) {
+    @Override
+	public boolean addAll(int index, Collection collection) {
 
         if (fast) {
             synchronized (this) {
@@ -257,7 +261,8 @@ public class FastArrayList extends ArrayList {
      * @exception UnsupportedOperationException if <code>clear()</code>
      *  is not supported by this list
      */
-    public void clear() {
+    @Override
+	public void clear() {
 
         if (fast) {
             synchronized (this) {
@@ -278,7 +283,8 @@ public class FastArrayList extends ArrayList {
      * Return a shallow copy of this <code>FastArrayList</code> instance.
      * The elements themselves are not copied.
      */
-    public Object clone() {
+    @Override
+	public Object clone() {
 
         FastArrayList results = null;
         if (fast) {
@@ -299,7 +305,8 @@ public class FastArrayList extends ArrayList {
      *
      * @param element The element to test for
      */
-    public boolean contains(Object element) {
+    @Override
+	public boolean contains(Object element) {
 
         if (fast) {
             return (list.contains(element));
@@ -318,7 +325,8 @@ public class FastArrayList extends ArrayList {
      *
      * @param collection Collection whose elements are to be checked
      */
-    public boolean containsAll(Collection collection) {
+    @Override
+	public boolean containsAll(Collection collection) {
 
         if (fast) {
             return (list.containsAll(collection));
@@ -338,7 +346,8 @@ public class FastArrayList extends ArrayList {
      *
      * @param capacity The new minimum capacity
      */
-    public void ensureCapacity(int capacity) {
+    @Override
+	public void ensureCapacity(int capacity) {
 
         if (fast) {
             synchronized (this) {
@@ -363,7 +372,8 @@ public class FastArrayList extends ArrayList {
      *
      * @param o Object to be compared to this list
      */
-    public boolean equals(Object o) {
+    @Override
+	public boolean equals(Object o) {
 
         // Simple tests that require no synchronization
         if (o == this)
@@ -407,7 +417,8 @@ public class FastArrayList extends ArrayList {
      *
      * @exception IndexOutOfBoundsException if the index is out of range
      */
-    public Object get(int index) {
+    @Override
+	public Object get(int index) {
 
         if (fast) {
             return (list.get(index));
@@ -425,7 +436,8 @@ public class FastArrayList extends ArrayList {
      * exactly the code that is used to define the list hash function in the
      * documentation for the <code>List.hashCode</code> method.
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
 
         if (fast) {
             int hashCode = 1;
@@ -457,7 +469,8 @@ public class FastArrayList extends ArrayList {
      *
      * @param element The element to search for
      */
-    public int indexOf(Object element) {
+    @Override
+	public int indexOf(Object element) {
 
         if (fast) {
             return (list.indexOf(element));
@@ -473,7 +486,8 @@ public class FastArrayList extends ArrayList {
     /**
      * Test if this list has no elements.
      */
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
 
         if (fast) {
             return (list.isEmpty());
@@ -503,7 +517,8 @@ public class FastArrayList extends ArrayList {
      * 
      * @return the iterator
      */
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         if (fast) {
             return new ListIter(0);
         } else {
@@ -519,7 +534,8 @@ public class FastArrayList extends ArrayList {
      *
      * @param element The element to search for
      */
-    public int lastIndexOf(Object element) {
+    @Override
+	public int lastIndexOf(Object element) {
 
         if (fast) {
             return (list.lastIndexOf(element));
@@ -549,7 +565,8 @@ public class FastArrayList extends ArrayList {
      * 
      * @return the list iterator
      */
-    public ListIterator listIterator() {
+    @Override
+	public ListIterator listIterator() {
         if (fast) {
             return new ListIter(0);
         } else {
@@ -578,7 +595,8 @@ public class FastArrayList extends ArrayList {
      * @return the list iterator
      * @exception IndexOutOfBoundsException if the index is out of range
      */
-    public ListIterator listIterator(int index) {
+    @Override
+	public ListIterator listIterator(int index) {
         if (fast) {
             return new ListIter(index);
         } else {
@@ -595,7 +613,8 @@ public class FastArrayList extends ArrayList {
      *
      * @exception IndexOutOfBoundsException if the index is out of range
      */
-    public Object remove(int index) {
+    @Override
+	public Object remove(int index) {
 
         if (fast) {
             synchronized (this) {
@@ -619,7 +638,8 @@ public class FastArrayList extends ArrayList {
      *
      * @param element Element to be removed
      */
-    public boolean remove(Object element) {
+    @Override
+	public boolean remove(Object element) {
 
         if (fast) {
             synchronized (this) {
@@ -646,7 +666,8 @@ public class FastArrayList extends ArrayList {
      * @exception UnsupportedOperationException if this optional operation
      *  is not supported by this list
      */
-    public boolean removeAll(Collection collection) {
+    @Override
+	public boolean removeAll(Collection collection) {
 
         if (fast) {
             synchronized (this) {
@@ -673,7 +694,8 @@ public class FastArrayList extends ArrayList {
      * @exception UnsupportedOperationException if this optional operation
      *  is not supported by this list
      */
-    public boolean retainAll(Collection collection) {
+    @Override
+	public boolean retainAll(Collection collection) {
 
         if (fast) {
             synchronized (this) {
@@ -704,7 +726,8 @@ public class FastArrayList extends ArrayList {
      *
      * @exception IndexOutOfBoundsException if the index is out of range
      */
-    public Object set(int index, Object element) {
+    @Override
+	public Object set(int index, Object element) {
 
         if (fast) {
             return (list.set(index, element));
@@ -720,7 +743,8 @@ public class FastArrayList extends ArrayList {
     /**
      * Return the number of elements in this list.
      */
-    public int size() {
+    @Override
+	public int size() {
 
         if (fast) {
             return (list.size());
@@ -745,7 +769,8 @@ public class FastArrayList extends ArrayList {
      *
      * @exception IndexOutOfBoundsException if an index is out of range
      */
-    public List subList(int fromIndex, int toIndex) {
+    @Override
+	public List subList(int fromIndex, int toIndex) {
         if (fast) {
             return new SubList(fromIndex, toIndex);
         } else {
@@ -758,7 +783,8 @@ public class FastArrayList extends ArrayList {
      * Return an array containing all of the elements in this list in the
      * correct order.
      */
-    public Object[] toArray() {
+    @Override
+	public Object[] toArray() {
 
         if (fast) {
             return (list.toArray());
@@ -783,7 +809,8 @@ public class FastArrayList extends ArrayList {
      * @exception ArrayStoreException if the runtime type of <code>array</code>
      *  is not a supertype of the runtime type of every element in this list
      */
-    public Object[] toArray(Object array[]) {
+    @Override
+	public Object[] toArray(Object array[]) {
 
         if (fast) {
             return (list.toArray(array));
@@ -799,7 +826,8 @@ public class FastArrayList extends ArrayList {
     /**
      * Return a String representation of this object.
      */
-    public String toString() {
+    @Override
+	public String toString() {
 
         StringBuffer sb = new StringBuffer("FastArrayList[");
         sb.append(list.toString());
@@ -814,7 +842,8 @@ public class FastArrayList extends ArrayList {
      * list's current size.  An application can use this operation to minimize
      * the storage of an <code>ArrayList</code> instance.
      */
-    public void trimToSize() {
+    @Override
+	public void trimToSize() {
 
         if (fast) {
             synchronized (this) {
@@ -852,7 +881,8 @@ public class FastArrayList extends ArrayList {
             return l.subList(first, last);
         }
 
-        public void clear() {
+        @Override
+		public void clear() {
             if (fast) {
                 synchronized (FastArrayList.this) {
                     ArrayList temp = (ArrayList) list.clone();
@@ -868,7 +898,8 @@ public class FastArrayList extends ArrayList {
             }
         }
 
-        public boolean remove(Object o) {
+        @Override
+		public boolean remove(Object o) {
             if (fast) {
                 synchronized (FastArrayList.this) {
                     ArrayList temp = (ArrayList) list.clone();
@@ -885,7 +916,8 @@ public class FastArrayList extends ArrayList {
             }
         }
 
-        public boolean removeAll(Collection o) {
+        @Override
+		public boolean removeAll(Collection o) {
             if (fast) {
                 synchronized (FastArrayList.this) {
                     ArrayList temp = (ArrayList) list.clone();
@@ -903,7 +935,8 @@ public class FastArrayList extends ArrayList {
             }
         }
 
-        public boolean retainAll(Collection o) {
+        @Override
+		public boolean retainAll(Collection o) {
             if (fast) {
                 synchronized (FastArrayList.this) {
                     ArrayList temp = (ArrayList) list.clone();
@@ -921,7 +954,8 @@ public class FastArrayList extends ArrayList {
             }
         }
 
-        public int size() {
+        @Override
+		public int size() {
             if (fast) {
                 return get(expected).size();
             } else {
@@ -932,7 +966,8 @@ public class FastArrayList extends ArrayList {
         }
 
 
-        public boolean isEmpty() {
+        @Override
+		public boolean isEmpty() {
             if (fast) {
                 return get(expected).isEmpty();
             } else {
@@ -942,7 +977,8 @@ public class FastArrayList extends ArrayList {
             }
         }
 
-        public boolean contains(Object o) {
+        @Override
+		public boolean contains(Object o) {
             if (fast) {
                 return get(expected).contains(o);
             } else {
@@ -952,7 +988,8 @@ public class FastArrayList extends ArrayList {
             }
         }
 
-        public boolean containsAll(Collection o) {
+        @Override
+		public boolean containsAll(Collection o) {
             if (fast) {
                 return get(expected).containsAll(o);
             } else {
@@ -962,7 +999,8 @@ public class FastArrayList extends ArrayList {
             }
         }
 
-        public Object[] toArray(Object[] o) {
+        @Override
+		public Object[] toArray(Object[] o) {
             if (fast) {
                 return get(expected).toArray(o);
             } else {
@@ -972,7 +1010,8 @@ public class FastArrayList extends ArrayList {
             }
         }
 
-        public Object[] toArray() {
+        @Override
+		public Object[] toArray() {
             if (fast) {
                 return get(expected).toArray();
             } else {
@@ -983,7 +1022,8 @@ public class FastArrayList extends ArrayList {
         }
 
 
-        public boolean equals(Object o) {
+        @Override
+		public boolean equals(Object o) {
             if (o == this) return true;
             if (fast) {
                 return get(expected).equals(o);
@@ -994,7 +1034,8 @@ public class FastArrayList extends ArrayList {
             }
         }
 
-        public int hashCode() {
+        @Override
+		public int hashCode() {
             if (fast) {
                 return get(expected).hashCode();
             } else {
@@ -1004,7 +1045,8 @@ public class FastArrayList extends ArrayList {
             }
         }
 
-        public boolean add(Object o) {
+        @Override
+		public boolean add(Object o) {
             if (fast) {
                 synchronized (FastArrayList.this) {
                     ArrayList temp = (ArrayList) list.clone();
@@ -1021,7 +1063,8 @@ public class FastArrayList extends ArrayList {
             }
         }
 
-        public boolean addAll(Collection o) {
+        @Override
+		public boolean addAll(Collection o) {
             if (fast) {
                 synchronized (FastArrayList.this) {
                     ArrayList temp = (ArrayList) list.clone();
@@ -1038,7 +1081,8 @@ public class FastArrayList extends ArrayList {
             }
         }
 
-        public void add(int i, Object o) {
+        @Override
+		public void add(int i, Object o) {
             if (fast) {
                 synchronized (FastArrayList.this) {
                     ArrayList temp = (ArrayList) list.clone();
@@ -1054,7 +1098,8 @@ public class FastArrayList extends ArrayList {
             }
         }
 
-        public boolean addAll(int i, Collection o) {
+        @Override
+		public boolean addAll(int i, Collection o) {
             if (fast) {
                 synchronized (FastArrayList.this) {
                     ArrayList temp = (ArrayList) list.clone();
@@ -1071,7 +1116,8 @@ public class FastArrayList extends ArrayList {
             }
         }
 
-        public Object remove(int i) {
+        @Override
+		public Object remove(int i) {
             if (fast) {
                 synchronized (FastArrayList.this) {
                     ArrayList temp = (ArrayList) list.clone();
@@ -1088,7 +1134,8 @@ public class FastArrayList extends ArrayList {
             }
         }
 
-        public Object set(int i, Object a) {
+        @Override
+		public Object set(int i, Object a) {
             if (fast) {
                 synchronized (FastArrayList.this) {
                     ArrayList temp = (ArrayList) list.clone();
@@ -1105,20 +1152,24 @@ public class FastArrayList extends ArrayList {
         }
 
 
-        public Iterator iterator() {
+        @Override
+		public Iterator iterator() {
             return new SubListIter(0);
         }
 
-        public ListIterator listIterator() {
+        @Override
+		public ListIterator listIterator() {
             return new SubListIter(0);
         }
 
-        public ListIterator listIterator(int i) {
+        @Override
+		public ListIterator listIterator(int i) {
             return new SubListIter(i);
         }
 
 
-        public Object get(int i) {
+        @Override
+		public Object get(int i) {
             if (fast) {
                 return get(expected).get(i);
             } else {
@@ -1128,7 +1179,8 @@ public class FastArrayList extends ArrayList {
             }
         }
 
-        public int indexOf(Object o) {
+        @Override
+		public int indexOf(Object o) {
             if (fast) {
                 return get(expected).indexOf(o);
             } else {
@@ -1139,7 +1191,8 @@ public class FastArrayList extends ArrayList {
         }
 
 
-        public int lastIndexOf(Object o) {
+        @Override
+		public int lastIndexOf(Object o) {
             if (fast) {
                 return get(expected).lastIndexOf(o);
             } else {
@@ -1150,7 +1203,8 @@ public class FastArrayList extends ArrayList {
         }
 
 
-        public List subList(int f, int l) {
+        @Override
+		public List subList(int f, int l) {
             if (list != expected) {
                 throw new ConcurrentModificationException();
             }
@@ -1180,39 +1234,46 @@ public class FastArrayList extends ArrayList {
             return SubList.this.get(expected);
         }
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             checkMod();
             return iter.hasNext();     
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             checkMod();
             lastReturnedIndex = iter.nextIndex();
             return iter.next();
         }
 
-        public boolean hasPrevious() {
+        @Override
+		public boolean hasPrevious() {
             checkMod();
             return iter.hasPrevious();
         }
 
-        public Object previous() {
+        @Override
+		public Object previous() {
             checkMod();
             lastReturnedIndex = iter.previousIndex();
             return iter.previous();
         }
 
-        public int previousIndex() {
+        @Override
+		public int previousIndex() {
             checkMod();
             return iter.previousIndex();
         }
 
-        public int nextIndex() {
+        @Override
+		public int nextIndex() {
             checkMod();
             return iter.nextIndex();
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             checkMod();
             if (lastReturnedIndex < 0) {
                 throw new IllegalStateException();
@@ -1224,7 +1285,8 @@ public class FastArrayList extends ArrayList {
             lastReturnedIndex = -1;
         }
 
-        public void set(Object o) {
+        @Override
+		public void set(Object o) {
             checkMod();
             if (lastReturnedIndex < 0) {
                 throw new IllegalStateException();
@@ -1234,7 +1296,8 @@ public class FastArrayList extends ArrayList {
             iter = get().listIterator(previousIndex() + 1);
         } 
 
-        public void add(Object o) {
+        @Override
+		public void add(Object o) {
             checkMod();
             int i = nextIndex();
             get().add(i, o);
@@ -1273,33 +1336,40 @@ public class FastArrayList extends ArrayList {
             return expected;
         }
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             return iter.hasNext();     
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             lastReturnedIndex = iter.nextIndex();
             return iter.next();
         }
 
-        public boolean hasPrevious() {
+        @Override
+		public boolean hasPrevious() {
             return iter.hasPrevious();
         }
 
-        public Object previous() {
+        @Override
+		public Object previous() {
             lastReturnedIndex = iter.previousIndex();
             return iter.previous();
         }
 
-        public int previousIndex() {
+        @Override
+		public int previousIndex() {
             return iter.previousIndex();
         }
 
-        public int nextIndex() {
+        @Override
+		public int nextIndex() {
             return iter.nextIndex();
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             checkMod();
             if (lastReturnedIndex < 0) {
                 throw new IllegalStateException();
@@ -1310,7 +1380,8 @@ public class FastArrayList extends ArrayList {
             lastReturnedIndex = -1;
         }
 
-        public void set(Object o) {
+        @Override
+		public void set(Object o) {
             checkMod();
             if (lastReturnedIndex < 0) {
                 throw new IllegalStateException();
@@ -1320,7 +1391,8 @@ public class FastArrayList extends ArrayList {
             iter = get().listIterator(previousIndex() + 1);
         } 
 
-        public void add(Object o) {
+        @Override
+		public void add(Object o) {
             checkMod();
             int i = nextIndex();
             get().add(i, o);

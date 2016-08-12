@@ -170,7 +170,8 @@ public class LRUMap
      * @param key  the key
      * @return the mapped value, null if no match
      */
-    public Object get(Object key) {
+    @Override
+	public Object get(Object key) {
         LinkEntry entry = (LinkEntry) getEntry(key);
         if (entry == null) {
             return null;
@@ -213,7 +214,8 @@ public class LRUMap
      * @param entry  the entry to update
      * @param newValue  the new value to store
      */
-    protected void updateEntry(HashEntry entry, Object newValue) {
+    @Override
+	protected void updateEntry(HashEntry entry, Object newValue) {
         moveToMRU((LinkEntry) entry);  // handles modCount
         entry.setValue(newValue);
     }
@@ -233,7 +235,8 @@ public class LRUMap
      * @param key  the key to add
      * @param value  the value to add
      */
-    protected void addMapping(int hashIndex, int hashCode, Object key, Object value) {
+    @Override
+	protected void addMapping(int hashIndex, int hashCode, Object key, Object value) {
         if (isFull()) {
             LinkEntry reuse = header.after;
             boolean removeLRUEntry = false;
@@ -362,7 +365,8 @@ public class LRUMap
      *
      * @return <code>true</code> if the map is full
      */
-    public boolean isFull() {
+    @Override
+	public boolean isFull() {
         return (size >= maxSize);
     }
 
@@ -371,7 +375,8 @@ public class LRUMap
      *
      * @return the maximum number of elements the map can hold
      */
-    public int maxSize() {
+    @Override
+	public int maxSize() {
         return maxSize;
     }
 
@@ -392,7 +397,8 @@ public class LRUMap
      *
      * @return a shallow clone
      */
-    public Object clone() {
+    @Override
+	public Object clone() {
         return super.clone();
     }
     
@@ -415,7 +421,8 @@ public class LRUMap
     /**
      * Writes the data necessary for <code>put()</code> to work in deserialization.
      */
-    protected void doWriteObject(ObjectOutputStream out) throws IOException {
+    @Override
+	protected void doWriteObject(ObjectOutputStream out) throws IOException {
         out.writeInt(maxSize);
         super.doWriteObject(out);
     }
@@ -423,7 +430,8 @@ public class LRUMap
     /**
      * Reads the data necessary for <code>put()</code> to work in the superclass.
      */
-    protected void doReadObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    @Override
+	protected void doReadObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         maxSize = in.readInt();
         super.doReadObject(in);
     }

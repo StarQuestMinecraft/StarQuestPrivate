@@ -82,6 +82,7 @@ import org.apache.commons.collections.keyvalue.DefaultMapEntry;
  * 
  * @author Paul Jack
  */
+@Deprecated
 public class ReferenceMap extends AbstractMap {
 
     /**
@@ -478,7 +479,8 @@ public class ReferenceMap extends AbstractMap {
      *
      *  @return  the size of this map
      */
-    public int size() {
+    @Override
+	public int size() {
         purge();
         return size;
     }
@@ -489,7 +491,8 @@ public class ReferenceMap extends AbstractMap {
      *
      *  @return <code>true</code> if this map is empty
      */
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         purge();
         return size == 0;
     }
@@ -500,7 +503,8 @@ public class ReferenceMap extends AbstractMap {
      *
      *  @return true if the given key is in this map
      */
-    public boolean containsKey(Object key) {
+    @Override
+	public boolean containsKey(Object key) {
         purge();
         Entry entry = getEntry(key);
         if (entry == null) return false;
@@ -514,7 +518,8 @@ public class ReferenceMap extends AbstractMap {
      *  @return the value associated with the given key, or <code>null</code>
      *   if the key maps to no value
      */
-    public Object get(Object key) {
+    @Override
+	public Object get(Object key) {
         purge();
         Entry entry = getEntry(key);
         if (entry == null) return null;
@@ -533,7 +538,8 @@ public class ReferenceMap extends AbstractMap {
      *  @throws NullPointerException if either the key or value
      *   is null
      */
-    public Object put(Object key, Object value) {
+    @Override
+	public Object put(Object key, Object value) {
         if (key == null) throw new NullPointerException("null keys not allowed");
         if (value == null) throw new NullPointerException("null values not allowed");
 
@@ -567,7 +573,8 @@ public class ReferenceMap extends AbstractMap {
      *  @return the value associated with that key, or null if
      *   the key was not in the map
      */
-    public Object remove(Object key) {
+    @Override
+	public Object remove(Object key) {
         if (key == null) return null;
         purge();
         int hash = key.hashCode();
@@ -592,7 +599,8 @@ public class ReferenceMap extends AbstractMap {
     /**
      *  Clears this map.
      */
-    public void clear() {
+    @Override
+	public void clear() {
         Arrays.fill(table, null);
         size = 0;
         while (queue.poll() != null); // drain the queue
@@ -604,20 +612,24 @@ public class ReferenceMap extends AbstractMap {
      *
      *  @return a set view of this map's entries
      */
-    public Set entrySet() {
+    @Override
+	public Set entrySet() {
         if (entrySet != null) {
             return entrySet;
         } 
         entrySet = new AbstractSet() {
-            public int size() {
+            @Override
+			public int size() {
                 return ReferenceMap.this.size();
             }
 
-            public void clear() {
+            @Override
+			public void clear() {
                 ReferenceMap.this.clear();
             }
 
-            public boolean contains(Object o) {
+            @Override
+			public boolean contains(Object o) {
                 if (o == null) return false;
                 if (!(o instanceof Map.Entry)) return false;
                 Map.Entry e = (Map.Entry)o;
@@ -625,7 +637,8 @@ public class ReferenceMap extends AbstractMap {
                 return (e2 != null) && e.equals(e2);
             }
 
-            public boolean remove(Object o) {
+            @Override
+			public boolean remove(Object o) {
                 boolean r = contains(o);
                 if (r) {
                     Map.Entry e = (Map.Entry)o;
@@ -634,15 +647,18 @@ public class ReferenceMap extends AbstractMap {
                 return r;
             }
 
-            public Iterator iterator() {
+            @Override
+			public Iterator iterator() {
                 return new EntryIterator();
             }
 
-            public Object[] toArray() {
+            @Override
+			public Object[] toArray() {
                 return toArray(new Object[0]);
             }
 
-            public Object[] toArray(Object[] arr) {
+            @Override
+			public Object[] toArray(Object[] arr) {
                 ArrayList list = new ArrayList();
                 Iterator iterator = iterator();
                 while (iterator.hasNext()) {
@@ -661,36 +677,44 @@ public class ReferenceMap extends AbstractMap {
      *
      *  @return a set view of this map's keys
      */
-    public Set keySet() {
+    @Override
+	public Set keySet() {
         if (keySet != null) return keySet;
         keySet = new AbstractSet() {
-            public int size() {
+            @Override
+			public int size() {
                 return ReferenceMap.this.size();
             }
 
-            public Iterator iterator() {
+            @Override
+			public Iterator iterator() {
                 return new KeyIterator();
             }
 
-            public boolean contains(Object o) {
+            @Override
+			public boolean contains(Object o) {
                 return containsKey(o);
             }
 
 
-            public boolean remove(Object o) {
+            @Override
+			public boolean remove(Object o) {
                 Object r = ReferenceMap.this.remove(o);
                 return r != null;
             }
 
-            public void clear() {
+            @Override
+			public void clear() {
                 ReferenceMap.this.clear();
             }
 
-            public Object[] toArray() {
+            @Override
+			public Object[] toArray() {
                 return toArray(new Object[0]);
             }
 
-            public Object[] toArray(Object[] array) {
+            @Override
+			public Object[] toArray(Object[] array) {
                 Collection c = new ArrayList(size());
                 for (Iterator it = iterator(); it.hasNext(); ) {
                     c.add(it.next());
@@ -707,26 +731,32 @@ public class ReferenceMap extends AbstractMap {
      *
      *  @return a collection view of this map's values.
      */
-    public Collection values() {
+    @Override
+	public Collection values() {
         if (values != null) return values;
         values = new AbstractCollection()  {
-            public int size() {
+            @Override
+			public int size() {
                 return ReferenceMap.this.size();
             }
 
-            public void clear() {
+            @Override
+			public void clear() {
                 ReferenceMap.this.clear();
             }
 
-            public Iterator iterator() {
+            @Override
+			public Iterator iterator() {
                 return new ValueIterator();
             }
 
-            public Object[] toArray() {
+            @Override
+			public Object[] toArray() {
                 return toArray(new Object[0]);
             }
 
-            public Object[] toArray(Object[] array) {
+            @Override
+			public Object[] toArray(Object[] array) {
                 Collection c = new ArrayList(size());
                 for (Iterator it = iterator(); it.hasNext(); ) {
                     c.add(it.next());
@@ -756,17 +786,20 @@ public class ReferenceMap extends AbstractMap {
         }
 
 
-        public Object getKey() {
+        @Override
+		public Object getKey() {
             return (keyType > HARD) ? ((Reference)key).get() : key;
         }
 
 
-        public Object getValue() {
+        @Override
+		public Object getValue() {
             return (valueType > HARD) ? ((Reference)value).get() : value;
         }
 
 
-        public Object setValue(Object object) {
+        @Override
+		public Object setValue(Object object) {
             Object old = getValue();
             if (valueType > HARD) ((Reference)value).clear();
             value = toReference(valueType, object, hash);
@@ -774,7 +807,8 @@ public class ReferenceMap extends AbstractMap {
         }
 
 
-        public boolean equals(Object o) {
+        @Override
+		public boolean equals(Object o) {
             if (o == null) return false;
             if (o == this) return true;
             if (!(o instanceof Map.Entry)) return false;
@@ -787,13 +821,15 @@ public class ReferenceMap extends AbstractMap {
         }
 
 
-        public int hashCode() {
+        @Override
+		public int hashCode() {
             Object v = getValue();
             return hash ^ ((v == null) ? 0 : v.hashCode());
         }
 
 
-        public String toString() {
+        @Override
+		public String toString() {
             return getKey() + "=" + getValue();
         }
 
@@ -837,7 +873,8 @@ public class ReferenceMap extends AbstractMap {
         }
 
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             checkMod();
             while (nextNull()) {
                 Entry e = entry;
@@ -885,12 +922,14 @@ public class ReferenceMap extends AbstractMap {
         }
 
 
-        public Object next() {
+        @Override
+		public Object next() {
             return nextEntry();
         }
 
 
-        public void remove() {
+        @Override
+		public void remove() {
             checkMod();
             if (previous == null) throw new IllegalStateException();
             ReferenceMap.this.remove(currentKey);
@@ -904,14 +943,16 @@ public class ReferenceMap extends AbstractMap {
 
 
     private class ValueIterator extends EntryIterator {
-        public Object next() {
+        @Override
+		public Object next() {
             return nextEntry().getValue();
         }
     }
 
 
     private class KeyIterator extends EntryIterator {
-        public Object next() {
+        @Override
+		public Object next() {
             return nextEntry().getKey();
         }
     }
@@ -933,7 +974,8 @@ public class ReferenceMap extends AbstractMap {
         }
 
 
-        public int hashCode() {
+        @Override
+		public int hashCode() {
             return hash;
         }
     }
@@ -949,7 +991,8 @@ public class ReferenceMap extends AbstractMap {
         }
 
 
-        public int hashCode() {
+        @Override
+		public int hashCode() {
             return hash;
         }
     }

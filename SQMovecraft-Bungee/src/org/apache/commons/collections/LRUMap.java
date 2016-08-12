@@ -50,6 +50,7 @@ import java.util.Iterator;
  * @author <a href="mailto:jstrachan@apache.org">James Strachan</a>
  * @author <a href="mailto:morgand@apache.org">Morgan Delagrange</a>
  */
+@Deprecated
 public class LRUMap extends SequencedHashMap implements Externalizable {
         
     private int maximumSize = 0;
@@ -88,7 +89,8 @@ public class LRUMap extends SequencedHashMap implements Externalizable {
      * @return Returns the value.  Returns null if the key has a
      *         null value <i>or</i> if the key has no value.
      */
-    public Object get(Object key) {
+    @Override
+	public Object get(Object key) {
         if(!containsKey(key)) return null;
 
         Object value = remove(key);
@@ -108,7 +110,8 @@ public class LRUMap extends SequencedHashMap implements Externalizable {
       * @param value  Object to add
       * @return Former value of the key
       */    
-    public Object put( Object key, Object value ) {
+    @Override
+	public Object put( Object key, Object value ) {
 
         int mapSize = size();
         Object retval = null;
@@ -157,7 +160,8 @@ public class LRUMap extends SequencedHashMap implements Externalizable {
  
     // Externalizable interface
     //-------------------------------------------------------------------------        
-    public void readExternal( ObjectInput in )  throws IOException, ClassNotFoundException {
+    @Override
+	public void readExternal( ObjectInput in )  throws IOException, ClassNotFoundException {
         maximumSize = in.readInt();
         int size = in.readInt();
         
@@ -168,7 +172,8 @@ public class LRUMap extends SequencedHashMap implements Externalizable {
         }
     }
 
-    public void writeExternal( ObjectOutput out ) throws IOException {
+    @Override
+	public void writeExternal( ObjectOutput out ) throws IOException {
         out.writeInt( maximumSize );
         out.writeInt( size() );
         for( Iterator iterator = keySet().iterator(); iterator.hasNext(); ) {

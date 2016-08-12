@@ -80,30 +80,36 @@ public class TransformedSortedSet extends TransformedSet implements SortedSet {
     }
 
     //-----------------------------------------------------------------------
-    public Object first() {
+    @Override
+	public Object first() {
         return getSortedSet().first();
     }
 
-    public Object last() {
+    @Override
+	public Object last() {
         return getSortedSet().last();
     }
 
-    public Comparator comparator() {
+    @Override
+	public Comparator comparator() {
         return getSortedSet().comparator();
     }
 
     //-----------------------------------------------------------------------
-    public SortedSet subSet(Object fromElement, Object toElement) {
+    @Override
+	public SortedSet subSet(Object fromElement, Object toElement) {
         SortedSet set = getSortedSet().subSet(fromElement, toElement);
         return new TransformedSortedSet(set, transformer);
     }
 
-    public SortedSet headSet(Object toElement) {
+    @Override
+	public SortedSet headSet(Object toElement) {
         SortedSet set = getSortedSet().headSet(toElement);
         return new TransformedSortedSet(set, transformer);
     }
 
-    public SortedSet tailSet(Object fromElement) {
+    @Override
+	public SortedSet tailSet(Object fromElement) {
         SortedSet set = getSortedSet().tailSet(fromElement);
         return new TransformedSortedSet(set, transformer);
     }

@@ -104,6 +104,7 @@ import java.util.Set;
  * 
  * @author Marc Johnson
  */
+@Deprecated
 public final class DoubleOrderedMap extends AbstractMap {
 //  final for performance
 
@@ -204,17 +205,20 @@ public final class DoubleOrderedMap extends AbstractMap {
         if (setOfEntries[VALUE] == null) {
             setOfEntries[VALUE] = new AbstractSet() {
 
-                public Iterator iterator() {
+                @Override
+				public Iterator iterator() {
 
                     return new DoubleOrderedMapIterator(VALUE) {
 
-                        protected Object doGetNext() {
+                        @Override
+						protected Object doGetNext() {
                             return lastReturnedNode;
                         }
                     };
                 }
 
-                public boolean contains(Object o) {
+                @Override
+				public boolean contains(Object o) {
 
                     if (!(o instanceof Map.Entry)) {
                         return false;
@@ -228,7 +232,8 @@ public final class DoubleOrderedMap extends AbstractMap {
                     return (node != null) && node.getData(KEY).equals(key);
                 }
 
-                public boolean remove(Object o) {
+                @Override
+				public boolean remove(Object o) {
 
                     if (!(o instanceof Map.Entry)) {
                         return false;
@@ -248,11 +253,13 @@ public final class DoubleOrderedMap extends AbstractMap {
                     return false;
                 }
 
-                public int size() {
+                @Override
+				public int size() {
                     return DoubleOrderedMap.this.size();
                 }
 
-                public void clear() {
+                @Override
+				public void clear() {
                     DoubleOrderedMap.this.clear();
                 }
             };
@@ -284,25 +291,30 @@ public final class DoubleOrderedMap extends AbstractMap {
         if (setOfKeys[VALUE] == null) {
             setOfKeys[VALUE] = new AbstractSet() {
 
-                public Iterator iterator() {
+                @Override
+				public Iterator iterator() {
 
                     return new DoubleOrderedMapIterator(VALUE) {
 
-                        protected Object doGetNext() {
+                        @Override
+						protected Object doGetNext() {
                             return lastReturnedNode.getData(KEY);
                         }
                     };
                 }
 
-                public int size() {
+                @Override
+				public int size() {
                     return DoubleOrderedMap.this.size();
                 }
 
-                public boolean contains(Object o) {
+                @Override
+				public boolean contains(Object o) {
                     return containsKey(o);
                 }
 
-                public boolean remove(Object o) {
+                @Override
+				public boolean remove(Object o) {
 
                     int oldnodeCount = nodeCount;
 
@@ -311,7 +323,8 @@ public final class DoubleOrderedMap extends AbstractMap {
                     return nodeCount != oldnodeCount;
                 }
 
-                public void clear() {
+                @Override
+				public void clear() {
                     DoubleOrderedMap.this.clear();
                 }
             };
@@ -343,25 +356,30 @@ public final class DoubleOrderedMap extends AbstractMap {
         if (collectionOfValues[VALUE] == null) {
             collectionOfValues[VALUE] = new AbstractCollection() {
 
-                public Iterator iterator() {
+                @Override
+				public Iterator iterator() {
 
                     return new DoubleOrderedMapIterator(VALUE) {
 
-                        protected Object doGetNext() {
+                        @Override
+						protected Object doGetNext() {
                             return lastReturnedNode.getData(VALUE);
                         }
                     };
                 }
 
-                public int size() {
+                @Override
+				public int size() {
                     return DoubleOrderedMap.this.size();
                 }
 
-                public boolean contains(Object o) {
+                @Override
+				public boolean contains(Object o) {
                     return containsValue(o);
                 }
 
-                public boolean remove(Object o) {
+                @Override
+				public boolean remove(Object o) {
 
                     int oldnodeCount = nodeCount;
 
@@ -370,7 +388,8 @@ public final class DoubleOrderedMap extends AbstractMap {
                     return nodeCount != oldnodeCount;
                 }
 
-                public boolean removeAll(Collection c) {
+                @Override
+				public boolean removeAll(Collection c) {
 
                     boolean  modified = false;
                     Iterator iter     = c.iterator();
@@ -384,7 +403,8 @@ public final class DoubleOrderedMap extends AbstractMap {
                     return modified;
                 }
 
-                public void clear() {
+                @Override
+				public void clear() {
                     DoubleOrderedMap.this.clear();
                 }
             };
@@ -1282,7 +1302,8 @@ public final class DoubleOrderedMap extends AbstractMap {
      *
      * @return the number of key-value mappings in this map.
      */
-    public int size() {
+    @Override
+	public int size() {
         return nodeCount;
     }
 
@@ -1299,7 +1320,8 @@ public final class DoubleOrderedMap extends AbstractMap {
      *                               type for this map.
      * @throws NullPointerException if the key is null
      */
-    public boolean containsKey(final Object key)
+    @Override
+	public boolean containsKey(final Object key)
             throws ClassCastException, NullPointerException {
 
         checkKey(key);
@@ -1316,7 +1338,8 @@ public final class DoubleOrderedMap extends AbstractMap {
      * @return true if this map maps one or more keys to the specified
      *         value.
      */
-    public boolean containsValue(final Object value) {
+    @Override
+	public boolean containsValue(final Object value) {
 
         checkValue(value);
 
@@ -1336,7 +1359,8 @@ public final class DoubleOrderedMap extends AbstractMap {
      *                               type for this map.
      * @throws NullPointerException if the key is null
      */
-    public Object get(final Object key)
+    @Override
+	public Object get(final Object key)
             throws ClassCastException, NullPointerException {
         return doGet((Comparable) key, KEY);
     }
@@ -1361,7 +1385,8 @@ public final class DoubleOrderedMap extends AbstractMap {
      *                                     value duplicates an
      *                                     existing value
      */
-    public Object put(final Object key, final Object value)
+    @Override
+	public Object put(final Object key, final Object value)
             throws ClassCastException, NullPointerException,
                    IllegalArgumentException {
 
@@ -1429,14 +1454,16 @@ public final class DoubleOrderedMap extends AbstractMap {
      * @return previous value associated with specified key, or null
      *         if there was no mapping for key.
      */
-    public Object remove(final Object key) {
+    @Override
+	public Object remove(final Object key) {
         return doRemove((Comparable) key, KEY);
     }
 
     /**
      * Removes all mappings from this map
      */
-    public void clear() {
+    @Override
+	public void clear() {
 
         modify();
 
@@ -1457,30 +1484,36 @@ public final class DoubleOrderedMap extends AbstractMap {
      *
      * @return a set view of the keys contained in this map.
      */
-    public Set keySet() {
+    @Override
+	public Set keySet() {
 
         if (setOfKeys[KEY] == null) {
             setOfKeys[KEY] = new AbstractSet() {
 
-                public Iterator iterator() {
+                @Override
+				public Iterator iterator() {
 
                     return new DoubleOrderedMapIterator(KEY) {
 
-                        protected Object doGetNext() {
+                        @Override
+						protected Object doGetNext() {
                             return lastReturnedNode.getData(KEY);
                         }
                     };
                 }
 
-                public int size() {
+                @Override
+				public int size() {
                     return DoubleOrderedMap.this.size();
                 }
 
-                public boolean contains(Object o) {
+                @Override
+				public boolean contains(Object o) {
                     return containsKey(o);
                 }
 
-                public boolean remove(Object o) {
+                @Override
+				public boolean remove(Object o) {
 
                     int oldNodeCount = nodeCount;
 
@@ -1489,7 +1522,8 @@ public final class DoubleOrderedMap extends AbstractMap {
                     return nodeCount != oldNodeCount;
                 }
 
-                public void clear() {
+                @Override
+				public void clear() {
                     DoubleOrderedMap.this.clear();
                 }
             };
@@ -1511,30 +1545,36 @@ public final class DoubleOrderedMap extends AbstractMap {
      *
      * @return a collection view of the values contained in this map.
      */
-    public Collection values() {
+    @Override
+	public Collection values() {
 
         if (collectionOfValues[KEY] == null) {
             collectionOfValues[KEY] = new AbstractCollection() {
 
-                public Iterator iterator() {
+                @Override
+				public Iterator iterator() {
 
                     return new DoubleOrderedMapIterator(KEY) {
 
-                        protected Object doGetNext() {
+                        @Override
+						protected Object doGetNext() {
                             return lastReturnedNode.getData(VALUE);
                         }
                     };
                 }
 
-                public int size() {
+                @Override
+				public int size() {
                     return DoubleOrderedMap.this.size();
                 }
 
-                public boolean contains(Object o) {
+                @Override
+				public boolean contains(Object o) {
                     return containsValue(o);
                 }
 
-                public boolean remove(Object o) {
+                @Override
+				public boolean remove(Object o) {
 
                     int oldNodeCount = nodeCount;
 
@@ -1543,7 +1583,8 @@ public final class DoubleOrderedMap extends AbstractMap {
                     return nodeCount != oldNodeCount;
                 }
 
-                public boolean removeAll(Collection c) {
+                @Override
+				public boolean removeAll(Collection c) {
 
                     boolean  modified = false;
                     Iterator iter     = c.iterator();
@@ -1557,7 +1598,8 @@ public final class DoubleOrderedMap extends AbstractMap {
                     return modified;
                 }
 
-                public void clear() {
+                @Override
+				public void clear() {
                     DoubleOrderedMap.this.clear();
                 }
             };
@@ -1582,22 +1624,26 @@ public final class DoubleOrderedMap extends AbstractMap {
      *
      * @return a set view of the mappings contained in this map.
      */
-    public Set entrySet() {
+    @Override
+	public Set entrySet() {
 
         if (setOfEntries[KEY] == null) {
             setOfEntries[KEY] = new AbstractSet() {
 
-                public Iterator iterator() {
+                @Override
+				public Iterator iterator() {
 
                     return new DoubleOrderedMapIterator(KEY) {
 
-                        protected Object doGetNext() {
+                        @Override
+						protected Object doGetNext() {
                             return lastReturnedNode;
                         }
                     };
                 }
 
-                public boolean contains(Object o) {
+                @Override
+				public boolean contains(Object o) {
 
                     if (!(o instanceof Map.Entry)) {
                         return false;
@@ -1612,7 +1658,8 @@ public final class DoubleOrderedMap extends AbstractMap {
                            && node.getData(VALUE).equals(value);
                 }
 
-                public boolean remove(Object o) {
+                @Override
+				public boolean remove(Object o) {
 
                     if (!(o instanceof Map.Entry)) {
                         return false;
@@ -1632,11 +1679,13 @@ public final class DoubleOrderedMap extends AbstractMap {
                     return false;
                 }
 
-                public int size() {
+                @Override
+				public int size() {
                     return DoubleOrderedMap.this.size();
                 }
 
-                public void clear() {
+                @Override
+				public void clear() {
                     DoubleOrderedMap.this.clear();
                 }
             };
@@ -1678,7 +1727,8 @@ public final class DoubleOrderedMap extends AbstractMap {
         /**
          * @return true if the iterator has more elements.
          */
-        public final boolean hasNext() {
+        @Override
+		public final boolean hasNext() {
             return nextNode != null;
         }
 
@@ -1693,7 +1743,8 @@ public final class DoubleOrderedMap extends AbstractMap {
          *                                            the iterator's
          *                                            back
          */
-        public final Object next()
+        @Override
+		public final Object next()
                 throws NoSuchElementException,
                        ConcurrentModificationException {
 
@@ -1730,7 +1781,8 @@ public final class DoubleOrderedMap extends AbstractMap {
          *                                            the iterator's
          *                                            back
          */
-        public final void remove()
+        @Override
+		public final void remove()
                 throws IllegalStateException,
                        ConcurrentModificationException {
 
@@ -1923,14 +1975,16 @@ public final class DoubleOrderedMap extends AbstractMap {
         /**
          * @return the key corresponding to this entry.
          */
-        public Object getKey() {
+        @Override
+		public Object getKey() {
             return data[KEY];
         }
 
         /**
          * @return the value corresponding to this entry.
          */
-        public Object getValue() {
+        @Override
+		public Object getValue() {
             return data[VALUE];
         }
 
@@ -1944,7 +1998,8 @@ public final class DoubleOrderedMap extends AbstractMap {
          *
          * @throws UnsupportedOperationException
          */
-        public Object setValue(Object ignored)
+        @Override
+		public Object setValue(Object ignored)
                 throws UnsupportedOperationException {
             throw new UnsupportedOperationException(
                 "Map.Entry.setValue is not supported");
@@ -1960,7 +2015,8 @@ public final class DoubleOrderedMap extends AbstractMap {
          * @return true if the specified object is equal to this map
          *         entry.
          */
-        public boolean equals(Object o) {
+        @Override
+		public boolean equals(Object o) {
 
             if (this == o) {
                 return true;
@@ -1979,7 +2035,8 @@ public final class DoubleOrderedMap extends AbstractMap {
         /**
          * @return the hash code value for this map entry.
          */
-        public int hashCode() {
+        @Override
+		public int hashCode() {
 
             if (!calculatedHashCode) {
                 hashcodeValue      = data[KEY].hashCode()

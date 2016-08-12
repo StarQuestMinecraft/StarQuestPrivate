@@ -6,7 +6,6 @@ import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.crafttransfer.SerializableLocation;
 import net.countercraft.movecraft.crafttransfer.transferdata.TransferData;
 import net.countercraft.movecraft.crafttransfer.utils.bungee.BungeeHandler;
-import net.homeip.hall.sqnetevents.packet.ReceivedDataEvent;
 
 public class BungeeCraftSender {
 	//Called externally

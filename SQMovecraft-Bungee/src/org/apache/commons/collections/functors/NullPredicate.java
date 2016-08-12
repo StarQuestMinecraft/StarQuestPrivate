@@ -59,7 +59,8 @@ public final class NullPredicate implements Predicate, Serializable {
      * @param object  the input object
      * @return true if input is null
      */
-    public boolean evaluate(Object object) {
+    @Override
+	public boolean evaluate(Object object) {
         return (object == null);
     }
 

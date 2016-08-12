@@ -150,7 +150,8 @@ public class PredicatedMap
      * @throws IllegalArgumentException if invalid
      * @since Commons Collections 3.1
      */
-    protected Object checkSetValue(Object value) {
+    @Override
+	protected Object checkSetValue(Object value) {
         if (valuePredicate.evaluate(value) == false) {
             throw new IllegalArgumentException("Cannot set value - Predicate rejected it");
         }
@@ -163,17 +164,20 @@ public class PredicatedMap
      * @return true if a value predicate is in use
      * @since Commons Collections 3.1
      */
-    protected boolean isSetValueChecking() {
+    @Override
+	protected boolean isSetValueChecking() {
         return (valuePredicate != null);
     }
 
     //-----------------------------------------------------------------------
-    public Object put(Object key, Object value) {
+    @Override
+	public Object put(Object key, Object value) {
         validate(key, value);
         return map.put(key, value);
     }
 
-    public void putAll(Map mapToCopy) {
+    @Override
+	public void putAll(Map mapToCopy) {
         Iterator it = mapToCopy.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry entry = (Map.Entry) it.next();

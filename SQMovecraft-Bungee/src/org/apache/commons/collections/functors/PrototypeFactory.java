@@ -129,7 +129,8 @@ public class PrototypeFactory {
          * 
          * @return the new object
          */
-        public Object create() {
+        @Override
+		public Object create() {
             // needed for post-serialization
             if (iCloneMethod == null) {
                 findCloneMethod();
@@ -172,7 +173,8 @@ public class PrototypeFactory {
          * 
          * @return the new object
          */
-        public Object create() {
+        @Override
+		public Object create() {
             ByteArrayOutputStream baos = new ByteArrayOutputStream(512);
             ByteArrayInputStream bais = null;
             try {

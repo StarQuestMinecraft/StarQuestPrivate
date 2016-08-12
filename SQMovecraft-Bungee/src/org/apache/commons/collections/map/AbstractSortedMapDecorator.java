@@ -67,27 +67,33 @@ public abstract class AbstractSortedMapDecorator
     }
 
     //-----------------------------------------------------------------------
-    public Comparator comparator() {
+    @Override
+	public Comparator comparator() {
         return getSortedMap().comparator();
     }
 
-    public Object firstKey() {
+    @Override
+	public Object firstKey() {
         return getSortedMap().firstKey();
     }
 
-    public SortedMap headMap(Object toKey) {
+    @Override
+	public SortedMap headMap(Object toKey) {
         return getSortedMap().headMap(toKey);
     }
 
-    public Object lastKey() {
+    @Override
+	public Object lastKey() {
         return getSortedMap().lastKey();
     }
 
-    public SortedMap subMap(Object fromKey, Object toKey) {
+    @Override
+	public SortedMap subMap(Object fromKey, Object toKey) {
         return getSortedMap().subMap(fromKey, toKey);
     }
 
-    public SortedMap tailMap(Object fromKey) {
+    @Override
+	public SortedMap tailMap(Object fromKey) {
         return getSortedMap().tailMap(fromKey);
     }
 

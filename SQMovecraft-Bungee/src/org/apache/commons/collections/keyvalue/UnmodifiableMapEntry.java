@@ -69,7 +69,8 @@ public final class UnmodifiableMapEntry extends AbstractMapEntry implements Unmo
      * @return the previous value
      * @throws UnsupportedOperationException always
      */
-    public Object setValue(Object value) {
+    @Override
+	public Object setValue(Object value) {
         throw new UnsupportedOperationException("setValue() is not supported");
     }
 

@@ -97,44 +97,54 @@ public final class UnmodifiableBag
     }
 
     //-----------------------------------------------------------------------
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         return UnmodifiableIterator.decorate(getCollection().iterator());
     }
 
-    public boolean add(Object object) {
+    @Override
+	public boolean add(Object object) {
         throw new UnsupportedOperationException();
     }
 
-    public boolean addAll(Collection coll) {
+    @Override
+	public boolean addAll(Collection coll) {
         throw new UnsupportedOperationException();
     }
 
-    public void clear() {
+    @Override
+	public void clear() {
         throw new UnsupportedOperationException();
     }
 
-    public boolean remove(Object object) {
+    @Override
+	public boolean remove(Object object) {
         throw new UnsupportedOperationException();
     }
 
-    public boolean removeAll(Collection coll) {
+    @Override
+	public boolean removeAll(Collection coll) {
         throw new UnsupportedOperationException();
     }
 
-    public boolean retainAll(Collection coll) {
+    @Override
+	public boolean retainAll(Collection coll) {
         throw new UnsupportedOperationException();
     }
 
     //-----------------------------------------------------------------------
-    public boolean add(Object object, int count) {
+    @Override
+	public boolean add(Object object, int count) {
         throw new UnsupportedOperationException();
     }
 
-    public boolean remove(Object object, int count) {
+    @Override
+	public boolean remove(Object object, int count) {
         throw new UnsupportedOperationException();
     }
 
-    public Set uniqueSet() {
+    @Override
+	public Set uniqueSet() {
         Set set = getBag().uniqueSet();
         return UnmodifiableSet.decorate(set);
     }

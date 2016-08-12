@@ -82,31 +82,36 @@ public class SynchronizedList extends SynchronizedCollection implements List {
     }
 
     //-----------------------------------------------------------------------
-    public void add(int index, Object object) {
+    @Override
+	public void add(int index, Object object) {
         synchronized (lock) {
             getList().add(index, object);
         }
     }
 
-    public boolean addAll(int index, Collection coll) {
+    @Override
+	public boolean addAll(int index, Collection coll) {
         synchronized (lock) {
             return getList().addAll(index, coll);
         }
     }
 
-    public Object get(int index) {
+    @Override
+	public Object get(int index) {
         synchronized (lock) {
             return getList().get(index);
         }
     }
 
-    public int indexOf(Object object) {
+    @Override
+	public int indexOf(Object object) {
         synchronized (lock) {
             return getList().indexOf(object);
         }
     }
 
-    public int lastIndexOf(Object object) {
+    @Override
+	public int lastIndexOf(Object object) {
         synchronized (lock) {
             return getList().lastIndexOf(object);
         }
@@ -122,7 +127,8 @@ public class SynchronizedList extends SynchronizedCollection implements List {
      * 
      * @return an iterator that must be manually synchronized on the collection
      */
-    public ListIterator listIterator() {
+    @Override
+	public ListIterator listIterator() {
         return getList().listIterator();
     }
 
@@ -136,23 +142,27 @@ public class SynchronizedList extends SynchronizedCollection implements List {
      * 
      * @return an iterator that must be manually synchronized on the collection
      */
-    public ListIterator listIterator(int index) {
+    @Override
+	public ListIterator listIterator(int index) {
         return getList().listIterator(index);
     }
 
-    public Object remove(int index) {
+    @Override
+	public Object remove(int index) {
         synchronized (lock) {
             return getList().remove(index);
         }
     }
 
-    public Object set(int index, Object object) {
+    @Override
+	public Object set(int index, Object object) {
         synchronized (lock) {
             return getList().set(index, object);
         }
     }
 
-    public List subList(int fromIndex, int toIndex) {
+    @Override
+	public List subList(int fromIndex, int toIndex) {
         synchronized (lock) {
             List list = getList().subList(fromIndex, toIndex);
             // the lock is passed into the constructor here to ensure that the sublist is

@@ -115,11 +115,13 @@ public class FilterListIterator implements ListIterator {
 
     //-----------------------------------------------------------------------
     /** Not supported. */
-    public void add(Object o) {
+    @Override
+	public void add(Object o) {
         throw new UnsupportedOperationException("FilterListIterator.add(Object) is not supported.");
     }
 
-    public boolean hasNext() {
+    @Override
+	public boolean hasNext() {
         if(nextObjectSet) {
             return true;
         } else {
@@ -127,7 +129,8 @@ public class FilterListIterator implements ListIterator {
         }
     }
 
-    public boolean hasPrevious() {
+    @Override
+	public boolean hasPrevious() {
         if(previousObjectSet) {
             return true;
         } else {
@@ -135,7 +138,8 @@ public class FilterListIterator implements ListIterator {
         }
     }
 
-    public Object next() {
+    @Override
+	public Object next() {
         if(!nextObjectSet) {
             if(!setNextObject()) {
                 throw new NoSuchElementException();
@@ -147,11 +151,13 @@ public class FilterListIterator implements ListIterator {
         return temp;
     }
 
-    public int nextIndex() {
+    @Override
+	public int nextIndex() {
         return nextIndex;
     }
 
-    public Object previous() {
+    @Override
+	public Object previous() {
         if(!previousObjectSet) {
             if(!setPreviousObject()) {
                 throw new NoSuchElementException();
@@ -163,17 +169,20 @@ public class FilterListIterator implements ListIterator {
         return temp;
     }
 
-    public int previousIndex() {
+    @Override
+	public int previousIndex() {
         return (nextIndex-1);
     }
 
     /** Not supported. */
-    public void remove() {
+    @Override
+	public void remove() {
         throw new UnsupportedOperationException("FilterListIterator.remove() is not supported.");
     }
 
     /** Not supported. */
-    public void set(Object o) {
+    @Override
+	public void set(Object o) {
         throw new UnsupportedOperationException("FilterListIterator.set(Object) is not supported.");
     }
 

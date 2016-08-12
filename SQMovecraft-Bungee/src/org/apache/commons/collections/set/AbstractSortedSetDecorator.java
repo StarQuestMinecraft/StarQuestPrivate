@@ -60,27 +60,33 @@ public abstract class AbstractSortedSetDecorator extends AbstractSetDecorator im
     }
     
     //-----------------------------------------------------------------------
-    public SortedSet subSet(Object fromElement, Object toElement) {
+    @Override
+	public SortedSet subSet(Object fromElement, Object toElement) {
         return getSortedSet().subSet(fromElement, toElement);
     }
 
-    public SortedSet headSet(Object toElement) {
+    @Override
+	public SortedSet headSet(Object toElement) {
         return getSortedSet().headSet(toElement);
     }
 
-    public SortedSet tailSet(Object fromElement) {
+    @Override
+	public SortedSet tailSet(Object fromElement) {
         return getSortedSet().tailSet(fromElement);
     }
 
-    public Object first() {
+    @Override
+	public Object first() {
         return getSortedSet().first();
     }
 
-    public Object last() {
+    @Override
+	public Object last() {
         return getSortedSet().last();
     }
 
-    public Comparator comparator() {
+    @Override
+	public Comparator comparator() {
         return getSortedSet().comparator();
     }
 

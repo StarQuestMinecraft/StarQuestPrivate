@@ -107,7 +107,8 @@ public class BoundedBuffer extends SynchronizedBuffer implements BoundedCollecti
     }
 
     //-----------------------------------------------------------------------
-    public Object remove() {
+    @Override
+	public Object remove() {
         synchronized (lock) {
             Object returnValue = getBuffer().remove();
             lock.notifyAll();
@@ -115,21 +116,24 @@ public class BoundedBuffer extends SynchronizedBuffer implements BoundedCollecti
         }
     }
 
-    public boolean add(Object o) {
+    @Override
+	public boolean add(Object o) {
         synchronized (lock) {
             timeoutWait(1);
             return getBuffer().add(o);
         }
     }
 
-    public boolean addAll(final Collection c) {
+    @Override
+	public boolean addAll(final Collection c) {
         synchronized (lock) {
             timeoutWait(c.size());
             return getBuffer().addAll(c);
         }
     }
 
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         return new NotifyingIterator(collection.iterator());
     }
 
@@ -165,12 +169,14 @@ public class BoundedBuffer extends SynchronizedBuffer implements BoundedCollecti
         }
     }
 
-    public boolean isFull() {
+    @Override
+	public boolean isFull() {
         // size() is synchronized
         return (size() == maxSize());
     }
 
-    public int maxSize() {
+    @Override
+	public int maxSize() {
         return maximumSize;
     }
 
@@ -184,7 +190,8 @@ public class BoundedBuffer extends SynchronizedBuffer implements BoundedCollecti
             super(it);
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             synchronized (lock) {
                 iterator.remove();
                 lock.notifyAll();

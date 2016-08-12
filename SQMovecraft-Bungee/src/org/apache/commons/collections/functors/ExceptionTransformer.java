@@ -62,7 +62,8 @@ public final class ExceptionTransformer implements Transformer, Serializable {
      * @return never
      * @throws FunctorException always
      */
-    public Object transform(Object input) {
+    @Override
+	public Object transform(Object input) {
         throw new FunctorException("ExceptionTransformer invoked");
     }
 

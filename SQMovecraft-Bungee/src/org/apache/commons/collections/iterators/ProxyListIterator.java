@@ -28,6 +28,7 @@ import java.util.ListIterator;
  * 
  * @author Rodney Waldhoff
  */
+@Deprecated
 public class ProxyListIterator implements ListIterator {
 
     /** Holds value of property "iterator". */
@@ -64,7 +65,8 @@ public class ProxyListIterator implements ListIterator {
      *
      *  @throws NullPointerException  if the underlying iterator is null
      */
-    public void add(Object o) {
+    @Override
+	public void add(Object o) {
         getListIterator().add(o);
     }
 
@@ -73,7 +75,8 @@ public class ProxyListIterator implements ListIterator {
      *
      *  @throws NullPointerException  if the underlying iterator is null
      */
-    public boolean hasNext() {
+    @Override
+	public boolean hasNext() {
         return getListIterator().hasNext();
     }
 
@@ -82,7 +85,8 @@ public class ProxyListIterator implements ListIterator {
      *
      *  @throws NullPointerException  if the underlying iterator is null
      */
-    public boolean hasPrevious() {
+    @Override
+	public boolean hasPrevious() {
         return getListIterator().hasPrevious();
     }
 
@@ -91,7 +95,8 @@ public class ProxyListIterator implements ListIterator {
      *
      *  @throws NullPointerException  if the underlying iterator is null
      */
-    public Object next() {
+    @Override
+	public Object next() {
         return getListIterator().next();
     }
 
@@ -100,7 +105,8 @@ public class ProxyListIterator implements ListIterator {
      *
      *  @throws NullPointerException  if the underlying iterator is null
      */
-    public int nextIndex() {
+    @Override
+	public int nextIndex() {
         return getListIterator().nextIndex();
     }
 
@@ -109,7 +115,8 @@ public class ProxyListIterator implements ListIterator {
      *
      *  @throws NullPointerException  if the underlying iterator is null
      */
-    public Object previous() {
+    @Override
+	public Object previous() {
         return getListIterator().previous();
     }
 
@@ -118,7 +125,8 @@ public class ProxyListIterator implements ListIterator {
      *
      *  @throws NullPointerException  if the underlying iterator is null
      */
-    public int previousIndex() {
+    @Override
+	public int previousIndex() {
         return getListIterator().previousIndex();
     }
 
@@ -127,7 +135,8 @@ public class ProxyListIterator implements ListIterator {
      *
      *  @throws NullPointerException  if the underlying iterator is null
      */
-    public void remove() {
+    @Override
+	public void remove() {
         getListIterator().remove();
     }
 
@@ -136,7 +145,8 @@ public class ProxyListIterator implements ListIterator {
      *
      *  @throws NullPointerException  if the underlying iterator is null
      */
-    public void set(Object o) {
+    @Override
+	public void set(Object o) {
         getListIterator().set(o);
     }
 

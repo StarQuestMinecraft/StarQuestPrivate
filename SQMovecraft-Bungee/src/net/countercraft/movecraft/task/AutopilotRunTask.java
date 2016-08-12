@@ -29,6 +29,7 @@ public class AutopilotRunTask extends BukkitRunnable{
 		DISABLED = Movecraft.getInstance().getConfig().getBoolean("autopilot");
 	}
 	
+	@Override
 	public void run(){
 		for (Craft c : autopilotingCrafts){
 			if (!c.isProcessing() && !c.isProcessingTeleport() && c.pilot != null && c.pilot.isOnline()){
@@ -280,7 +281,7 @@ public class AutopilotRunTask extends BukkitRunnable{
 	
 	private static void calculateVelocity(Craft c, int speed){
 		Player p = c.pilot;
-		int modif = 2 * ((int) Math.round(speed));
+		int modif = 2 * (Math.round(speed));
 		int modifroot = Math.round(modif / SQRT_2);
 		
         float deg = p.getLocation().getYaw() + 180;

@@ -69,7 +69,8 @@ public class TransformerClosure implements Closure, Serializable {
      * 
      * @param input  the input object
      */
-    public void execute(Object input) {
+    @Override
+	public void execute(Object input) {
         iTransformer.transform(input);
     }
 

@@ -1,12 +1,8 @@
 package net.countercraft.movecraft.vapor;
 
-import java.util.ArrayList;
-
 import net.countercraft.movecraft.Movecraft;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 
 public class VaporUtils {
 

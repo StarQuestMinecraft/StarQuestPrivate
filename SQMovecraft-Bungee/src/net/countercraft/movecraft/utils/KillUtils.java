@@ -1,11 +1,6 @@
 package net.countercraft.movecraft.utils;
 
 
-import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.database.StarshipData;
-import net.countercraft.movecraft.event.CraftSignBreakEvent;
-import net.countercraft.movecraft.shield.Compression;
-
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 

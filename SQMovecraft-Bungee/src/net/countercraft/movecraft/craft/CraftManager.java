@@ -28,9 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.cryo.CryoSpawn;
-import net.countercraft.movecraft.database.StarshipData;
 import net.countercraft.movecraft.event.CraftReleaseEvent;
 import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.shield.ShieldUtils;
@@ -157,6 +155,7 @@ public class CraftManager {
 		updateBedspawns(c);
 
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+			@Override
 			public void run() {
 				if (SAVE_CRAFTS && save) {
 					Movecraft.getInstance().getStarshipDatabase().saveStarshipAtLocation(c);

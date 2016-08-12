@@ -69,7 +69,8 @@ public class PredicateTransformer implements Transformer, Serializable {
      * @param input  the input object to transform
      * @return the transformed result
      */
-    public Object transform(Object input) {
+    @Override
+	public Object transform(Object input) {
         return (iPredicate.evaluate(input) ? Boolean.TRUE : Boolean.FALSE);
     }
 

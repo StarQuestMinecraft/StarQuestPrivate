@@ -72,7 +72,8 @@ public interface Bag extends Collection {
      * @param object  the object to add
      * @return <code>true</code> if the object was not already in the <code>uniqueSet</code>
      */
-    boolean add(Object object);
+    @Override
+	boolean add(Object object);
 
     /**
      * Adds <code>nCopies</code> copies of the specified object to the Bag.
@@ -99,7 +100,8 @@ public interface Bag extends Collection {
      *
      * @return <code>true</code> if this call changed the collection
      */
-    boolean remove(Object object);
+    @Override
+	boolean remove(Object object);
 
     /**
      * Removes <code>nCopies</code> copies of the specified object from the Bag.
@@ -127,7 +129,8 @@ public interface Bag extends Collection {
      * 
      * @return the total size of the Bag
      */
-    int size();
+    @Override
+	int size();
 
     /**
      * <i>(Violation)</i>
@@ -145,7 +148,8 @@ public interface Bag extends Collection {
      * @param coll  the collection to check against
      * @return <code>true</code> if the Bag contains all the collection
      */
-    boolean containsAll(Collection coll);
+    @Override
+	boolean containsAll(Collection coll);
 
     /**
      * <i>(Violation)</i>
@@ -163,7 +167,8 @@ public interface Bag extends Collection {
      * @param coll  the collection to remove
      * @return <code>true</code> if this call changed the collection
      */
-    boolean removeAll(Collection coll);
+    @Override
+	boolean removeAll(Collection coll);
 
     /**
      * <i>(Violation)</i>
@@ -184,7 +189,8 @@ public interface Bag extends Collection {
      * @param coll  the collection to retain
      * @return <code>true</code> if this call changed the collection
      */
-    boolean retainAll(Collection coll);
+    @Override
+	boolean retainAll(Collection coll);
 
     /**
      * Returns an {@link Iterator} over the entire set of members,
@@ -193,7 +199,8 @@ public interface Bag extends Collection {
      * 
      * @return iterator over all elements in the Bag
      */
-    Iterator iterator();
+    @Override
+	Iterator iterator();
 
     // The following is not part of the formal Bag interface, however where possible
     // Bag implementations should follow these comments.

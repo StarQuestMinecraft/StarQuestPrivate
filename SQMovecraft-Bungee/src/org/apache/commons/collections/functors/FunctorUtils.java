@@ -51,7 +51,7 @@ class FunctorUtils {
         if (predicates == null) {
             return null;
         }
-        return (Predicate[]) predicates.clone();
+        return predicates.clone();
     }
     
     /**
@@ -103,7 +103,7 @@ class FunctorUtils {
         if (closures == null) {
             return null;
         }
-        return (Closure[]) closures.clone();
+        return closures.clone();
     }
     
     /**
@@ -132,7 +132,7 @@ class FunctorUtils {
         if (transformers == null) {
             return null;
         }
-        return (Transformer[]) transformers.clone();
+        return transformers.clone();
     }
     
     /**

@@ -336,6 +336,7 @@ public class InteractListener implements Listener {
 			}
 		} else if (sign.getLine(0).equalsIgnoreCase("[cryopod]")){
 			Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable(){
+				@Override
 				public void run(){
 					CryoSpawn.setUpCryoTubeAsync(sign, event.getPlayer().getName());
 				}
@@ -343,6 +344,7 @@ public class InteractListener implements Listener {
 			return;
 		} else if (sign.getLine(0).equalsIgnoreCase(CryoSpawn.KEY_LINE)){
 			Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable(){
+				@Override
 				public void run(){
 					CryoSpawn.toggleActiveAsync(sign, event.getPlayer());
 				}

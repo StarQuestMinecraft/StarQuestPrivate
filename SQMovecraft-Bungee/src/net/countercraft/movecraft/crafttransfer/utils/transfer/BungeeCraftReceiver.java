@@ -1,7 +1,5 @@
 package net.countercraft.movecraft.crafttransfer.utils.transfer;
 
-import java.util.ArrayList;
-
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 

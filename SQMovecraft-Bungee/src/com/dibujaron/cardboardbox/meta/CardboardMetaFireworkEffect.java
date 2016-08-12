@@ -1,8 +1,6 @@
 
 package com.dibujaron.cardboardbox.meta;
 
-import java.io.Serializable;
-
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkEffectMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -22,6 +20,7 @@ public class CardboardMetaFireworkEffect implements CardboardItemMeta {
 		this.effect = new CardboardFireworkEffect(meta.getEffect());
 	}
 
+	@Override
 	public ItemMeta unbox() {
 
 		FireworkEffectMeta meta = (FireworkEffectMeta) new ItemStack(this.id).getItemMeta();

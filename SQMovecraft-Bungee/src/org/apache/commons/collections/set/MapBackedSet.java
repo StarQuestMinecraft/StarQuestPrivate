@@ -86,33 +86,40 @@ public final class MapBackedSet implements Set, Serializable {
     }
 
     //-----------------------------------------------------------------------
-    public int size() {
+    @Override
+	public int size() {
         return map.size();
     }
 
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         return map.isEmpty();
     }
 
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         return map.keySet().iterator();
     }
 
-    public boolean contains(Object obj) {
+    @Override
+	public boolean contains(Object obj) {
         return map.containsKey(obj);
     }
 
-    public boolean containsAll(Collection coll) {
+    @Override
+	public boolean containsAll(Collection coll) {
         return map.keySet().containsAll(coll);
     }
 
-    public boolean add(Object obj) {
+    @Override
+	public boolean add(Object obj) {
         int size = map.size();
         map.put(obj, dummyValue);
         return (map.size() != size);
     }
 
-    public boolean addAll(Collection coll) {
+    @Override
+	public boolean addAll(Collection coll) {
         int size = map.size();
         for (Iterator it = coll.iterator(); it.hasNext();) {
             Object obj = it.next();
@@ -121,37 +128,45 @@ public final class MapBackedSet implements Set, Serializable {
         return (map.size() != size);
     }
 
-    public boolean remove(Object obj) {
+    @Override
+	public boolean remove(Object obj) {
         int size = map.size();
         map.remove(obj);
         return (map.size() != size);
     }
 
-    public boolean removeAll(Collection coll) {
+    @Override
+	public boolean removeAll(Collection coll) {
         return map.keySet().removeAll(coll);
     }
 
-    public boolean retainAll(Collection coll) {
+    @Override
+	public boolean retainAll(Collection coll) {
         return map.keySet().retainAll(coll);
     }
 
-    public void clear() {
+    @Override
+	public void clear() {
         map.clear();
     }
 
-    public Object[] toArray() {
+    @Override
+	public Object[] toArray() {
         return map.keySet().toArray();
     }
 
-    public Object[] toArray(Object[] array) {
+    @Override
+	public Object[] toArray(Object[] array) {
         return map.keySet().toArray(array);
     }
 
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
         return map.keySet().equals(obj);
     }
 
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return map.keySet().hashCode();
     }
 

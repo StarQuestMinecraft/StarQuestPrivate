@@ -68,7 +68,8 @@ public final class EqualPredicate implements Predicate, Serializable {
      * @param object  the input object
      * @return true if input object equals stored value
      */
-    public boolean evaluate(Object object) {
+    @Override
+	public boolean evaluate(Object object) {
         return (iValue.equals(object));
     }
 

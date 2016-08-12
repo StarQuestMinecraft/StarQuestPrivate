@@ -28,6 +28,7 @@ package org.apache.commons.collections;
  * 
  * @author Peter Donald
  */
+@Deprecated
 public interface PriorityQueue {
     
     /**

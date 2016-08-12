@@ -62,39 +62,48 @@ public final class UnmodifiableListIterator implements ListIterator, Unmodifiabl
     }
 
     //-----------------------------------------------------------------------
-    public boolean hasNext() {
+    @Override
+	public boolean hasNext() {
         return iterator.hasNext();
     }
 
-    public Object next() {
+    @Override
+	public Object next() {
         return iterator.next();
     }
 
-    public int nextIndex() {
+    @Override
+	public int nextIndex() {
         return iterator.nextIndex();
     }
 
-    public boolean hasPrevious() {
+    @Override
+	public boolean hasPrevious() {
         return iterator.hasPrevious();
     }
 
-    public Object previous() {
+    @Override
+	public Object previous() {
         return iterator.previous();
     }
 
-    public int previousIndex() {
+    @Override
+	public int previousIndex() {
         return iterator.previousIndex();
     }
 
-    public void remove() {
+    @Override
+	public void remove() {
         throw new UnsupportedOperationException("remove() is not supported");
     }
 
-    public void set(Object obj) {
+    @Override
+	public void set(Object obj) {
         throw new UnsupportedOperationException("set() is not supported");
     }
 
-    public void add(Object obj) {
+    @Override
+	public void add(Object obj) {
         throw new UnsupportedOperationException("add() is not supported");
     }
 

@@ -407,7 +407,8 @@ public class ExtendedProperties extends Hashtable {
          *
          * @return True if the object has more tokens.
          */
-        public boolean hasMoreTokens() {
+        @Override
+		public boolean hasMoreTokens() {
             return super.hasMoreTokens();
         }
 
@@ -416,7 +417,8 @@ public class ExtendedProperties extends Hashtable {
          *
          * @return A String.
          */
-        public String nextToken() {
+        @Override
+		public String nextToken() {
             StringBuffer buffer = new StringBuffer();
 
             while (hasMoreTokens()) {

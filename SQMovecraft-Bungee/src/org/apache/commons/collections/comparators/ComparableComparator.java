@@ -88,7 +88,8 @@ public class ComparableComparator implements Comparator, Serializable {
      * @throws ClassCastException when <i>obj1</i> is not a <code>Comparable</code>,
      *         or when <code>((Comparable)obj1).compareTo(obj2)</code> does
      */
-    public int compare(Object obj1, Object obj2) {
+    @Override
+	public int compare(Object obj1, Object obj2) {
         return ((Comparable)obj1).compareTo(obj2);
     }
 
@@ -100,7 +101,8 @@ public class ComparableComparator implements Comparator, Serializable {
      * @return a hash code for this comparator.
      * @since Commons Collections 3.0
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return "ComparableComparator".hashCode();
     }
 
@@ -119,7 +121,8 @@ public class ComparableComparator implements Comparator, Serializable {
      * @return true if equal
      * @since Commons Collections 3.0
      */
-    public boolean equals(Object object) {
+    @Override
+	public boolean equals(Object object) {
         return (this == object) || 
                ((null != object) && (object.getClass().equals(this.getClass())));
     }

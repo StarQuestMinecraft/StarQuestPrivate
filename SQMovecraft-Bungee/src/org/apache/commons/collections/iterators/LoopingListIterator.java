@@ -72,7 +72,8 @@ public class LoopingListIterator implements ResettableListIterator {
      *
      * @return <code>true</code> if there are more elements
      */
-    public boolean hasNext() {
+    @Override
+	public boolean hasNext() {
         return !list.isEmpty();
     }
 
@@ -84,7 +85,8 @@ public class LoopingListIterator implements ResettableListIterator {
      * @return the object after the last element returned
      * @throws NoSuchElementException if there are no elements in the list
      */
-    public Object next() {
+    @Override
+	public Object next() {
         if (list.isEmpty()) {
             throw new NoSuchElementException(
                 "There are no elements for this iterator to loop on");
@@ -106,7 +108,8 @@ public class LoopingListIterator implements ResettableListIterator {
      * @return the index of the element that would be returned if next() were called
      * @throws NoSuchElementException if there are no elements in the list
      */
-    public int nextIndex() {
+    @Override
+	public int nextIndex() {
         if (list.isEmpty()) {
             throw new NoSuchElementException(
                 "There are no elements for this iterator to loop on");
@@ -126,7 +129,8 @@ public class LoopingListIterator implements ResettableListIterator {
      *
      * @return <code>true</code> if there are more elements
      */
-    public boolean hasPrevious() {
+    @Override
+	public boolean hasPrevious() {
         return !list.isEmpty();
     }
 
@@ -139,7 +143,8 @@ public class LoopingListIterator implements ResettableListIterator {
      * @return the object before the last element returned
      * @throws NoSuchElementException if there are no elements in the list
      */
-    public Object previous() {
+    @Override
+	public Object previous() {
         if (list.isEmpty()) {
             throw new NoSuchElementException(
                 "There are no elements for this iterator to loop on");
@@ -167,7 +172,8 @@ public class LoopingListIterator implements ResettableListIterator {
      * @return the index of the element that would be returned if previous() were called
      * @throws NoSuchElementException if there are no elements in the list
      */
-    public int previousIndex() {
+    @Override
+	public int previousIndex() {
         if (list.isEmpty()) {
             throw new NoSuchElementException(
                 "There are no elements for this iterator to loop on");
@@ -197,7 +203,8 @@ public class LoopingListIterator implements ResettableListIterator {
      * not supported by the iterator implementation of the underlying
      * list
      */
-    public void remove() {
+    @Override
+	public void remove() {
         iterator.remove();
     }
 
@@ -216,7 +223,8 @@ public class LoopingListIterator implements ResettableListIterator {
      * @throws UnsupportedOperationException if the add method is not
      *  supported by the iterator implementation of the underlying list
      */
-    public void add(Object obj) {
+    @Override
+	public void add(Object obj) {
         iterator.add(obj);
     }
 
@@ -232,14 +240,16 @@ public class LoopingListIterator implements ResettableListIterator {
      * @throws UnsupportedOperationException if the set method is not
      *  supported by the iterator implementation of the underlying list
      */
-    public void set(Object obj) {
+    @Override
+	public void set(Object obj) {
         iterator.set(obj);
     }
 
     /**
      * Resets the iterator back to the start of the list.
      */
-    public void reset() {
+    @Override
+	public void reset() {
         iterator = list.listIterator();
     }
 

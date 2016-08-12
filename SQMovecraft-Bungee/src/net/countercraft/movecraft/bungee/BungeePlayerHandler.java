@@ -14,7 +14,6 @@ import java.util.UUID;
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.cryo.ActiveCryoHandler;
-import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.utils.MathUtils;
 
 import org.bukkit.Bukkit;
@@ -46,6 +45,7 @@ public class BungeePlayerHandler {
 		if(!p.hasPlayedBefore() && Bukkit.getServer().getServerName().equals("Trinitos_Alpha")){
 			System.out.println("New player on Regalis!");
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+				@Override
 				public void run(){
 					if(spawnLocation == null){
 						spawnLocation = Movecraft.getInstance().getDefaultSpawnLocation();
@@ -60,6 +60,7 @@ public class BungeePlayerHandler {
 			final PlayerTeleport t = teleportQueue.get(i);
 			if(uid.equals(t.getUUID())){
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+					@Override
 					public void run(){
 						t.execute();
 					}
@@ -67,6 +68,7 @@ public class BungeePlayerHandler {
 				final Craft c = pilotQueue.get(uid);
 				if(c != null){
 					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+						@Override
 						public void run(){
 							if(c.originalPilotLoc == null){
 								c.detect(p, MathUtils.bukkit2MovecraftLoc(p.getLocation()));

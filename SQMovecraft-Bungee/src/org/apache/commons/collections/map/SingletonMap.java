@@ -136,7 +136,8 @@ public class SingletonMap
      *
      * @return the key 
      */
-    public Object getKey() {
+    @Override
+	public Object getKey() {
         return key;
     }
 
@@ -145,7 +146,8 @@ public class SingletonMap
      *
      * @return the value
      */
-    public Object getValue() {
+    @Override
+	public Object getValue() {
         return value;
     }
 
@@ -168,7 +170,8 @@ public class SingletonMap
      *
      * @return true always
      */
-    public boolean isFull() {
+    @Override
+	public boolean isFull() {
         return true;
     }
 
@@ -177,7 +180,8 @@ public class SingletonMap
      * 
      * @return 1 always
      */
-    public int maxSize() {
+    @Override
+	public int maxSize() {
         return 1;
     }
 
@@ -189,7 +193,8 @@ public class SingletonMap
      * @param key  the key
      * @return the mapped value, null if no match
      */
-    public Object get(Object key) {
+    @Override
+	public Object get(Object key) {
         if (isEqualKey(key)) {
             return value;
         }
@@ -201,7 +206,8 @@ public class SingletonMap
      * 
      * @return the size of 1
      */
-    public int size() {
+    @Override
+	public int size() {
         return 1;
     }
 
@@ -210,7 +216,8 @@ public class SingletonMap
      * 
      * @return false always
      */
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         return false;
     }
 
@@ -221,7 +228,8 @@ public class SingletonMap
      * @param key  the key to search for
      * @return true if the map contains the key
      */
-    public boolean containsKey(Object key) {
+    @Override
+	public boolean containsKey(Object key) {
         return (isEqualKey(key));
     }
 
@@ -231,7 +239,8 @@ public class SingletonMap
      * @param value  the value to search for
      * @return true if the map contains the key
      */
-    public boolean containsValue(Object value) {
+    @Override
+	public boolean containsValue(Object value) {
         return (isEqualValue(value));
     }
 
@@ -247,7 +256,8 @@ public class SingletonMap
      * @return the value previously mapped to this key, null if none
      * @throws IllegalArgumentException if the key does not match
      */
-    public Object put(Object key, Object value) {
+    @Override
+	public Object put(Object key, Object value) {
         if (isEqualKey(key)) {
             return setValue(value);
         }
@@ -265,7 +275,8 @@ public class SingletonMap
      * @throws NullPointerException if the map is null
      * @throws IllegalArgumentException if the key does not match
      */
-    public void putAll(Map map) {
+    @Override
+	public void putAll(Map map) {
         switch (map.size()) {
             case 0:
                 return;
@@ -287,14 +298,16 @@ public class SingletonMap
      * @return the value mapped to the removed key, null if key not in map
      * @throws UnsupportedOperationException always
      */
-    public Object remove(Object key) {
+    @Override
+	public Object remove(Object key) {
         throw new UnsupportedOperationException();
     }
 
     /**
      * Unsupported operation.
      */
-    public void clear() {
+    @Override
+	public void clear() {
         throw new UnsupportedOperationException();
     }
 
@@ -306,7 +319,8 @@ public class SingletonMap
      * 
      * @return the entrySet view
      */
-    public Set entrySet() {
+    @Override
+	public Set entrySet() {
         Map.Entry entry = new TiedMapEntry(this, getKey());
         return Collections.singleton(entry);
     }
@@ -318,7 +332,8 @@ public class SingletonMap
      * 
      * @return the keySet view
      */
-    public Set keySet() {
+    @Override
+	public Set keySet() {
         return Collections.singleton(key);
     }
 
@@ -329,7 +344,8 @@ public class SingletonMap
      * 
      * @return the values view
      */
-    public Collection values() {
+    @Override
+	public Collection values() {
         return new SingletonValues(this);
     }
 
@@ -345,7 +361,8 @@ public class SingletonMap
      * 
      * @return the map iterator
      */
-    public MapIterator mapIterator() {
+    @Override
+	public MapIterator mapIterator() {
         return new SingletonMapIterator(this);
     }
 
@@ -359,7 +376,8 @@ public class SingletonMap
      * 
      * @return an ordered map iterator
      */
-    public OrderedMapIterator orderedMapIterator() {
+    @Override
+	public OrderedMapIterator orderedMapIterator() {
         return new SingletonMapIterator(this);
     }
 
@@ -368,7 +386,8 @@ public class SingletonMap
      * 
      * @return the key
      */
-    public Object firstKey() {
+    @Override
+	public Object firstKey() {
         return getKey();
     }
 
@@ -377,7 +396,8 @@ public class SingletonMap
      * 
      * @return the key
      */
-    public Object lastKey() {
+    @Override
+	public Object lastKey() {
         return getKey();
     }
 
@@ -387,7 +407,8 @@ public class SingletonMap
      * @param key  the next key
      * @return null always
      */
-    public Object nextKey(Object key) {
+    @Override
+	public Object nextKey(Object key) {
         return null;
     }
 
@@ -397,7 +418,8 @@ public class SingletonMap
      * @param key  the next key
      * @return null always
      */
-    public Object previousKey(Object key) {
+    @Override
+	public Object previousKey(Object key) {
         return null;
     }
 
@@ -436,11 +458,13 @@ public class SingletonMap
             this.parent = parent;
         }
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             return hasNext;
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             if (hasNext == false) {
                 throw new NoSuchElementException(AbstractHashedMap.NO_NEXT_ENTRY);
             }
@@ -449,11 +473,13 @@ public class SingletonMap
             return parent.getKey();
         }
 
-        public boolean hasPrevious() {
+        @Override
+		public boolean hasPrevious() {
             return (hasNext == false);
         }
 
-        public Object previous() {
+        @Override
+		public Object previous() {
             if (hasNext == true) {
                 throw new NoSuchElementException(AbstractHashedMap.NO_PREVIOUS_ENTRY);
             }
@@ -461,36 +487,42 @@ public class SingletonMap
             return parent.getKey();
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             throw new UnsupportedOperationException();
         }
 
-        public Object getKey() {
+        @Override
+		public Object getKey() {
             if (canGetSet == false) {
                 throw new IllegalStateException(AbstractHashedMap.GETKEY_INVALID);
             }
             return parent.getKey();
         }
 
-        public Object getValue() {
+        @Override
+		public Object getValue() {
             if (canGetSet == false) {
                 throw new IllegalStateException(AbstractHashedMap.GETVALUE_INVALID);
             }
             return parent.getValue();
         }
 
-        public Object setValue(Object value) {
+        @Override
+		public Object setValue(Object value) {
             if (canGetSet == false) {
                 throw new IllegalStateException(AbstractHashedMap.SETVALUE_INVALID);
             }
             return parent.setValue(value);
         }
         
-        public void reset() {
+        @Override
+		public void reset() {
             hasNext = true;
         }
         
-        public String toString() {
+        @Override
+		public String toString() {
             if (hasNext) {
                 return "Iterator[]";
             } else {
@@ -512,19 +544,24 @@ public class SingletonMap
             this.parent = parent;
         }
 
-        public int size() {
+        @Override
+		public int size() {
             return 1;
         }
-        public boolean isEmpty() {
+        @Override
+		public boolean isEmpty() {
             return false;
         }
-        public boolean contains(Object object) {
+        @Override
+		public boolean contains(Object object) {
             return parent.containsValue(object);
         }
-        public void clear() {
+        @Override
+		public void clear() {
             throw new UnsupportedOperationException();
         }
-        public Iterator iterator() {
+        @Override
+		public Iterator iterator() {
             return new SingletonIterator(parent.getValue(), false);
         }
     }
@@ -535,7 +572,8 @@ public class SingletonMap
      *
      * @return a shallow clone
      */
-    public Object clone() {
+    @Override
+	public Object clone() {
         try {
             SingletonMap cloned = (SingletonMap) super.clone();
             return cloned;
@@ -550,7 +588,8 @@ public class SingletonMap
      * @param obj  the object to compare to
      * @return true if equal
      */
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
         if (obj == this) {
             return true;
         }
@@ -570,7 +609,8 @@ public class SingletonMap
      * 
      * @return the hash code defined in the Map interface
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return (getKey() == null ? 0 : getKey().hashCode()) ^
                (getValue() == null ? 0 : getValue().hashCode()); 
     }
@@ -580,7 +620,8 @@ public class SingletonMap
      * 
      * @return a string version of the map
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return new StringBuffer(128)
             .append('{')
             .append((getKey() == this ? "(this Map)" : getKey()))

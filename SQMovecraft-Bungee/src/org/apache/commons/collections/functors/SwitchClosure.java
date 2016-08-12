@@ -132,7 +132,8 @@ public class SwitchClosure implements Closure, Serializable {
      * 
      * @param input  the input object
      */
-    public void execute(Object input) {
+    @Override
+	public void execute(Object input) {
         for (int i = 0; i < iPredicates.length; i++) {
             if (iPredicates[i].evaluate(input) == true) {
                 iClosures[i].execute(input);

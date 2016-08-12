@@ -97,7 +97,8 @@ public final class NonePredicate implements Predicate, PredicateDecorator, Seria
      * @param object  the input object
      * @return true if none of decorated predicates return true
      */
-    public boolean evaluate(Object object) {
+    @Override
+	public boolean evaluate(Object object) {
         for (int i = 0; i < iPredicates.length; i++) {
             if (iPredicates[i].evaluate(object)) {
                 return false;
@@ -112,7 +113,8 @@ public final class NonePredicate implements Predicate, PredicateDecorator, Seria
      * @return the predicates
      * @since Commons Collections 3.1
      */
-    public Predicate[] getPredicates() {
+    @Override
+	public Predicate[] getPredicates() {
         return iPredicates;
     }
 

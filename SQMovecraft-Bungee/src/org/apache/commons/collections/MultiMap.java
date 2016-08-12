@@ -66,7 +66,8 @@ public interface MultiMap extends Map {
      * @throws ClassCastException if the key or value is of an invalid type
      * @throws NullPointerException if the key or value is null and null is invalid
      */
-    public boolean remove(Object key, Object item);
+    @Override
+	public boolean remove(Object key, Object item);
 
     //-----------------------------------------------------------------------
     /**
@@ -77,7 +78,8 @@ public interface MultiMap extends Map {
      *
      * @return the number of key-collection mappings in this map
      */
-    int size();
+    @Override
+	int size();
 
     /**
      * Gets the collection of values associated with the specified key.
@@ -98,7 +100,8 @@ public interface MultiMap extends Map {
      * @throws ClassCastException if the key is of an invalid type
      * @throws NullPointerException if the key is null and null keys are invalid
      */
-    Object get(Object key);
+    @Override
+	Object get(Object key);
 
     /**
      * Checks whether the map contains the value specified.
@@ -111,7 +114,8 @@ public interface MultiMap extends Map {
      * @throws ClassCastException if the value is of an invalid type
      * @throws NullPointerException if the value is null and null value are invalid
      */
-    boolean containsValue(Object value);
+    @Override
+	boolean containsValue(Object value);
 
     /**
      * Adds the value to the collection associated with the specified key.
@@ -129,7 +133,8 @@ public interface MultiMap extends Map {
      * @throws NullPointerException if the key or value is null and null is invalid
      * @throws IllegalArgumentException if the key or value is invalid
      */
-    Object put(Object key, Object value);
+    @Override
+	Object put(Object key, Object value);
 
     /**
      * Removes all values associated with the specified key.
@@ -144,7 +149,8 @@ public interface MultiMap extends Map {
      * @throws ClassCastException if the key is of an invalid type
      * @throws NullPointerException if the key is null and null keys are invalid
      */
-    Object remove(Object key);
+    @Override
+	Object remove(Object key);
 
     /**
      * Gets a collection containing all the values in the map.
@@ -155,6 +161,7 @@ public interface MultiMap extends Map {
      *
      * @return a collection view of the values contained in this map
      */
-    Collection values();
+    @Override
+	Collection values();
 
 }

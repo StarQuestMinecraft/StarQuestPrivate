@@ -59,39 +59,48 @@ public class AbstractListIteratorDecorator implements ListIterator {
     }
 
     //-----------------------------------------------------------------------
-    public boolean hasNext() {
+    @Override
+	public boolean hasNext() {
         return iterator.hasNext();
     }
 
-    public Object next() {
+    @Override
+	public Object next() {
         return iterator.next();
     }
 
-    public int nextIndex() {
+    @Override
+	public int nextIndex() {
         return iterator.nextIndex();
     }
 
-    public boolean hasPrevious() {
+    @Override
+	public boolean hasPrevious() {
         return iterator.hasPrevious();
     }
 
-    public Object previous() {
+    @Override
+	public Object previous() {
         return iterator.previous();
     }
 
-    public int previousIndex() {
+    @Override
+	public int previousIndex() {
         return iterator.previousIndex();
     }
 
-    public void remove() {
+    @Override
+	public void remove() {
         iterator.remove();
     }
 
-    public void set(Object obj) {
+    @Override
+	public void set(Object obj) {
         iterator.set(obj);
     }
 
-    public void add(Object obj) {
+    @Override
+	public void add(Object obj) {
         iterator.add(obj);
     }
     

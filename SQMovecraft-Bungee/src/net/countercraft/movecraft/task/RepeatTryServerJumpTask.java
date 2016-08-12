@@ -17,6 +17,7 @@ public class RepeatTryServerJumpTask extends BukkitRunnable{
 	
 	public static void createServerJumpTask(final Craft craft, final SerializableLocation location) {
 		Bukkit.getServer().getScheduler().runTask(Movecraft.getInstance(), new Runnable() {
+			@Override
 			public void run() {
 				RepeatTryServerJumpTask t = new RepeatTryServerJumpTask(craft, location);
 				t.runTaskTimer(Movecraft.getInstance(), 0, 1);
@@ -33,6 +34,7 @@ public class RepeatTryServerJumpTask extends BukkitRunnable{
 			cancel();
 			if(c.pilot != null) c.pilot.sendMessage("Preparing serverjump...");
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+				@Override
 				public void run(){
 					BungeeCraftSender.sendCraft(destinationLocation, c);
 				}

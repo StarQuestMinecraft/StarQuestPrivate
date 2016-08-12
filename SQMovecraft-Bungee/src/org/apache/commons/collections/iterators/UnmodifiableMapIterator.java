@@ -61,27 +61,33 @@ public final class UnmodifiableMapIterator implements MapIterator, Unmodifiable 
     }
 
     //-----------------------------------------------------------------------
-    public boolean hasNext() {
+    @Override
+	public boolean hasNext() {
         return iterator.hasNext();
     }
 
-    public Object next() {
+    @Override
+	public Object next() {
         return iterator.next();
     }
 
-    public Object getKey() {
+    @Override
+	public Object getKey() {
         return iterator.getKey();
     }
 
-    public Object getValue() {
+    @Override
+	public Object getValue() {
         return iterator.getValue();
     }
 
-    public Object setValue(Object value) {
+    @Override
+	public Object setValue(Object value) {
         throw new UnsupportedOperationException("setValue() is not supported");
     }
 
-    public void remove() {
+    @Override
+	public void remove() {
         throw new UnsupportedOperationException("remove() is not supported");
     }
 

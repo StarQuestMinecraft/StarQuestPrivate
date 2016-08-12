@@ -116,7 +116,8 @@ public class CaseInsensitiveMap extends AbstractHashedMap implements Serializabl
      * @param key  the key convert
      * @return the converted key
      */
-    protected Object convertKey(Object key) {
+    @Override
+	protected Object convertKey(Object key) {
         if (key != null) {
             return key.toString().toLowerCase();
         } else {
@@ -130,7 +131,8 @@ public class CaseInsensitiveMap extends AbstractHashedMap implements Serializabl
      *
      * @return a shallow clone
      */
-    public Object clone() {
+    @Override
+	public Object clone() {
         return super.clone();
     }
 

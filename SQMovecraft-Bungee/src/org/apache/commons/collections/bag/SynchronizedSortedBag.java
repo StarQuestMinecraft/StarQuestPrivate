@@ -84,19 +84,22 @@ public class SynchronizedSortedBag
     }
     
     //-----------------------------------------------------------------------
-    public synchronized Object first() {
+    @Override
+	public synchronized Object first() {
         synchronized (lock) {
             return getSortedBag().first();
         }
     }
 
-    public synchronized Object last() {
+    @Override
+	public synchronized Object last() {
         synchronized (lock) {
             return getSortedBag().last();
         }
     }
 
-    public synchronized Comparator comparator() {
+    @Override
+	public synchronized Comparator comparator() {
         synchronized (lock) {
             return getSortedBag().comparator();
         }

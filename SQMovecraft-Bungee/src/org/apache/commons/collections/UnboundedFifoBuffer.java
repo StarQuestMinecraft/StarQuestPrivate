@@ -52,6 +52,7 @@ import java.util.NoSuchElementException;
  * @author Stephen Colebourne
  * @author Andreas Schlosser
  */
+@Deprecated
 public class UnboundedFifoBuffer extends AbstractCollection implements Buffer {
     
     protected Object[] m_buffer;
@@ -91,7 +92,8 @@ public class UnboundedFifoBuffer extends AbstractCollection implements Buffer {
      *
      * @return this buffer's size
      */
-    public int size() {
+    @Override
+	public int size() {
         int size = 0;
 
         if (m_tail < m_head) {
@@ -108,7 +110,8 @@ public class UnboundedFifoBuffer extends AbstractCollection implements Buffer {
      *
      * @return true if this buffer is empty
      */
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         return (size() == 0);
     }
 
@@ -120,7 +123,8 @@ public class UnboundedFifoBuffer extends AbstractCollection implements Buffer {
      * @throws NullPointerException  if the given element is null
      * @throws BufferOverflowException  if this buffer is full
      */
-    public boolean add(final Object obj) {
+    @Override
+	public boolean add(final Object obj) {
         if (obj == null) {
             throw new NullPointerException("Attempted to add null object to buffer");
         }
@@ -159,7 +163,8 @@ public class UnboundedFifoBuffer extends AbstractCollection implements Buffer {
      * @return the next object in the buffer
      * @throws BufferUnderflowException  if this buffer is empty
      */
-    public Object get() {
+    @Override
+	public Object get() {
         if (isEmpty()) {
             throw new BufferUnderflowException("The buffer is already empty");
         }
@@ -173,7 +178,8 @@ public class UnboundedFifoBuffer extends AbstractCollection implements Buffer {
      * @return the removed object
      * @throws BufferUnderflowException  if this buffer is empty
      */
-    public Object remove() {
+    @Override
+	public Object remove() {
         if (isEmpty()) {
             throw new BufferUnderflowException("The buffer is already empty");
         }
@@ -225,18 +231,21 @@ public class UnboundedFifoBuffer extends AbstractCollection implements Buffer {
      *
      * @return an iterator over this buffer's elements
      */
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         return new Iterator() {
 
             private int index = m_head;
             private int lastReturnedIndex = -1;
 
-            public boolean hasNext() {
+            @Override
+			public boolean hasNext() {
                 return index != m_tail;
 
             }
 
-            public Object next() {
+            @Override
+			public Object next() {
                 if (!hasNext())
                     throw new NoSuchElementException();
                 lastReturnedIndex = index;
@@ -244,7 +253,8 @@ public class UnboundedFifoBuffer extends AbstractCollection implements Buffer {
                 return m_buffer[lastReturnedIndex];
             }
 
-            public void remove() {
+            @Override
+			public void remove() {
                 if (lastReturnedIndex == -1)
                     throw new IllegalStateException();
 

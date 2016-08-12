@@ -65,31 +65,38 @@ public final class UnmodifiableSet
     }
 
     //-----------------------------------------------------------------------
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         return UnmodifiableIterator.decorate(getCollection().iterator());
     }
 
-    public boolean add(Object object) {
+    @Override
+	public boolean add(Object object) {
         throw new UnsupportedOperationException();
     }
 
-    public boolean addAll(Collection coll) {
+    @Override
+	public boolean addAll(Collection coll) {
         throw new UnsupportedOperationException();
     }
 
-    public void clear() {
+    @Override
+	public void clear() {
         throw new UnsupportedOperationException();
     }
 
-    public boolean remove(Object object) {
+    @Override
+	public boolean remove(Object object) {
         throw new UnsupportedOperationException();
     }
 
-    public boolean removeAll(Collection coll) {
+    @Override
+	public boolean removeAll(Collection coll) {
         throw new UnsupportedOperationException();
     }
 
-    public boolean retainAll(Collection coll) {
+    @Override
+	public boolean retainAll(Collection coll) {
         throw new UnsupportedOperationException();
     }
 

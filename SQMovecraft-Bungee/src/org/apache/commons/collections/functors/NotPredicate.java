@@ -67,7 +67,8 @@ public final class NotPredicate implements Predicate, PredicateDecorator, Serial
      * @param object  the input object
      * @return true if predicate returns false
      */
-    public boolean evaluate(Object object) {
+    @Override
+	public boolean evaluate(Object object) {
         return !(iPredicate.evaluate(object));
     }
 
@@ -77,7 +78,8 @@ public final class NotPredicate implements Predicate, PredicateDecorator, Serial
      * @return the predicate as the only element in an array
      * @since Commons Collections 3.1
      */
-    public Predicate[] getPredicates() {
+    @Override
+	public Predicate[] getPredicates() {
         return new Predicate[] {iPredicate};
     }
 

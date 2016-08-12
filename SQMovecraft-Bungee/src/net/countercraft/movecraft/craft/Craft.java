@@ -43,7 +43,6 @@ import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
-import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -555,6 +554,7 @@ public class Craft {
 														
 														Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 															
+															@Override
 															public void run(){
 																
 																b.getWorld().createExplosion(location, getType().getLaserPower());

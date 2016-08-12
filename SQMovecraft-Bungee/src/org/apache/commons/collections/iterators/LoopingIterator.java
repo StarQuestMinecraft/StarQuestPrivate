@@ -70,7 +70,8 @@ public class LoopingIterator implements ResettableIterator {
      * 
      * @return <code>true</code> if there are more elements
      */
-    public boolean hasNext() {
+    @Override
+	public boolean hasNext() {
         return (collection.size() > 0);
     }
 
@@ -82,7 +83,8 @@ public class LoopingIterator implements ResettableIterator {
      * @throws NoSuchElementException if there are no elements
      *         at all.  Use {@link #hasNext} to avoid this error.
      */
-    public Object next() {
+    @Override
+	public Object next() {
         if (collection.size() == 0) {
             throw new NoSuchElementException("There are no elements for this iterator to loop on");
         }
@@ -104,14 +106,16 @@ public class LoopingIterator implements ResettableIterator {
      * next has been performed. If the {@link #reset} is called, then remove may
      * not be called until {@link #next} is called again.
      */
-    public void remove() {
+    @Override
+	public void remove() {
         iterator.remove();
     }
 
     /**
      * Resets the iterator back to the start of the collection.
      */
-    public void reset() {
+    @Override
+	public void reset() {
         iterator = collection.iterator();
     }
 

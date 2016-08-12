@@ -42,6 +42,7 @@ import java.util.Set;
  * @author Daniel Rall
  * @author Stephen Colebourne
  */
+@Deprecated
 public abstract class ProxyMap implements Map {
     
     /**
@@ -65,98 +66,112 @@ public abstract class ProxyMap implements Map {
     /**
      * Invokes the underlying {@link Map#clear()} method.
      */
-    public void clear() {
+    @Override
+	public void clear() {
         map.clear();
     }
 
     /**
      * Invokes the underlying {@link Map#containsKey(Object)} method.
      */
-    public boolean containsKey(Object key) {
+    @Override
+	public boolean containsKey(Object key) {
         return map.containsKey(key);
     }
 
     /**
      * Invokes the underlying {@link Map#containsValue(Object)} method.
      */
-    public boolean containsValue(Object value) {
+    @Override
+	public boolean containsValue(Object value) {
         return map.containsValue(value);
     }
 
     /**
      * Invokes the underlying {@link Map#entrySet()} method.
      */
-    public Set entrySet() {
+    @Override
+	public Set entrySet() {
         return map.entrySet();
     }
 
     /**
      * Invokes the underlying {@link Map#equals(Object)} method.
      */
-    public boolean equals(Object m) {
+    @Override
+	public boolean equals(Object m) {
         return map.equals(m);
     }
 
     /**
      * Invokes the underlying {@link Map#get(Object)} method.
      */
-    public Object get(Object key) {
+    @Override
+	public Object get(Object key) {
         return map.get(key);
     }
 
     /**
      * Invokes the underlying {@link Map#hashCode()} method.
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return map.hashCode();
     }
 
     /**
      * Invokes the underlying {@link Map#isEmpty()} method.
      */
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         return map.isEmpty();
     }
 
     /**
      * Invokes the underlying {@link Map#keySet()} method.
      */
-    public Set keySet() {
+    @Override
+	public Set keySet() {
         return map.keySet();
     }
 
     /**
      * Invokes the underlying {@link Map#put(Object,Object)} method.
      */
-    public Object put(Object key, Object value) {
+    @Override
+	public Object put(Object key, Object value) {
         return map.put(key, value);
     }
 
     /**
      * Invokes the underlying {@link Map#putAll(Map)} method.
      */
-    public void putAll(Map t) {
+    @Override
+	public void putAll(Map t) {
         map.putAll(t);
     }
 
     /**
      * Invokes the underlying {@link Map#remove(Object)} method.
      */
-    public Object remove(Object key) {
+    @Override
+	public Object remove(Object key) {
         return map.remove(key);
     }
 
     /**
      * Invokes the underlying {@link Map#size()} method.
      */
-    public int size() {
+    @Override
+	public int size() {
         return map.size();
     }
 
     /**
      * Invokes the underlying {@link Map#values()} method.
      */
-    public Collection values() {
+    @Override
+	public Collection values() {
         return map.values();
     }
    

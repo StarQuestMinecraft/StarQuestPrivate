@@ -37,6 +37,7 @@ public abstract class AsyncTask extends BukkitRunnable {
 		craft = c;
 	}
 
+	@Override
 	public void run() {
 		try {
 			execute();

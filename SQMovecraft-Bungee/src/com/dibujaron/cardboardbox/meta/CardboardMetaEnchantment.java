@@ -1,7 +1,6 @@
 
 package com.dibujaron.cardboardbox.meta;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +35,7 @@ public class CardboardMetaEnchantment implements CardboardItemMeta {
 
 	}
 
+	@Override
 	public ItemMeta unbox() {
 
 		ItemFactory factory = Bukkit.getServer().getItemFactory();

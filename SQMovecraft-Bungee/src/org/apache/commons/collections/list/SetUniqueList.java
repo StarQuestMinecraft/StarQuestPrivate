@@ -125,7 +125,8 @@ public class SetUniqueList extends AbstractSerializableListDecorator {
      * @param object the object to add
      * @return true if object was added
      */
-    public boolean add(Object object) {
+    @Override
+	public boolean add(Object object) {
         // gets initial size
         final int sizeBefore = size();
 
@@ -146,7 +147,8 @@ public class SetUniqueList extends AbstractSerializableListDecorator {
      * @param index  the index to insert at
      * @param object  the object to add
      */
-    public void add(int index, Object object) {
+    @Override
+	public void add(int index, Object object) {
         // adds element if it is not contained already
         if (set.contains(object) == false) {
             super.add(index, object);
@@ -163,7 +165,8 @@ public class SetUniqueList extends AbstractSerializableListDecorator {
      * 
      * @param coll  the collection to add
      */
-    public boolean addAll(Collection coll) {
+    @Override
+	public boolean addAll(Collection coll) {
         return addAll(size(), coll);
     }
 
@@ -181,7 +184,8 @@ public class SetUniqueList extends AbstractSerializableListDecorator {
      * @param coll  the collection to add in iterator order
      * @return true if this collection changed
      */
-    public boolean addAll(int index, Collection coll) {
+    @Override
+	public boolean addAll(int index, Collection coll) {
         // gets initial size
         final int sizeBefore = size();
 
@@ -207,7 +211,8 @@ public class SetUniqueList extends AbstractSerializableListDecorator {
      * @param object  the object to set
      * @return the previous object
      */
-    public Object set(int index, Object object) {
+    @Override
+	public Object set(int index, Object object) {
         int pos = indexOf(object);
         Object removed = super.set(index, object);
         if (pos == -1 || pos == index) {
@@ -221,56 +226,67 @@ public class SetUniqueList extends AbstractSerializableListDecorator {
         return removed;  // return the item deleted by the set
     }
 
-    public boolean remove(Object object) {
+    @Override
+	public boolean remove(Object object) {
         boolean result = super.remove(object);
         set.remove(object);
         return result;
     }
 
-    public Object remove(int index) {
+    @Override
+	public Object remove(int index) {
         Object result = super.remove(index);
         set.remove(result);
         return result;
     }
 
-    public boolean removeAll(Collection coll) {
+    @Override
+	public boolean removeAll(Collection coll) {
         boolean result = super.removeAll(coll);
         set.removeAll(coll);
         return result;
     }
 
-    public boolean retainAll(Collection coll) {
+    @Override
+	public boolean retainAll(Collection coll) {
         boolean result = super.retainAll(coll);
         set.retainAll(coll);
         return result;
     }
 
-    public void clear() {
+    @Override
+	public void clear() {
         super.clear();
         set.clear();
     }
 
-    public boolean contains(Object object) {
+    @Override
+	public boolean contains(Object object) {
         return set.contains(object);
     }
 
-    public boolean containsAll(Collection coll) {
+    @Override
+	public boolean containsAll(Collection coll) {
         return set.containsAll(coll);
     }
 
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         return new SetListIterator(super.iterator(), set);
     }
 
-    public ListIterator listIterator() {
+    @Override
+	public ListIterator listIterator() {
         return new SetListListIterator(super.listIterator(), set);
     }
 
-    public ListIterator listIterator(int index) {
+    @Override
+	public ListIterator listIterator(int index) {
         return new SetListListIterator(super.listIterator(index), set);
     }
 
-    public List subList(int fromIndex, int toIndex) {
+    @Override
+	public List subList(int fromIndex, int toIndex) {
         return new SetUniqueList(super.subList(fromIndex, toIndex), set);
     }
 
@@ -288,12 +304,14 @@ public class SetUniqueList extends AbstractSerializableListDecorator {
             this.set = set;
         }
         
-        public Object next() {
+        @Override
+		public Object next() {
             last = super.next();
             return last;
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             super.remove();
             set.remove(last);
             last = null;
@@ -313,30 +331,35 @@ public class SetUniqueList extends AbstractSerializableListDecorator {
             this.set = set;
         }
         
-        public Object next() {
+        @Override
+		public Object next() {
             last = super.next();
             return last;
         }
 
-        public Object previous() {
+        @Override
+		public Object previous() {
             last = super.previous();
             return last;
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             super.remove();
             set.remove(last);
             last = null;
         }
 
-        public void add(Object object) {
+        @Override
+		public void add(Object object) {
             if (set.contains(object) == false) {
                 super.add(object);
                 set.add(object);
             }
         }
         
-        public void set(Object object) {
+        @Override
+		public void set(Object object) {
             throw new UnsupportedOperationException("ListIterator does not support set");
         }
     }

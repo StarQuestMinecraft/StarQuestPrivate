@@ -59,7 +59,8 @@ public final class NotNullPredicate implements Predicate, Serializable {
      * @param object  the object to evaluate
      * @return true if not null
      */
-    public boolean evaluate(Object object) {
+    @Override
+	public boolean evaluate(Object object) {
         return (object != null);
     }
 

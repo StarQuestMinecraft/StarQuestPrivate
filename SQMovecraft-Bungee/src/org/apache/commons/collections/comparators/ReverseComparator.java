@@ -77,7 +77,8 @@ public class ReverseComparator implements Comparator, Serializable {
      * @param obj2  the second object to compare
      * @return negative if obj1 is less, positive if greater, zero if equal
      */
-    public int compare(Object obj1, Object obj2) {
+    @Override
+	public int compare(Object obj1, Object obj2) {
         return comparator.compare(obj2, obj1);
     }
 
@@ -89,7 +90,8 @@ public class ReverseComparator implements Comparator, Serializable {
      * @return a suitable hash code
      * @since Commons Collections 3.0
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return "ReverseComparator".hashCode() ^ comparator.hashCode();
     }
 
@@ -109,7 +111,8 @@ public class ReverseComparator implements Comparator, Serializable {
      * @return true if equal
      * @since Commons Collections 3.0
      */
-    public boolean equals(Object object) {
+    @Override
+	public boolean equals(Object object) {
         if(this == object) {
             return true;
         } else if(null == object) {

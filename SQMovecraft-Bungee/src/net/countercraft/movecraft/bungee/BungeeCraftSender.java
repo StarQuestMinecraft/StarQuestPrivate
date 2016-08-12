@@ -15,7 +15,6 @@ import net.countercraft.movecraft.utils.MovecraftLocation;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -122,7 +121,7 @@ public class BungeeCraftSender {
 			msgout.writeInt(l.getZ());
 			Location loc = new Location(c.getW(), l.getX(), l.getY(), l.getZ());
 			int id = loc.getBlock().getTypeId();
-			int data = (int) loc.getBlock().getData();
+			int data = loc.getBlock().getData();
 			msgout.writeInt(id);
 			msgout.writeInt(data);
 			// send inventory
@@ -192,6 +191,7 @@ public class BungeeCraftSender {
 			updates[i] = new MapUpdateCommand(blocks[i], 0, c, false);
 		}
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+			@Override
 			public void run(){
 				MapUpdateManager.getInstance().addWorldUpdate(c.getW(), updates, new EntityUpdateCommand[0]);
 			}

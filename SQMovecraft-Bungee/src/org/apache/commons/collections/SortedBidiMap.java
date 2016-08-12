@@ -47,7 +47,8 @@ public interface SortedBidiMap extends OrderedBidiMap, SortedMap {
      *
      * @return an inverted bidirectional map
      */
-    public BidiMap inverseBidiMap();
+    @Override
+	public BidiMap inverseBidiMap();
     
     /**
      * Gets a view of this map where the keys and values are reversed.

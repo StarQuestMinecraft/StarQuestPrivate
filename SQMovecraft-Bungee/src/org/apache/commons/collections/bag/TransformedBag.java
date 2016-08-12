@@ -84,21 +84,25 @@ public class TransformedBag
     }
 
     //-----------------------------------------------------------------------
-    public int getCount(Object object) {
+    @Override
+	public int getCount(Object object) {
         return getBag().getCount(object);
     }
 
-    public boolean remove(Object object, int nCopies) {
+    @Override
+	public boolean remove(Object object, int nCopies) {
         return getBag().remove(object, nCopies);
     }
 
     //-----------------------------------------------------------------------
-    public boolean add(Object object, int nCopies) {
+    @Override
+	public boolean add(Object object, int nCopies) {
         object = transform(object);
         return getBag().add(object, nCopies);
     }
 
-    public Set uniqueSet() {
+    @Override
+	public Set uniqueSet() {
         Set set = getBag().uniqueSet();
         return TransformedSet.decorate(set, transformer);
     }

@@ -66,8 +66,8 @@ public class InstantiateFactory implements Factory, Serializable {
         if (paramTypes == null || paramTypes.length == 0) {
             return new InstantiateFactory(classToInstantiate);
         } else {
-            paramTypes = (Class[]) paramTypes.clone();
-            args = (Object[]) args.clone();
+            paramTypes = paramTypes.clone();
+            args = args.clone();
             return new InstantiateFactory(classToInstantiate, paramTypes, args);
         }
     }
@@ -119,7 +119,8 @@ public class InstantiateFactory implements Factory, Serializable {
      * 
      * @return the new object
      */
-    public Object create() {
+    @Override
+	public Object create() {
         // needed for post-serialization
         if (iConstructor == null) {
             findConstructor();

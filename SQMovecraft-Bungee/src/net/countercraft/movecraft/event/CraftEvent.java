@@ -15,6 +15,7 @@ public class CraftEvent extends Event implements Cancellable{
 	public CraftEvent(Craft c){
 		craft = c;
 	}
+	@Override
 	public HandlerList getHandlers() {
 	    return handlers;
 	}

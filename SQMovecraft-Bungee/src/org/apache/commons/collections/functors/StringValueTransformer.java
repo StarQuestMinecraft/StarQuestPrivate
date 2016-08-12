@@ -60,7 +60,8 @@ public final class StringValueTransformer implements Transformer, Serializable {
      * @param input  the input object to transform
      * @return the transformed result
      */
-    public Object transform(Object input) {
+    @Override
+	public Object transform(Object input) {
         return String.valueOf(input);
     }
 

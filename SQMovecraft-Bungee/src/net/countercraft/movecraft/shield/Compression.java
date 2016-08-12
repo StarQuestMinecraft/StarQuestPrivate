@@ -37,7 +37,7 @@ public class Compression {
 	    long[] longs = new long[2];
 	    //for (int i = 0; i < chars.length; ++i) {
 	    for (int i = chars.length - 1; i >= 0; --i) {
-	        int payload = (int) chars[i];
+	        int payload = chars[i];
 	        if (payload < char0) {
 	            throw new IllegalArgumentException(
 	                     String.format("Char [%d] is wrong; U+%04X",

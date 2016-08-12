@@ -264,7 +264,8 @@ public class ComparatorChain implements Comparator, Serializable {
      *                   if the ComparatorChain does not contain at least one
      *                   Comparator
      */
-    public int compare(Object o1, Object o2) throws UnsupportedOperationException {
+    @Override
+	public int compare(Object o1, Object o2) throws UnsupportedOperationException {
         if (isLocked == false) {
             checkChainIntegrity();
             isLocked = true;
@@ -303,7 +304,8 @@ public class ComparatorChain implements Comparator, Serializable {
      * @return a suitable hash code
      * @since Commons Collections 3.0
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         int hash = 0;
         if(null != comparatorChain) {
             hash ^= comparatorChain.hashCode();
@@ -330,7 +332,8 @@ public class ComparatorChain implements Comparator, Serializable {
      * @return true if equal
      * @since Commons Collections 3.0
      */
-    public boolean equals(Object object) {
+    @Override
+	public boolean equals(Object object) {
         if(this == object) {
             return true;
         } else if(null == object) {

@@ -1,8 +1,6 @@
 
 package com.dibujaron.cardboardbox.meta;
 
-import java.io.Serializable;
-
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.MapMeta;
@@ -24,6 +22,7 @@ public class CardboardMetaMap implements CardboardItemMeta {
 		}
 	}
 
+	@Override
 	public ItemMeta unbox() {
 
 		MapMeta meta = (MapMeta) new ItemStack(this.id).getItemMeta();

@@ -12,7 +12,6 @@ import net.countercraft.movecraft.utils.BorderUtils;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
 import net.countercraft.movecraft.utils.MathUtils;
-import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.NewShipClassConverter;
 
 import org.bukkit.Bukkit;
@@ -222,6 +221,7 @@ public class BungeeCraftConstructor {
 	public static void delayStarshipMoving(final Craft c){
 		c.setProcessingTeleport(true);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+			@Override
 			public void run(){
 				c.setProcessingTeleport(false);
 			}
@@ -256,6 +256,7 @@ public class BungeeCraftConstructor {
 	
 	private static void attemptPilot(final int count, final Craft c, final String pilot, final UUID uid, final String type, final World w){
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+			@Override
 			public void run(){
 				Player p = Bukkit.getServer().getPlayer(pilot);
 				if(p != null){

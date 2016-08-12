@@ -90,7 +90,8 @@ public class CursorableLinkedList extends AbstractLinkedList implements Serializ
      * The equivalent of a default constructor called
      * by any constructor and by <code>readObject</code>.
      */
-    protected void init() {
+    @Override
+	protected void init() {
         super.init();
         cursors = new ArrayList();
     }
@@ -105,7 +106,8 @@ public class CursorableLinkedList extends AbstractLinkedList implements Serializ
      * 
      * @return a new iterator that does <b>not</b> support concurrent modification
      */
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         return super.listIterator(0);
     }
 
@@ -124,7 +126,8 @@ public class CursorableLinkedList extends AbstractLinkedList implements Serializ
      * 
      * @return a new cursor iterator
      */
-    public ListIterator listIterator() {
+    @Override
+	public ListIterator listIterator() {
         return cursor(0);
     }
 
@@ -144,7 +147,8 @@ public class CursorableLinkedList extends AbstractLinkedList implements Serializ
      * @param fromIndex  the index to start from
      * @return a new cursor iterator
      */
-    public ListIterator listIterator(int fromIndex) {
+    @Override
+	public ListIterator listIterator(int fromIndex) {
         return cursor(fromIndex);
     }
 
@@ -217,7 +221,8 @@ public class CursorableLinkedList extends AbstractLinkedList implements Serializ
      * @param node  node to update
      * @param value  new value of the node
      */
-    protected void updateNode(Node node, Object value) {
+    @Override
+	protected void updateNode(Node node, Object value) {
         super.updateNode(node, value);
         broadcastNodeChanged(node);
     }
@@ -229,7 +234,8 @@ public class CursorableLinkedList extends AbstractLinkedList implements Serializ
      * @param insertBeforeNode  node to insert before
      * @throws NullPointerException if either node is null
      */
-    protected void addNode(Node nodeToInsert, Node insertBeforeNode) {
+    @Override
+	protected void addNode(Node nodeToInsert, Node insertBeforeNode) {
         super.addNode(nodeToInsert, insertBeforeNode);
         broadcastNodeInserted(nodeToInsert);
     }
@@ -240,7 +246,8 @@ public class CursorableLinkedList extends AbstractLinkedList implements Serializ
      * @param node  the node to remove
      * @throws NullPointerException if <code>node</code> is null
      */
-    protected void removeNode(Node node) {
+    @Override
+	protected void removeNode(Node node) {
         super.removeNode(node);
         broadcastNodeRemoved(node);
     }
@@ -248,7 +255,8 @@ public class CursorableLinkedList extends AbstractLinkedList implements Serializ
     /**
      * Removes all nodes by iteration.
      */
-    protected void removeAllNodes() {
+    @Override
+	protected void removeAllNodes() {
         if (size() > 0) {
             // superclass implementation would break all the iterators
             Iterator it = iterator();
@@ -382,7 +390,8 @@ public class CursorableLinkedList extends AbstractLinkedList implements Serializ
      * @param subList  the sublist to get an iterator for
      * @param fromIndex  the index to start from, relative to the sublist
      */
-    protected ListIterator createSubListListIterator(LinkedSubList subList, int fromIndex) {
+    @Override
+	protected ListIterator createSubListListIterator(LinkedSubList subList, int fromIndex) {
         SubCursor cursor = new SubCursor(subList, fromIndex);
         registerCursor(cursor);
         return cursor;
@@ -422,7 +431,8 @@ public class CursorableLinkedList extends AbstractLinkedList implements Serializ
          *
          * @throws IllegalStateException if there is no item to remove
          */
-        public void remove() {
+        @Override
+		public void remove() {
             // overridden, as the nodeRemoved() method updates the iterator
             // state in the parent.removeNode() call below
             if (current == null && currentRemovedByAnother) {
@@ -443,7 +453,8 @@ public class CursorableLinkedList extends AbstractLinkedList implements Serializ
          * 
          * @param obj  the object to add
          */
-        public void add(Object obj) {
+        @Override
+		public void add(Object obj) {
             // overridden, as the nodeInserted() method updates the iterator state
             super.add(obj);
             // matches the (next.previous == node) clause in nodeInserted()
@@ -461,7 +472,8 @@ public class CursorableLinkedList extends AbstractLinkedList implements Serializ
          * 
          * @return the next index
          */
-        public int nextIndex() {
+        @Override
+		public int nextIndex() {
             if (nextIndexValid == false) {
                 if (next == parent.header) {
                     nextIndex = parent.size();
@@ -534,7 +546,8 @@ public class CursorableLinkedList extends AbstractLinkedList implements Serializ
         /**
          * Override superclass modCount check, and replace it with our valid flag.
          */
-        protected void checkModCount() {
+        @Override
+		protected void checkModCount() {
             if (!valid) {
                 throw new ConcurrentModificationException("Cursor closed");
             }
@@ -577,25 +590,30 @@ public class CursorableLinkedList extends AbstractLinkedList implements Serializ
             this.sub = sub;
         }
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             return (nextIndex() < sub.size);
         }
 
-        public boolean hasPrevious() {
+        @Override
+		public boolean hasPrevious() {
             return (previousIndex() >= 0);
         }
 
-        public int nextIndex() {
+        @Override
+		public int nextIndex() {
             return (super.nextIndex() - sub.offset);
         }
 
-        public void add(Object obj) {
+        @Override
+		public void add(Object obj) {
             super.add(obj);
             sub.expectedModCount = parent.modCount;
             sub.size++;
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             super.remove();
             sub.expectedModCount = parent.modCount;
             sub.size--;

@@ -107,7 +107,8 @@ public class LazyList extends AbstractSerializableListDecorator {
      * 
      * @param index  the index to retrieve
      */
-    public Object get(int index) {
+    @Override
+	public Object get(int index) {
         int size = getList().size();
         if (index < size) {
             // within bounds, get the object
@@ -134,7 +135,8 @@ public class LazyList extends AbstractSerializableListDecorator {
     }
 
 
-    public List subList(int fromIndex, int toIndex) {
+    @Override
+	public List subList(int fromIndex, int toIndex) {
         List sub = getList().subList(fromIndex, toIndex);
         return new LazyList(sub, factory);
     }

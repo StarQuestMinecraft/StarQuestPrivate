@@ -81,7 +81,8 @@ public class SynchronizedSortedSet extends SynchronizedCollection implements Sor
     }
 
     //-----------------------------------------------------------------------
-    public SortedSet subSet(Object fromElement, Object toElement) {
+    @Override
+	public SortedSet subSet(Object fromElement, Object toElement) {
         synchronized (lock) {
             SortedSet set = getSortedSet().subSet(fromElement, toElement);
             // the lock is passed into the constructor here to ensure that the
@@ -90,7 +91,8 @@ public class SynchronizedSortedSet extends SynchronizedCollection implements Sor
         }
     }
 
-    public SortedSet headSet(Object toElement) {
+    @Override
+	public SortedSet headSet(Object toElement) {
         synchronized (lock) {
             SortedSet set = getSortedSet().headSet(toElement);
             // the lock is passed into the constructor here to ensure that the
@@ -99,7 +101,8 @@ public class SynchronizedSortedSet extends SynchronizedCollection implements Sor
         }
     }
 
-    public SortedSet tailSet(Object fromElement) {
+    @Override
+	public SortedSet tailSet(Object fromElement) {
         synchronized (lock) {
             SortedSet set = getSortedSet().tailSet(fromElement);
             // the lock is passed into the constructor here to ensure that the
@@ -108,19 +111,22 @@ public class SynchronizedSortedSet extends SynchronizedCollection implements Sor
         }
     }
 
-    public Object first() {
+    @Override
+	public Object first() {
         synchronized (lock) {
             return getSortedSet().first();
         }
     }
 
-    public Object last() {
+    @Override
+	public Object last() {
         synchronized (lock) {
             return getSortedSet().last();
         }
     }
 
-    public Comparator comparator() {
+    @Override
+	public Comparator comparator() {
         synchronized (lock) {
             return getSortedSet().comparator();
         }

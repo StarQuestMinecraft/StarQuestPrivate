@@ -72,7 +72,8 @@ public final class OrPredicate implements Predicate, PredicateDecorator, Seriali
      * @param object  the input object
      * @return true if either decorated predicate returns true
      */
-    public boolean evaluate(Object object) {
+    @Override
+	public boolean evaluate(Object object) {
        return (iPredicate1.evaluate(object) || iPredicate2.evaluate(object));
     }
 
@@ -82,7 +83,8 @@ public final class OrPredicate implements Predicate, PredicateDecorator, Seriali
      * @return the predicates
      * @since Commons Collections 3.1
      */
-    public Predicate[] getPredicates() {
+    @Override
+	public Predicate[] getPredicates() {
         return new Predicate[] {iPredicate1, iPredicate2};
     }
 

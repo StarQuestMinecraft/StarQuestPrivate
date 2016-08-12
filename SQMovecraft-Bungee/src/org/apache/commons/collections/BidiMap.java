@@ -58,7 +58,8 @@ public interface BidiMap extends IterableMap {
      * 
      * @return a map iterator
      */
-    MapIterator mapIterator();
+    @Override
+	MapIterator mapIterator();
     
     /**
      * Puts the key-value pair into the map, replacing any previous pair.
@@ -88,7 +89,8 @@ public interface BidiMap extends IterableMap {
      * @throws NullPointerException (optional) if the map limits the values to
      *  non-null and null was specified
      */
-    Object put(Object key, Object value);
+    @Override
+	Object put(Object key, Object value);
     
     /**
      * Gets the key that is currently mapped to the specified value.

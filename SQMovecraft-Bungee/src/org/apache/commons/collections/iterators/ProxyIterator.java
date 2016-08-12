@@ -27,6 +27,7 @@ import java.util.Iterator;
  * 
  * @author James Strachan
  */
+@Deprecated
 public class ProxyIterator implements Iterator {
     
     /** Holds value of property iterator. */
@@ -62,7 +63,8 @@ public class ProxyIterator implements Iterator {
      *
      *  @return true if the underlying iterator has more elements
      */
-    public boolean hasNext() {
+    @Override
+	public boolean hasNext() {
         return getIterator().hasNext();
     }
 
@@ -73,7 +75,8 @@ public class ProxyIterator implements Iterator {
      *  @throws java.util.NoSuchElementException  if the underlying iterator 
      *    raises it because it has no more elements
      */
-    public Object next() {
+    @Override
+	public Object next() {
         return getIterator().next();
     }
 
@@ -81,7 +84,8 @@ public class ProxyIterator implements Iterator {
      *  Removes the last returned element from the collection that spawned
      *  the underlying iterator.
      */
-    public void remove() {
+    @Override
+	public void remove() {
         getIterator().remove();
     }
 

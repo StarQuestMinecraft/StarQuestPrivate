@@ -3,9 +3,7 @@ package net.countercraft.movecraft.crafttransfer.transferdata;
 import java.io.Serializable;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Sign;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 import com.dibujaron.cardboardbox.Crate;

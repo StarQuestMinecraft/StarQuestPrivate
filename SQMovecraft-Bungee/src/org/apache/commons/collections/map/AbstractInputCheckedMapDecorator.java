@@ -96,7 +96,8 @@ abstract class AbstractInputCheckedMapDecorator
     }
 
     //-----------------------------------------------------------------------
-    public Set entrySet() {
+    @Override
+	public Set entrySet() {
         if (isSetValueChecking()) {
             return new EntrySet(map.entrySet(), this);
         } else {
@@ -118,11 +119,13 @@ abstract class AbstractInputCheckedMapDecorator
             this.parent = parent;
         }
 
-        public Iterator iterator() {
+        @Override
+		public Iterator iterator() {
             return new EntrySetIterator(collection.iterator(), parent);
         }
         
-        public Object[] toArray() {
+        @Override
+		public Object[] toArray() {
             Object[] array = collection.toArray();
             for (int i = 0; i < array.length; i++) {
                 array[i] = new MapEntry((Map.Entry) array[i], parent);
@@ -130,7 +133,8 @@ abstract class AbstractInputCheckedMapDecorator
             return array;
         }
         
-        public Object[] toArray(Object array[]) {
+        @Override
+		public Object[] toArray(Object array[]) {
             Object[] result = array;
             if (array.length > 0) {
                 // we must create a new array to handle multi-threaded situations
@@ -169,7 +173,8 @@ abstract class AbstractInputCheckedMapDecorator
             this.parent = parent;
         }
         
-        public Object next() {
+        @Override
+		public Object next() {
             Map.Entry entry = (Map.Entry) iterator.next();
             return new MapEntry(entry, parent);
         }
@@ -188,7 +193,8 @@ abstract class AbstractInputCheckedMapDecorator
             this.parent = parent;
         }
 
-        public Object setValue(Object value) {
+        @Override
+		public Object setValue(Object value) {
             value = parent.checkSetValue(value);
             return entry.setValue(value);
         }

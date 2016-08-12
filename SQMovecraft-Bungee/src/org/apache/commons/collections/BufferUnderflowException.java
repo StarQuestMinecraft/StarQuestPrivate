@@ -70,7 +70,8 @@ public class BufferUnderflowException extends NoSuchElementException {
      *
      * @return the root cause
      */
-    public final Throwable getCause() {
+    @Override
+	public final Throwable getCause() {
         return throwable;
     }
     

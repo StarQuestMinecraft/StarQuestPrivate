@@ -220,14 +220,16 @@ public class PriorityBuffer extends AbstractCollection
      *
      * @return the number of elements in this buffer
      */
-    public int size() {
+    @Override
+	public int size() {
         return size;
     }
 
     /**
      * Clears all elements from the buffer.
      */
-    public void clear() {
+    @Override
+	public void clear() {
         elements = new Object[elements.length]; // for gc
         size = 0;
     }
@@ -240,7 +242,8 @@ public class PriorityBuffer extends AbstractCollection
      * @param element  the element to be added
      * @return true always
      */
-    public boolean add(Object element) {
+    @Override
+	public boolean add(Object element) {
         if (isAtCapacity()) {
             grow();
         }
@@ -259,7 +262,8 @@ public class PriorityBuffer extends AbstractCollection
      * @return the next element
      * @throws BufferUnderflowException if the buffer is empty
      */
-    public Object get() {
+    @Override
+	public Object get() {
         if (isEmpty()) {
             throw new BufferUnderflowException();
         } else {
@@ -273,7 +277,8 @@ public class PriorityBuffer extends AbstractCollection
      * @return the next element
      * @throws BufferUnderflowException if the buffer is empty
      */
-    public Object remove() {
+    @Override
+	public Object remove() {
         final Object result = get();
         elements[1] = elements[size--];
 
@@ -466,17 +471,20 @@ public class PriorityBuffer extends AbstractCollection
      *
      * @return an iterator over this heap's elements
      */
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         return new Iterator() {
 
             private int index = 1;
             private int lastReturnedIndex = -1;
 
-            public boolean hasNext() {
+            @Override
+			public boolean hasNext() {
                 return index <= size;
             }
 
-            public Object next() {
+            @Override
+			public Object next() {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
@@ -485,7 +493,8 @@ public class PriorityBuffer extends AbstractCollection
                 return elements[lastReturnedIndex];
             }
 
-            public void remove() {
+            @Override
+			public void remove() {
                 if (lastReturnedIndex == -1) {
                     throw new IllegalStateException();
                 }
@@ -525,7 +534,8 @@ public class PriorityBuffer extends AbstractCollection
      *
      * @return a string representation of this heap
      */
-    public String toString() {
+    @Override
+	public String toString() {
         final StringBuffer sb = new StringBuffer();
 
         sb.append("[ ");

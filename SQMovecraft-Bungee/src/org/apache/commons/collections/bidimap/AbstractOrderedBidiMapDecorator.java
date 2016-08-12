@@ -59,27 +59,33 @@ public abstract class AbstractOrderedBidiMapDecorator
     }
 
     //-----------------------------------------------------------------------
-    public OrderedMapIterator orderedMapIterator() {
+    @Override
+	public OrderedMapIterator orderedMapIterator() {
         return getOrderedBidiMap().orderedMapIterator();
     }
 
-    public Object firstKey() {
+    @Override
+	public Object firstKey() {
         return getOrderedBidiMap().firstKey();
     }
 
-    public Object lastKey() {
+    @Override
+	public Object lastKey() {
         return getOrderedBidiMap().lastKey();
     }
 
-    public Object nextKey(Object key) {
+    @Override
+	public Object nextKey(Object key) {
         return getOrderedBidiMap().nextKey(key);
     }
 
-    public Object previousKey(Object key) {
+    @Override
+	public Object previousKey(Object key) {
         return getOrderedBidiMap().previousKey(key);
     }
 
-    public OrderedBidiMap inverseOrderedBidiMap() {
+    @Override
+	public OrderedBidiMap inverseOrderedBidiMap() {
         return getOrderedBidiMap().inverseOrderedBidiMap();
     }
 

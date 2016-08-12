@@ -159,7 +159,7 @@ public class MultiKey implements Serializable {
             throw new IllegalArgumentException("The array of keys must not be null");
         }
         if (makeClone) {
-            this.keys = (Object[]) keys.clone();
+            this.keys = keys.clone();
         } else {
             this.keys = keys;
         }
@@ -183,7 +183,7 @@ public class MultiKey implements Serializable {
      * @return the individual keys
      */
     public Object[] getKeys() {
-        return (Object[]) keys.clone();
+        return keys.clone();
     }
     
     /**
@@ -221,7 +221,8 @@ public class MultiKey implements Serializable {
      * @param other  the other object to compare to
      * @return true if equal
      */
-    public boolean equals(Object other) {
+    @Override
+	public boolean equals(Object other) {
         if (other == this) {
             return true;
         }
@@ -242,7 +243,8 @@ public class MultiKey implements Serializable {
      * 
      * @return the hash code
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return hashCode;
     }
 
@@ -251,7 +253,8 @@ public class MultiKey implements Serializable {
      * 
      * @return a debugging string
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return "MultiKey" + Arrays.asList(keys).toString();
     }
 

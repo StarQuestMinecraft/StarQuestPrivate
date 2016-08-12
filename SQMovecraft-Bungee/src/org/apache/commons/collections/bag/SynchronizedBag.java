@@ -85,26 +85,30 @@ public class SynchronizedBag
     }
     
     //-----------------------------------------------------------------------
-    public boolean add(Object object, int count) {
+    @Override
+	public boolean add(Object object, int count) {
         synchronized (lock) {
             return getBag().add(object, count);
         }
     }
 
-    public boolean remove(Object object, int count) {
+    @Override
+	public boolean remove(Object object, int count) {
         synchronized (lock) {
             return getBag().remove(object, count);
         }
     }
 
-    public Set uniqueSet() {
+    @Override
+	public Set uniqueSet() {
         synchronized (lock) {
             Set set = getBag().uniqueSet();
             return new SynchronizedBagSet(set, lock);
         }
     }
 
-    public int getCount(Object object) {
+    @Override
+	public int getCount(Object object) {
         synchronized (lock) {
             return getBag().getCount(object);
         }

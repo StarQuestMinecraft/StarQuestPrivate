@@ -75,66 +75,81 @@ public abstract class AbstractMapDecorator implements Map {
     }
 
     //-----------------------------------------------------------------------
-    public void clear() {
+    @Override
+	public void clear() {
         map.clear();
     }
 
-    public boolean containsKey(Object key) {
+    @Override
+	public boolean containsKey(Object key) {
         return map.containsKey(key);
     }
 
-    public boolean containsValue(Object value) {
+    @Override
+	public boolean containsValue(Object value) {
         return map.containsValue(value);
     }
 
-    public Set entrySet() {
+    @Override
+	public Set entrySet() {
         return map.entrySet();
     }
 
-    public Object get(Object key) {
+    @Override
+	public Object get(Object key) {
         return map.get(key);
     }
 
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         return map.isEmpty();
     }
 
-    public Set keySet() {
+    @Override
+	public Set keySet() {
         return map.keySet();
     }
 
-    public Object put(Object key, Object value) {
+    @Override
+	public Object put(Object key, Object value) {
         return map.put(key, value);
     }
 
-    public void putAll(Map mapToCopy) {
+    @Override
+	public void putAll(Map mapToCopy) {
         map.putAll(mapToCopy);
     }
 
-    public Object remove(Object key) {
+    @Override
+	public Object remove(Object key) {
         return map.remove(key);
     }
 
-    public int size() {
+    @Override
+	public int size() {
         return map.size();
     }
 
-    public Collection values() {
+    @Override
+	public Collection values() {
         return map.values();
     }
    
-    public boolean equals(Object object) {
+    @Override
+	public boolean equals(Object object) {
         if (object == this) {
             return true;
         }
         return map.equals(object);
     }
 
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return map.hashCode();
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         return map.toString();
     }
 

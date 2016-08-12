@@ -1,7 +1,6 @@
 
 package com.dibujaron.cardboardbox.meta;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +29,7 @@ public class CardboardMetaFirework implements CardboardItemMeta {
 		this.power = meta.getPower();
 	}
 
+	@Override
 	public ItemMeta unbox() {
 
 		FireworkMeta meta = (FireworkMeta) new ItemStack(this.id).getItemMeta();

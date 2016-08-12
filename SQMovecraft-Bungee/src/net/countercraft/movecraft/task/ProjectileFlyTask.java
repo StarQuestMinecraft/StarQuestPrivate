@@ -10,6 +10,7 @@ public class ProjectileFlyTask extends BukkitRunnable{
 		myTorpedo = projectile;
 	}
 	
+	@Override
 	public void run(){
 		myTorpedo.taskMove();
 	}

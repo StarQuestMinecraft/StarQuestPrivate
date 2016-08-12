@@ -109,7 +109,8 @@ public class ObjectArrayListIterator extends ObjectArrayIterator
      *
      * @return true if there is a previous element to return
      */
-    public boolean hasPrevious() {
+    @Override
+	public boolean hasPrevious() {
         return (this.index > this.startIndex);
     }
 
@@ -119,7 +120,8 @@ public class ObjectArrayListIterator extends ObjectArrayIterator
      * @return the previous element
      * @throws NoSuchElementException if there is no previous element
      */
-    public Object previous() {
+    @Override
+	public Object previous() {
         if (hasPrevious() == false) {
             throw new NoSuchElementException();
         }
@@ -133,7 +135,8 @@ public class ObjectArrayListIterator extends ObjectArrayIterator
      * @return the next element
      * @throws NoSuchElementException if there is no next element
      */
-    public Object next() {
+    @Override
+	public Object next() {
         if (hasNext() == false) {
             throw new NoSuchElementException();
         }
@@ -146,7 +149,8 @@ public class ObjectArrayListIterator extends ObjectArrayIterator
      * 
      * @return the index of the item to be retrieved next
      */
-    public int nextIndex() {
+    @Override
+	public int nextIndex() {
         return this.index - this.startIndex;
     }
 
@@ -155,7 +159,8 @@ public class ObjectArrayListIterator extends ObjectArrayIterator
      * 
      * @return the index of the item to be retrieved next
      */
-    public int previousIndex() {
+    @Override
+	public int previousIndex() {
         return this.index - this.startIndex - 1;
     }
 
@@ -166,7 +171,8 @@ public class ObjectArrayListIterator extends ObjectArrayIterator
      * @param obj  the object to add
      * @throws UnsupportedOperationException always thrown.
      */
-    public void add(Object obj) {
+    @Override
+	public void add(Object obj) {
         throw new UnsupportedOperationException("add() method is not supported");
     }
 
@@ -187,7 +193,8 @@ public class ObjectArrayListIterator extends ObjectArrayIterator
      * @throws IllegalStateException if next() has not yet been called.
      * @throws ClassCastException if the object type is unsuitable for the array
      */
-    public void set(Object obj) {
+    @Override
+	public void set(Object obj) {
         if (this.lastItemIndex == -1) {
             throw new IllegalStateException("must call next() or previous() before a call to set()");
         }
@@ -198,7 +205,8 @@ public class ObjectArrayListIterator extends ObjectArrayIterator
     /**
      * Resets the iterator back to the start index.
      */
-    public void reset() {
+    @Override
+	public void reset() {
         super.reset();
         this.lastItemIndex = -1;
     }

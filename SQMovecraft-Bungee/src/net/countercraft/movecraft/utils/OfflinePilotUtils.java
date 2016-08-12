@@ -19,6 +19,7 @@ public class OfflinePilotUtils {
 	public static void registerOfflinePilot(final UUID uid, Craft c){
 		offlinePilotIndex.put(uid, c);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+			@Override
 			public void run(){
 				offlinePilotIndex.remove(uid);
 			}

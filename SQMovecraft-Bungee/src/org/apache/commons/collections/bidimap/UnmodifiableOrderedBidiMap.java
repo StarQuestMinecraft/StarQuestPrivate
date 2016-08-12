@@ -72,57 +72,69 @@ public final class UnmodifiableOrderedBidiMap
     }
 
     //-----------------------------------------------------------------------
-    public void clear() {
+    @Override
+	public void clear() {
         throw new UnsupportedOperationException();
     }
 
-    public Object put(Object key, Object value) {
+    @Override
+	public Object put(Object key, Object value) {
         throw new UnsupportedOperationException();
     }
 
-    public void putAll(Map mapToCopy) {
+    @Override
+	public void putAll(Map mapToCopy) {
         throw new UnsupportedOperationException();
     }
 
-    public Object remove(Object key) {
+    @Override
+	public Object remove(Object key) {
         throw new UnsupportedOperationException();
     }
 
-    public Set entrySet() {
+    @Override
+	public Set entrySet() {
         Set set = super.entrySet();
         return UnmodifiableEntrySet.decorate(set);
     }
 
-    public Set keySet() {
+    @Override
+	public Set keySet() {
         Set set = super.keySet();
         return UnmodifiableSet.decorate(set);
     }
 
-    public Collection values() {
+    @Override
+	public Collection values() {
         Collection coll = super.values();
         return UnmodifiableCollection.decorate(coll);
     }
 
     //-----------------------------------------------------------------------
-    public Object removeValue(Object value) {
+    @Override
+	public Object removeValue(Object value) {
         throw new UnsupportedOperationException();
     }
 
-    public MapIterator mapIterator() {
+    @Override
+	public MapIterator mapIterator() {
         return orderedMapIterator();
     }
 
-    public BidiMap inverseBidiMap() {
+    @Override
+	public BidiMap inverseBidiMap() {
         return inverseOrderedBidiMap();
     }
     
     //-----------------------------------------------------------------------
-    public OrderedMapIterator orderedMapIterator() {
+    @Override
+	public OrderedMapIterator orderedMapIterator() {
         OrderedMapIterator it = getOrderedBidiMap().orderedMapIterator();
         return UnmodifiableOrderedMapIterator.decorate(it);
     }
 
-    public OrderedBidiMap inverseOrderedBidiMap() {
+    @Override
+	public OrderedBidiMap inverseOrderedBidiMap() {
         if (inverse == null) {
             inverse = new UnmodifiableOrderedBidiMap(getOrderedBidiMap().inverseOrderedBidiMap());
             inverse.inverse = this;

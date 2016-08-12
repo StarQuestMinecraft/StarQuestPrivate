@@ -180,7 +180,8 @@ public class DefaultedMap
     }
 
     //-----------------------------------------------------------------------
-    public Object get(Object key) {
+    @Override
+	public Object get(Object key) {
         // create value for key if key is not currently in the map
         if (map.containsKey(key) == false) {
             if (value instanceof Transformer) {

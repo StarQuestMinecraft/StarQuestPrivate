@@ -154,7 +154,8 @@ public class FastHashMap extends HashMap {
      * @param key  the key whose value is to be returned
      * @return the value mapped to that key, or null
      */
-    public Object get(Object key) {
+    @Override
+	public Object get(Object key) {
         if (fast) {
             return (map.get(key));
         } else {
@@ -169,7 +170,8 @@ public class FastHashMap extends HashMap {
      * 
      * @return the current size of the map
      */
-    public int size() {
+    @Override
+	public int size() {
         if (fast) {
             return (map.size());
         } else {
@@ -184,7 +186,8 @@ public class FastHashMap extends HashMap {
      * 
      * @return is the map currently empty
      */
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         if (fast) {
             return (map.isEmpty());
         } else {
@@ -201,7 +204,8 @@ public class FastHashMap extends HashMap {
      * @param key  the key to be searched for
      * @return true if the map contains the key
      */
-    public boolean containsKey(Object key) {
+    @Override
+	public boolean containsKey(Object key) {
         if (fast) {
             return (map.containsKey(key));
         } else {
@@ -218,7 +222,8 @@ public class FastHashMap extends HashMap {
      * @param value  the value to be searched for
      * @return true if the map contains the value
      */
-    public boolean containsValue(Object value) {
+    @Override
+	public boolean containsValue(Object value) {
         if (fast) {
             return (map.containsValue(value));
         } else {
@@ -243,7 +248,8 @@ public class FastHashMap extends HashMap {
      * @param value  the value to be associated with this key
      * @return the value previously mapped to the key, or null
      */
-    public Object put(Object key, Object value) {
+    @Override
+	public Object put(Object key, Object value) {
         if (fast) {
             synchronized (this) {
                 HashMap temp = (HashMap) map.clone();
@@ -264,7 +270,8 @@ public class FastHashMap extends HashMap {
      *
      * @param in  the map whose mappings are to be copied
      */
-    public void putAll(Map in) {
+    @Override
+	public void putAll(Map in) {
         if (fast) {
             synchronized (this) {
                 HashMap temp = (HashMap) map.clone();
@@ -285,7 +292,8 @@ public class FastHashMap extends HashMap {
      * @param key  the key whose mapping is to be removed
      * @return the value removed, or null
      */
-    public Object remove(Object key) {
+    @Override
+	public Object remove(Object key) {
         if (fast) {
             synchronized (this) {
                 HashMap temp = (HashMap) map.clone();
@@ -303,7 +311,8 @@ public class FastHashMap extends HashMap {
     /**
      * Remove all mappings from this map.
      */
-    public void clear() {
+    @Override
+	public void clear() {
         if (fast) {
             synchronized (this) {
                 map = new HashMap();
@@ -327,7 +336,8 @@ public class FastHashMap extends HashMap {
      * @param o  the object to be compared to this list
      * @return true if the two maps are equal
      */
-    public boolean equals(Object o) {
+    @Override
+	public boolean equals(Object o) {
         // Simple tests that require no synchronization
         if (o == this) {
             return (true);
@@ -390,7 +400,8 @@ public class FastHashMap extends HashMap {
      * 
      * @return suitable integer hash code
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         if (fast) {
             int h = 0;
             Iterator i = map.entrySet().iterator();
@@ -416,7 +427,8 @@ public class FastHashMap extends HashMap {
      * 
      * @return a clone of this map
      */
-    public Object clone() {
+    @Override
+	public Object clone() {
         FastHashMap results = null;
         if (fast) {
             results = new FastHashMap(map);
@@ -436,21 +448,24 @@ public class FastHashMap extends HashMap {
      * Return a collection view of the mappings contained in this map.  Each
      * element in the returned collection is a <code>Map.Entry</code>.
      */
-    public Set entrySet() {
+    @Override
+	public Set entrySet() {
         return new EntrySet();
     }
 
     /**
      * Return a set view of the keys contained in this map.
      */
-    public Set keySet() {
+    @Override
+	public Set keySet() {
         return new KeySet();
     }
 
     /**
      * Return a collection view of the values contained in this map.
      */
-    public Collection values() {
+    @Override
+	public Collection values() {
         return new Values();
     }
 
@@ -469,7 +484,8 @@ public class FastHashMap extends HashMap {
         protected abstract Object iteratorNext(Map.Entry entry);
 
 
-        public void clear() {
+        @Override
+		public void clear() {
             if (fast) {
                 synchronized (FastHashMap.this) {
                     map = new HashMap();
@@ -481,7 +497,8 @@ public class FastHashMap extends HashMap {
             }
         }
 
-        public boolean remove(Object o) {
+        @Override
+		public boolean remove(Object o) {
             if (fast) {
                 synchronized (FastHashMap.this) {
                     HashMap temp = (HashMap) map.clone();
@@ -496,7 +513,8 @@ public class FastHashMap extends HashMap {
             }
         }
 
-        public boolean removeAll(Collection o) {
+        @Override
+		public boolean removeAll(Collection o) {
             if (fast) {
                 synchronized (FastHashMap.this) {
                     HashMap temp = (HashMap) map.clone();
@@ -511,7 +529,8 @@ public class FastHashMap extends HashMap {
             }
         }
 
-        public boolean retainAll(Collection o) {
+        @Override
+		public boolean retainAll(Collection o) {
             if (fast) {
                 synchronized (FastHashMap.this) {
                     HashMap temp = (HashMap) map.clone();
@@ -526,7 +545,8 @@ public class FastHashMap extends HashMap {
             }
         }
 
-        public int size() {
+        @Override
+		public int size() {
             if (fast) {
                 return get(map).size();
             } else {
@@ -537,7 +557,8 @@ public class FastHashMap extends HashMap {
         }
 
 
-        public boolean isEmpty() {
+        @Override
+		public boolean isEmpty() {
             if (fast) {
                 return get(map).isEmpty();
             } else {
@@ -547,7 +568,8 @@ public class FastHashMap extends HashMap {
             }
         }
 
-        public boolean contains(Object o) {
+        @Override
+		public boolean contains(Object o) {
             if (fast) {
                 return get(map).contains(o);
             } else {
@@ -557,7 +579,8 @@ public class FastHashMap extends HashMap {
             }
         }
 
-        public boolean containsAll(Collection o) {
+        @Override
+		public boolean containsAll(Collection o) {
             if (fast) {
                 return get(map).containsAll(o);
             } else {
@@ -567,7 +590,8 @@ public class FastHashMap extends HashMap {
             }
         }
 
-        public Object[] toArray(Object[] o) {
+        @Override
+		public Object[] toArray(Object[] o) {
             if (fast) {
                 return get(map).toArray(o);
             } else {
@@ -577,7 +601,8 @@ public class FastHashMap extends HashMap {
             }
         }
 
-        public Object[] toArray() {
+        @Override
+		public Object[] toArray() {
             if (fast) {
                 return get(map).toArray();
             } else {
@@ -588,7 +613,8 @@ public class FastHashMap extends HashMap {
         }
 
 
-        public boolean equals(Object o) {
+        @Override
+		public boolean equals(Object o) {
             if (o == this) return true;
             if (fast) {
                 return get(map).equals(o);
@@ -599,7 +625,8 @@ public class FastHashMap extends HashMap {
             }
         }
 
-        public int hashCode() {
+        @Override
+		public int hashCode() {
             if (fast) {
                 return get(map).hashCode();
             } else {
@@ -609,15 +636,18 @@ public class FastHashMap extends HashMap {
             }
         }
 
-        public boolean add(Object o) {
+        @Override
+		public boolean add(Object o) {
             throw new UnsupportedOperationException();
         }
 
-        public boolean addAll(Collection c) {
+        @Override
+		public boolean addAll(Collection c) {
             throw new UnsupportedOperationException();
         }
 
-        public Iterator iterator() {
+        @Override
+		public Iterator iterator() {
             return new CollectionViewIterator();
         }
 
@@ -632,14 +662,16 @@ public class FastHashMap extends HashMap {
                 this.iterator = expected.entrySet().iterator();
             }
  
-            public boolean hasNext() {
+            @Override
+			public boolean hasNext() {
                 if (expected != map) {
                     throw new ConcurrentModificationException();
                 }
                 return iterator.hasNext();
             }
 
-            public Object next() {
+            @Override
+			public Object next() {
                 if (expected != map) {
                     throw new ConcurrentModificationException();
                 }
@@ -647,7 +679,8 @@ public class FastHashMap extends HashMap {
                 return iteratorNext(lastReturned);
             }
 
-            public void remove() {
+            @Override
+			public void remove() {
                 if (lastReturned == null) {
                     throw new IllegalStateException();
                 }
@@ -673,11 +706,13 @@ public class FastHashMap extends HashMap {
      */
     private class KeySet extends CollectionView implements Set {
     
-        protected Collection get(Map map) {
+        @Override
+		protected Collection get(Map map) {
             return map.keySet();
         }
     
-        protected Object iteratorNext(Map.Entry entry) {
+        @Override
+		protected Object iteratorNext(Map.Entry entry) {
             return entry.getKey();
         }
     
@@ -688,11 +723,13 @@ public class FastHashMap extends HashMap {
      */
     private class Values extends CollectionView {
     
-        protected Collection get(Map map) {
+        @Override
+		protected Collection get(Map map) {
             return map.values();
         }
     
-        protected Object iteratorNext(Map.Entry entry) {
+        @Override
+		protected Object iteratorNext(Map.Entry entry) {
             return entry.getValue();
         }
     }
@@ -702,11 +739,13 @@ public class FastHashMap extends HashMap {
      */
     private class EntrySet extends CollectionView implements Set {
     
-        protected Collection get(Map map) {
+        @Override
+		protected Collection get(Map map) {
             return map.entrySet();
         }
     
-        protected Object iteratorNext(Map.Entry entry) {
+        @Override
+		protected Object iteratorNext(Map.Entry entry) {
             return entry;
         }
     

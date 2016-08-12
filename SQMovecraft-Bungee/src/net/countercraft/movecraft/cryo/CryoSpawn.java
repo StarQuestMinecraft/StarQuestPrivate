@@ -27,8 +27,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class CryoSpawn {
 	public static final String KEY_LINE = "{" + ChatColor.AQUA + "Cryo Pod" + ChatColor.BLACK + "}";
@@ -109,6 +107,7 @@ public class CryoSpawn {
 				final Sign s = (Sign) b.getState();
 				if (isCryoTube(s) && s.getLine(0).equals(KEY_LINE)) {
 					Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable(){
+						@Override
 						public void run(){
 							updatePodSpawnAsync(s, true);
 						}
@@ -129,6 +128,7 @@ public class CryoSpawn {
 
 	public static void setPodSpawn(final CryoSpawn spawn) {
 		Runnable r = new Runnable() {
+			@Override
 			public void run() {
 				System.out.println("Setting new pod spawn!");
 				String playerName = signTrim(spawn.player);
@@ -177,6 +177,7 @@ public class CryoSpawn {
 
 	public static void updatePodSpawnAsync(final String nameold, final CryoSpawn b, final boolean checkAsActiveUpdate) {
 		Runnable r = new Runnable() {
+			@Override
 			public void run() {
 
 				System.out.println("Updating cryospawn!");
@@ -245,6 +246,7 @@ public class CryoSpawn {
 
 	public static void removePodSpawn(final String playerUntrimmed, final CommandSender notify, final Location l) {
 		Runnable r = new Runnable() {
+			@Override
 			public void run() {
 				System.out.println("REMOVING POD SPAWN!");
 				String player = signTrim(playerUntrimmed);
@@ -382,6 +384,7 @@ public class CryoSpawn {
 			System.out.println("Server is not the same as target server, sending death to " + s.server);
 			p.sendMessage(ChatColor.RED + "Teleporting in one second.");
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+				@Override
 				public void run() {
 					BungeePlayerHandler.sendPlayer(p, s.server, s.world, s.x, s.y, s.z);
 				}
@@ -393,6 +396,7 @@ public class CryoSpawn {
 			// if (checkForNotAir(loc2)) {
 			System.out.println("Teleporting player delayed.");
 			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable() {
+				@Override
 				public void run() {
 					System.out.println("Delayed teleport activating.");
 					CryoUtils.removeBlockAtCryoSpawn(loc2);
@@ -563,6 +567,7 @@ public class CryoSpawn {
 
 	public static void unsetUpdatedSinceLastLogin(final String name) {
 		Runnable r = new Runnable() {
+			@Override
 			public void run() {
 				final String name2 = signTrim(name);
 				if (!getContext()) {

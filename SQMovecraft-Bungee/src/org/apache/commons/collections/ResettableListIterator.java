@@ -34,6 +34,7 @@ public interface ResettableListIterator extends ListIterator, ResettableIterator
      * Resets the iterator back to the position at which the iterator
      * was created.
      */
-    public void reset();
+    @Override
+	public void reset();
 
 }

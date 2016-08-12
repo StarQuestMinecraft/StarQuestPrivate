@@ -151,7 +151,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
     /**
      * Initialise this subclass during construction, cloning or deserialization.
      */
-    protected void init() {
+    @Override
+	protected void init() {
         queue = new ReferenceQueue();
     }
 
@@ -175,7 +176,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      * 
      * @return the size
      */
-    public int size() {
+    @Override
+	public int size() {
         purgeBeforeRead();
         return super.size();
     }
@@ -185,7 +187,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      * 
      * @return true if the map is currently size zero
      */
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         purgeBeforeRead();
         return super.isEmpty();
     }
@@ -196,7 +199,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      * @param key  the key to search for
      * @return true if the map contains the key
      */
-    public boolean containsKey(Object key) {
+    @Override
+	public boolean containsKey(Object key) {
         purgeBeforeRead();
         Entry entry = getEntry(key);
         if (entry == null) {
@@ -211,7 +215,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      * @param value  the value to search for
      * @return true if the map contains the value
      */
-    public boolean containsValue(Object value) {
+    @Override
+	public boolean containsValue(Object value) {
         purgeBeforeRead();
         if (value == null) {
             return false;
@@ -225,7 +230,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      * @param key  the key
      * @return the mapped value, null if no match
      */
-    public Object get(Object key) {
+    @Override
+	public Object get(Object key) {
         purgeBeforeRead();
         Entry entry = getEntry(key);
         if (entry == null) {
@@ -244,7 +250,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      * @return the value previously mapped to this key, null if none
      * @throws NullPointerException if either the key or value is null
      */
-    public Object put(Object key, Object value) {
+    @Override
+	public Object put(Object key, Object value) {
         if (key == null) {
             throw new NullPointerException("null keys not allowed");
         }
@@ -262,7 +269,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      * @param key  the mapping to remove
      * @return the value mapped to the removed key, null if key not in map
      */
-    public Object remove(Object key) {
+    @Override
+	public Object remove(Object key) {
         if (key == null) {
             return null;
         }
@@ -273,7 +281,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
     /**
      * Clears this map.
      */
-    public void clear() {
+    @Override
+	public void clear() {
         super.clear();
         while (queue.poll() != null) {} // drain the queue
     }
@@ -285,7 +294,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      * 
      * @return a map iterator
      */
-    public MapIterator mapIterator() {
+    @Override
+	public MapIterator mapIterator() {
         return new ReferenceMapIterator(this);
     }
 
@@ -296,7 +306,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      *
      * @return a set view of this map's entries
      */
-    public Set entrySet() {
+    @Override
+	public Set entrySet() {
         if (entrySet == null) {
             entrySet = new ReferenceEntrySet(this);
         }
@@ -308,7 +319,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      *
      * @return a set view of this map's keys
      */
-    public Set keySet() {
+    @Override
+	public Set keySet() {
         if (keySet == null) {
             keySet = new ReferenceKeySet(this);
         }
@@ -320,7 +332,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      *
      * @return a set view of this map's values
      */
-    public Collection values() {
+    @Override
+	public Collection values() {
         if (values == null) {
             values = new ReferenceValues(this);
         }
@@ -398,7 +411,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      * @param key  the key
      * @return the entry, null if no match
      */
-    protected HashEntry getEntry(Object key) {
+    @Override
+	protected HashEntry getEntry(Object key) {
         if (key == null) {
             return null;
         } else {
@@ -429,7 +443,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      * @param key2  the second key extracted from the entry via <code>entry.key</code>
      * @return true if equal
      */
-    protected boolean isEqualKey(Object key1, Object key2) {
+    @Override
+	protected boolean isEqualKey(Object key1, Object key2) {
         key2 = (keyType > HARD ? ((Reference) key2).get() : key2);
         return (key1 == key2 || key1.equals(key2));
     }
@@ -443,7 +458,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      * @param value  the value to store
      * @return the newly created entry
      */
-    protected HashEntry createEntry(HashEntry next, int hashCode, Object key, Object value) {
+    @Override
+	protected HashEntry createEntry(HashEntry next, int hashCode, Object key, Object value) {
         return new ReferenceEntry(this, next, hashCode, key, value);
     }
 
@@ -452,7 +468,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      * 
      * @return the entrySet iterator
      */
-    protected Iterator createEntrySetIterator() {
+    @Override
+	protected Iterator createEntrySetIterator() {
         return new ReferenceEntrySetIterator(this);
     }
 
@@ -461,7 +478,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      * 
      * @return the keySet iterator
      */
-    protected Iterator createKeySetIterator() {
+    @Override
+	protected Iterator createKeySetIterator() {
         return new ReferenceKeySetIterator(this);
     }
 
@@ -470,7 +488,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      * 
      * @return the values iterator
      */
-    protected Iterator createValuesIterator() {
+    @Override
+	protected Iterator createValuesIterator() {
         return new ReferenceValuesIterator(this);
     }
 
@@ -484,11 +503,13 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
             super(parent);
         }
 
-        public Object[] toArray() {
+        @Override
+		public Object[] toArray() {
             return toArray(new Object[0]);
         }
 
-        public Object[] toArray(Object[] arr) {
+        @Override
+		public Object[] toArray(Object[] arr) {
             // special implementation to handle disappearing entries
             ArrayList list = new ArrayList();
             Iterator iterator = iterator();
@@ -510,11 +531,13 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
             super(parent);
         }
 
-        public Object[] toArray() {
+        @Override
+		public Object[] toArray() {
             return toArray(new Object[0]);
         }
 
-        public Object[] toArray(Object[] arr) {
+        @Override
+		public Object[] toArray(Object[] arr) {
             // special implementation to handle disappearing keys
             List list = new ArrayList(parent.size());
             for (Iterator it = iterator(); it.hasNext(); ) {
@@ -534,11 +557,13 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
             super(parent);
         }
 
-        public Object[] toArray() {
+        @Override
+		public Object[] toArray() {
             return toArray(new Object[0]);
         }
 
-        public Object[] toArray(Object[] arr) {
+        @Override
+		public Object[] toArray(Object[] arr) {
             // special implementation to handle disappearing values
             List list = new ArrayList(parent.size());
             for (Iterator it = iterator(); it.hasNext(); ) {
@@ -583,7 +608,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
          * 
          * @return the key, which may be null if it was garbage collected
          */
-        public Object getKey() {
+        @Override
+		public Object getKey() {
             return (parent.keyType > HARD) ? ((Reference) key).get() : key;
         }
 
@@ -593,7 +619,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
          * 
          * @return the value, which may be null if it was garbage collected
          */
-        public Object getValue() {
+        @Override
+		public Object getValue() {
             return (parent.valueType > HARD) ? ((Reference) value).get() : value;
         }
 
@@ -603,7 +630,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
          * @param obj  the object to store
          * @return the previous value
          */
-        public Object setValue(Object obj) {
+        @Override
+		public Object setValue(Object obj) {
             Object old = getValue();
             if (parent.valueType > HARD) {
                 ((Reference)value).clear();
@@ -621,7 +649,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
          * @param obj  the other map entry to compare to
          * @return true if equal, false if not
          */
-        public boolean equals(Object obj) {
+        @Override
+		public boolean equals(Object obj) {
             if (obj == this) {
                 return true;
             }
@@ -648,7 +677,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
          * 
          * @return the hashcode of the entry
          */
-        public int hashCode() {
+        @Override
+		public int hashCode() {
             return parent.hashEntry(getKey(), getValue());
         }
 
@@ -732,7 +762,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
             expectedModCount = parent.modCount;
         }
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             checkMod();
             while (nextNull()) {
                 ReferenceEntry e = entry;
@@ -786,11 +817,13 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
             return previous;
         }
         
-        public Object next() {
+        @Override
+		public Object next() {
             return nextEntry();
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             checkMod();
             if (previous == null) {
                 throw new IllegalStateException();
@@ -812,7 +845,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
             super(parent);
         }
         
-        public Object next() {
+        @Override
+		public Object next() {
             return nextEntry().getKey();
         }
     }
@@ -826,7 +860,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
             super(parent);
         }
         
-        public Object next() {
+        @Override
+		public Object next() {
             return nextEntry().getValue();
         }
     }
@@ -840,11 +875,13 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
             super(parent);
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             return nextEntry().getKey();
         }
 
-        public Object getKey() {
+        @Override
+		public Object getKey() {
             HashEntry current = currentEntry();
             if (current == null) {
                 throw new IllegalStateException(AbstractHashedMap.GETKEY_INVALID);
@@ -852,7 +889,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
             return current.getKey();
         }
 
-        public Object getValue() {
+        @Override
+		public Object getValue() {
             HashEntry current = currentEntry();
             if (current == null) {
                 throw new IllegalStateException(AbstractHashedMap.GETVALUE_INVALID);
@@ -860,7 +898,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
             return current.getValue();
         }
 
-        public Object setValue(Object value) {
+        @Override
+		public Object setValue(Object value) {
             HashEntry current = currentEntry();
             if (current == null) {
                 throw new IllegalStateException(AbstractHashedMap.SETVALUE_INVALID);
@@ -886,7 +925,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
             this.hash = hash;
         }
 
-        public int hashCode() {
+        @Override
+		public int hashCode() {
             return hash;
         }
     }
@@ -903,7 +943,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
             this.hash = hash;
         }
 
-        public int hashCode() {
+        @Override
+		public int hashCode() {
             return hash;
         }
     }
@@ -927,7 +968,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      * 
      * @param out  the output stream
      */
-    protected void doWriteObject(ObjectOutputStream out) throws IOException {
+    @Override
+	protected void doWriteObject(ObjectOutputStream out) throws IOException {
         out.writeInt(keyType);
         out.writeInt(valueType);
         out.writeBoolean(purgeValues);
@@ -958,7 +1000,8 @@ public abstract class AbstractReferenceMap extends AbstractHashedMap {
      * 
      * @param in  the input stream
      */
-    protected void doReadObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    @Override
+	protected void doReadObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         this.keyType = in.readInt();
         this.valueType = in.readInt();
         this.purgeValues = in.readBoolean();

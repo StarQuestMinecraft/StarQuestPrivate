@@ -4,7 +4,6 @@ import java.util.UUID;
 import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.async.translation.TranslationTask;
 import net.countercraft.movecraft.craft.Craft;
-import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.crafttransfer.SerializableLocation;
 import net.countercraft.movecraft.task.RepeatTryServerJumpTask;
 import net.countercraft.movecraft.utils.BorderUtils;

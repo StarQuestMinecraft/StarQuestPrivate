@@ -80,13 +80,15 @@ public class SynchronizedBuffer extends SynchronizedCollection implements Buffer
     }
 
     //-----------------------------------------------------------------------
-    public Object get() {
+    @Override
+	public Object get() {
         synchronized (lock) {
             return getBuffer().get();
         }
     }
 
-    public Object remove() {
+    @Override
+	public Object remove() {
         synchronized (lock) {
             return getBuffer().remove();
         }

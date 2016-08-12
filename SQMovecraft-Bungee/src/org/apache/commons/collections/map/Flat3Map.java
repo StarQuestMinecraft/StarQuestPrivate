@@ -125,7 +125,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
      * @param key  the key
      * @return the mapped value, null if no match
      */
-    public Object get(Object key) {
+    @Override
+	public Object get(Object key) {
         if (delegateMap != null) {
             return delegateMap.get(key);
         }
@@ -161,7 +162,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
      * 
      * @return the size
      */
-    public int size() {
+    @Override
+	public int size() {
         if (delegateMap != null) {
             return delegateMap.size();
         }
@@ -173,7 +175,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
      * 
      * @return true if the map is currently size zero
      */
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         return (size() == 0);
     }
 
@@ -184,7 +187,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
      * @param key  the key to search for
      * @return true if the map contains the key
      */
-    public boolean containsKey(Object key) {
+    @Override
+	public boolean containsKey(Object key) {
         if (delegateMap != null) {
             return delegateMap.containsKey(key);
         }
@@ -219,7 +223,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
      * @param value  the value to search for
      * @return true if the map contains the key
      */
-    public boolean containsValue(Object value) {
+    @Override
+	public boolean containsValue(Object value) {
         if (delegateMap != null) {
             return delegateMap.containsValue(value);
         }
@@ -253,7 +258,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
      * @param value  the value to add
      * @return the value previously mapped to this key, null if none
      */
-    public Object put(Object key, Object value) {
+    @Override
+	public Object put(Object key, Object value) {
         if (delegateMap != null) {
             return delegateMap.put(key, value);
         }
@@ -337,7 +343,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
      * @param map  the map to add
      * @throws NullPointerException if the map is null
      */
-    public void putAll(Map map) {
+    @Override
+	public void putAll(Map map) {
         int size = map.size();
         if (size == 0) {
             return;
@@ -397,7 +404,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
      * @param key  the mapping to remove
      * @return the value mapped to the removed key, null if key not in map
      */
-    public Object remove(Object key) {
+    @Override
+	public Object remove(Object key) {
         if (delegateMap != null) {
             return delegateMap.remove(key);
         }
@@ -545,7 +553,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
      * Clears the map, resetting the size to zero and nullifying references
      * to avoid garbage collection issues.
      */
-    public void clear() {
+    @Override
+	public void clear() {
         if (delegateMap != null) {
             delegateMap.clear();  // should aid gc
             delegateMap = null;  // switch back to flat mode
@@ -569,7 +578,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
      * 
      * @return the map iterator
      */
-    public MapIterator mapIterator() {
+    @Override
+	public MapIterator mapIterator() {
         if (delegateMap != null) {
             return delegateMap.mapIterator();
         }
@@ -592,11 +602,13 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
             this.parent = parent;
         }
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             return (nextIndex < parent.size);
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             if (hasNext() == false) {
                 throw new NoSuchElementException(AbstractHashedMap.NO_NEXT_ENTRY);
             }
@@ -605,7 +617,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
             return getKey();
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             if (canRemove == false) {
                 throw new IllegalStateException(AbstractHashedMap.REMOVE_INVALID);
             }
@@ -614,7 +627,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
             canRemove = false;
         }
 
-        public Object getKey() {
+        @Override
+		public Object getKey() {
             if (canRemove == false) {
                 throw new IllegalStateException(AbstractHashedMap.GETKEY_INVALID);
             }
@@ -629,7 +643,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
             throw new IllegalStateException("Invalid map index");
         }
 
-        public Object getValue() {
+        @Override
+		public Object getValue() {
             if (canRemove == false) {
                 throw new IllegalStateException(AbstractHashedMap.GETVALUE_INVALID);
             }
@@ -644,7 +659,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
             throw new IllegalStateException("Invalid map index");
         }
 
-        public Object setValue(Object value) {
+        @Override
+		public Object setValue(Object value) {
             if (canRemove == false) {
                 throw new IllegalStateException(AbstractHashedMap.SETVALUE_INVALID);
             }
@@ -660,12 +676,14 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
             return old;
         }
         
-        public void reset() {
+        @Override
+		public void reset() {
             nextIndex = 0;
             canRemove = false;
         }
         
-        public String toString() {
+        @Override
+		public String toString() {
             if (canRemove) {
                 return "Iterator[" + getKey() + "=" + getValue() + "]";
             } else {
@@ -683,7 +701,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
      * 
      * @return the entrySet view
      */
-    public Set entrySet() {
+    @Override
+	public Set entrySet() {
         if (delegateMap != null) {
             return delegateMap.entrySet();
         }
@@ -701,15 +720,18 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
             this.parent = parent;
         }
 
-        public int size() {
+        @Override
+		public int size() {
             return parent.size();
         }
         
-        public void clear() {
+        @Override
+		public void clear() {
             parent.clear();
         }
         
-        public boolean remove(Object obj) {
+        @Override
+		public boolean remove(Object obj) {
             if (obj instanceof Map.Entry == false) {
                 return false;
             }
@@ -720,7 +742,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
             return result;
         }
 
-        public Iterator iterator() {
+        @Override
+		public Iterator iterator() {
             if (parent.delegateMap != null) {
                 return parent.delegateMap.entrySet().iterator();
             }
@@ -744,11 +767,13 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
             this.parent = parent;
         }
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             return (nextIndex < parent.size);
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             if (hasNext() == false) {
                 throw new NoSuchElementException(AbstractHashedMap.NO_NEXT_ENTRY);
             }
@@ -757,7 +782,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
             return this;
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             if (canRemove == false) {
                 throw new IllegalStateException(AbstractHashedMap.REMOVE_INVALID);
             }
@@ -766,7 +792,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
             canRemove = false;
         }
 
-        public Object getKey() {
+        @Override
+		public Object getKey() {
             if (canRemove == false) {
                 throw new IllegalStateException(AbstractHashedMap.GETKEY_INVALID);
             }
@@ -781,7 +808,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
             throw new IllegalStateException("Invalid map index");
         }
 
-        public Object getValue() {
+        @Override
+		public Object getValue() {
             if (canRemove == false) {
                 throw new IllegalStateException(AbstractHashedMap.GETVALUE_INVALID);
             }
@@ -796,7 +824,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
             throw new IllegalStateException("Invalid map index");
         }
 
-        public Object setValue(Object value) {
+        @Override
+		public Object setValue(Object value) {
             if (canRemove == false) {
                 throw new IllegalStateException(AbstractHashedMap.SETVALUE_INVALID);
             }
@@ -812,7 +841,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
             return old;
         }
         
-        public boolean equals(Object obj) {
+        @Override
+		public boolean equals(Object obj) {
             if (canRemove == false) {
                 return false;
             }
@@ -826,7 +856,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
                    (value == null ? other.getValue() == null : value.equals(other.getValue()));
         }
         
-        public int hashCode() {
+        @Override
+		public int hashCode() {
             if (canRemove == false) {
                 return 0;
             }
@@ -836,7 +867,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
                    (value == null ? 0 : value.hashCode());
         }
         
-        public String toString() {
+        @Override
+		public String toString() {
             if (canRemove) {
                 return getKey() + "=" + getValue();
             } else {
@@ -852,7 +884,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
      * 
      * @return the keySet view
      */
-    public Set keySet() {
+    @Override
+	public Set keySet() {
         if (delegateMap != null) {
             return delegateMap.keySet();
         }
@@ -870,25 +903,30 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
             this.parent = parent;
         }
 
-        public int size() {
+        @Override
+		public int size() {
             return parent.size();
         }
         
-        public void clear() {
+        @Override
+		public void clear() {
             parent.clear();
         }
         
-        public boolean contains(Object key) {
+        @Override
+		public boolean contains(Object key) {
             return parent.containsKey(key);
         }
 
-        public boolean remove(Object key) {
+        @Override
+		public boolean remove(Object key) {
             boolean result = parent.containsKey(key);
             parent.remove(key);
             return result;
         }
 
-        public Iterator iterator() {
+        @Override
+		public Iterator iterator() {
             if (parent.delegateMap != null) {
                 return parent.delegateMap.keySet().iterator();
             }
@@ -908,7 +946,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
             super(parent);
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             super.next();
             return getKey();
         }
@@ -921,7 +960,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
      * 
      * @return the values view
      */
-    public Collection values() {
+    @Override
+	public Collection values() {
         if (delegateMap != null) {
             return delegateMap.values();
         }
@@ -939,19 +979,23 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
             this.parent = parent;
         }
 
-        public int size() {
+        @Override
+		public int size() {
             return parent.size();
         }
         
-        public void clear() {
+        @Override
+		public void clear() {
             parent.clear();
         }
         
-        public boolean contains(Object value) {
+        @Override
+		public boolean contains(Object value) {
             return parent.containsValue(value);
         }
 
-        public Iterator iterator() {
+        @Override
+		public Iterator iterator() {
             if (parent.delegateMap != null) {
                 return parent.delegateMap.values().iterator();
             }
@@ -971,7 +1015,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
             super(parent);
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             super.next();
             return getValue();
         }
@@ -1011,7 +1056,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
      * @return a shallow clone
      * @since Commons Collections 3.1
      */
-    public Object clone() {
+    @Override
+	public Object clone() {
         try {
             Flat3Map cloned = (Flat3Map) super.clone();
             if (cloned.delegateMap != null) {
@@ -1029,7 +1075,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
      * @param obj  the object to compare to
      * @return true if equal
      */
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
         if (obj == this) {
             return true;
         }
@@ -1080,7 +1127,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
      * 
      * @return the hash code defined in the Map interface
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         if (delegateMap != null) {
             return delegateMap.hashCode();
         }
@@ -1101,7 +1149,8 @@ public class Flat3Map implements IterableMap, Serializable, Cloneable {
      * 
      * @return a string version of the map
      */
-    public String toString() {
+    @Override
+	public String toString() {
         if (delegateMap != null) {
             return delegateMap.toString();
         }

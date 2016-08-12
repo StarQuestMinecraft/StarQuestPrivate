@@ -62,43 +62,53 @@ public abstract class AbstractListDecorator extends AbstractCollectionDecorator 
     }
 
     //-----------------------------------------------------------------------
-    public void add(int index, Object object) {
+    @Override
+	public void add(int index, Object object) {
         getList().add(index, object);
     }
 
-    public boolean addAll(int index, Collection coll) {
+    @Override
+	public boolean addAll(int index, Collection coll) {
         return getList().addAll(index, coll);
     }
 
-    public Object get(int index) {
+    @Override
+	public Object get(int index) {
         return getList().get(index);
     }
 
-    public int indexOf(Object object) {
+    @Override
+	public int indexOf(Object object) {
         return getList().indexOf(object);
     }
 
-    public int lastIndexOf(Object object) {
+    @Override
+	public int lastIndexOf(Object object) {
         return getList().lastIndexOf(object);
     }
 
-    public ListIterator listIterator() {
+    @Override
+	public ListIterator listIterator() {
         return getList().listIterator();
     }
 
-    public ListIterator listIterator(int index) {
+    @Override
+	public ListIterator listIterator(int index) {
         return getList().listIterator(index);
     }
 
-    public Object remove(int index) {
+    @Override
+	public Object remove(int index) {
         return getList().remove(index);
     }
 
-    public Object set(int index, Object object) {
+    @Override
+	public Object set(int index, Object object) {
         return getList().set(index, object);
     }
 
-    public List subList(int fromIndex, int toIndex) {
+    @Override
+	public List subList(int fromIndex, int toIndex) {
         return getList().subList(fromIndex, toIndex);
     }
 

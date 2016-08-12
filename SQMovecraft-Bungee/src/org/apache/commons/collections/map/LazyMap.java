@@ -152,7 +152,8 @@ public class LazyMap
     }
 
     //-----------------------------------------------------------------------
-    public Object get(Object key) {
+    @Override
+	public Object get(Object key) {
         // create value for key if key is not currently in the map
         if (map.containsKey(key) == false) {
             Object value = factory.transform(key);

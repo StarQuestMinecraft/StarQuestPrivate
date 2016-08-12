@@ -91,37 +91,43 @@ public class SynchronizedCollection implements Collection, Serializable {
     }
 
     //-----------------------------------------------------------------------
-    public boolean add(Object object) {
+    @Override
+	public boolean add(Object object) {
         synchronized (lock) {
             return collection.add(object);
         }
     }
 
-    public boolean addAll(Collection coll) {
+    @Override
+	public boolean addAll(Collection coll) {
         synchronized (lock) {
             return collection.addAll(coll);
         }
     }
 
-    public void clear() {
+    @Override
+	public void clear() {
         synchronized (lock) {
             collection.clear();
         }
     }
 
-    public boolean contains(Object object) {
+    @Override
+	public boolean contains(Object object) {
         synchronized (lock) {
             return collection.contains(object);
         }
     }
 
-    public boolean containsAll(Collection coll) {
+    @Override
+	public boolean containsAll(Collection coll) {
         synchronized (lock) {
             return collection.containsAll(coll);
         }
     }
 
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         synchronized (lock) {
             return collection.isEmpty();
         }
@@ -137,47 +143,55 @@ public class SynchronizedCollection implements Collection, Serializable {
      * 
      * @return an iterator that must be manually synchronized on the collection
      */
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         return collection.iterator();
     }
 
-    public Object[] toArray() {
+    @Override
+	public Object[] toArray() {
         synchronized (lock) {
             return collection.toArray();
         }
     }
 
-    public Object[] toArray(Object[] object) {
+    @Override
+	public Object[] toArray(Object[] object) {
         synchronized (lock) {
             return collection.toArray(object);
         }
     }
 
-    public boolean remove(Object object) {
+    @Override
+	public boolean remove(Object object) {
         synchronized (lock) {
             return collection.remove(object);
         }
     }
 
-    public boolean removeAll(Collection coll) {
+    @Override
+	public boolean removeAll(Collection coll) {
         synchronized (lock) {
             return collection.removeAll(coll);
         }
     }
 
-    public boolean retainAll(Collection coll) {
+    @Override
+	public boolean retainAll(Collection coll) {
         synchronized (lock) {
             return collection.retainAll(coll);
         }
     }
 
-    public int size() {
+    @Override
+	public int size() {
         synchronized (lock) {
             return collection.size();
         }
     }
 
-    public boolean equals(Object object) {
+    @Override
+	public boolean equals(Object object) {
         synchronized (lock) {
             if (object == this) {
                 return true;
@@ -186,13 +200,15 @@ public class SynchronizedCollection implements Collection, Serializable {
         }
     }
 
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         synchronized (lock) {
             return collection.hashCode();
         }
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         synchronized (lock) {
             return collection.toString();
         }

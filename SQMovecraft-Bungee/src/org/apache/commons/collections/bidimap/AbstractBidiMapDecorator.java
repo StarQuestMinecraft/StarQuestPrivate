@@ -60,19 +60,23 @@ public abstract class AbstractBidiMapDecorator
     }
 
     //-----------------------------------------------------------------------
-    public MapIterator mapIterator() {
+    @Override
+	public MapIterator mapIterator() {
         return getBidiMap().mapIterator();
     }
 
-    public Object getKey(Object value) {
+    @Override
+	public Object getKey(Object value) {
         return getBidiMap().getKey(value);
     }
 
-    public Object removeValue(Object value) {
+    @Override
+	public Object removeValue(Object value) {
         return getBidiMap().removeValue(value);
     }
 
-    public BidiMap inverseBidiMap() {
+    @Override
+	public BidiMap inverseBidiMap() {
         return getBidiMap().inverseBidiMap();
     }
 

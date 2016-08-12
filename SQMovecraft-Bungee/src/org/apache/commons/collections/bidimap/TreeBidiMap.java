@@ -119,7 +119,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      *
      * @return the number of key-value mappings in this map
      */
-    public int size() {
+    @Override
+	public int size() {
         return nodeCount;
     }
 
@@ -128,7 +129,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      *
      * @return true if the map is empty
      */
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         return (nodeCount == 0);
     }
 
@@ -142,7 +144,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      * @throws ClassCastException if the key is of an inappropriate type
      * @throws NullPointerException if the key is null
      */
-    public boolean containsKey(final Object key) {
+    @Override
+	public boolean containsKey(final Object key) {
         checkKey(key);
         return (lookup((Comparable) key, KEY) != null);
     }
@@ -157,7 +160,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      * @throws ClassCastException if the value is of an inappropriate type
      * @throws NullPointerException if the value is null
      */
-    public boolean containsValue(final Object value) {
+    @Override
+	public boolean containsValue(final Object value) {
         checkValue(value);
         return (lookup((Comparable) value, VALUE) != null);
     }
@@ -174,7 +178,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      * @throws ClassCastException if the key is of an inappropriate type
      * @throws NullPointerException if the key is null
      */
-    public Object get(final Object key) {
+    @Override
+	public Object get(final Object key) {
         return doGet((Comparable) key, KEY);
     }
 
@@ -202,7 +207,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      * @throws ClassCastException if the key is of an inappropriate type
      * @throws NullPointerException if the key is null
      */
-    public Object put(final Object key, final Object value) {
+    @Override
+	public Object put(final Object key, final Object value) {
         return doPut((Comparable) key, (Comparable) value, KEY);
     }
 
@@ -213,7 +219,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      * 
      * @param map  the map to copy from
      */
-    public void putAll(Map map) {
+    @Override
+	public void putAll(Map map) {
         Iterator it = map.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry entry = (Map.Entry) it.next();
@@ -232,14 +239,16 @@ public class TreeBidiMap implements OrderedBidiMap {
      * @throws ClassCastException if the key is of an inappropriate type
      * @throws NullPointerException if the key is null
      */
-    public Object remove(final Object key) {
+    @Override
+	public Object remove(final Object key) {
         return doRemove((Comparable) key, KEY);
     }
 
     /**
      * Removes all mappings from this map.
      */
-    public void clear() {
+    @Override
+	public void clear() {
         modify();
 
         nodeCount = 0;
@@ -260,7 +269,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      * @throws ClassCastException if the value is of an inappropriate type
      * @throws NullPointerException if the value is null
      */
-    public Object getKey(final Object value) {
+    @Override
+	public Object getKey(final Object value) {
         return doGet((Comparable) value, VALUE);
     }
 
@@ -275,7 +285,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      * @throws ClassCastException if the value is of an inappropriate type
      * @throws NullPointerException if the value is null
      */
-    public Object removeValue(final Object value) {
+    @Override
+	public Object removeValue(final Object value) {
         return doRemove((Comparable) value, VALUE);
     }
 
@@ -286,7 +297,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      * @return the first (lowest) key currently in this sorted map
      * @throws NoSuchElementException if this map is empty
      */
-    public Object firstKey() {
+    @Override
+	public Object firstKey() {
         if (nodeCount == 0) {
             throw new NoSuchElementException("Map is empty");
         }
@@ -299,7 +311,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      * @return the last (highest) key currently in this sorted map
      * @throws NoSuchElementException if this map is empty
      */
-    public Object lastKey() {
+    @Override
+	public Object lastKey() {
         if (nodeCount == 0) {
             throw new NoSuchElementException("Map is empty");
         }
@@ -314,7 +327,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      * @param key the key to search for next from
      * @return the next key, null if no match or at end
      */
-    public Object nextKey(Object key) {
+    @Override
+	public Object nextKey(Object key) {
         checkKey(key);
         Node node = nextGreater(lookup((Comparable) key, KEY), KEY);
         return (node == null ? null : node.getKey());
@@ -328,7 +342,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      * @param key the key to search for previous from
      * @return the previous key, null if no match or at start
      */
-    public Object previousKey(Object key) {
+    @Override
+	public Object previousKey(Object key) {
         checkKey(key);
         Node node = nextSmaller(lookup((Comparable) key, KEY), KEY);
         return (node == null ? null : node.getKey());
@@ -347,7 +362,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      *
      * @return a set view of the keys contained in this map.
      */
-    public Set keySet() {
+    @Override
+	public Set keySet() {
         if (keySet == null) {
             keySet = new View(this, KEY, KEY);
         }
@@ -368,7 +384,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      *
      * @return a set view of the values contained in this map.
      */
-    public Collection values() {
+    @Override
+	public Collection values() {
         if (valuesSet == null) {
             valuesSet = new View(this, KEY, VALUE);
         }
@@ -390,7 +407,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      *
      * @return a set view of the values contained in this map.
      */
-    public Set entrySet() {
+    @Override
+	public Set entrySet() {
         if (entrySet == null) {
             return new EntryView(this, KEY, MAPENTRY);
         }
@@ -405,7 +423,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      * 
      * @return an iterator
      */
-    public MapIterator mapIterator() {
+    @Override
+	public MapIterator mapIterator() {
         if (isEmpty()) {
             return EmptyOrderedMapIterator.INSTANCE;
         }
@@ -419,7 +438,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      * 
      * @return an iterator
      */
-    public OrderedMapIterator orderedMapIterator() {
+    @Override
+	public OrderedMapIterator orderedMapIterator() {
         if (isEmpty()) {
             return EmptyOrderedMapIterator.INSTANCE;
         }
@@ -432,7 +452,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      * 
      * @return the inverse map
      */
-    public BidiMap inverseBidiMap() {
+    @Override
+	public BidiMap inverseBidiMap() {
         return inverseOrderedBidiMap();
     }
 
@@ -441,7 +462,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      * 
      * @return the inverse map
      */
-    public OrderedBidiMap inverseOrderedBidiMap() {
+    @Override
+	public OrderedBidiMap inverseOrderedBidiMap() {
         if (inverse == null) {
             inverse = new Inverse(this);
         }
@@ -455,7 +477,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      * @param obj  the object to compare to
      * @return true if equal
      */
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
         return this.doEquals(obj, KEY);
     }
     
@@ -464,7 +487,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      *
      * @return the hash code value for this map
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return this.doHashCode(KEY);
     }
     
@@ -473,7 +497,8 @@ public class TreeBidiMap implements OrderedBidiMap {
      * 
      * @return a standard format string version of the map
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return this.doToString(KEY);
     }
     
@@ -1486,24 +1511,29 @@ public class TreeBidiMap implements OrderedBidiMap {
             this.dataType = dataType;
         }
         
-        public Iterator iterator() {
+        @Override
+		public Iterator iterator() {
             return new ViewIterator(main, orderType, dataType);
         }
 
-        public int size() {
+        @Override
+		public int size() {
             return main.size();
         }
 
-        public boolean contains(final Object obj) {
+        @Override
+		public boolean contains(final Object obj) {
             checkNonNullComparable(obj, dataType);
             return (main.lookup((Comparable) obj, dataType) != null);
         }
 
-        public boolean remove(final Object obj) {
+        @Override
+		public boolean remove(final Object obj) {
             return (main.doRemove((Comparable) obj, dataType) != null);
         }
 
-        public void clear() {
+        @Override
+		public void clear() {
             main.clear();
         }
     }
@@ -1547,11 +1577,13 @@ public class TreeBidiMap implements OrderedBidiMap {
             previousNode = null;
         }
 
-        public final boolean hasNext() {
+        @Override
+		public final boolean hasNext() {
             return (nextNode != null);
         }
 
-        public final Object next() {
+        @Override
+		public final Object next() {
             if (nextNode == null) {
                 throw new NoSuchElementException();
             }
@@ -1564,11 +1596,13 @@ public class TreeBidiMap implements OrderedBidiMap {
             return doGetData();
         }
 
-        public boolean hasPrevious() {
+        @Override
+		public boolean hasPrevious() {
             return (previousNode != null);
         }
 
-        public Object previous() {
+        @Override
+		public Object previous() {
             if (previousNode == null) {
                 throw new NoSuchElementException();
             }
@@ -1602,7 +1636,8 @@ public class TreeBidiMap implements OrderedBidiMap {
             return null;
         }
 
-        public final void remove() {
+        @Override
+		public final void remove() {
             if (lastReturnedNode == null) {
                 throw new IllegalStateException();
             }
@@ -1639,21 +1674,24 @@ public class TreeBidiMap implements OrderedBidiMap {
             this.oppositeType = oppositeIndex(dataType);
         }
         
-        public Object getKey() {
+        @Override
+		public Object getKey() {
             if (lastReturnedNode == null) {
                 throw new IllegalStateException("Iterator getKey() can only be called after next() and before remove()");
             }
             return lastReturnedNode.getData(dataType);
         }
 
-        public Object getValue() {
+        @Override
+		public Object getValue() {
             if (lastReturnedNode == null) {
                 throw new IllegalStateException("Iterator getValue() can only be called after next() and before remove()");
             }
             return lastReturnedNode.getData(oppositeType);
         }
 
-        public Object setValue(final Object obj) {
+        @Override
+		public Object setValue(final Object obj) {
             throw new UnsupportedOperationException();
         }
     }
@@ -1678,7 +1716,8 @@ public class TreeBidiMap implements OrderedBidiMap {
             this.oppositeType = TreeBidiMap.oppositeIndex(orderType);
         }
         
-        public boolean contains(Object obj) {
+        @Override
+		public boolean contains(Object obj) {
             if (obj instanceof Map.Entry == false) {
                 return false;
             }
@@ -1688,7 +1727,8 @@ public class TreeBidiMap implements OrderedBidiMap {
             return (node != null && node.getData(oppositeType).equals(value));
         }
 
-        public boolean remove(Object obj) {
+        @Override
+		public boolean remove(Object obj) {
             if (obj instanceof Map.Entry == false) {
                 return false;
             }
@@ -1871,7 +1911,8 @@ public class TreeBidiMap implements OrderedBidiMap {
          * 
          * @return the key corresponding to this entry.
          */
-        public Object getKey() {
+        @Override
+		public Object getKey() {
             return data[KEY];
         }
 
@@ -1880,7 +1921,8 @@ public class TreeBidiMap implements OrderedBidiMap {
          * 
          * @return the value corresponding to this entry.
          */
-        public Object getValue() {
+        @Override
+		public Object getValue() {
             return data[VALUE];
         }
 
@@ -1891,7 +1933,8 @@ public class TreeBidiMap implements OrderedBidiMap {
          * @return does not return
          * @throws UnsupportedOperationException always
          */
-        public Object setValue(final Object ignored)
+        @Override
+		public Object setValue(final Object ignored)
                 throws UnsupportedOperationException {
             throw new UnsupportedOperationException(
                 "Map.Entry.setValue is not supported");
@@ -1905,7 +1948,8 @@ public class TreeBidiMap implements OrderedBidiMap {
          * @param obj  the object to be compared for equality with this entry.
          * @return true if the specified object is equal to this entry.
          */
-        public boolean equals(final Object obj) {
+        @Override
+		public boolean equals(final Object obj) {
             if (obj == this) {
                 return true;
             }
@@ -1919,7 +1963,8 @@ public class TreeBidiMap implements OrderedBidiMap {
         /**
          * @return the hash code value for this map entry.
          */
-        public int hashCode() {
+        @Override
+		public int hashCode() {
             if (!calculatedHashCode) {
                 hashcodeValue = data[KEY].hashCode() ^ data[VALUE].hashCode();
                 calculatedHashCode = true;
@@ -1952,61 +1997,73 @@ public class TreeBidiMap implements OrderedBidiMap {
             this.main = main;
         }
 
-        public int size() {
+        @Override
+		public int size() {
             return main.size();
         }
 
-        public boolean isEmpty() {
+        @Override
+		public boolean isEmpty() {
             return main.isEmpty();
         }
 
-        public Object get(final Object key) {
+        @Override
+		public Object get(final Object key) {
             return main.getKey(key);
         }
 
-        public Object getKey(final Object value) {
+        @Override
+		public Object getKey(final Object value) {
             return main.get(value);
         }
 
-        public boolean containsKey(final Object key) {
+        @Override
+		public boolean containsKey(final Object key) {
             return main.containsValue(key);
         }
 
-        public boolean containsValue(final Object value) {
+        @Override
+		public boolean containsValue(final Object value) {
             return main.containsKey(value);
         }
 
-        public Object firstKey() {
+        @Override
+		public Object firstKey() {
             if (main.nodeCount == 0) {
                 throw new NoSuchElementException("Map is empty");
             }
             return TreeBidiMap.leastNode(main.rootNode[VALUE], VALUE).getValue();
         }
 
-        public Object lastKey() {
+        @Override
+		public Object lastKey() {
             if (main.nodeCount == 0) {
                 throw new NoSuchElementException("Map is empty");
             }
             return TreeBidiMap.greatestNode(main.rootNode[VALUE], VALUE).getValue();
         }
     
-        public Object nextKey(Object key) {
+        @Override
+		public Object nextKey(Object key) {
             checkKey(key);
             Node node = main.nextGreater(main.lookup((Comparable) key, VALUE), VALUE);
             return (node == null ? null : node.getValue());
         }
 
-        public Object previousKey(Object key) {
+        @Override
+		public Object previousKey(Object key) {
             checkKey(key);
             Node node = main.nextSmaller(main.lookup((Comparable) key, VALUE), VALUE);
             return (node == null ? null : node.getValue());
         }
 
-        public Object put(final Object key, final Object value) {
+        @Override
+		public Object put(final Object key, final Object value) {
             return main.doPut((Comparable) value, (Comparable) key, VALUE);
         }
 
-        public void putAll(Map map) {
+        @Override
+		public void putAll(Map map) {
             Iterator it = map.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry entry = (Map.Entry) it.next();
@@ -2014,70 +2071,83 @@ public class TreeBidiMap implements OrderedBidiMap {
             }
         }
         
-        public Object remove(final Object key) {
+        @Override
+		public Object remove(final Object key) {
             return main.removeValue(key);
         }
 
-        public Object removeValue(final Object value) {
+        @Override
+		public Object removeValue(final Object value) {
             return main.remove(value);
         }
 
-        public void clear() {
+        @Override
+		public void clear() {
             main.clear();
         }
 
-        public Set keySet() {
+        @Override
+		public Set keySet() {
             if (keySet == null) {
                 keySet = new View(main, VALUE, VALUE);
             }
             return keySet;
         }
 
-        public Collection values() {
+        @Override
+		public Collection values() {
             if (valuesSet == null) {
                 valuesSet = new View(main, VALUE, KEY);
             }
             return valuesSet;
         }
 
-        public Set entrySet() {
+        @Override
+		public Set entrySet() {
             if (entrySet == null) {
                 return new EntryView(main, VALUE, INVERSEMAPENTRY);
             }
             return entrySet;
         }
         
-        public MapIterator mapIterator() {
+        @Override
+		public MapIterator mapIterator() {
             if (isEmpty()) {
                 return EmptyOrderedMapIterator.INSTANCE;
             }
             return new ViewMapIterator(main, VALUE);
         }
 
-        public OrderedMapIterator orderedMapIterator() {
+        @Override
+		public OrderedMapIterator orderedMapIterator() {
             if (isEmpty()) {
                 return EmptyOrderedMapIterator.INSTANCE;
             }
             return new ViewMapIterator(main, VALUE);
         }
 
-        public BidiMap inverseBidiMap() {
+        @Override
+		public BidiMap inverseBidiMap() {
             return main;
         }
         
-        public OrderedBidiMap inverseOrderedBidiMap() {
+        @Override
+		public OrderedBidiMap inverseOrderedBidiMap() {
             return main;
         }
         
-        public boolean equals(Object obj) {
+        @Override
+		public boolean equals(Object obj) {
             return main.doEquals(obj, VALUE);
         }
     
-        public int hashCode() {
+        @Override
+		public int hashCode() {
             return main.doHashCode(VALUE);
         }
     
-        public String toString() {
+        @Override
+		public String toString() {
             return main.doToString(VALUE);
         }
     }

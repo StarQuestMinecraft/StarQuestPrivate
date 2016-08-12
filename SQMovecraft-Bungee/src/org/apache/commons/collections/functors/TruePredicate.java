@@ -59,7 +59,8 @@ public final class TruePredicate implements Predicate, Serializable {
      * @param object  the input object
      * @return true always
      */
-    public boolean evaluate(Object object) {
+    @Override
+	public boolean evaluate(Object object) {
         return true;
     }
 

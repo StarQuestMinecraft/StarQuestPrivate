@@ -64,7 +64,8 @@ public final class UniquePredicate implements Predicate, Serializable {
      * @param object  the input object
      * @return true if this is the first time the object is seen
      */
-    public boolean evaluate(Object object) {
+    @Override
+	public boolean evaluate(Object object) {
         return iSet.add(object);
     }
 

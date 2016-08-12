@@ -95,7 +95,8 @@ public class IdentityMap
      * @param key  the key to get a hash code for
      * @return the hash code
      */
-    protected int hash(Object key) {
+    @Override
+	protected int hash(Object key) {
         return System.identityHashCode(key);
     }
     
@@ -107,7 +108,8 @@ public class IdentityMap
      * @param key2  the second key to compare
      * @return true if equal by identity
      */
-    protected boolean isEqualKey(Object key1, Object key2) {
+    @Override
+	protected boolean isEqualKey(Object key1, Object key2) {
         return (key1 == key2);
     }
     
@@ -119,7 +121,8 @@ public class IdentityMap
      * @param value2  the second value to compare
      * @return true if equal by identity
      */
-    protected boolean isEqualValue(Object value1, Object value2) {
+    @Override
+	protected boolean isEqualValue(Object value1, Object value2) {
         return (value1 == value2);
     }
     
@@ -133,7 +136,8 @@ public class IdentityMap
      * @param value  the value to store
      * @return the newly created entry
      */
-    protected HashEntry createEntry(HashEntry next, int hashCode, Object key, Object value) {
+    @Override
+	protected HashEntry createEntry(HashEntry next, int hashCode, Object key, Object value) {
         return new IdentityEntry(next, hashCode, key, value);
     }
     
@@ -147,7 +151,8 @@ public class IdentityMap
             super(next, hashCode, key, value);
         }
         
-        public boolean equals(Object obj) {
+        @Override
+		public boolean equals(Object obj) {
             if (obj == this) {
                 return true;
             }
@@ -160,7 +165,8 @@ public class IdentityMap
                 (getValue() == other.getValue());
         }
         
-        public int hashCode() {
+        @Override
+		public int hashCode() {
             return System.identityHashCode(getKey()) ^
                    System.identityHashCode(getValue());
         }
@@ -172,7 +178,8 @@ public class IdentityMap
      *
      * @return a shallow clone
      */
-    public Object clone() {
+    @Override
+	public Object clone() {
         return super.clone();
     }
     

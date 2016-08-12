@@ -61,7 +61,8 @@ public class CloneTransformer implements Transformer, Serializable {
      * @param input  the input object to transform
      * @return the transformed result
      */
-    public Object transform(Object input) {
+    @Override
+	public Object transform(Object input) {
         if (input == null) {
             return null;
         }

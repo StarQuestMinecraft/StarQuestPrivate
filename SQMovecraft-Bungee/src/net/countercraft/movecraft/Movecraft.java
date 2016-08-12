@@ -18,7 +18,6 @@
 package net.countercraft.movecraft;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,7 +40,6 @@ import net.countercraft.movecraft.async.AsyncManager;
 import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.crafttransfer.utils.transfer.BungeeCraftReceiver;
 import net.countercraft.movecraft.crafttransfer.utils.transfer.BungeeCraftSender;
-import net.countercraft.movecraft.bungee.BungeeFileHandler;
 import net.countercraft.movecraft.bungee.BungeeListener;
 import net.countercraft.movecraft.config.Settings;
 import net.countercraft.movecraft.craft.Craft;
@@ -83,6 +81,7 @@ public class Movecraft extends JavaPlugin {
 	
 	public static String[] blockMetadataTransfer = new String[] {"guiblock"};
 	
+	@Override
 	public void onDisable() {
 		// Process the storage crates to disk
 		//StorageChestItem.saveToDisk();
@@ -92,6 +91,7 @@ public class Movecraft extends JavaPlugin {
 		ShieldUtils.activateAllRemaining();
 	}
 	
+	@Override
 	public boolean onCommand(final CommandSender sender, Command cmd, String label, final String[] args) {
 	if (cmd.getName().equalsIgnoreCase("removehome") && sender instanceof Player){
 			if(args.length > 0){
@@ -106,6 +106,7 @@ public class Movecraft extends JavaPlugin {
 			if(sender instanceof Player){
 				sender.sendMessage("Fetching cryospawn...");
 				Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable(){
+					@Override
 					public void run(){
 						CryoSpawn spawn = CryoSpawn.getSpawnAsync(sender.getName());
 						if(spawn == null){
@@ -139,6 +140,7 @@ public class Movecraft extends JavaPlugin {
 			String serverName = args[0];
 			final SerializableLocation destinationLocation = new SerializableLocation(serverName, 0, 200, 0);
 			Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
+				@Override
 				public void run() {
 					BungeeCraftSender.sendCraft(destinationLocation, CraftManager.getInstance().getCraftByPlayer((Player) sender));
 				}
@@ -148,6 +150,7 @@ public class Movecraft extends JavaPlugin {
 			if(sender.hasPermission("movecraft.loadship")){
 				if(args.length == 1){
 					Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable()  {
+						@Override
 						public void run() {
 							BungeeCraftReceiver.receiveCraft(args[0]);
 							sender.sendMessage("loaded ship.");
@@ -157,6 +160,7 @@ public class Movecraft extends JavaPlugin {
 				}
 				else if(args.length == 2) {
 					Bukkit.getScheduler().runTaskAsynchronously(this,  new Runnable() {
+						@Override
 						public void run() {
 							if(args[1].equalsIgnoreCase("true")) {
 								BungeeCraftReceiver.receiveCraft(Bukkit.getPlayer(args[0]));
@@ -264,6 +268,7 @@ public class Movecraft extends JavaPlugin {
 		return false;
 	}
 
+	@Override
 	public void onEnable() {
 		// Read in config
 		this.saveDefaultConfig();
@@ -331,6 +336,7 @@ public class Movecraft extends JavaPlugin {
 		}
 		if(Bukkit.getServerName().equalsIgnoreCase("CoreSystem")){
 			Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable(){
+				@Override
 				public void run(){
 				    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "reloadchat");
 				}

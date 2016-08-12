@@ -186,7 +186,8 @@ public class NodeCachingLinkedList extends AbstractLinkedList implements Seriali
      * @param value  value of the new node
      * @return the newly created node
      */
-    protected Node createNode(Object value) {
+    @Override
+	protected Node createNode(Object value) {
         Node cachedNode = getNodeFromCache();
         if (cachedNode == null) {
             return super.createNode(value);
@@ -202,7 +203,8 @@ public class NodeCachingLinkedList extends AbstractLinkedList implements Seriali
      * 
      * @param node  the node to remove
      */
-    protected void removeNode(Node node) {
+    @Override
+	protected void removeNode(Node node) {
         super.removeNode(node);
         addNodeToCache(node);
     }
@@ -212,7 +214,8 @@ public class NodeCachingLinkedList extends AbstractLinkedList implements Seriali
      * cache for reuse.
      * 
      */
-    protected void removeAllNodes() {
+    @Override
+	protected void removeAllNodes() {
         // Add the removed nodes to the cache, then remove the rest.
         // We can add them to the cache before removing them, since
         // {@link AbstractLinkedList.removeAllNodes()} removes the

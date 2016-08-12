@@ -21,6 +21,7 @@ public class DeathTeleport/* implements PlayerTeleport */{
 		if (p != null) {
 			System.out.println("Executing death teleport!");
 			Bukkit.getScheduler().runTaskAsynchronously(Movecraft.getInstance(), new Runnable() {
+				@Override
 				public void run() {
 					CryoSpawn.respawnPlayerAsync( p);
 				}

@@ -81,15 +81,18 @@ public class TreeBag
     }
 
     //-----------------------------------------------------------------------
-    public Object first() {
+    @Override
+	public Object first() {
         return ((SortedMap) getMap()).firstKey();
     }
 
-    public Object last() {
+    @Override
+	public Object last() {
         return ((SortedMap) getMap()).lastKey();
     }
 
-    public Comparator comparator() {
+    @Override
+	public Comparator comparator() {
         return ((SortedMap) getMap()).comparator();
     }
 

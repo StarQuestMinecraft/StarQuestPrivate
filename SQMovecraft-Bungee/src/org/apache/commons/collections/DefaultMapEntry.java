@@ -30,6 +30,7 @@ import java.util.Map;
  * @author Neil O'Toole
  * @author Stephen Colebourne
  */
+@Deprecated
 public class DefaultMapEntry implements Map.Entry, KeyValue {
     
     /** The key */
@@ -78,7 +79,8 @@ public class DefaultMapEntry implements Map.Entry, KeyValue {
      *
      * @return the key 
      */
-    public Object getKey() {
+    @Override
+	public Object getKey() {
         return key;
     }
 
@@ -98,7 +100,8 @@ public class DefaultMapEntry implements Map.Entry, KeyValue {
      *
      * @return the value
      */
-    public Object getValue() {
+    @Override
+	public Object getValue() {
         return value;
     }
 
@@ -110,7 +113,8 @@ public class DefaultMapEntry implements Map.Entry, KeyValue {
      * @param value  the new value
      * @return the previous value
      */
-    public Object setValue(Object value) {
+    @Override
+	public Object setValue(Object value) {
         Object answer = this.value;
         this.value = value;
         return answer;
@@ -126,7 +130,8 @@ public class DefaultMapEntry implements Map.Entry, KeyValue {
      * @param obj  the object to compare to
      * @return true if equal key and value
      */
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
         if (obj == this) {
             return true;
         }
@@ -146,7 +151,8 @@ public class DefaultMapEntry implements Map.Entry, KeyValue {
      * 
      * @return a suitable hash code
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return (getKey() == null ? 0 : getKey().hashCode()) ^
                (getValue() == null ? 0 : getValue().hashCode()); 
     }
@@ -156,7 +162,8 @@ public class DefaultMapEntry implements Map.Entry, KeyValue {
      * a {@link java.util.HashMap}. 
      * @since 3.0
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return ""+getKey()+"="+getValue();
     }
 

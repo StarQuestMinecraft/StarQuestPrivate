@@ -711,7 +711,8 @@ public class CollectionUtils {
      *
      * @deprecated use {@link #get(Object, int)} instead. Will be removed in v4.0
      */
-    public static Object index(Object obj, int idx) {
+    @Deprecated
+	public static Object index(Object obj, int idx) {
         return index(obj, new Integer(idx));
     }
     
@@ -738,7 +739,8 @@ public class CollectionUtils {
      *
      * @deprecated use {@link #get(Object, int)} instead. Will be removed in v4.0
      */
-    public static Object index(Object obj, Object index) {
+    @Deprecated
+	public static Object index(Object obj, Object index) {
         if(obj instanceof Map) {
             Map map = (Map)obj;
             if(map.containsKey(index)) {

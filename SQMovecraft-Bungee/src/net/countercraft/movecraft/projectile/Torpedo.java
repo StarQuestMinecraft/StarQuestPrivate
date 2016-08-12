@@ -1,16 +1,13 @@
 package net.countercraft.movecraft.projectile;
 
 import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.config.Settings;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.event.CraftProjectileDetonateEvent;
-import net.countercraft.movecraft.projectile.LaserBolt.LocationHit;
 import net.countercraft.movecraft.utils.LocationUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -18,7 +15,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.TNTPrimed;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -71,12 +67,14 @@ public class Torpedo extends Projectile{
 		this.plr = plr;
 	}
 	
+	@Override
 	public void move(Block target){
 		super.move(target);
 		myBlock.getWorld().playEffect(myBlock.getLocation(), Effect.SMOKE, 20);
 		myBlock.getWorld().playSound(myBlock.getLocation(), Sound.ENTITY_FIREWORK_LAUNCH, 2.0F, 1.0F);
 	}
 	
+	@Override
 	public void detonate(){
 		CraftProjectileDetonateEvent event = new CraftProjectileDetonateEvent(plr, myBlock);
 		event.call();
@@ -84,6 +82,7 @@ public class Torpedo extends Projectile{
 			myBlock.setType(Material.AIR);
 			final Player shooter = plr;
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+				@Override
 				public void run(){
 					Craft c = CraftManager.getInstance().getCraftByPlayer(shooter);
 					if(c != null){

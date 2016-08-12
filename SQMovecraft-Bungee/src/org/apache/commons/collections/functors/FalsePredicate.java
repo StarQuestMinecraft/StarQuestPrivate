@@ -59,7 +59,8 @@ public final class FalsePredicate implements Predicate, Serializable {
      * @param object  the input object
      * @return false always
      */
-    public boolean evaluate(Object object) {
+    @Override
+	public boolean evaluate(Object object) {
         return false;
     }
 

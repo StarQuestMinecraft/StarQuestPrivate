@@ -200,7 +200,8 @@ public class TransformedMap
      * @return the transformed value
      * @since Commons Collections 3.1
      */
-    protected Object checkSetValue(Object value) {
+    @Override
+	protected Object checkSetValue(Object value) {
         return valueTransformer.transform(value);
     }
 
@@ -210,18 +211,21 @@ public class TransformedMap
      * @return true if a value transformer is in use
      * @since Commons Collections 3.1
      */
-    protected boolean isSetValueChecking() {
+    @Override
+	protected boolean isSetValueChecking() {
         return (valueTransformer != null);
     }
 
     //-----------------------------------------------------------------------
-    public Object put(Object key, Object value) {
+    @Override
+	public Object put(Object key, Object value) {
         key = transformKey(key);
         value = transformValue(value);
         return getMap().put(key, value);
     }
 
-    public void putAll(Map mapToCopy) {
+    @Override
+	public void putAll(Map mapToCopy) {
         mapToCopy = transformMap(mapToCopy);
         getMap().putAll(mapToCopy);
     }

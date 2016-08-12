@@ -1,8 +1,6 @@
 
 package com.dibujaron.cardboardbox.meta;
 
-import java.io.Serializable;
-
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -26,6 +24,7 @@ public class CardboardMetaSkull implements CardboardItemMeta {
 		}
 	}
 
+	@Override
 	public ItemMeta unbox() {
 
 		SkullMeta meta = (SkullMeta) new ItemStack(this.id).getItemMeta();

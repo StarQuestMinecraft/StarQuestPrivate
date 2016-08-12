@@ -72,7 +72,8 @@ public class ConstantFactory implements Factory, Serializable {
      * 
      * @return the stored constant value
      */
-    public Object create() {
+    @Override
+	public Object create() {
         return iConstant;
     }
 

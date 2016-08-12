@@ -1,8 +1,6 @@
 
 package com.dibujaron.cardboardbox.meta;
 
-import java.io.Serializable;
-
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -22,6 +20,7 @@ public class CardboardMetaLeatherArmor implements CardboardItemMeta {
 		this.color = new CardboardColor(meta.getColor());
 	}
 
+	@Override
 	public ItemMeta unbox() {
 
 		LeatherArmorMeta meta = (LeatherArmorMeta) new ItemStack(this.id).getItemMeta();

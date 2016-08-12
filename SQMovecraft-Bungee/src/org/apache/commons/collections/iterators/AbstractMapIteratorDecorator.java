@@ -58,27 +58,33 @@ public class AbstractMapIteratorDecorator implements MapIterator {
     }
 
     //-----------------------------------------------------------------------
-    public boolean hasNext() {
+    @Override
+	public boolean hasNext() {
         return iterator.hasNext();
     }
 
-    public Object next() {
+    @Override
+	public Object next() {
         return iterator.next();
     }
 
-    public void remove() {
+    @Override
+	public void remove() {
         iterator.remove();
     }
     
-    public Object getKey() {
+    @Override
+	public Object getKey() {
         return iterator.getKey();
     }
 
-    public Object getValue() {
+    @Override
+	public Object getValue() {
         return iterator.getValue();
     }
 
-    public Object setValue(Object obj) {
+    @Override
+	public Object setValue(Object obj) {
         return iterator.setValue(obj);
     }
 

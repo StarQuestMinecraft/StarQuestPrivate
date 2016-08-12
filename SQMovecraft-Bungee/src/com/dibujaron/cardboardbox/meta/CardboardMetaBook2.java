@@ -1,6 +1,5 @@
 package com.dibujaron.cardboardbox.meta;
 
-import java.io.Serializable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;

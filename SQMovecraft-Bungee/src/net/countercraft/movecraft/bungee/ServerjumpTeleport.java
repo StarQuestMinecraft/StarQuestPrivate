@@ -4,11 +4,8 @@ package net.countercraft.movecraft.bungee;
 import java.util.UUID;
 
 import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.bedspawns.Bedspawn;
 import net.countercraft.movecraft.cryo.CryoSpawn;
 import net.countercraft.movecraft.cryo.CryoUtils;
-import net.countercraft.movecraft.listener.EntityListener;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -54,6 +51,7 @@ public class ServerjumpTeleport implements PlayerTeleport{
 		this.knapsack = playerKnap;
 	}
 
+	@Override
 	public void execute() {
 
 		final Player p = Movecraft.getPlayer(uuid);
@@ -65,7 +63,7 @@ public class ServerjumpTeleport implements PlayerTeleport{
 		
 		World w = Bukkit.getServer().getWorld(worldname);
 		
-		Location l = new Location(w, x + 0.5, (double) y, z + 0.5, yaw, pitch);
+		Location l = new Location(w, x + 0.5, y, z + 0.5, yaw, pitch);
 		Block b = l.getBlock().getRelative(BlockFace.UP);
 		if(b.getType() == Material.WALL_SIGN){
 			Sign s = (Sign) b.getState();
@@ -99,6 +97,7 @@ public class ServerjumpTeleport implements PlayerTeleport{
 		}*/
 	}
 	
+	@Override
 	public UUID getUUID(){
 		return uuid;
 	}

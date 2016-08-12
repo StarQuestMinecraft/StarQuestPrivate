@@ -153,7 +153,8 @@ public class ReferenceIdentityMap extends AbstractReferenceMap implements Serial
      * @param key  the key to get a hash code for
      * @return the hash code
      */
-    protected int hash(Object key) {
+    @Override
+	protected int hash(Object key) {
         return System.identityHashCode(key);
     }
 
@@ -166,7 +167,8 @@ public class ReferenceIdentityMap extends AbstractReferenceMap implements Serial
      * @param value  the value to get a hash code for, may be null
      * @return the hash code, as per the MapEntry specification
      */
-    protected int hashEntry(Object key, Object value) {
+    @Override
+	protected int hashEntry(Object key, Object value) {
         return System.identityHashCode(key) ^
                System.identityHashCode(value);
     }
@@ -181,7 +183,8 @@ public class ReferenceIdentityMap extends AbstractReferenceMap implements Serial
      * @param key2  the second key extracted from the entry via <code>entry.key</code>
      * @return true if equal by identity
      */
-    protected boolean isEqualKey(Object key1, Object key2) {
+    @Override
+	protected boolean isEqualKey(Object key1, Object key2) {
         key2 = (keyType > HARD ? ((Reference) key2).get() : key2);
         return (key1 == key2);
     }
@@ -195,7 +198,8 @@ public class ReferenceIdentityMap extends AbstractReferenceMap implements Serial
      * @param value2  the second value extracted from the entry via <code>getValue()</code>
      * @return true if equal by identity
      */
-    protected boolean isEqualValue(Object value1, Object value2) {
+    @Override
+	protected boolean isEqualValue(Object value1, Object value2) {
         return (value1 == value2);
     }
 

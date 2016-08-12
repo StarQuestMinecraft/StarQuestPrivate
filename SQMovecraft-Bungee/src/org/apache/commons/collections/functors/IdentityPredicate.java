@@ -70,7 +70,8 @@ public final class IdentityPredicate implements Predicate, Serializable {
      * @param object  the input object
      * @return true if input is the same object as the stored value
      */
-    public boolean evaluate(Object object) {
+    @Override
+	public boolean evaluate(Object object) {
         return (iValue == object);
     }
 

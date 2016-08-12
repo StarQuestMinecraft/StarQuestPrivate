@@ -85,7 +85,8 @@ public class DualHashBidiMap
      * @param inverseBidiMap  the inverse BidiMap
      * @return new bidi map
      */
-    protected BidiMap createBidiMap(Map normalMap, Map reverseMap, BidiMap inverseBidiMap) {
+    @Override
+	protected BidiMap createBidiMap(Map normalMap, Map reverseMap, BidiMap inverseBidiMap) {
         return new DualHashBidiMap(normalMap, reverseMap, inverseBidiMap);
     }
 

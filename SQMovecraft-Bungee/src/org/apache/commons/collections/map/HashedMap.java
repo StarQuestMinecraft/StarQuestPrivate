@@ -93,7 +93,8 @@ public class HashedMap
      *
      * @return a shallow clone
      */
-    public Object clone() {
+    @Override
+	public Object clone() {
         return super.clone();
     }
     

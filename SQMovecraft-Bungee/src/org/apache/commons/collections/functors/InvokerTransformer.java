@@ -77,8 +77,8 @@ public class InvokerTransformer implements Transformer, Serializable {
         if (paramTypes == null || paramTypes.length == 0) {
             return new InvokerTransformer(methodName);
         } else {
-            paramTypes = (Class[]) paramTypes.clone();
-            args = (Object[]) args.clone();
+            paramTypes = paramTypes.clone();
+            args = args.clone();
             return new InvokerTransformer(methodName, paramTypes, args);
         }
     }
@@ -116,7 +116,8 @@ public class InvokerTransformer implements Transformer, Serializable {
      * @param input  the input object to transform
      * @return the transformed result, null if null input
      */
-    public Object transform(Object input) {
+    @Override
+	public Object transform(Object input) {
         if (input == null) {
             return null;
         }

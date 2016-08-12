@@ -90,49 +90,59 @@ public class PredicatedList extends PredicatedCollection implements List {
     }
 
     //-----------------------------------------------------------------------
-    public Object get(int index) {
+    @Override
+	public Object get(int index) {
         return getList().get(index);
     }
 
-    public int indexOf(Object object) {
+    @Override
+	public int indexOf(Object object) {
         return getList().indexOf(object);
     }
 
-    public int lastIndexOf(Object object) {
+    @Override
+	public int lastIndexOf(Object object) {
         return getList().lastIndexOf(object);
     }
 
-    public Object remove(int index) {
+    @Override
+	public Object remove(int index) {
         return getList().remove(index);
     }
 
     //-----------------------------------------------------------------------
-    public void add(int index, Object object) {
+    @Override
+	public void add(int index, Object object) {
         validate(object);
         getList().add(index, object);
     }
 
-    public boolean addAll(int index, Collection coll) {
+    @Override
+	public boolean addAll(int index, Collection coll) {
         for (Iterator it = coll.iterator(); it.hasNext(); ) {
             validate(it.next());
         }
         return getList().addAll(index, coll);
     }
 
-    public ListIterator listIterator() {
+    @Override
+	public ListIterator listIterator() {
         return listIterator(0);
     }
 
-    public ListIterator listIterator(int i) {
+    @Override
+	public ListIterator listIterator(int i) {
         return new PredicatedListIterator(getList().listIterator(i));
     }
 
-    public Object set(int index, Object object) {
+    @Override
+	public Object set(int index, Object object) {
         validate(object);
         return getList().set(index, object);
     }
 
-    public List subList(int fromIndex, int toIndex) {
+    @Override
+	public List subList(int fromIndex, int toIndex) {
         List sub = getList().subList(fromIndex, toIndex);
         return new PredicatedList(sub, predicate);
     }
@@ -146,12 +156,14 @@ public class PredicatedList extends PredicatedCollection implements List {
             super(iterator);
         }
         
-        public void add(Object object) {
+        @Override
+		public void add(Object object) {
             validate(object);
             iterator.add(object);
         }
         
-        public void set(Object object) {
+        @Override
+		public void set(Object object) {
             validate(object);
             iterator.set(object);
         }

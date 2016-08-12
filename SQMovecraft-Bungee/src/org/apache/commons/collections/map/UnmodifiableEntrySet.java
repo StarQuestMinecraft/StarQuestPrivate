@@ -63,36 +63,44 @@ public final class UnmodifiableEntrySet
     }
 
     //-----------------------------------------------------------------------
-    public boolean add(Object object) {
+    @Override
+	public boolean add(Object object) {
         throw new UnsupportedOperationException();
     }
 
-    public boolean addAll(Collection coll) {
+    @Override
+	public boolean addAll(Collection coll) {
         throw new UnsupportedOperationException();
     }
 
-    public void clear() {
+    @Override
+	public void clear() {
         throw new UnsupportedOperationException();
     }
 
-    public boolean remove(Object object) {
+    @Override
+	public boolean remove(Object object) {
         throw new UnsupportedOperationException();
     }
 
-    public boolean removeAll(Collection coll) {
+    @Override
+	public boolean removeAll(Collection coll) {
         throw new UnsupportedOperationException();
     }
 
-    public boolean retainAll(Collection coll) {
+    @Override
+	public boolean retainAll(Collection coll) {
         throw new UnsupportedOperationException();
     }
 
     //-----------------------------------------------------------------------
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         return new UnmodifiableEntrySetIterator(collection.iterator());
     }
     
-    public Object[] toArray() {
+    @Override
+	public Object[] toArray() {
         Object[] array = collection.toArray();
         for (int i = 0; i < array.length; i++) {
             array[i] = new UnmodifiableEntry((Map.Entry) array[i]);
@@ -100,7 +108,8 @@ public final class UnmodifiableEntrySet
         return array;
     }
     
-    public Object[] toArray(Object array[]) {
+    @Override
+	public Object[] toArray(Object array[]) {
         Object[] result = array;
         if (array.length > 0) {
             // we must create a new array to handle multi-threaded situations
@@ -135,12 +144,14 @@ public final class UnmodifiableEntrySet
             super(iterator);
         }
         
-        public Object next() {
+        @Override
+		public Object next() {
             Map.Entry entry = (Map.Entry) iterator.next();
             return new UnmodifiableEntry(entry);
         }
         
-        public void remove() {
+        @Override
+		public void remove() {
             throw new UnsupportedOperationException();
         }
     }
@@ -155,7 +166,8 @@ public final class UnmodifiableEntrySet
             super(entry);
         }
 
-        public Object setValue(Object obj) {
+        @Override
+		public Object setValue(Object obj) {
             throw new UnsupportedOperationException();
         }
     }

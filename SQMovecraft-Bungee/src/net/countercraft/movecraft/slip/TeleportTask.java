@@ -2,25 +2,17 @@ package net.countercraft.movecraft.slip;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.UUID;
-
 import net.countercraft.movecraft.Movecraft;
-import net.countercraft.movecraft.bedspawns.Bedspawn;
-import net.countercraft.movecraft.bungee.LocAndBlock;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.utils.BlockUtils;
 import net.countercraft.movecraft.utils.MathUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.Dispenser;
-import org.bukkit.block.Dropper;
-import org.bukkit.block.Furnace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

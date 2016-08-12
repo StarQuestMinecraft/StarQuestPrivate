@@ -113,24 +113,29 @@ public class DualTreeBidiMap
      * @param inverseMap  the inverse BidiMap
      * @return new bidi map
      */
-    protected BidiMap createBidiMap(Map normalMap, Map reverseMap, BidiMap inverseMap) {
+    @Override
+	protected BidiMap createBidiMap(Map normalMap, Map reverseMap, BidiMap inverseMap) {
         return new DualTreeBidiMap(normalMap, reverseMap, inverseMap);
     }
 
     //-----------------------------------------------------------------------
-    public Comparator comparator() {
+    @Override
+	public Comparator comparator() {
         return ((SortedMap) maps[0]).comparator();
     }
 
-    public Object firstKey() {
+    @Override
+	public Object firstKey() {
         return ((SortedMap) maps[0]).firstKey();
     }
 
-    public Object lastKey() {
+    @Override
+	public Object lastKey() {
         return ((SortedMap) maps[0]).lastKey();
     }
 
-    public Object nextKey(Object key) {
+    @Override
+	public Object nextKey(Object key) {
         if (isEmpty()) {
             return null;
         }
@@ -146,7 +151,8 @@ public class DualTreeBidiMap
         return null;
     }
 
-    public Object previousKey(Object key) {
+    @Override
+	public Object previousKey(Object key) {
         if (isEmpty()) {
             return null;
         }
@@ -170,30 +176,36 @@ public class DualTreeBidiMap
      * 
      * @return a new ordered map iterator
      */
-    public OrderedMapIterator orderedMapIterator() {
+    @Override
+	public OrderedMapIterator orderedMapIterator() {
         return new BidiOrderedMapIterator(this);
     }
 
-    public SortedBidiMap inverseSortedBidiMap() {
+    @Override
+	public SortedBidiMap inverseSortedBidiMap() {
         return (SortedBidiMap) inverseBidiMap();
     }
 
-    public OrderedBidiMap inverseOrderedBidiMap() {
+    @Override
+	public OrderedBidiMap inverseOrderedBidiMap() {
         return (OrderedBidiMap) inverseBidiMap();
     }
 
     //-----------------------------------------------------------------------
-    public SortedMap headMap(Object toKey) {
+    @Override
+	public SortedMap headMap(Object toKey) {
         SortedMap sub = ((SortedMap) maps[0]).headMap(toKey);
         return new ViewMap(this, sub);
     }
 
-    public SortedMap tailMap(Object fromKey) {
+    @Override
+	public SortedMap tailMap(Object fromKey) {
         SortedMap sub = ((SortedMap) maps[0]).tailMap(fromKey);
         return new ViewMap(this, sub);
     }
 
-    public SortedMap subMap(Object fromKey, Object toKey) {
+    @Override
+	public SortedMap subMap(Object fromKey, Object toKey) {
         SortedMap sub = ((SortedMap) maps[0]).subMap(fromKey, toKey);
         return new ViewMap(this, sub);
     }
@@ -219,12 +231,14 @@ public class DualTreeBidiMap
             this.bidi = (DualTreeBidiMap) map;
         }
         
-        public boolean containsValue(Object value) {
+        @Override
+		public boolean containsValue(Object value) {
             // override as default implementation jumps to [1]
             return bidi.maps[0].containsValue(value);
         }
         
-        public void clear() {
+        @Override
+		public void clear() {
             // override as default implementation jumps to [1]
             for (Iterator it = keySet().iterator(); it.hasNext();) {
                 it.next();
@@ -232,15 +246,18 @@ public class DualTreeBidiMap
             }
         }
         
-        public SortedMap headMap(Object toKey) {
+        @Override
+		public SortedMap headMap(Object toKey) {
             return new ViewMap(bidi, super.headMap(toKey));
         }
 
-        public SortedMap tailMap(Object fromKey) {
+        @Override
+		public SortedMap tailMap(Object fromKey) {
             return new ViewMap(bidi, super.tailMap(fromKey));
         }
 
-        public SortedMap subMap(Object fromKey, Object toKey) {
+        @Override
+		public SortedMap subMap(Object fromKey, Object toKey) {
             return new ViewMap(bidi, super.subMap(fromKey, toKey));
         }
     }
@@ -268,45 +285,53 @@ public class DualTreeBidiMap
             iterator = new ArrayList(parent.entrySet()).listIterator();
         }
         
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             return iterator.hasNext();
         }
         
-        public Object next() {
+        @Override
+		public Object next() {
             last = (Map.Entry) iterator.next();
             return last.getKey();
         }
         
-        public boolean hasPrevious() {
+        @Override
+		public boolean hasPrevious() {
             return iterator.hasPrevious();
         }
         
-        public Object previous() {
+        @Override
+		public Object previous() {
             last = (Map.Entry) iterator.previous();
             return last.getKey();
         }
         
-        public void remove() {
+        @Override
+		public void remove() {
             iterator.remove();
             parent.remove(last.getKey());
             last = null;
         }
         
-        public Object getKey() {
+        @Override
+		public Object getKey() {
             if (last == null) {
                 throw new IllegalStateException("Iterator getKey() can only be called after next() and before remove()");
             }
             return last.getKey();
         }
 
-        public Object getValue() {
+        @Override
+		public Object getValue() {
             if (last == null) {
                 throw new IllegalStateException("Iterator getValue() can only be called after next() and before remove()");
             }
             return last.getValue();
         }
         
-        public Object setValue(Object value) {
+        @Override
+		public Object setValue(Object value) {
             if (last == null) {
                 throw new IllegalStateException("Iterator setValue() can only be called after next() and before remove()");
             }
@@ -317,12 +342,14 @@ public class DualTreeBidiMap
             return parent.put(last.getKey(), value);
         }
         
-        public void reset() {
+        @Override
+		public void reset() {
             iterator = new ArrayList(parent.entrySet()).listIterator();
             last = null;
         }
         
-        public String toString() {
+        @Override
+		public String toString() {
             if (last != null) {
                 return "MapIterator[" + getKey() + "=" + getValue() + "]";
             } else {

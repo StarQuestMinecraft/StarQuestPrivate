@@ -53,7 +53,8 @@ public abstract class AbstractMapEntry extends AbstractKeyValue implements Map.E
      * @param value  the new value
      * @return the previous value
      */
-    public Object setValue(Object value) {
+    @Override
+	public Object setValue(Object value) {
         Object answer = this.value;
         this.value = value;
         return answer;
@@ -67,7 +68,8 @@ public abstract class AbstractMapEntry extends AbstractKeyValue implements Map.E
      * @param obj  the object to compare to
      * @return true if equal key and value
      */
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
         if (obj == this) {
             return true;
         }
@@ -87,7 +89,8 @@ public abstract class AbstractMapEntry extends AbstractKeyValue implements Map.E
      * 
      * @return a suitable hash code
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return (getKey() == null ? 0 : getKey().hashCode()) ^
                (getValue() == null ? 0 : getValue().hashCode()); 
     }

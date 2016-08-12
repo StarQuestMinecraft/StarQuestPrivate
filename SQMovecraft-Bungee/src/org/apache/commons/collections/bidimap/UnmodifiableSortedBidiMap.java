@@ -75,62 +75,75 @@ public final class UnmodifiableSortedBidiMap
     }
 
     //-----------------------------------------------------------------------
-    public void clear() {
+    @Override
+	public void clear() {
         throw new UnsupportedOperationException();
     }
 
-    public Object put(Object key, Object value) {
+    @Override
+	public Object put(Object key, Object value) {
         throw new UnsupportedOperationException();
     }
 
-    public void putAll(Map mapToCopy) {
+    @Override
+	public void putAll(Map mapToCopy) {
         throw new UnsupportedOperationException();
     }
 
-    public Object remove(Object key) {
+    @Override
+	public Object remove(Object key) {
         throw new UnsupportedOperationException();
     }
 
-    public Set entrySet() {
+    @Override
+	public Set entrySet() {
         Set set = super.entrySet();
         return UnmodifiableEntrySet.decorate(set);
     }
 
-    public Set keySet() {
+    @Override
+	public Set keySet() {
         Set set = super.keySet();
         return UnmodifiableSet.decorate(set);
     }
 
-    public Collection values() {
+    @Override
+	public Collection values() {
         Collection coll = super.values();
         return UnmodifiableCollection.decorate(coll);
     }
 
     //-----------------------------------------------------------------------
-    public Object removeValue(Object value) {
+    @Override
+	public Object removeValue(Object value) {
         throw new UnsupportedOperationException();
     }
 
-    public MapIterator mapIterator() {
+    @Override
+	public MapIterator mapIterator() {
         return orderedMapIterator();
     }
 
-    public BidiMap inverseBidiMap() {
+    @Override
+	public BidiMap inverseBidiMap() {
         return inverseSortedBidiMap();
     }
     
     //-----------------------------------------------------------------------
-    public OrderedMapIterator orderedMapIterator() {
+    @Override
+	public OrderedMapIterator orderedMapIterator() {
         OrderedMapIterator it = getSortedBidiMap().orderedMapIterator();
         return UnmodifiableOrderedMapIterator.decorate(it);
     }
 
-    public OrderedBidiMap inverseOrderedBidiMap() {
+    @Override
+	public OrderedBidiMap inverseOrderedBidiMap() {
         return inverseSortedBidiMap();
     }
 
     //-----------------------------------------------------------------------
-    public SortedBidiMap inverseSortedBidiMap() {
+    @Override
+	public SortedBidiMap inverseSortedBidiMap() {
         if (inverse == null) {
             inverse = new UnmodifiableSortedBidiMap(getSortedBidiMap().inverseSortedBidiMap());
             inverse.inverse = this;
@@ -138,17 +151,20 @@ public final class UnmodifiableSortedBidiMap
         return inverse;
     }
 
-    public SortedMap subMap(Object fromKey, Object toKey) {
+    @Override
+	public SortedMap subMap(Object fromKey, Object toKey) {
         SortedMap sm = getSortedBidiMap().subMap(fromKey, toKey);
         return UnmodifiableSortedMap.decorate(sm);
     }
 
-    public SortedMap headMap(Object toKey) {
+    @Override
+	public SortedMap headMap(Object toKey) {
         SortedMap sm = getSortedBidiMap().headMap(toKey);
         return UnmodifiableSortedMap.decorate(sm);
     }
 
-    public SortedMap tailMap(Object fromKey) {
+    @Override
+	public SortedMap tailMap(Object fromKey) {
         SortedMap sm = getSortedBidiMap().tailMap(fromKey);
         return UnmodifiableSortedMap.decorate(sm);
     }

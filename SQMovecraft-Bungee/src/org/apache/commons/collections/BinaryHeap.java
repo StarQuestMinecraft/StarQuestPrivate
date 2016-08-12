@@ -60,6 +60,7 @@ import java.util.NoSuchElementException;
  * @author Paul Jack
  * @author Stephen Colebourne
  */
+@Deprecated
 public final class BinaryHeap extends AbstractCollection
         implements PriorityQueue, Buffer {
 
@@ -195,7 +196,8 @@ public final class BinaryHeap extends AbstractCollection
     /**
      * Clears all elements from queue.
      */
-    public void clear() {
+    @Override
+	public void clear() {
         m_elements = new Object[m_elements.length];  // for gc
         m_size = 0;
     }
@@ -206,7 +208,8 @@ public final class BinaryHeap extends AbstractCollection
      * @return <code>true</code> if queue is empty; <code>false</code> 
      *  otherwise.
      */
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         return m_size == 0;
     }
 
@@ -226,7 +229,8 @@ public final class BinaryHeap extends AbstractCollection
      *
      * @param element  the element to be inserted
      */
-    public void insert(Object element) {
+    @Override
+	public void insert(Object element) {
         if (isFull()) {
             grow();
         }
@@ -244,7 +248,8 @@ public final class BinaryHeap extends AbstractCollection
      * @return the element at top of heap
      * @throws NoSuchElementException  if <code>isEmpty() == true</code>
      */
-    public Object peek() throws NoSuchElementException {
+    @Override
+	public Object peek() throws NoSuchElementException {
         if (isEmpty()) {
             throw new NoSuchElementException();
         } else {
@@ -258,7 +263,8 @@ public final class BinaryHeap extends AbstractCollection
      * @return the element at top of heap
      * @throws NoSuchElementException  if <code>isEmpty() == true</code>
      */
-    public Object pop() throws NoSuchElementException {
+    @Override
+	public Object pop() throws NoSuchElementException {
         final Object result = peek();
         m_elements[1] = m_elements[m_size--];
 
@@ -439,7 +445,8 @@ public final class BinaryHeap extends AbstractCollection
      *
      * @return a string representation of this heap
      */
-    public String toString() {
+    @Override
+	public String toString() {
         final StringBuffer sb = new StringBuffer();
 
         sb.append("[ ");
@@ -462,24 +469,28 @@ public final class BinaryHeap extends AbstractCollection
      *
      * @return an iterator over this heap's elements
      */
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         return new Iterator() {
 
             private int index = 1;
             private int lastReturnedIndex = -1;
 
-            public boolean hasNext() {
+            @Override
+			public boolean hasNext() {
                 return index <= m_size;
             }
 
-            public Object next() {
+            @Override
+			public Object next() {
                 if (!hasNext()) throw new NoSuchElementException();
                 lastReturnedIndex = index;
                 index++;
                 return m_elements[lastReturnedIndex];
             }
 
-            public void remove() {
+            @Override
+			public void remove() {
                 if (lastReturnedIndex == -1) {
                     throw new IllegalStateException();
                 }
@@ -520,7 +531,8 @@ public final class BinaryHeap extends AbstractCollection
      * @param object  the object to add
      * @return true, always
      */
-    public boolean add(Object object) {
+    @Override
+	public boolean add(Object object) {
         insert(object);
         return true;
     }
@@ -531,7 +543,8 @@ public final class BinaryHeap extends AbstractCollection
      * @return the priority element
      * @throws BufferUnderflowException if this heap is empty
      */
-    public Object get() {
+    @Override
+	public Object get() {
         try {
             return peek();
         } catch (NoSuchElementException e) {
@@ -545,7 +558,8 @@ public final class BinaryHeap extends AbstractCollection
      * @return the removed priority element
      * @throws BufferUnderflowException if this heap is empty
      */
-    public Object remove() {
+    @Override
+	public Object remove() {
         try {
             return pop();
         } catch (NoSuchElementException e) {
@@ -558,7 +572,8 @@ public final class BinaryHeap extends AbstractCollection
      *
      * @return the number of elements in this heap
      */
-    public int size() {
+    @Override
+	public int size() {
         return m_size;
     }
 

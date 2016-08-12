@@ -138,7 +138,8 @@ public final class BooleanComparator implements Comparator, Serializable {
      * @return negative if obj1 is less, positive if greater, zero if equal
      * @throws ClassCastException when either argument is not <code>Boolean</code>
      */
-    public int compare(Object obj1, Object obj2) {
+    @Override
+	public int compare(Object obj1, Object obj2) {
         return compare((Boolean)obj1, (Boolean)obj2);
     }
     
@@ -165,7 +166,8 @@ public final class BooleanComparator implements Comparator, Serializable {
      *
      * @return a hash code for this comparator.
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         int hash = "BooleanComparator".hashCode();
         return trueFirst ? -1 * hash : hash;
     }
@@ -182,7 +184,8 @@ public final class BooleanComparator implements Comparator, Serializable {
      * @param object  the object to compare to
      * @return true if equal
      */
-    public boolean equals(Object object) {
+    @Override
+	public boolean equals(Object object) {
         return (this == object) || 
                ((object instanceof BooleanComparator) && 
                 (this.trueFirst == ((BooleanComparator)object).trueFirst));

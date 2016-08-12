@@ -82,15 +82,18 @@ public class TransformedSortedBag
     }
 
     //-----------------------------------------------------------------------
-    public Object first() {
+    @Override
+	public Object first() {
         return getSortedBag().first();
     }
 
-    public Object last() {
+    @Override
+	public Object last() {
         return getSortedBag().last();
     }
 
-    public Comparator comparator() {
+    @Override
+	public Comparator comparator() {
         return getSortedBag().comparator();
     }
 

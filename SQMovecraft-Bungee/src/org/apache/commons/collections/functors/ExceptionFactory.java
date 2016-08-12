@@ -61,7 +61,8 @@ public final class ExceptionFactory implements Factory, Serializable {
      * @return never
      * @throws FunctorException always
      */
-    public Object create() {
+    @Override
+	public Object create() {
         throw new FunctorException("ExceptionFactory invoked");
     }
 

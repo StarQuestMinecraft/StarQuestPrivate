@@ -133,7 +133,8 @@ public class NullComparator implements Comparator, Serializable {
      *  "higher" than (greater than, after, etc.) <code>o2</code>; or
      *  <code>0</code> if <code>o1</code> and <code>o2</code> are equal.
      **/
-    public int compare(Object o1, Object o2) {
+    @Override
+	public int compare(Object o1, Object o2) {
         if(o1 == o2) { return 0; }
         if(o1 == null) { return (this.nullsAreHigh ? 1 : -1); }
         if(o2 == null) { return (this.nullsAreHigh ? -1 : 1); }
@@ -147,7 +148,8 @@ public class NullComparator implements Comparator, Serializable {
      *
      *  @return a hash code for this comparator.
      **/
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return (nullsAreHigh ? -1 : 1) * nonNullComparator.hashCode();
     }
 
@@ -162,7 +164,8 @@ public class NullComparator implements Comparator, Serializable {
      *  (i.e. <code>null</code> high or low) and with equivalent underlying
      *  non-<code>null</code> object comparators.
      **/
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
         if(obj == null) { return false; }
         if(obj == this) { return true; }
         if(!obj.getClass().equals(this.getClass())) { return false; }

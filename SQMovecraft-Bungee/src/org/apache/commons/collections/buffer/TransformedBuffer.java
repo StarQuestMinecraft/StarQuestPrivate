@@ -80,11 +80,13 @@ public class TransformedBuffer extends TransformedCollection implements Buffer {
     }
 
     //-----------------------------------------------------------------------
-    public Object get() {
+    @Override
+	public Object get() {
         return getBuffer().get();
     }
 
-    public Object remove() {
+    @Override
+	public Object remove() {
         return getBuffer().remove();
     }
 

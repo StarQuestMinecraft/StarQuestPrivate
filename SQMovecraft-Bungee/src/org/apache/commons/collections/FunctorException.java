@@ -101,14 +101,16 @@ public class FunctorException extends RuntimeException {
      * 
      * @return  the cause of this throwable, or <code>null</code>
      */
-    public Throwable getCause() {
+    @Override
+	public Throwable getCause() {
         return rootCause;
     }
 
     /**
      * Prints the stack trace of this exception to the standard error stream.
      */
-    public void printStackTrace() {
+    @Override
+	public void printStackTrace() {
         printStackTrace(System.err);
     }
 
@@ -117,7 +119,8 @@ public class FunctorException extends RuntimeException {
      *
      * @param out  the <code>PrintStream</code> to use for output
      */
-    public void printStackTrace(PrintStream out) {
+    @Override
+	public void printStackTrace(PrintStream out) {
         synchronized (out) {
             PrintWriter pw = new PrintWriter(out, false);
             printStackTrace(pw);
@@ -131,7 +134,8 @@ public class FunctorException extends RuntimeException {
      *
      * @param out  the <code>PrintWriter</code> to use for output
      */
-    public void printStackTrace(PrintWriter out) {
+    @Override
+	public void printStackTrace(PrintWriter out) {
         synchronized (out) {
             super.printStackTrace(out);
             if (rootCause != null && JDK_SUPPORTS_NESTED == false) {

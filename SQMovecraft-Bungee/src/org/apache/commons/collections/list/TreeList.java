@@ -94,7 +94,8 @@ public class TreeList extends AbstractList {
      * @param index  the index to retrieve
      * @return the element at the specified index
      */
-    public Object get(int index) {
+    @Override
+	public Object get(int index) {
         checkInterval(index, 0, size() - 1);
         return root.get(index).getValue();
     }
@@ -104,7 +105,8 @@ public class TreeList extends AbstractList {
      * 
      * @return the current size
      */
-    public int size() {
+    @Override
+	public int size() {
         return size;
     }
 
@@ -113,7 +115,8 @@ public class TreeList extends AbstractList {
      * 
      * @return an iterator over the list
      */
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         // override to go 75% faster
         return listIterator(0);
     }
@@ -123,7 +126,8 @@ public class TreeList extends AbstractList {
      * 
      * @return the new iterator
      */
-    public ListIterator listIterator() {
+    @Override
+	public ListIterator listIterator() {
         // override to go 75% faster
         return listIterator(0);
     }
@@ -134,7 +138,8 @@ public class TreeList extends AbstractList {
      * @param fromIndex  the index to start from
      * @return the new iterator
      */
-    public ListIterator listIterator(int fromIndex) {
+    @Override
+	public ListIterator listIterator(int fromIndex) {
         // override to go 75% faster
         // cannot use EmptyIterator as iterator.add() must work
         checkInterval(fromIndex, 0, size());
@@ -146,7 +151,8 @@ public class TreeList extends AbstractList {
      * 
      * @return the index of the object, -1 if not found
      */
-    public int indexOf(Object object) {
+    @Override
+	public int indexOf(Object object) {
         // override to go 75% faster
         if (root == null) {
             return -1;
@@ -159,7 +165,8 @@ public class TreeList extends AbstractList {
      * 
      * @return true if the object is found
      */
-    public boolean contains(Object object) {
+    @Override
+	public boolean contains(Object object) {
         return (indexOf(object) >= 0);
     }
 
@@ -168,7 +175,8 @@ public class TreeList extends AbstractList {
      * 
      * @return the list as an array
      */
-    public Object[] toArray() {
+    @Override
+	public Object[] toArray() {
         // override to go 20% faster
         Object[] array = new Object[size()];
         if (root != null) {
@@ -184,7 +192,8 @@ public class TreeList extends AbstractList {
      * @param index  the index to add before
      * @param obj  the element to add
      */
-    public void add(int index, Object obj) {
+    @Override
+	public void add(int index, Object obj) {
         modCount++;
         checkInterval(index, 0, size());
         if (root == null) {
@@ -203,7 +212,8 @@ public class TreeList extends AbstractList {
      * @return the previous object at that index
      * @throws IndexOutOfBoundsException if the index is invalid
      */
-    public Object set(int index, Object obj) {
+    @Override
+	public Object set(int index, Object obj) {
         checkInterval(index, 0, size() - 1);
         AVLNode node = root.get(index);
         Object result = node.value;
@@ -217,7 +227,8 @@ public class TreeList extends AbstractList {
      * @param index  the index to remove
      * @return the previous object at that index
      */
-    public Object remove(int index) {
+    @Override
+	public Object remove(int index) {
         modCount++;
         checkInterval(index, 0, size() - 1);
         Object result = get(index);
@@ -229,7 +240,8 @@ public class TreeList extends AbstractList {
     /**
      * Clears the list, removing all entries.
      */
-    public void clear() {
+    @Override
+	public void clear() {
         modCount++;
         root = null;
         size = 0;
@@ -764,7 +776,8 @@ public class TreeList extends AbstractList {
         /**
          * Used for debugging.
          */
-        public String toString() {
+        @Override
+		public String toString() {
             return "AVLNode(" + relativePosition + "," + (left != null) + "," + value +
                 "," + (getRightSubTree() != null) + ", faedelung " + rightIsNext + " )";
         }
@@ -829,11 +842,13 @@ public class TreeList extends AbstractList {
             }
         }
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             return (nextIndex < parent.size());
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             checkModCount();
             if (!hasNext()) {
                 throw new NoSuchElementException("No element at index " + nextIndex + ".");
@@ -848,11 +863,13 @@ public class TreeList extends AbstractList {
             return value;
         }
 
-        public boolean hasPrevious() {
+        @Override
+		public boolean hasPrevious() {
             return (nextIndex > 0);
         }
 
-        public Object previous() {
+        @Override
+		public Object previous() {
             checkModCount();
             if (!hasPrevious()) {
                 throw new NoSuchElementException("Already at start of list.");
@@ -868,15 +885,18 @@ public class TreeList extends AbstractList {
             return value;
         }
 
-        public int nextIndex() {
+        @Override
+		public int nextIndex() {
             return nextIndex;
         }
 
-        public int previousIndex() {
+        @Override
+		public int previousIndex() {
             return nextIndex() - 1;
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             checkModCount();
             if (currentIndex == -1) {
                 throw new IllegalStateException();
@@ -895,7 +915,8 @@ public class TreeList extends AbstractList {
             expectedModCount++;
         }
 
-        public void set(Object obj) {
+        @Override
+		public void set(Object obj) {
             checkModCount();
             if (current == null) {
                 throw new IllegalStateException();
@@ -903,7 +924,8 @@ public class TreeList extends AbstractList {
             current.setValue(obj);
         }
 
-        public void add(Object obj) {
+        @Override
+		public void add(Object obj) {
             checkModCount();
             parent.add(nextIndex, obj);
             current = null;

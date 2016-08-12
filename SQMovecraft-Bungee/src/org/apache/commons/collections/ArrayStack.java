@@ -170,7 +170,8 @@ public class ArrayStack extends ArrayList implements Buffer {
      * @return the element on the top of the stack
      * @throws BufferUnderflowException  if the stack is empty
      */
-    public Object get() {
+    @Override
+	public Object get() {
         int size = size();
         if (size == 0) {
             throw new BufferUnderflowException();
@@ -184,7 +185,8 @@ public class ArrayStack extends ArrayList implements Buffer {
      * @return the removed element 
      * @throws BufferUnderflowException  if the stack is empty
      */
-    public Object remove() {
+    @Override
+	public Object remove() {
         int size = size();
         if (size == 0) {
             throw new BufferUnderflowException();

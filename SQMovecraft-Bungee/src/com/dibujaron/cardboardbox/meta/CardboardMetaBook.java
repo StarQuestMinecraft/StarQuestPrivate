@@ -1,7 +1,6 @@
 
 package com.dibujaron.cardboardbox.meta;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.bukkit.inventory.ItemStack;
@@ -25,6 +24,7 @@ public class CardboardMetaBook implements CardboardItemMeta {
 		this.pages = meta.getPages();
 	}
 
+	@Override
 	public ItemMeta unbox() {
 
 		BookMeta meta = (BookMeta) new ItemStack(this.id).getItemMeta();

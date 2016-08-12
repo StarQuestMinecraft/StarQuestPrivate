@@ -104,7 +104,8 @@ public final class AnyPredicate implements Predicate, PredicateDecorator, Serial
      * @param object  the input object
      * @return true if any decorated predicate return true
      */
-    public boolean evaluate(Object object) {
+    @Override
+	public boolean evaluate(Object object) {
         for (int i = 0; i < iPredicates.length; i++) {
             if (iPredicates[i].evaluate(object)) {
                 return true;
@@ -119,7 +120,8 @@ public final class AnyPredicate implements Predicate, PredicateDecorator, Serial
      * @return the predicates
      * @since Commons Collections 3.1
      */
-    public Predicate[] getPredicates() {
+    @Override
+	public Predicate[] getPredicates() {
         return iPredicates;
     }
 

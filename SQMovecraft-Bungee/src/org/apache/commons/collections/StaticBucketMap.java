@@ -100,6 +100,7 @@ import java.util.Set;
  * @author Janek Bogucki
  * @author Kazuya Ujihara
  */
+@Deprecated
 public final class StaticBucketMap implements Map {
 
     private static final int DEFAULT_BUCKETS = 255;
@@ -173,7 +174,8 @@ public final class StaticBucketMap implements Map {
     /**
      *  Implements {@link Map#keySet()}.
      */
-    public Set keySet()
+    @Override
+	public Set keySet()
     {
         return new KeySet();
     }
@@ -181,7 +183,8 @@ public final class StaticBucketMap implements Map {
     /**
      *  Implements {@link Map#size()}.
      */
-    public int size()
+    @Override
+	public int size()
     {
         int cnt = 0;
 
@@ -196,7 +199,8 @@ public final class StaticBucketMap implements Map {
     /**
      *  Implements {@link Map#put(Object, Object)}.
      */
-    public Object put( final Object key, final Object value )
+    @Override
+	public Object put( final Object key, final Object value )
     {
         int hash = getHash( key );
 
@@ -244,7 +248,8 @@ public final class StaticBucketMap implements Map {
     /**
      *  Implements {@link Map#get(Object)}.
      */
-    public Object get( final Object key )
+    @Override
+	public Object get( final Object key )
     {
         int hash = getHash( key );
 
@@ -269,7 +274,8 @@ public final class StaticBucketMap implements Map {
     /**
      * Implements {@link Map#containsKey(Object)}.
      */
-    public boolean containsKey( final Object key )
+    @Override
+	public boolean containsKey( final Object key )
     {
         int hash = getHash( key );
 
@@ -294,7 +300,8 @@ public final class StaticBucketMap implements Map {
     /**
      * Implements {@link Map#containsValue(Object)}.
      */
-    public boolean containsValue( final Object value )
+    @Override
+	public boolean containsValue( final Object value )
     {
         for( int i = 0; i < m_buckets.length; i++ )
         {
@@ -321,7 +328,8 @@ public final class StaticBucketMap implements Map {
     /**
      *  Implements {@link Map#values()}.
      */
-    public Collection values()
+    @Override
+	public Collection values()
     {
         return new Values();
     }
@@ -329,7 +337,8 @@ public final class StaticBucketMap implements Map {
     /**
      *  Implements {@link Map#entrySet()}.
      */
-    public Set entrySet()
+    @Override
+	public Set entrySet()
     {
         return new EntrySet();
     }
@@ -337,7 +346,8 @@ public final class StaticBucketMap implements Map {
     /**
      *  Implements {@link Map#putAll(Map)}.
      */
-    public void putAll( Map other )
+    @Override
+	public void putAll( Map other )
     {
         Iterator i = other.keySet().iterator();
 
@@ -351,7 +361,8 @@ public final class StaticBucketMap implements Map {
     /**
      *  Implements {@link Map#remove(Object)}.
      */
-    public Object remove( Object key )
+    @Override
+	public Object remove( Object key )
     {
         int hash = getHash( key );
 
@@ -390,7 +401,8 @@ public final class StaticBucketMap implements Map {
     /**
      *  Implements {@link Map#isEmpty()}.
      */
-    public final boolean isEmpty()
+    @Override
+	public final boolean isEmpty()
     {
         return size() == 0;
     }
@@ -398,7 +410,8 @@ public final class StaticBucketMap implements Map {
     /**
      *  Implements {@link Map#clear()}.
      */
-    public final void clear()
+    @Override
+	public final void clear()
     {
         for( int i = 0; i < m_buckets.length; i++ )
         {
@@ -413,7 +426,8 @@ public final class StaticBucketMap implements Map {
     /**
      *  Implements {@link Map#equals(Object)}.
      */
-    public final boolean equals( Object obj )
+    @Override
+	public final boolean equals( Object obj )
     {
         if( obj == null ) return false;
         if( obj == this ) return true;
@@ -428,7 +442,8 @@ public final class StaticBucketMap implements Map {
     /**
      *  Implements {@link Map#hashCode()}.
      */
-    public final int hashCode() 
+    @Override
+	public final int hashCode() 
     {
         int hashCode = 0;
 
@@ -457,23 +472,27 @@ public final class StaticBucketMap implements Map {
         protected Object value;
         protected Node next;
 
-        public Object getKey()
+        @Override
+		public Object getKey()
         {
             return key;
         }
 
-        public Object getValue()
+        @Override
+		public Object getValue()
         {
             return value;
         }
 
-        public int hashCode()
+        @Override
+		public int hashCode()
         {
             return ( ( key == null ? 0 : key.hashCode() ) ^
                      ( value == null ? 0 : value.hashCode() ) ); 
         }
 
-        public boolean equals(Object o) {
+        @Override
+		public boolean equals(Object o) {
             if( o == null ) return false;
             if( o == this ) return true;        
             
@@ -488,7 +507,8 @@ public final class StaticBucketMap implements Map {
                      e2.getValue() == null : value.equals(e2.getValue())));
         }
 
-        public Object setValue( Object val )
+        @Override
+		public Object setValue( Object val )
         {
             Object retVal = value;
             value = val;
@@ -510,7 +530,8 @@ public final class StaticBucketMap implements Map {
         private Map.Entry last;
 
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             if (current.size() > 0) return true;
             while (bucket < m_buckets.length) {
                 synchronized (m_locks[bucket]) {
@@ -532,11 +553,13 @@ public final class StaticBucketMap implements Map {
             return last;
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             return nextEntry();
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             if (last == null) throw new IllegalStateException();
             StaticBucketMap.this.remove(last.getKey());
             last = null;
@@ -546,7 +569,8 @@ public final class StaticBucketMap implements Map {
 
     private class ValueIterator extends EntryIterator {
 
-        public Object next() {
+        @Override
+		public Object next() {
             return nextEntry().getValue();
         }
 
@@ -554,7 +578,8 @@ public final class StaticBucketMap implements Map {
 
     private class KeyIterator extends EntryIterator {
 
-        public Object next() {
+        @Override
+		public Object next() {
             return nextEntry().getKey();
         }
 
@@ -562,19 +587,23 @@ public final class StaticBucketMap implements Map {
 
     private class EntrySet extends AbstractSet {
 
-        public int size() {
+        @Override
+		public int size() {
             return StaticBucketMap.this.size();
         }
 
-        public void clear() {
+        @Override
+		public void clear() {
             StaticBucketMap.this.clear();
         }
 
-        public Iterator iterator() {
+        @Override
+		public Iterator iterator() {
             return new EntryIterator();
         }
 
-        public boolean contains(Object o) {
+        @Override
+		public boolean contains(Object o) {
             Map.Entry entry = (Map.Entry)o;
             int hash = getHash(entry.getKey());
             synchronized (m_locks[hash]) {
@@ -585,7 +614,8 @@ public final class StaticBucketMap implements Map {
             return false;
         }
 
-        public boolean remove(Object obj) {
+        @Override
+		public boolean remove(Object obj) {
             if (obj instanceof Map.Entry == false) {
                 return false;
             }
@@ -607,23 +637,28 @@ public final class StaticBucketMap implements Map {
 
     private class KeySet extends AbstractSet {
 
-        public int size() {
+        @Override
+		public int size() {
             return StaticBucketMap.this.size();
         }
 
-        public void clear() {
+        @Override
+		public void clear() {
             StaticBucketMap.this.clear();
         }
 
-        public Iterator iterator() {
+        @Override
+		public Iterator iterator() {
             return new KeyIterator();
         }
 
-        public boolean contains(Object o) {
+        @Override
+		public boolean contains(Object o) {
             return StaticBucketMap.this.containsKey(o);
         }
 
-        public boolean remove(Object o) {
+        @Override
+		public boolean remove(Object o) {
             int hash = getHash(o);
             synchronized (m_locks[hash]) {
                 for (Node n = m_buckets[hash]; n != null; n = n.next) {
@@ -643,15 +678,18 @@ public final class StaticBucketMap implements Map {
 
     private class Values extends AbstractCollection {
 
-        public int size() {
+        @Override
+		public int size() {
             return StaticBucketMap.this.size();
         }
 
-        public void clear() {
+        @Override
+		public void clear() {
             StaticBucketMap.this.clear();
         }
 
-        public Iterator iterator() {
+        @Override
+		public Iterator iterator() {
             return new ValueIterator();
         }
 

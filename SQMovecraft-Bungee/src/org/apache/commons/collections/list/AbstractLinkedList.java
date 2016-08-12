@@ -101,34 +101,41 @@ public abstract class AbstractLinkedList implements List {
     }
 
     //-----------------------------------------------------------------------
-    public int size() {
+    @Override
+	public int size() {
         return size;
     }
 
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         return (size() == 0);
     }
 
-    public Object get(int index) {
+    @Override
+	public Object get(int index) {
         Node node = getNode(index, false);
         return node.getValue();
     }
 
     //-----------------------------------------------------------------------
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         return listIterator();
     }
 
-    public ListIterator listIterator() {
+    @Override
+	public ListIterator listIterator() {
         return new LinkedListIterator(this, 0);
     }
 
-    public ListIterator listIterator(int fromIndex) {
+    @Override
+	public ListIterator listIterator(int fromIndex) {
         return new LinkedListIterator(this, fromIndex);
     }
 
     //-----------------------------------------------------------------------
-    public int indexOf(Object value) {
+    @Override
+	public int indexOf(Object value) {
         int i = 0;
         for (Node node = header.next; node != header; node = node.next) {
             if (isEqualValue(node.getValue(), value)) {
@@ -139,7 +146,8 @@ public abstract class AbstractLinkedList implements List {
         return -1;
     }
 
-    public int lastIndexOf(Object value) {
+    @Override
+	public int lastIndexOf(Object value) {
         int i = size - 1;
         for (Node node = header.previous; node != header; node = node.previous) {
             if (isEqualValue(node.getValue(), value)) {
@@ -150,11 +158,13 @@ public abstract class AbstractLinkedList implements List {
         return -1;
     }
 
-    public boolean contains(Object value) {
+    @Override
+	public boolean contains(Object value) {
         return indexOf(value) != -1;
     }
 
-    public boolean containsAll(Collection coll) {
+    @Override
+	public boolean containsAll(Collection coll) {
         Iterator it = coll.iterator();
         while (it.hasNext()) {
             if (contains(it.next()) == false) {
@@ -165,11 +175,13 @@ public abstract class AbstractLinkedList implements List {
     }
     
     //-----------------------------------------------------------------------
-    public Object[] toArray() {
+    @Override
+	public Object[] toArray() {
         return toArray(new Object[size]);
     }
 
-    public Object[] toArray(Object[] array) {
+    @Override
+	public Object[] toArray(Object[] array) {
         // Extend the array if needed
         if (array.length < size) {
             Class componentType = array.getClass().getComponentType();
@@ -194,26 +206,31 @@ public abstract class AbstractLinkedList implements List {
      * @param toIndexExclusive  the index to end at
      * @return the new sublist
      */
-    public List subList(int fromIndexInclusive, int toIndexExclusive) {
+    @Override
+	public List subList(int fromIndexInclusive, int toIndexExclusive) {
         return new LinkedSubList(this, fromIndexInclusive, toIndexExclusive);
     }
     
     //-----------------------------------------------------------------------
-    public boolean add(Object value) {
+    @Override
+	public boolean add(Object value) {
         addLast(value);
         return true;
     }
     
-    public void add(int index, Object value) {
+    @Override
+	public void add(int index, Object value) {
         Node node = getNode(index, true);
         addNodeBefore(node, value);
     }
     
-    public boolean addAll(Collection coll) {
+    @Override
+	public boolean addAll(Collection coll) {
         return addAll(size, coll);
     }
 
-    public boolean addAll(int index, Collection coll) {
+    @Override
+	public boolean addAll(int index, Collection coll) {
         Node node = getNode(index, true);
         for (Iterator itr = coll.iterator(); itr.hasNext();) {
             Object value = itr.next();
@@ -223,14 +240,16 @@ public abstract class AbstractLinkedList implements List {
     }
 
     //-----------------------------------------------------------------------
-    public Object remove(int index) {
+    @Override
+	public Object remove(int index) {
         Node node = getNode(index, false);
         Object oldValue = node.getValue();
         removeNode(node);
         return oldValue;
     }
 
-    public boolean remove(Object value) {
+    @Override
+	public boolean remove(Object value) {
         for (Node node = header.next; node != header; node = node.next) {
             if (isEqualValue(node.getValue(), value)) {
                 removeNode(node);
@@ -240,7 +259,8 @@ public abstract class AbstractLinkedList implements List {
         return false;
     }
 
-    public boolean removeAll(Collection coll) {
+    @Override
+	public boolean removeAll(Collection coll) {
         boolean modified = false;
         Iterator it = iterator();
         while (it.hasNext()) {
@@ -253,7 +273,8 @@ public abstract class AbstractLinkedList implements List {
     }
 
     //-----------------------------------------------------------------------
-    public boolean retainAll(Collection coll) {
+    @Override
+	public boolean retainAll(Collection coll) {
         boolean modified = false;
         Iterator it = iterator();
         while (it.hasNext()) {
@@ -265,14 +286,16 @@ public abstract class AbstractLinkedList implements List {
         return modified;
     }
 
-    public Object set(int index, Object value) {
+    @Override
+	public Object set(int index, Object value) {
         Node node = getNode(index, false);
         Object oldValue = node.getValue();
         updateNode(node, value);
         return oldValue;
     }
 
-    public void clear() {
+    @Override
+	public void clear() {
         removeAllNodes();
     }
     
@@ -324,7 +347,8 @@ public abstract class AbstractLinkedList implements List {
     }
 
     //-----------------------------------------------------------------------
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
         if (obj == this) {
             return true;
         }
@@ -346,7 +370,8 @@ public abstract class AbstractLinkedList implements List {
         return !(it1.hasNext() || it2.hasNext());
     }
 
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         int hashCode = 1;
         Iterator it = iterator();
         while (it.hasNext()) {
@@ -356,7 +381,8 @@ public abstract class AbstractLinkedList implements List {
         return hashCode;
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         if (size() == 0) {
             return "[]";
         }
@@ -777,11 +803,13 @@ public abstract class AbstractLinkedList implements List {
             return current;
         }
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             return next != parent.header;
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             checkModCount();
             if (!hasNext()) {
                 throw new NoSuchElementException("No element at index " + nextIndex + ".");
@@ -793,11 +821,13 @@ public abstract class AbstractLinkedList implements List {
             return value;
         }
 
-        public boolean hasPrevious() {
+        @Override
+		public boolean hasPrevious() {
             return next.previous != parent.header;
         }
 
-        public Object previous() {
+        @Override
+		public Object previous() {
             checkModCount();
             if (!hasPrevious()) {
                 throw new NoSuchElementException("Already at start of list.");
@@ -809,16 +839,19 @@ public abstract class AbstractLinkedList implements List {
             return value;
         }
 
-        public int nextIndex() {
+        @Override
+		public int nextIndex() {
             return nextIndex;
         }
 
-        public int previousIndex() {
+        @Override
+		public int previousIndex() {
             // not normally overridden, as relative to nextIndex()
             return nextIndex() - 1;
         }
 
-        public void remove() {
+        @Override
+		public void remove() {
             checkModCount();
             if (current == next) {
                 // remove() following previous()
@@ -833,12 +866,14 @@ public abstract class AbstractLinkedList implements List {
             expectedModCount++;
         }
 
-        public void set(Object obj) {
+        @Override
+		public void set(Object obj) {
             checkModCount();
             getLastNodeReturned().setValue(obj);
         }
 
-        public void add(Object obj) {
+        @Override
+		public void add(Object obj) {
             checkModCount();
             parent.addNodeBefore(next, obj);
             current = null;
@@ -862,25 +897,30 @@ public abstract class AbstractLinkedList implements List {
             this.sub = sub;
         }
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             return (nextIndex() < sub.size);
         }
 
-        public boolean hasPrevious() {
+        @Override
+		public boolean hasPrevious() {
             return (previousIndex() >= 0);
         }
 
-        public int nextIndex() {
+        @Override
+		public int nextIndex() {
             return (super.nextIndex() - sub.offset);
         }
 
-        public void add(Object obj) {
+        @Override
+		public void add(Object obj) {
             super.add(obj);
             sub.expectedModCount = parent.modCount;
             sub.size++;
         }
         
-        public void remove() {
+        @Override
+		public void remove() {
             super.remove();
             sub.expectedModCount = parent.modCount;
             sub.size--;
@@ -917,18 +957,21 @@ public abstract class AbstractLinkedList implements List {
             this.expectedModCount = parent.modCount;
         }
 
-        public int size() {
+        @Override
+		public int size() {
             checkModCount();
             return size;
         }
 
-        public Object get(int index) {
+        @Override
+		public Object get(int index) {
             rangeCheck(index, size);
             checkModCount();
             return parent.get(index + offset);
         }
 
-        public void add(int index, Object obj) {
+        @Override
+		public void add(int index, Object obj) {
             rangeCheck(index, size + 1);
             checkModCount();
             parent.add(index + offset, obj);
@@ -937,7 +980,8 @@ public abstract class AbstractLinkedList implements List {
             LinkedSubList.this.modCount++;
         }
 
-        public Object remove(int index) {
+        @Override
+		public Object remove(int index) {
             rangeCheck(index, size);
             checkModCount();
             Object result = parent.remove(index + offset);
@@ -947,11 +991,13 @@ public abstract class AbstractLinkedList implements List {
             return result;
         }
 
-        public boolean addAll(Collection coll) {
+        @Override
+		public boolean addAll(Collection coll) {
             return addAll(size, coll);
         }
 
-        public boolean addAll(int index, Collection coll) {
+        @Override
+		public boolean addAll(int index, Collection coll) {
             rangeCheck(index, size + 1);
             int cSize = coll.size();
             if (cSize == 0) {
@@ -966,13 +1012,15 @@ public abstract class AbstractLinkedList implements List {
             return true;
         }
 
-        public Object set(int index, Object obj) {
+        @Override
+		public Object set(int index, Object obj) {
             rangeCheck(index, size);
             checkModCount();
             return parent.set(index + offset, obj);
         }
 
-        public void clear() {
+        @Override
+		public void clear() {
             checkModCount();
             Iterator it = iterator();
             while (it.hasNext()) {
@@ -981,18 +1029,21 @@ public abstract class AbstractLinkedList implements List {
             }
         }
 
-        public Iterator iterator() {
+        @Override
+		public Iterator iterator() {
             checkModCount();
             return parent.createSubListIterator(this);
         }
 
-        public ListIterator listIterator(final int index) {
+        @Override
+		public ListIterator listIterator(final int index) {
             rangeCheck(index, size + 1);
             checkModCount();
             return parent.createSubListListIterator(this, index);
         }
 
-        public List subList(int fromIndexInclusive, int toIndexExclusive) {
+        @Override
+		public List subList(int fromIndexInclusive, int toIndexExclusive) {
             return new LinkedSubList(parent, fromIndexInclusive + offset, toIndexExclusive + offset);
         }
 

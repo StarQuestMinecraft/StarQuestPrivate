@@ -61,7 +61,8 @@ public class TiedMapEntry implements Map.Entry, KeyValue, Serializable {
      * 
      * @return the key
      */
-    public Object getKey() {
+    @Override
+	public Object getKey() {
         return key;
     }
 
@@ -70,7 +71,8 @@ public class TiedMapEntry implements Map.Entry, KeyValue, Serializable {
      * 
      * @return the value
      */
-    public Object getValue() {
+    @Override
+	public Object getValue() {
         return map.get(key);
     }
 
@@ -81,7 +83,8 @@ public class TiedMapEntry implements Map.Entry, KeyValue, Serializable {
      * @return the old value
      * @throws IllegalArgumentException if the value is set to this map entry
      */
-    public Object setValue(Object value) {
+    @Override
+	public Object setValue(Object value) {
         if (value == this) {
             throw new IllegalArgumentException("Cannot set value to this map entry");
         }
@@ -96,7 +99,8 @@ public class TiedMapEntry implements Map.Entry, KeyValue, Serializable {
      * @param obj  the object to compare to
      * @return true if equal key and value
      */
-    public boolean equals(Object obj) {
+    @Override
+	public boolean equals(Object obj) {
         if (obj == this) {
             return true;
         }
@@ -117,7 +121,8 @@ public class TiedMapEntry implements Map.Entry, KeyValue, Serializable {
      * 
      * @return a suitable hash code
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         Object value = getValue();
         return (getKey() == null ? 0 : getKey().hashCode()) ^
                (value == null ? 0 : value.hashCode()); 
@@ -128,7 +133,8 @@ public class TiedMapEntry implements Map.Entry, KeyValue, Serializable {
      * 
      * @return entry as a string
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return getKey() + "=" + getValue();
     }
 

@@ -98,61 +98,74 @@ public final class UnmodifiableSortedMap
     }
 
     //-----------------------------------------------------------------------
-    public void clear() {
+    @Override
+	public void clear() {
         throw new UnsupportedOperationException();
     }
 
-    public Object put(Object key, Object value) {
+    @Override
+	public Object put(Object key, Object value) {
         throw new UnsupportedOperationException();
     }
 
-    public void putAll(Map mapToCopy) {
+    @Override
+	public void putAll(Map mapToCopy) {
         throw new UnsupportedOperationException();
     }
 
-    public Object remove(Object key) {
+    @Override
+	public Object remove(Object key) {
         throw new UnsupportedOperationException();
     }
 
-    public Set entrySet() {
+    @Override
+	public Set entrySet() {
         Set set = super.entrySet();
         return UnmodifiableEntrySet.decorate(set);
     }
 
-    public Set keySet() {
+    @Override
+	public Set keySet() {
         Set set = super.keySet();
         return UnmodifiableSet.decorate(set);
     }
 
-    public Collection values() {
+    @Override
+	public Collection values() {
         Collection coll = super.values();
         return UnmodifiableCollection.decorate(coll);
     }
 
     //-----------------------------------------------------------------------
-    public Object firstKey() {
+    @Override
+	public Object firstKey() {
         return getSortedMap().firstKey();
     }
 
-    public Object lastKey() {
+    @Override
+	public Object lastKey() {
         return getSortedMap().lastKey();
     }
 
-    public Comparator comparator() {
+    @Override
+	public Comparator comparator() {
         return getSortedMap().comparator();
     }
 
-    public SortedMap subMap(Object fromKey, Object toKey) {
+    @Override
+	public SortedMap subMap(Object fromKey, Object toKey) {
         SortedMap map = getSortedMap().subMap(fromKey, toKey);
         return new UnmodifiableSortedMap(map);
     }
 
-    public SortedMap headMap(Object toKey) {
+    @Override
+	public SortedMap headMap(Object toKey) {
         SortedMap map = getSortedMap().headMap(toKey);
         return new UnmodifiableSortedMap(map);
     }
 
-    public SortedMap tailMap(Object fromKey) {
+    @Override
+	public SortedMap tailMap(Object fromKey) {
         SortedMap map = getSortedMap().tailMap(fromKey);
         return new UnmodifiableSortedMap(map);
     }

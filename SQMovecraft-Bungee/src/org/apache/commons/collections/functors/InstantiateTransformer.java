@@ -61,8 +61,8 @@ public class InstantiateTransformer implements Transformer, Serializable {
         if (paramTypes == null || paramTypes.length == 0) {
             return NO_ARG_INSTANCE;
         } else {
-            paramTypes = (Class[]) paramTypes.clone();
-            args = (Object[]) args.clone();
+            paramTypes = paramTypes.clone();
+            args = args.clone();
         }
         return new InstantiateTransformer(paramTypes, args);
     }
@@ -95,7 +95,8 @@ public class InstantiateTransformer implements Transformer, Serializable {
      * @param input  the input object to transform
      * @return the transformed result
      */
-    public Object transform(Object input) {
+    @Override
+	public Object transform(Object input) {
         try {
             if (input instanceof Class == false) {
                 throw new FunctorException(

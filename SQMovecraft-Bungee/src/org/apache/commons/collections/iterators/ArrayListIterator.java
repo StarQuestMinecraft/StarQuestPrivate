@@ -119,7 +119,8 @@ public class ArrayListIterator extends ArrayIterator
      *
      * @return true if there is a previous element to return
      */
-    public boolean hasPrevious() {
+    @Override
+	public boolean hasPrevious() {
         return (this.index > this.startIndex);
     }
 
@@ -129,7 +130,8 @@ public class ArrayListIterator extends ArrayIterator
      * @return the previous element
      * @throws NoSuchElementException if there is no previous element
      */
-    public Object previous() {
+    @Override
+	public Object previous() {
         if (hasPrevious() == false) {
             throw new NoSuchElementException();
         }
@@ -143,7 +145,8 @@ public class ArrayListIterator extends ArrayIterator
      * @return the next element
      * @throws NoSuchElementException if there is no next element
      */
-    public Object next() {
+    @Override
+	public Object next() {
         if (hasNext() == false) {
             throw new NoSuchElementException();
         }
@@ -156,7 +159,8 @@ public class ArrayListIterator extends ArrayIterator
      * 
      * @return the index of the item to be retrieved next
      */
-    public int nextIndex() {
+    @Override
+	public int nextIndex() {
         return this.index - this.startIndex;
     }
 
@@ -165,7 +169,8 @@ public class ArrayListIterator extends ArrayIterator
      * 
      * @return the index of the item to be retrieved next
      */
-    public int previousIndex() {
+    @Override
+	public int previousIndex() {
         return this.index - this.startIndex - 1;
     }
 
@@ -176,7 +181,8 @@ public class ArrayListIterator extends ArrayIterator
      * @throws UnsupportedOperationException always thrown.
      * @see java.util.ListIterator#set
      */
-    public void add(Object o) {
+    @Override
+	public void add(Object o) {
         throw new UnsupportedOperationException("add() method is not supported");
     }
 
@@ -195,7 +201,8 @@ public class ArrayListIterator extends ArrayIterator
      *
      * @see java.util.ListIterator#set
      */
-    public void set(Object o) {
+    @Override
+	public void set(Object o) {
         if (this.lastItemIndex == -1) {
             throw new IllegalStateException("must call next() or previous() before a call to set()");
         }
@@ -206,7 +213,8 @@ public class ArrayListIterator extends ArrayIterator
     /**
      * Resets the iterator back to the start index.
      */
-    public void reset() {
+    @Override
+	public void reset() {
         super.reset();
         this.lastItemIndex = -1;
     }

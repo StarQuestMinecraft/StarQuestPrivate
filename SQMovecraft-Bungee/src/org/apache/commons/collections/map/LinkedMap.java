@@ -114,7 +114,8 @@ public class LinkedMap
      *
      * @return a shallow clone
      */
-    public Object clone() {
+    @Override
+	public Object clone() {
         return super.clone();
     }
     
@@ -216,71 +217,88 @@ public class LinkedMap
             this.parent = parent;
         }
         
-        public int size() {
+        @Override
+		public int size() {
             return parent.size();
         }
     
-        public Object get(int index) {
+        @Override
+		public Object get(int index) {
             return parent.get(index);
         }
         
-        public boolean contains(Object obj) {
+        @Override
+		public boolean contains(Object obj) {
             return parent.containsKey(obj);
         }
 
-        public int indexOf(Object obj) {
+        @Override
+		public int indexOf(Object obj) {
             return parent.indexOf(obj);
         }
         
-        public int lastIndexOf(Object obj) {
+        @Override
+		public int lastIndexOf(Object obj) {
             return parent.indexOf(obj);
         }
         
-        public boolean containsAll(Collection coll) {
+        @Override
+		public boolean containsAll(Collection coll) {
             return parent.keySet().containsAll(coll);
         }
         
-        public Object remove(int index) {
+        @Override
+		public Object remove(int index) {
             throw new UnsupportedOperationException();
         }
         
-        public boolean remove(Object obj) {
+        @Override
+		public boolean remove(Object obj) {
             throw new UnsupportedOperationException();
         }
         
-        public boolean removeAll(Collection coll) {
+        @Override
+		public boolean removeAll(Collection coll) {
             throw new UnsupportedOperationException();
         }
         
-        public boolean retainAll(Collection coll) {
+        @Override
+		public boolean retainAll(Collection coll) {
             throw new UnsupportedOperationException();
         }
         
-        public void clear() {
+        @Override
+		public void clear() {
             throw new UnsupportedOperationException();
         }
         
-        public Object[] toArray() {
+        @Override
+		public Object[] toArray() {
             return parent.keySet().toArray();
         }
 
-        public Object[] toArray(Object[] array) {
+        @Override
+		public Object[] toArray(Object[] array) {
             return parent.keySet().toArray(array);
         }
         
-        public Iterator iterator() {
+        @Override
+		public Iterator iterator() {
             return UnmodifiableIterator.decorate(parent.keySet().iterator());
         }
         
-        public ListIterator listIterator() {
+        @Override
+		public ListIterator listIterator() {
             return UnmodifiableListIterator.decorate(super.listIterator());
         }
         
-        public ListIterator listIterator(int fromIndex) {
+        @Override
+		public ListIterator listIterator(int fromIndex) {
             return UnmodifiableListIterator.decorate(super.listIterator(fromIndex));
         }
         
-        public List subList(int fromIndexInclusive, int toIndexExclusive) {
+        @Override
+		public List subList(int fromIndexInclusive, int toIndexExclusive) {
             return UnmodifiableList.decorate(super.subList(fromIndexInclusive, toIndexExclusive));
         }
     }

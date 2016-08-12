@@ -52,6 +52,7 @@ import java.util.NoSuchElementException;
  * @author Stephen Colebourne
  * @author Herve Quiroz
  */
+@Deprecated
 public class BoundedFifoBuffer extends AbstractCollection
         implements Buffer, BoundedCollection {
             
@@ -102,7 +103,8 @@ public class BoundedFifoBuffer extends AbstractCollection
      *
      * @return this buffer's size
      */
-    public int size() {
+    @Override
+	public int size() {
         int size = 0;
 
         if (m_end < m_start) {
@@ -121,7 +123,8 @@ public class BoundedFifoBuffer extends AbstractCollection
      *
      * @return true if this buffer is empty
      */
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         return size() == 0;
     }
 
@@ -130,7 +133,8 @@ public class BoundedFifoBuffer extends AbstractCollection
      *
      * @return <code>true</code> if the collection is full
      */
-    public boolean isFull() {
+    @Override
+	public boolean isFull() {
         return size() == maxElements;
     }
     
@@ -139,14 +143,16 @@ public class BoundedFifoBuffer extends AbstractCollection
      *
      * @return the maximum number of elements the collection can hold
      */
-    public int maxSize() {
+    @Override
+	public int maxSize() {
         return maxElements;
     }
     
     /**
      * Clears this buffer.
      */
-    public void clear() {
+    @Override
+	public void clear() {
         m_full = false;
         m_start = 0;
         m_end = 0;
@@ -161,7 +167,8 @@ public class BoundedFifoBuffer extends AbstractCollection
      * @throws NullPointerException  if the given element is null
      * @throws BufferOverflowException  if this buffer is full
      */
-    public boolean add(Object element) {
+    @Override
+	public boolean add(Object element) {
         if (null == element) {
             throw new NullPointerException("Attempted to add null object to buffer");
         }
@@ -189,7 +196,8 @@ public class BoundedFifoBuffer extends AbstractCollection
      * @return the least recently inserted element
      * @throws BufferUnderflowException  if the buffer is empty
      */
-    public Object get() {
+    @Override
+	public Object get() {
         if (isEmpty()) {
             throw new BufferUnderflowException("The buffer is already empty");
         }
@@ -203,7 +211,8 @@ public class BoundedFifoBuffer extends AbstractCollection
      * @return the least recently inserted element
      * @throws BufferUnderflowException  if the buffer is empty
      */
-    public Object remove() {
+    @Override
+	public Object remove() {
         if (isEmpty()) {
             throw new BufferUnderflowException("The buffer is already empty");
         }
@@ -256,19 +265,22 @@ public class BoundedFifoBuffer extends AbstractCollection
      *
      * @return an iterator over this buffer's elements
      */
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         return new Iterator() {
 
             private int index = m_start;
             private int lastReturnedIndex = -1;
             private boolean isFirst = m_full;
 
-            public boolean hasNext() {
+            @Override
+			public boolean hasNext() {
                 return isFirst || (index != m_end);
                 
             }
 
-            public Object next() {
+            @Override
+			public Object next() {
                 if (!hasNext()) throw new NoSuchElementException();
                 isFirst = false;
                 lastReturnedIndex = index;
@@ -276,7 +288,8 @@ public class BoundedFifoBuffer extends AbstractCollection
                 return m_elements[lastReturnedIndex];
             }
 
-            public void remove() {
+            @Override
+			public void remove() {
                 if (lastReturnedIndex == -1) throw new IllegalStateException();
 
                 // First element can be removed quickly

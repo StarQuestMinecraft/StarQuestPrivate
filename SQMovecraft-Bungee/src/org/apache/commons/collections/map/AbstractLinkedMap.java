@@ -126,7 +126,8 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
      * {@link #createEntry(HashEntry, int, Object, Object)} to create
      * the map entry object.
      */
-    protected void init() {
+    @Override
+	protected void init() {
         header = (LinkEntry) createEntry(null, -1, null, null);
         header.before = header.after = header;
     }
@@ -138,7 +139,8 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
      * @param value  the value to search for
      * @return true if the map contains the value
      */
-    public boolean containsValue(Object value) {
+    @Override
+	public boolean containsValue(Object value) {
         // override uses faster iterator
         if (value == null) {
             for (LinkEntry entry = header.after; entry != header; entry = entry.after) {
@@ -160,7 +162,8 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
      * Clears the map, resetting the size to zero and nullifying references
      * to avoid garbage collection issues.
      */
-    public void clear() {
+    @Override
+	public void clear() {
         // override to reset the linked list
         super.clear();
         header.before = header.after = header;
@@ -172,7 +175,8 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
      * 
      * @return the most recently inserted key
      */
-    public Object firstKey() {
+    @Override
+	public Object firstKey() {
         if (size == 0) {
             throw new NoSuchElementException("Map is empty");
         }
@@ -184,7 +188,8 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
      * 
      * @return the eldest key
      */
-    public Object lastKey() {
+    @Override
+	public Object lastKey() {
         if (size == 0) {
             throw new NoSuchElementException("Map is empty");
         }
@@ -197,7 +202,8 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
      * @param key  the key to get after
      * @return the next key
      */
-    public Object nextKey(Object key) {
+    @Override
+	public Object nextKey(Object key) {
         LinkEntry entry = (LinkEntry) getEntry(key);
         return (entry == null || entry.after == header ? null : entry.after.getKey());
     }
@@ -208,7 +214,8 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
      * @param key  the key to get before
      * @return the previous key
      */
-    public Object previousKey(Object key) {
+    @Override
+	public Object previousKey(Object key) {
         LinkEntry entry = (LinkEntry) getEntry(key);
         return (entry == null || entry.before == header ? null : entry.before.getKey());
     }
@@ -254,7 +261,8 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
      * @param entry  the entry to add
      * @param hashIndex  the index into the data array to store at
      */
-    protected void addEntry(HashEntry entry, int hashIndex) {
+    @Override
+	protected void addEntry(HashEntry entry, int hashIndex) {
         LinkEntry link = (LinkEntry) entry;
         link.after  = header;
         link.before = header.before;
@@ -274,7 +282,8 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
      * @param value  the value to store
      * @return the newly created entry
      */
-    protected HashEntry createEntry(HashEntry next, int hashCode, Object key, Object value) {
+    @Override
+	protected HashEntry createEntry(HashEntry next, int hashCode, Object key, Object value) {
         return new LinkEntry(next, hashCode, key, value);
     }
     
@@ -288,7 +297,8 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
      * @param hashIndex  the index into the data structure
      * @param previous  the previous entry in the chain
      */
-    protected void removeEntry(HashEntry entry, int hashIndex, HashEntry previous) {
+    @Override
+	protected void removeEntry(HashEntry entry, int hashIndex, HashEntry previous) {
         LinkEntry link = (LinkEntry) entry;
         link.before.after = link.after;
         link.after.before = link.before;
@@ -335,7 +345,8 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
      * 
      * @return the map iterator
      */
-    public MapIterator mapIterator() {
+    @Override
+	public MapIterator mapIterator() {
         if (size == 0) {
             return EmptyOrderedMapIterator.INSTANCE;
         }
@@ -352,7 +363,8 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
      * 
      * @return the map iterator
      */
-    public OrderedMapIterator orderedMapIterator() {
+    @Override
+	public OrderedMapIterator orderedMapIterator() {
         if (size == 0) {
             return EmptyOrderedMapIterator.INSTANCE;
         }
@@ -368,15 +380,18 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
             super(parent);
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             return super.nextEntry().getKey();
         }
 
-        public Object previous() {
+        @Override
+		public Object previous() {
             return super.previousEntry().getKey();
         }
 
-        public Object getKey() {
+        @Override
+		public Object getKey() {
             HashEntry current = currentEntry();
             if (current == null) {
                 throw new IllegalStateException(AbstractHashedMap.GETKEY_INVALID);
@@ -384,7 +399,8 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
             return current.getKey();
         }
 
-        public Object getValue() {
+        @Override
+		public Object getValue() {
             HashEntry current = currentEntry();
             if (current == null) {
                 throw new IllegalStateException(AbstractHashedMap.GETVALUE_INVALID);
@@ -392,7 +408,8 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
             return current.getValue();
         }
 
-        public Object setValue(Object value) {
+        @Override
+		public Object setValue(Object value) {
             HashEntry current = currentEntry();
             if (current == null) {
                 throw new IllegalStateException(AbstractHashedMap.SETVALUE_INVALID);
@@ -408,7 +425,8 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
      * 
      * @return the entrySet iterator
      */
-    protected Iterator createEntrySetIterator() {
+    @Override
+	protected Iterator createEntrySetIterator() {
         if (size() == 0) {
             return EmptyOrderedIterator.INSTANCE;
         }
@@ -424,11 +442,13 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
             super(parent);
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             return super.nextEntry();
         }
 
-        public Object previous() {
+        @Override
+		public Object previous() {
             return super.previousEntry();
         }
     }
@@ -440,7 +460,8 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
      * 
      * @return the keySet iterator
      */
-    protected Iterator createKeySetIterator() {
+    @Override
+	protected Iterator createKeySetIterator() {
         if (size() == 0) {
             return EmptyOrderedIterator.INSTANCE;
         }
@@ -456,11 +477,13 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
             super(parent);
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             return super.nextEntry().getKey();
         }
 
-        public Object previous() {
+        @Override
+		public Object previous() {
             return super.previousEntry().getKey();
         }
     }
@@ -472,7 +495,8 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
      * 
      * @return the values iterator
      */
-    protected Iterator createValuesIterator() {
+    @Override
+	protected Iterator createValuesIterator() {
         if (size() == 0) {
             return EmptyOrderedIterator.INSTANCE;
         }
@@ -488,11 +512,13 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
             super(parent);
         }
 
-        public Object next() {
+        @Override
+		public Object next() {
             return super.nextEntry().getValue();
         }
 
-        public Object previous() {
+        @Override
+		public Object previous() {
             return super.previousEntry().getValue();
         }
     }
@@ -547,11 +573,13 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
             this.expectedModCount = parent.modCount;
         }
 
-        public boolean hasNext() {
+        @Override
+		public boolean hasNext() {
             return (next != parent.header);
         }
         
-        public boolean hasPrevious() {
+        @Override
+		public boolean hasPrevious() {
             return (next.before != parent.header);
         }
 
@@ -584,7 +612,8 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
             return last;
         }
         
-        public void remove() {
+        @Override
+		public void remove() {
             if (last == null) {
                 throw new IllegalStateException(AbstractHashedMap.REMOVE_INVALID);
             }
@@ -596,12 +625,14 @@ public class AbstractLinkedMap extends AbstractHashedMap implements OrderedMap {
             expectedModCount = parent.modCount;
         }
         
-        public void reset() {
+        @Override
+		public void reset() {
             last = null;
             next = parent.header.after;
         }
 
-        public String toString() {
+        @Override
+		public String toString() {
             if (last != null) {
                 return "Iterator[" + last.getKey() + "=" + last.getValue() + "]";
             } else {

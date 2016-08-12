@@ -153,7 +153,7 @@ public class CraftType {
 		if (data.containsKey("cruiseSkipBlocks")) {
 			cruiseSkipBlocks = (Integer) data.get("cruiseSkipBlocks");
 		} else {
-			cruiseSkipBlocks = 2 * ((int) Math.round(tickCooldown));
+			cruiseSkipBlocks = 2 * (Math.round(tickCooldown));
 		}
 		if (data.containsKey("fuelBurnRate")) {
 			fuelBurnRate = (Double) data.get("fuelBurnRate");

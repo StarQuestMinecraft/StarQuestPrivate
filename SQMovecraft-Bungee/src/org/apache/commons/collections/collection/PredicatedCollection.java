@@ -111,7 +111,8 @@ public class PredicatedCollection extends AbstractSerializableCollectionDecorato
      * @return the result of adding to the underlying collection
      * @throws IllegalArgumentException if the add is invalid
      */
-    public boolean add(Object object) {
+    @Override
+	public boolean add(Object object) {
         validate(object);
         return getCollection().add(object);
     }
@@ -125,7 +126,8 @@ public class PredicatedCollection extends AbstractSerializableCollectionDecorato
      * @return the result of adding to the underlying collection
      * @throws IllegalArgumentException if the add is invalid
      */
-    public boolean addAll(Collection coll) {
+    @Override
+	public boolean addAll(Collection coll) {
         for (Iterator it = coll.iterator(); it.hasNext(); ) {
             validate(it.next());
         }

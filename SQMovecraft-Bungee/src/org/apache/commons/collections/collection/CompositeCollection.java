@@ -85,7 +85,8 @@ public class CompositeCollection implements Collection {
      *
      * @return total number of elements in all contained containers
      */
-    public int size() {
+    @Override
+	public int size() {
         int size = 0;
         for (int i = this.all.length - 1; i >= 0; i--) {
             size += this.all[i].size();
@@ -100,7 +101,8 @@ public class CompositeCollection implements Collection {
      *
      * @return true if all of the contained collections are empty
      */
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         for (int i = this.all.length - 1; i >= 0; i--) {
             if (this.all[i].isEmpty() == false) {
                 return false;
@@ -117,7 +119,8 @@ public class CompositeCollection implements Collection {
      * @param obj  the object to search for
      * @return true if obj is contained in any of the contained collections
      */
-    public boolean contains(Object obj) {
+    @Override
+	public boolean contains(Object obj) {
         for (int i = this.all.length - 1; i >= 0; i--) {
             if (this.all[i].contains(obj)) {
                 return true;
@@ -136,7 +139,8 @@ public class CompositeCollection implements Collection {
      *  the order they were added, but this behavior should not be relied upon.
      * @see IteratorChain
      */
-    public Iterator iterator() {
+    @Override
+	public Iterator iterator() {
         if (this.all.length == 0) {
             return EmptyIterator.INSTANCE;
         }
@@ -152,7 +156,8 @@ public class CompositeCollection implements Collection {
      *
      * @return an object array of all the elements in the collection
      */
-    public Object[] toArray() {
+    @Override
+	public Object[] toArray() {
         final Object[] result = new Object[this.size()];
         int i = 0;
         for (Iterator it = this.iterator(); it.hasNext(); i++) {
@@ -168,7 +173,8 @@ public class CompositeCollection implements Collection {
      * @param array  the array to use, populating if possible
      * @return an array of all the elements in the collection
      */
-    public Object[] toArray(Object[] array) {
+    @Override
+	public Object[] toArray(Object[] array) {
         int size = this.size();
         Object[] result = null;
         if (array.length >= size) {
@@ -202,7 +208,8 @@ public class CompositeCollection implements Collection {
      * @throws NullPointerException if the object cannot be added because its null
      * @throws IllegalArgumentException if the object cannot be added
      */
-    public boolean add(Object obj) {
+    @Override
+	public boolean add(Object obj) {
         if (this.mutator == null) {
            throw new UnsupportedOperationException(
            "add() is not supported on CompositeCollection without a CollectionMutator strategy");
@@ -221,7 +228,8 @@ public class CompositeCollection implements Collection {
      * @throws NullPointerException if the object cannot be removed because its null
      * @throws IllegalArgumentException if the object cannot be removed
      */
-    public boolean remove(Object obj) {
+    @Override
+	public boolean remove(Object obj) {
         if (this.mutator == null) {
             throw new UnsupportedOperationException(
             "remove() is not supported on CompositeCollection without a CollectionMutator strategy");
@@ -238,7 +246,8 @@ public class CompositeCollection implements Collection {
      * @param coll  the collection to check for
      * @return true if all elements contained
      */
-    public boolean containsAll(Collection coll) {
+    @Override
+	public boolean containsAll(Collection coll) {
         for (Iterator it = coll.iterator(); it.hasNext();) {
             if (this.contains(it.next()) == false) {
                 return false;
@@ -259,7 +268,8 @@ public class CompositeCollection implements Collection {
      * @throws NullPointerException if the object cannot be added because its null
      * @throws IllegalArgumentException if the object cannot be added
      */
-    public boolean addAll(Collection coll) {
+    @Override
+	public boolean addAll(Collection coll) {
         if (this.mutator == null) {
             throw new UnsupportedOperationException(
             "addAll() is not supported on CompositeCollection without a CollectionMutator strategy");
@@ -276,7 +286,8 @@ public class CompositeCollection implements Collection {
      * @return true if the collection was modified
      * @throws UnsupportedOperationException if removeAll is unsupported
      */
-    public boolean removeAll(Collection coll) {
+    @Override
+	public boolean removeAll(Collection coll) {
         if (coll.size() == 0) {
             return false;
         }
@@ -297,7 +308,8 @@ public class CompositeCollection implements Collection {
      * @return true if the collection was modified
      * @throws UnsupportedOperationException if retainAll is unsupported
      */
-    public boolean retainAll(final Collection coll) {
+    @Override
+	public boolean retainAll(final Collection coll) {
         boolean changed = false;
         for (int i = this.all.length - 1; i >= 0; i--) {
             changed = (this.all[i].retainAll(coll) || changed);
@@ -312,7 +324,8 @@ public class CompositeCollection implements Collection {
      *
      * @throws UnsupportedOperationException if clear is unsupported
      */
-    public void clear() {
+    @Override
+	public void clear() {
         for (int i = 0; i < this.all.length; ++i) {
             this.all[i].clear();
         }

@@ -65,7 +65,8 @@ public class ReverseListIterator implements ResettableListIterator {
      *
      * @return true if there is another element
      */
-    public boolean hasNext() {
+    @Override
+	public boolean hasNext() {
         return iterator.hasPrevious();
     }
 
@@ -75,7 +76,8 @@ public class ReverseListIterator implements ResettableListIterator {
      *
      * @return the next element in the iterator
      */
-    public Object next() {
+    @Override
+	public Object next() {
         Object obj = iterator.previous();
         validForUpdate = true;
         return obj;
@@ -86,7 +88,8 @@ public class ReverseListIterator implements ResettableListIterator {
      *
      * @return the index of the next element in the iterator
      */
-    public int nextIndex() {
+    @Override
+	public int nextIndex() {
         return iterator.previousIndex();
     }
 
@@ -95,7 +98,8 @@ public class ReverseListIterator implements ResettableListIterator {
      *
      * @return true if there is a previous element
      */
-    public boolean hasPrevious() {
+    @Override
+	public boolean hasPrevious() {
         return iterator.hasNext();
     }
 
@@ -105,7 +109,8 @@ public class ReverseListIterator implements ResettableListIterator {
      *
      * @return the previous element in the iterator
      */
-    public Object previous() {
+    @Override
+	public Object previous() {
         Object obj = iterator.next();
         validForUpdate = true;
         return obj;
@@ -116,7 +121,8 @@ public class ReverseListIterator implements ResettableListIterator {
      *
      * @return the index of the previous element in the iterator
      */
-    public int previousIndex() {
+    @Override
+	public int previousIndex() {
         return iterator.nextIndex();
     }
 
@@ -126,7 +132,8 @@ public class ReverseListIterator implements ResettableListIterator {
      * @throws UnsupportedOperationException if the list is unmodifiable
      * @throws IllegalStateException if there is no element to remove
      */
-    public void remove() {
+    @Override
+	public void remove() {
         if (validForUpdate == false) {
             throw new IllegalStateException("Cannot remove from list until next() or previous() called");
         }
@@ -140,7 +147,8 @@ public class ReverseListIterator implements ResettableListIterator {
      * @throws UnsupportedOperationException if the list is unmodifiable
      * @throws IllegalStateException if the iterator is not in a valid state for set
      */
-    public void set(Object obj) {
+    @Override
+	public void set(Object obj) {
         if (validForUpdate == false) {
             throw new IllegalStateException("Cannot set to list until next() or previous() called");
         }
@@ -154,7 +162,8 @@ public class ReverseListIterator implements ResettableListIterator {
      * @throws UnsupportedOperationException if the list is unmodifiable
      * @throws IllegalStateException if the iterator is not in a valid state for set
      */
-    public void add(Object obj) {
+    @Override
+	public void add(Object obj) {
         // the validForUpdate flag is needed as the necessary previous()
         // method call re-enables remove and add
         if (validForUpdate == false) {
@@ -169,7 +178,8 @@ public class ReverseListIterator implements ResettableListIterator {
      * Resets the iterator back to the start (which is the
      * end of the list as this is a reversed iterator)
      */
-    public void reset() {
+    @Override
+	public void reset() {
         iterator = list.listIterator(list.size());
     }
 
