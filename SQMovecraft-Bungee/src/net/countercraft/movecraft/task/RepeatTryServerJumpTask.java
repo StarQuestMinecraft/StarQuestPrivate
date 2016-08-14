@@ -16,11 +16,12 @@ public class RepeatTryServerJumpTask extends BukkitRunnable{
 	SerializableLocation destinationLocation;
 	
 	public static void createServerJumpTask(final Craft craft, final SerializableLocation location) {
+		System.out.println("In createServerJumpTask for pilot " + craft.getPilot());
 		Bukkit.getServer().getScheduler().runTask(Movecraft.getInstance(), new Runnable() {
 			@Override
 			public void run() {
 				RepeatTryServerJumpTask t = new RepeatTryServerJumpTask(craft, location);
-				t.runTaskTimer(Movecraft.getInstance(), 0, 1);
+				t.runTaskTimer(Movecraft.getInstance(), 0, 2);
 			}
 		});
 	}
