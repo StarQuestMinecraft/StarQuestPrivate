@@ -66,6 +66,10 @@ public class LocationUtils {
 		} else if (SYSTEM.equals("CoreSystem")) {
 			
 			planets.put("Xira", locationFromConfig(cfg, "Xira"));
+			planets.put("Grallion", locationFromConfig(cfg, "Grallion"));
+			planets.put("Hylon", locationFromConfig(cfg, "Hylon"));
+			planets.put("Feldost", locationFromConfig(cfg, "Feldost"));
+			planets.put("Asteroid Belt",  locationFromConfig(cfg, "AsteroidBelt"));
 			
 			if(cfg.contains("stargates")) {
 				for(String stargateName : cfg.getConfigurationSection("stargates").getKeys(false)) {
