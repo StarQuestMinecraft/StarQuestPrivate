@@ -35,14 +35,17 @@ import net.countercraft.movecraft.async.translation.TranslationTaskData;
 import net.countercraft.movecraft.event.CraftProjectileDetonateEvent;
 import net.countercraft.movecraft.event.CraftShootEvent;
 import net.countercraft.movecraft.event.CraftSyncTranslateEvent;
+import net.countercraft.movecraft.utils.BlastUtils;
 import net.countercraft.movecraft.utils.FakeBlockUtils;
 import net.countercraft.movecraft.utils.GunUtils;
+import net.countercraft.movecraft.utils.HPUtils;
 import net.countercraft.movecraft.utils.MovecraftLocation;
 import net.countercraft.movecraft.utils.Rotation;
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -52,6 +55,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.inventivetalent.particle.ParticleEffect;
 
 import com.whirlwindgames.dibujaron.sqempire.Empire;
@@ -327,6 +332,89 @@ public class Craft {
 		if (cannonCooldown == 0) {
 			
 			BlockFace playerFacing = GunUtils.yawToFace(p.getLocation().getYaw());
+			
+			double pitch = p.getLocation().getPitch();
+			
+			if (pitch > getType().getCannonMaxDegress()) {
+				
+				pitch = getType().getCannonMaxDegress();
+				
+			} else if (pitch < -getType().getCannonMaxDegress()) {
+				
+				pitch = -getType().getCannonMaxDegress();
+				
+			}
+			
+			double yaw = p.getLocation().getYaw();
+			
+			if (yaw < 0) {
+				
+				yaw = yaw + 360;
+				
+			}
+			
+			if (playerFacing.equals(BlockFace.NORTH)) {
+				
+				if (yaw > 180 + getType().getCannonMaxDegress()) {
+					
+					yaw = 180 + getType().getCannonMaxDegress();
+					
+				} else if (yaw < 180 - getType().getCannonMaxDegress()) {
+					
+					yaw = 180 - getType().getCannonMaxDegress();
+					
+				}
+				
+			} else if (playerFacing.equals(BlockFace.EAST))	 {
+				
+				if (yaw > 270 + getType().getCannonMaxDegress()) {
+					
+					yaw = 270 + getType().getCannonMaxDegress();
+					
+				} else if (yaw < 270 - getType().getCannonMaxDegress()) {
+					
+					yaw = 270 - getType().getCannonMaxDegress();
+					
+				}
+				
+			} else if (playerFacing.equals(BlockFace.SOUTH))	 {
+				
+				if (yaw > getType().getCannonMaxDegress()) {
+					
+					if (yaw > 180) {
+						
+						if (yaw < 360 - getType().getCannonMaxDegress()) {
+							
+							yaw = 360 - getType().getCannonMaxDegress();
+							
+						}
+						
+					} else {
+						
+						yaw = getType().getCannonMaxDegress();
+						
+					}
+
+				}
+				
+			} else if (playerFacing.equals(BlockFace.WEST))	 {
+				
+				if (yaw > 90 + getType().getCannonMaxDegress()) {
+					
+					yaw = 90 + getType().getCannonMaxDegress();
+					
+				} else if (yaw < 90 - getType().getCannonMaxDegress()) {
+					
+					yaw = 90 - getType().getCannonMaxDegress();
+					
+				}
+				
+			}
+			
+			double x = Math.sin(Math.toRadians(yaw)) * -.25 * Math.cos(Math.toRadians(pitch));
+			double y = Math.sin(Math.toRadians(pitch)) * -.25;
+			double z = Math.cos(Math.toRadians(yaw)) * .25 * Math.cos(Math.toRadians(pitch));
+			
 			int datavalue = GunUtils.getIntegerDirection(playerFacing);
 			Material type = p.getEyeLocation().getBlock().getType();
 			if (!this.processing.get() && type != Material.GLASS && type != Material.STAINED_GLASS) {
@@ -355,88 +443,6 @@ public class Craft {
 									event.call();
 									
 									if(!event.isCancelled()){
-									
-										double pitch = p.getLocation().getPitch();
-										
-										if (pitch > getType().getCannonMaxDegress()) {
-											
-											pitch = getType().getCannonMaxDegress();
-											
-										} else if (pitch < -getType().getCannonMaxDegress()) {
-											
-											pitch = -getType().getCannonMaxDegress();
-											
-										}
-										
-										double yaw = p.getLocation().getYaw();
-										
-										if (yaw < 0) {
-											
-											yaw = yaw + 360;
-											
-										}
-										
-										if (playerFacing.equals(BlockFace.NORTH)) {
-											
-											if (yaw > 180 + getType().getCannonMaxDegress()) {
-												
-												yaw = 180 + getType().getCannonMaxDegress();
-												
-											} else if (yaw < 180 - getType().getCannonMaxDegress()) {
-												
-												yaw = 180 - getType().getCannonMaxDegress();
-												
-											}
-											
-										} else if (playerFacing.equals(BlockFace.EAST))	 {
-											
-											if (yaw > 270 + getType().getCannonMaxDegress()) {
-												
-												yaw = 270 + getType().getCannonMaxDegress();
-												
-											} else if (yaw < 270 - getType().getCannonMaxDegress()) {
-												
-												yaw = 270 - getType().getCannonMaxDegress();
-												
-											}
-											
-										} else if (playerFacing.equals(BlockFace.SOUTH))	 {
-											
-											if (yaw > getType().getCannonMaxDegress()) {
-												
-												if (yaw > 180) {
-													
-													if (yaw < 360 - getType().getCannonMaxDegress()) {
-														
-														yaw = 360 - getType().getCannonMaxDegress();
-														
-													}
-													
-												} else {
-													
-													yaw = getType().getCannonMaxDegress();
-													
-												}
-
-											}
-											
-										} else if (playerFacing.equals(BlockFace.WEST))	 {
-											
-											if (yaw > 90 + getType().getCannonMaxDegress()) {
-												
-												yaw = 90 + getType().getCannonMaxDegress();
-												
-											} else if (yaw < 90 - getType().getCannonMaxDegress()) {
-												
-												yaw = 90 - getType().getCannonMaxDegress();
-												
-											}
-											
-										}
-										
-										double x = Math.sin(Math.toRadians(yaw)) * -.25 * Math.cos(Math.toRadians(pitch));
-										double y = Math.sin(Math.toRadians(pitch)) * -.25;
-										double z = Math.cos(Math.toRadians(yaw)) * .25 * Math.cos(Math.toRadians(pitch));
 
 										Location blockLocation = b.getRelative(playerFacing).getLocation();
 										
@@ -449,6 +455,8 @@ public class Craft {
 										b.getWorld().playSound(b.getLocation(), Sound.ENTITY_ARROW_SHOOT, 2.0F, 1.0F);
 		
 										MovecraftLocation firstBlock = null;
+										
+										double currentPower = getType().getCannonDamage();
 										
 										for (int i = 0; i < 400; i ++) {
 											
@@ -549,19 +557,75 @@ public class Craft {
 													detonateEvent.call();
 													
 													if(!detonateEvent.isCancelled()){
+
+														Location lastLocation = new Location(location.getWorld(), currentX - x, currentY - y, currentZ - z);
 														
-														i = 400;
+														b.getWorld().playEffect(lastLocation, Effect.EXPLOSION_LARGE, 0);
+														b.getWorld().playSound(lastLocation, Sound.ENTITY_GENERIC_EXPLODE, 1.0f, 1.0f);
 														
-														Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+														Block block = location.getBlock();
+														
+														double currentHp = 0;
+														
+														if (block.hasMetadata("hp")) {
+															
+															try {
+																
+																currentHp = block.getMetadata("hp").get(0).asDouble();
+																
+															} catch (Exception e) {
+																
+																e.printStackTrace();
+																
+															}
+															
+														} else {
+															
+															currentHp = HPUtils.getHP(block.getType());
+															
+														}
+														
+														if (currentHp - currentPower <= 0) {
+															
+															List<Block> blocks = new ArrayList<Block>();
+															blocks.add(block);
+															
+															EntityExplodeEvent explosionEvent = new EntityExplodeEvent(p, location, blocks, 0.0f);
+															Bukkit.getServer().getPluginManager().callEvent(explosionEvent);
+															
+															if (!explosionEvent.isCancelled()) {
+																
+																block.setType(Material.AIR);
+																block.removeMetadata("hp", Movecraft.getInstance());
+																
+																currentPower = Math.abs(currentHp - currentPower);
+																
+															} else {
+																
+																i = 400;
+																
+															}
+
+														} else {
+															
+															i = 400;
+															
+															block.setMetadata("hp", new FixedMetadataValue(Movecraft.getInstance(), currentHp - currentPower));
+															
+														}
+																												
+														/*Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
 															
 															@Override
 															public void run(){
 																
 																b.getWorld().createExplosion(location, getType().getLaserPower());
 			
+																
+																
 															}
 															
-														}, 1L);
+														}, 1L);*/
 														
 													}
 

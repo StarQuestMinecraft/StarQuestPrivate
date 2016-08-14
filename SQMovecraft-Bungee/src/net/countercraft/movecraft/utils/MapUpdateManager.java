@@ -34,7 +34,10 @@ import net.countercraft.movecraft.utils.datastructures.InventoryTransferHolder;
 import net.countercraft.movecraft.utils.datastructures.SignTransferHolder;
 import net.countercraft.movecraft.utils.datastructures.TransferData;
 import net.minecraft.server.v1_10_R1.BlockPosition;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -126,7 +129,7 @@ public class MapUpdateManager extends BukkitRunnable {
 	            	    //w.getBlockAt( x, y, z ).setTypeIdAndData( 0, (byte) 0, false );
 	            }*/
 
-	        	if (m.getOldBlockLocation() != null) {
+	        	/*if (m.getOldBlockLocation() != null) {
 		        	Block block = w.getBlockAt(m.getOldBlockLocation().getX(), m.getOldBlockLocation().getY(), m.getOldBlockLocation().getZ());
 		            for (String metadata : Movecraft.blockMetadataTransfer) {
 		            	if (block.hasMetadata(metadata) && m.oldMetadataName.contains(metadata)) { 
@@ -134,7 +137,7 @@ public class MapUpdateManager extends BukkitRunnable {
 		            	}
 		            }	
 
-	        	}
+	        	}*/
 	        	
 	            for (int i = 0; i < m.oldMetadataName.size(); i ++) {
 	            	b.setMetadata(m.oldMetadataName.get(i), m.oldMetadataValue.get(i));
@@ -150,16 +153,18 @@ public class MapUpdateManager extends BukkitRunnable {
 	            	boolean success = c.a( position, getBlockFromId(newTypeID).fromLegacyData(data) ) != null;
 		            //w.getBlockAt( x, y, z ).setTypeIdAndData( newTypeID, data, false );
 		            if ( !success ) {
-		                    b.setTypeIdAndData( newTypeID, data, false );
+		            		
+		            	b.setTypeIdAndData( newTypeID, data, false );
+		            			            	
 		            }
 		            if ( !chunks.contains( c ) ) {
 		            	failures++;
 		                chunks.add( c );
 		            }
+		            
 	            }
 	         
-
-				if (m.isLastUpdate()){
+	            if (m.isLastUpdate()){
 					AsyncManager.getInstance().clear(m.getCraft());
 				}  
         }
@@ -245,6 +250,14 @@ public class MapUpdateManager extends BukkitRunnable {
                             								c.setLastUpdate(false);
                             							}
                                                 }
+                                                   
+                            		        	Block block = w.getBlockAt(c.getOldBlockLocation().getX(), c.getOldBlockLocation().getY(), c.getOldBlockLocation().getZ());
+                            		            for (String metadata : Movecraft.blockMetadataTransfer) {
+                            		            	if (block.hasMetadata(metadata) && c.oldMetadataName.contains(metadata)) { 
+                            		            		block.removeMetadata(metadata, block.getMetadata(metadata).get(0).getOwningPlugin());
+                            		            	}
+                            		            }
+                                                
                                                 //remove dispensers and replace them with stone blocks to prevent firing during ship reconstruction
                                                 /*if(w.getBlockAt( l.getX(), l.getY(), l.getZ() ).getTypeId()==23) {
                                                         w.getBlockAt( l.getX(), l.getY(), l.getZ() ).setTypeIdAndData( 1, (byte) 0, false );

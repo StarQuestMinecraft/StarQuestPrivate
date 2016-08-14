@@ -79,7 +79,7 @@ public class Movecraft extends JavaPlugin {
 	private StarshipDatabase database;
 	private SQLDatabase sqlDatabase;
 	
-	public static String[] blockMetadataTransfer = new String[] {"guiblock"};
+	public static String[] blockMetadataTransfer = new String[] {"guiblock", "hp"};
 	
 	@Override
 	public void onDisable() {
