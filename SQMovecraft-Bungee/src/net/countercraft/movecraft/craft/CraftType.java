@@ -237,7 +237,7 @@ public class CraftType {
 			double d = (Double) data.get("laserPower");
 			laserPower = (float) d;
 		} else {
-			laserPower = 1.80f;
+			laserPower = 5f;
 		}
 		if (data.containsKey("cannonDamage")) {
 			cannonDamage = (Double) data.get("cannonDamage");

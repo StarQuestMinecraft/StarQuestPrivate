@@ -18,6 +18,8 @@
 package net.countercraft.movecraft;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +30,8 @@ import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -60,6 +64,7 @@ import net.countercraft.movecraft.localisation.I18nSupport;
 import net.countercraft.movecraft.shield.ShieldUtils;
 import net.countercraft.movecraft.task.AutopilotRunTask;
 import net.countercraft.movecraft.task.CooldownTask;
+import net.countercraft.movecraft.utils.HPUtils;
 import net.countercraft.movecraft.utils.HangarGateUtils;
 import net.countercraft.movecraft.utils.LocationUtils;
 import net.countercraft.movecraft.utils.MapUpdateManager;
@@ -333,6 +338,17 @@ public class Movecraft extends JavaPlugin {
 			database = new FileDatabase();
 			
 			logger.log( Level.INFO, String.format( I18nSupport.getInternationalisedString( "Startup - Enabled message" ), getDescription().getVersion() ) );
+		
+			if (new File(this.getDataFolder().getAbsolutePath() + "/hp.yml").exists()) {
+				
+				HPUtils.setup(YamlConfiguration.loadConfiguration(new File(this.getDataFolder().getAbsolutePath() + "/hp.yml")));
+				
+			} else {
+				
+				System.out.println("ERROR: hp.yml not found");
+				
+			}
+			
 		}
 		if(Bukkit.getServerName().equalsIgnoreCase("CoreSystem")){
 			Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable(){

@@ -53,6 +53,8 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -456,7 +458,7 @@ public class Craft {
 		
 										MovecraftLocation firstBlock = null;
 										
-										double currentPower = getType().getCannonDamage();
+										double currentPower = getType().getLaserPower();
 										
 										for (int i = 0; i < 400; i ++) {
 											
@@ -583,50 +585,66 @@ public class Craft {
 															
 															currentHp = HPUtils.getHP(block.getType());
 															
-														}
-														
-														if (currentHp - currentPower <= 0) {
-															
-															List<Block> blocks = new ArrayList<Block>();
-															blocks.add(block);
-															
-															EntityExplodeEvent explosionEvent = new EntityExplodeEvent(p, location, blocks, 0.0f);
-															Bukkit.getServer().getPluginManager().callEvent(explosionEvent);
-															
-															if (!explosionEvent.isCancelled()) {
-																
-																block.setType(Material.AIR);
-																block.removeMetadata("hp", Movecraft.getInstance());
-																
-																currentPower = Math.abs(currentHp - currentPower);
-																
-															} else {
+															if (currentHp == -1) {
 																
 																i = 400;
 																
 															}
-
-														} else {
-															
-															i = 400;
-															
-															block.setMetadata("hp", new FixedMetadataValue(Movecraft.getInstance(), currentHp - currentPower));
 															
 														}
-																												
-														/*Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+														
+														if (i < 400) {
 															
-															@Override
-															public void run(){
+															if (currentHp - currentPower <= 0) {
 																
-																b.getWorld().createExplosion(location, getType().getLaserPower());
-			
+																List<Block> blocks = new ArrayList<Block>();
+																blocks.add(block);
 																
+																Fireball fireball = (Fireball) p.getWorld().spawnEntity(location, EntityType.FIREBALL);
+																fireball.setYield(0.0f);
+																fireball.setShooter(p);
+																
+																EntityExplodeEvent explosionEvent = new EntityExplodeEvent(p, location, blocks, 0.0f);
+																Bukkit.getServer().getPluginManager().callEvent(explosionEvent);
+																
+																fireball.remove();
+																
+																if (!explosionEvent.isCancelled() && explosionEvent.blockList().equals(blocks)) {
+																	
+																	block.setType(Material.AIR);
+																	block.removeMetadata("hp", Movecraft.getInstance());
+																	
+																	currentPower = Math.abs(currentHp - currentPower);
+																	
+																} else {
+																	
+																	i = 400;
+																	
+																}
+
+															} else {
+																
+																i = 400;
+																
+																block.setMetadata("hp", new FixedMetadataValue(Movecraft.getInstance(), currentHp - currentPower));
 																
 															}
+																													
+															/*Bukkit.getScheduler().scheduleSyncDelayedTask(Movecraft.getInstance(), new Runnable(){
+																
+																@Override
+																public void run(){
+																	
+																	b.getWorld().createExplosion(location, getType().getLaserPower());
+				
+																	
+																	
+																}
+																
+															}, 1L);*/
 															
-														}, 1L);*/
-														
+														}
+
 													}
 
 												}
