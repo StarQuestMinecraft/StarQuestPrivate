@@ -69,7 +69,7 @@ public class LocationUtils {
 			planets.put("Grallion", locationFromConfig(cfg, "Grallion"));
 			planets.put("Hylon", locationFromConfig(cfg, "Hylon"));
 			planets.put("Feldost", locationFromConfig(cfg, "Feldost"));
-			planets.put("Asteroid Belt",  locationFromConfig(cfg, "AsteroidBelt"));
+			planets.put("AsteroidBelt",  locationFromConfig(cfg, "AsteroidBelt"));
 			
 			if(cfg.contains("stargates")) {
 				for(String stargateName : cfg.getConfigurationSection("stargates").getKeys(false)) {
@@ -80,6 +80,8 @@ public class LocationUtils {
 		} else if (SYSTEM.equals("Defalos")) {
 			planets.put("Acualis", locationFromConfig(cfg, "Acualis"));
 			planets.put("Hub", locationFromConfig(cfg, "Hub"));
+		} else if (SYSTEM.equals("AsteroidBelt")) {
+			planets.put("Anomaly", locationFromConfig(cfg, "Anomaly"));
 		}
 	}
 
@@ -351,7 +353,17 @@ public class LocationUtils {
 	}
 
 	public static String getSystem() {
-		return SYSTEM;
+		
+		if (SYSTEM != "AsteroidBelt") {
+			
+			return SYSTEM;
+			
+		} else {
+			
+			return "CoreSystem";
+			
+		}
+		
 	}
 
 	public static ArrayList<Craft> getCraftsWithinRadius(World w, int X, int Z, int radius) {
@@ -383,9 +395,7 @@ public class LocationUtils {
 	
 	public static boolean isInCorePlanet(Player p) {
 		
-		String world = p.getLocation().getWorld().getName();
-		
-		if (world.equals("Xira")) {
+		if (SYSTEM.equals("CoreSystem")) {
 			
 			return true;
 			

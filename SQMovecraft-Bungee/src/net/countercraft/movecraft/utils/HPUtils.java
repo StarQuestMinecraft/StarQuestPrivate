@@ -1,43 +1,102 @@
 package net.countercraft.movecraft.utils;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 
 
 public class HPUtils {
 	
-	private static HashMap<Material, Double> hps;
+	private static HashMap<Material, Double> hps = new HashMap<Material, Double>();
+	private static double torpedoPower = 300;
+	
+	public static void setup(FileConfiguration config) {
+		
+		if (config.contains("hp")) {
+			
+			for (String group : config.getConfigurationSection("hp").getKeys(false)) {
+				
+				String path = "hp." + group + ".";
+				
+				try {
+					
+					List<Material> materials = new ArrayList<Material>();
+					
+					List<Integer> ids = config.getIntegerList(path + "ids");
+					
+					for (Integer id : ids) {
+						
+						materials.add(Material.getMaterial(id));
+						
+					}
+					
+					double hp = config.getDouble(path + "hp");
+					
+					for (Material material : materials) {
+						
+						if (material != null) {
+							
+							hps.put(material, hp);
+							
+						} else {
+							
+							System.out.print("ERROR: Material is null");
+							
+						}
+						
+					}
+
+				} catch (Exception e) {
+					
+					e.printStackTrace();
+					
+				}
+				
+			}
+			
+		} else {
+			
+			System.out.println("ERROR: hp.yml is not setup properly");
+			
+		}
+		
+		if (config.contains("torpedoPower")) {
+			
+			torpedoPower = config.getDouble("torpedoPower");
+			
+		} else {
+			
+			System.out.println("ERROR: torpedoPower is not specified in the hp.yml");
+			
+		}
+		
+	}
 	
 	public static double getHP(int id){
 		Material m = Material.getMaterial(id);
 		if(m == null){
 			System.out.println("ERROR: no material found with id " + id);
-			return 4;
+			return 1;
 		}
 		return getHP(m);
 	}
 	public static double getHP(Material m){
 
-		if(hps == null){
-			hps = new HashMap<Material, Double>();
-			for(int i = 0; i < 255; i++){
-				Material m2 = Material.getMaterial(i);
-				if(m2 != null){
-					double resistance = getHPSwitch(m2);
-					System.out.println("Loaded hp " + resistance + " for material " + m2);
-					hps.put(m2, getHPSwitch(m2));
-				}
-			}
-		}
-		Double resistance = hps.get(m);
-		if(resistance == null){
-			return getHPSwitch(m);
+		if (hps.containsKey(m)) {
+			
+			return hps.get(m);
+			
 		} else {
-			return resistance;
+			
+			return 1;
+			
 		}
+		
 	}
 	
-	public static double getHPSwitch(Material type){
+	/*public static double getHPSwitch(Material type){
 		switch(type){
 		case BARRIER:
 			return 18000003;
@@ -46,7 +105,7 @@ public class HPUtils {
 		case ENDER_PORTAL:
 		case ENDER_PORTAL_FRAME:
 			return 18000000;
-		case ANVIL:
+		case ANVIL
 		case ENCHANTMENT_TABLE:
 		case OBSIDIAN:
 			return 6000;
@@ -165,7 +224,14 @@ public class HPUtils {
 		case WOOL:
 			return 4;
 		default:
-			return 0;
+			return 1;
 		}
+	}*/
+
+	public static double getTorpedoPower() {
+		
+		return torpedoPower;
+		
 	}
+
 }
